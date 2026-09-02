@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: ammo.bullet.heavy.rifle
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: 3f5bc68153c22493cae9f43c0e23cce7, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Ammo Heavy Rifle
+    descriptionLid: High-powered ammunition designed for precision rifles and heavy
+      machine guns.
+    order: 0
+    icon: {fileID: 21300000, guid: 3e67b2fb39ab9427c823a888b5969fdf, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 13
+    economyCategory: 50
+    tier: 1
+    flag: 0
+    itemLabel: 2
+    rarity: 0
+    maxStack: 120
+    sortCategory: 3
+    sortPriority: 5
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags:
+  - {fileID: 11400000, guid: 9565db40dd44f4023b87d696c12aa689, type: 2}
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: 1d60a547a14be49d3ae1133cf9796a4b, type: 2}
+  baseModifiers: []
+  prefabName: 
+  prefabPath: 
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 5930764005092884480
+  - rid: 5930764005092884481
+  references:
+    version: 2
+    RefIds:
+    - rid: 5930764005092884480
+      type: {class: AmmoModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        ammoType: {fileID: 11400000, guid: a34e5737ee2ee4144a1f85381e8d870a, type: 2}
+        priority: 0
+    - rid: 5930764005092884481
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 10

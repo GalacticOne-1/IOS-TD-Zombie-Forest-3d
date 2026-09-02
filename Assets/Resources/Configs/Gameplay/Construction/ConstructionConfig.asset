@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca23ab053ab14868852120aa4b7337c9, type: 3}
+  m_Name: ConstructionConfig
+  m_EditorClassIdentifier: 
+  <Categories>k__BackingField:
+  - Category: 1
+    Title: Structures
+    Icon: {fileID: 21300000, guid: 4232ae7e8d7cc47fc98d7a6ecf3eb687, type: 3}
+    FacilityTypes: 04000000050000000600000007000000
+  - Category: 2
+    Title: Storage
+    Icon: {fileID: 21300000, guid: 05b4ee51d8910492996c8354fdcd2a4e, type: 3}
+    FacilityTypes: 03000000
+  - Category: 3
+    Title: Production
+    Icon: {fileID: 21300000, guid: 6d5bf1679453c43d392aa4ecb4f9eced, type: 3}
+    FacilityTypes: 0100000002000000
+  - Category: 4
+    Title: Weapon
+    Icon: {fileID: 21300000, guid: ac8c835da0819494790d6c7d56a29e72, type: 3}
+    FacilityTypes: 01000000
+  - Category: 5
+    Title: Defense
+    Icon: {fileID: 21300000, guid: a715dc3ac7e5b4f87acad250a862710a, type: 3}
+    FacilityTypes: 0a000000

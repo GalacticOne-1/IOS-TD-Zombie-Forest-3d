@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: armor.torso.heavy.vest
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: ac618b428f82c4deaa14c6a33871aa94, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Heavy Vest
+    descriptionLid: Stronger body armor that provides better protection at the cost
+      of mobility.
+    order: 0
+    icon: {fileID: 21300000, guid: 33d305c63acbd43aca3e391f03b65dc8, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 11
+    economyCategory: 52
+    tier: 2
+    flag: 0
+    itemLabel: 2
+    rarity: 0
+    maxStack: 1
+    sortCategory: 2
+    sortPriority: 0
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 1
+    maxDurability: 450
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags:
+  - {fileID: 11400000, guid: 058d46a645bbb4af2a2a2469ae7089b7, type: 2}
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: 60ccff98dd5304c4aaf289636d3e1e67, type: 2}
+  baseModifiers: []
+  prefabName: heavy_vest
+  prefabPath: Torso/
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 6515182801572855891
+  - rid: 5930763668418985999
+  - rid: 5930763737138200669
+  references:
+    version: 2
+    RefIds:
+    - rid: 5930763668418985999
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: fdbd36406db2548d38d345bdfd962bf5, type: 2}
+    - rid: 5930763737138200669
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 11
+    - rid: 6515182801572855891
+      type: {class: EquipmentModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        settings:
+          slotType: 21
+          equipType: 10
+        equipRestrictions:
+          requiredLevel: 0
+          allowedUnits: 
+        baseStats:
+        - StatId: 1
+          Operation: 0
+          Value: 16
+          showInTooltip: 1
+          applyToUnit: 1

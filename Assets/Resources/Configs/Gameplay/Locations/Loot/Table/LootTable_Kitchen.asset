@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4657b644f044a3a447887a5201540d, type: 3}
+  m_Name: LootTable_Kitchen
+  m_EditorClassIdentifier: 
+  _id: {fileID: 11400000, guid: 55ddd4c10526b4d67adca83f8823dab1, type: 2}
+  _guaranteedEntries:
+  - _item: {fileID: 11400000, guid: df1962a1187ae4141a5fb9ac47d7279d, type: 2}
+    _minAmount: 4
+    _maxAmount: 12
+    _durabilityPercent: 0
+  - _item: {fileID: 11400000, guid: 8b1ddebb0718c40ffad4d5fefc2dbe45, type: 2}
+    _minAmount: 4
+    _maxAmount: 12
+    _durabilityPercent: 0
+  _slots:
+  - SlotId: food_primary
+    SharedPool: {fileID: 11400000, guid: 68439e598c6fe41848c4e95429b51fc9, type: 2}
+    RepeatCount: 1
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 1
+    MaxTier: 1
+  - SlotId: water_primary
+    SharedPool: {fileID: 11400000, guid: 6f4456029fcdf486a8dbc6429bed09dd, type: 2}
+    RepeatCount: 1
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 1
+    MaxTier: 1

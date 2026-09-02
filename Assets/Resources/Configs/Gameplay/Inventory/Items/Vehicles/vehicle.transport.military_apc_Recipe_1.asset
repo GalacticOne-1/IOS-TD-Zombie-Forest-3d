@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716483fa65ee4ee789440202871cf5a8, type: 3}
+  m_Name: vehicle.transport.military_apc_Recipe_1
+  m_EditorClassIdentifier: 
+  outputItem: {fileID: 11400000, guid: 5f1562ae1fab24fc5803eb732e60c545, type: 2}
+  outputCount: 1
+  requirement:
+  - Item: {fileID: 11400000, guid: a4022cb54df864858b18abab4a3e50a4, type: 2}
+    Amount: 50
+  - Item: {fileID: 11400000, guid: d60691fe28f86457a8c7f2b917f47df4, type: 2}
+    Amount: 20
+  - Item: {fileID: 11400000, guid: a1eea8ef2181d4debbceb5840c82e635, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: 663cc5d65d62344b8a44e8fb62a0e9a1, type: 2}
+    Amount: 30
+  - Item: {fileID: 11400000, guid: 6193e87ef81c448e4be6a888692b7016, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: 018187b87660f459190cb83eb1e49197, type: 2}
+    Amount: 1
+  - Item: {fileID: 11400000, guid: b95643412440943db8ea7f7095bc7b76, type: 2}
+    Amount: 2
+  requiredStationItem: {fileID: 0}
+  requiredTier: 3
+  craftTime: 5
+  stackOrderLimit: 1
+  requiredPlayerLevel: 0
+  requiredTags: []

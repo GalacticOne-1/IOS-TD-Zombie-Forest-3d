@@ -1,0 +1,364 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecce919f310e4b50844fb453567b982e, type: 3}
+  m_Name: StatStyleConfig
+  m_EditorClassIdentifier: 
+  entries:
+  - localizationKey: Damage
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 120
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: DPS
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 121
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Accuracy
+    front: 
+    suffix: '%'
+    appendColon: 1
+    currentMaxField: 0
+    statId: 200
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Reload Time
+    front: 
+    suffix: s
+    appendColon: 1
+    currentMaxField: 0
+    statId: 202
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Fire Rate
+    front: 
+    suffix: s
+    appendColon: 1
+    currentMaxField: 0
+    statId: 201
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Ammo Type
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 204
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Ammo Capacity
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 203
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Range
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 205
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Armor
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 1
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Movement Penalty
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 30
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Resistance
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 2
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Durability
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 1
+    statId: 12
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Tier
+    front: 
+    suffix: 
+    appendColon: 0
+    currentMaxField: 0
+    statId: 9
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Crit Chance
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 170
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Crit Damage
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 171
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Penetration
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 122
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Ammo Used
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 350
+    layoutType: 22
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Used By
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 351
+    layoutType: 22
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Restore Health
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 254
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 1
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: AoE Damage
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 210
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: AoE Range
+    front: 
+    suffix: m
+    appendColon: 1
+    currentMaxField: 0
+    statId: 211
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Duration
+    front: 
+    suffix: s
+    appendColon: 1
+    currentMaxField: 0
+    statId: 253
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Max Squad
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 52
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  - localizationKey: Cargo Slots
+    front: 
+    suffix: 
+    appendColon: 1
+    currentMaxField: 0
+    statId: 50
+    layoutType: 6
+    valueColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+    showPlusForPositive: 0
+    roundToInt: 0
+    decimalPlaces: 0
+  descriptorEntries:
+  - descriptorId: 0
+    layoutType: 50
+    staticLayoutId: item_tier
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+  - descriptorId: 53
+    layoutType: 50
+    staticLayoutId: extra_feature
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+  - descriptorId: 54
+    layoutType: 50
+    staticLayoutId: extra_value
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+  - descriptorId: 50
+    layoutType: 50
+    staticLayoutId: item_type
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+  - descriptorId: 51
+    layoutType: 6
+    staticLayoutId: 
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}
+  - descriptorId: 55
+    layoutType: 50
+    staticLayoutId: item_type
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    font: {fileID: 11400000, guid: a6a125564dc1641329a7239ea835a4e3, type: 2}
+    icon: {fileID: 0}

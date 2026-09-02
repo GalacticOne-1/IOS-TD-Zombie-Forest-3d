@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4657b644f044a3a447887a5201540d, type: 3}
+  m_Name: LootTable_VendingMachine
+  m_EditorClassIdentifier: 
+  _id: {fileID: 11400000, guid: 9e12bee76b497454693d22f228eea1d7, type: 2}
+  _guaranteedEntries:
+  - _item: {fileID: 11400000, guid: 8b1ddebb0718c40ffad4d5fefc2dbe45, type: 2}
+    _minAmount: 4
+    _maxAmount: 10
+    _durabilityPercent: 0
+  _slots:
+  - SlotId: water_primary
+    SharedPool: {fileID: 11400000, guid: 6f4456029fcdf486a8dbc6429bed09dd, type: 2}
+    RepeatCount: 1
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 1
+    MaxTier: 1

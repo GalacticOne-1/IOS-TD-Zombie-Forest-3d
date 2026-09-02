@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a61e12a38c4747a050b3f5b19d6836, type: 3}
+  m_Name: LP_Tech_Endgame
+  m_EditorClassIdentifier: 
+  _pool:
+  - Item: {fileID: 11400000, guid: b5e4393d2a97648ff9da500a6644b92b, type: 2}
+    Weight: 100
+    MinAmount: 1
+    MaxAmount: 2
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: 0c0d01984c24648ee92fb009fed9af69, type: 2}
+    Weight: 40
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: ff715f06633bd408f946aca19961e64a, type: 2}
+    Weight: 30
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: 416788180803e4c1a8a75cf72e7d2b1e, type: 2}
+    Weight: 30
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0

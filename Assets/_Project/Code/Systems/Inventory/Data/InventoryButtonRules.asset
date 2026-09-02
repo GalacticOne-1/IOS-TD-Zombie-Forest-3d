@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f68dde6260412dab47e14876d164fc, type: 3}
+  m_Name: InventoryButtonRules
+  m_EditorClassIdentifier: 
+  rules:
+  - buttonName: Use
+    isEnabledLogic: {fileID: 11400000, guid: 84599a30273bc42bd969443d17c771d1, type: 2}
+    isHighlightedLogic: {fileID: 0}
+  - buttonName: Split
+    isEnabledLogic: {fileID: 11400000, guid: 9899a35666aa748d8956f22e74f087ff, type: 2}
+    isHighlightedLogic: {fileID: 0}
+  - buttonName: SplitOne
+    isEnabledLogic: {fileID: 11400000, guid: 9899a35666aa748d8956f22e74f087ff, type: 2}
+    isHighlightedLogic: {fileID: 0}
+  - buttonName: Sort
+    isEnabledLogic: {fileID: 11400000, guid: ea134463bc09a4baaae05b682dcd15cb, type: 2}
+    isHighlightedLogic: {fileID: 0}
+  - buttonName: Remove
+    isEnabledLogic: {fileID: 11400000, guid: a7ee50a449526456b840adf57fd97ba6, type: 2}
+    isHighlightedLogic: {fileID: 0}
+  - buttonName: StoreAll
+    isEnabledLogic: {fileID: 11400000, guid: 028c1cc05cfe947b385945efa629ab44, type: 2}
+    isHighlightedLogic: {fileID: 0}
+  - buttonName: TakeAll
+    isEnabledLogic: {fileID: 11400000, guid: 9d2b4d5f1be8b4faabed763fb241ed78, type: 2}
+    isHighlightedLogic: {fileID: 0}

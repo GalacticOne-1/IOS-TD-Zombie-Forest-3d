@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d8682d7cdf4d799800dadb9207991d, type: 3}
+  m_Name: LayerConfig
+  m_EditorClassIdentifier: 
+  Detectable:
+    serializedVersion: 2
+    m_Bits: 2097152
+  DamageableAll:
+    serializedVersion: 2
+    m_Bits: 4194304
+  Occlusion:
+    serializedVersion: 2
+    m_Bits: 65536
+  Environment:
+    serializedVersion: 2
+    m_Bits: 0
+  Destructible:
+    serializedVersion: 2
+    m_Bits: 0
+  Terrain:
+    serializedVersion: 2
+    m_Bits: 0
+  BulletHit:
+    serializedVersion: 2
+    m_Bits: 8388608
+  ExplosionHit:
+    serializedVersion: 2
+    m_Bits: 0
+  Ground:
+    serializedVersion: 2
+    m_Bits: 32768
+  Interactable:
+    serializedVersion: 2
+    m_Bits: 256

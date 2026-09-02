@@ -1,0 +1,688 @@
+{
+    "files": [
+        {
+            "key": "ApplicationConfig",
+            "path": "Configs/Core/ApplicationConfig"
+        },
+        {
+            "key": "CameraConfigs",
+            "path": "Configs/Core/CameraConfigs"
+        },
+        {
+            "key": "CurrencyDatabase",
+            "path": "Configs/Core/CurrencyDatabase"
+        },
+        {
+            "key": "GameConfig",
+            "path": "Configs/Core/GameConfig"
+        },
+        {
+            "key": "GameIds",
+            "path": "Configs/Core/GameIds"
+        },
+        {
+            "key": "LayerConfig",
+            "path": "Configs/Core/LayerConfig"
+        },
+        {
+            "key": "NotificationMessageConfig",
+            "path": "Configs/Core/NotificationMessageConfig"
+        },
+        {
+            "key": "CampDefenseConfig",
+            "path": "Configs/Gameplay/CampDefense/CampDefenseConfig"
+        },
+        {
+            "key": "ID.horde.spawn_01",
+            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_01"
+        },
+        {
+            "key": "ID.horde.spawn_02",
+            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_02"
+        },
+        {
+            "key": "ID.horde.spawn_03",
+            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_03"
+        },
+        {
+            "key": "ID.horde.spawn_04",
+            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_04"
+        },
+        {
+            "key": "ID.horde.spawn_05",
+            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_05"
+        },
+        {
+            "key": "WaveConfig",
+            "path": "Configs/Gameplay/CampDefense/HordeWaves/WaveConfig"
+        },
+        {
+            "key": "AILODConfig",
+            "path": "Configs/Gameplay/Combat/AILODConfig"
+        },
+        {
+            "key": "CampDefensePenaltyConfig",
+            "path": "Configs/Gameplay/Combat/CampDefensePenaltyConfig"
+        },
+        {
+            "key": "CombatCameraShakeConfig",
+            "path": "Configs/Gameplay/Combat/CombatCameraShakeConfig"
+        },
+        {
+            "key": "ObjectPoolConfigs",
+            "path": "Configs/Gameplay/Combat/ObjectPoolConfigs"
+        },
+        {
+            "key": "SuppressionConfig",
+            "path": "Configs/Gameplay/Combat/SuppressionConfig"
+        },
+        {
+            "key": "ConstructionConfig",
+            "path": "Configs/Gameplay/Construction/ConstructionConfig"
+        },
+        {
+            "key": "GridBlockedAreasConfig",
+            "path": "Configs/Gameplay/Construction/GridBlockedAreasConfig"
+        },
+        {
+            "key": "GridSettingsConfig",
+            "path": "Configs/Gameplay/Construction/GridSettingsConfig"
+        },
+        {
+            "key": "DirectorConfig",
+            "path": "Configs/Gameplay/Enemies/DirectorConfig"
+        },
+        {
+            "key": "EnemyModifierConfigs",
+            "path": "Configs/Gameplay/Enemies/EnemyModifierConfigs"
+        },
+        {
+            "key": "VoiceAudio_enemy",
+            "path": "Configs/Gameplay/Enemies/VoiceAudio_enemy"
+        },
+        {
+            "key": "ZombieAnimConfig",
+            "path": "Configs/Gameplay/Enemies/ZombieAnimConfig"
+        },
+        {
+            "key": "ZombieVariantDatabase",
+            "path": "Configs/Gameplay/Enemies/ZombieVariantDatabase"
+        },
+        {
+            "key": "Crate Small",
+            "path": "Configs/Gameplay/Entities/Structures FOR REMOVE/Furnitures OLD/Crate Small"
+        },
+        {
+            "key": "WorldThreatConfig",
+            "path": "Configs/Gameplay/GlobalWorld/WorldThreatConfig"
+        },
+        {
+            "key": "ConsumableItemAction",
+            "path": "Configs/Gameplay/Inventory/Actions/ConsumableItemAction"
+        },
+        {
+            "key": "EquipItemAction",
+            "path": "Configs/Gameplay/Inventory/Actions/EquipItemAction"
+        },
+        {
+            "key": "ItemActionDatabase",
+            "path": "Configs/Gameplay/Inventory/ItemActionDatabase"
+        },
+        {
+            "key": "ItemDatabase",
+            "path": "Configs/Gameplay/Inventory/ItemDatabase"
+        },
+        {
+            "key": "RecipeDatabase",
+            "path": "Configs/Gameplay/Inventory/RecipeDatabase"
+        },
+        {
+            "key": "CampStorageInventoryConfig",
+            "path": "Configs/Gameplay/Inventory/Source/CampStorageInventoryConfig"
+        },
+        {
+            "key": "CrateInventoryConfig",
+            "path": "Configs/Gameplay/Inventory/Source/CrateInventoryConfig"
+        },
+        {
+            "key": "TransportInventoryConfig",
+            "path": "Configs/Gameplay/Inventory/Source/TransportInventoryConfig"
+        },
+        {
+            "key": "TransportInventoryEquipmentConfig",
+            "path": "Configs/Gameplay/Inventory/Source/TransportInventoryEquipmentConfig"
+        },
+        {
+            "key": "UnitInventoryEquipmentConfig",
+            "path": "Configs/Gameplay/Inventory/Source/UnitInventoryEquipmentConfig"
+        },
+        {
+            "key": "WorldMapDroneInventoryConfig",
+            "path": "Configs/Gameplay/Inventory/Source/WorldMapDroneInventoryConfig"
+        },
+        {
+            "key": "LocationsConfigs",
+            "path": "Configs/Gameplay/Locations/LocationsConfigs"
+        },
+        {
+            "key": "DepletionCurveConfig",
+            "path": "Configs/Gameplay/Locations/LootBalance/DepletionCurveConfig"
+        },
+        {
+            "key": "LootBalanceProfile",
+            "path": "Configs/Gameplay/Locations/LootBalance/LootBalanceProfile"
+        },
+        {
+            "key": "LootContainerVisualDatabase",
+            "path": "Configs/Gameplay/Locations/LootBalance/LootContainerVisualDatabase"
+        },
+        {
+            "key": "LocationStateConfigsCamp",
+            "path": "Configs/Gameplay/Locations/State/LocationStateConfigsCamp"
+        },
+        {
+            "key": "WorldMapConfig",
+            "path": "Configs/Gameplay/Locations/WorldMapConfig"
+        },
+        {
+            "key": "WorldVisitCost_Default",
+            "path": "Configs/Gameplay/Locations/WorldVisitCost_Default"
+        },
+        {
+            "key": "PerceptionConfig",
+            "path": "Configs/Gameplay/Player/Combat/PerceptionConfig"
+        },
+        {
+            "key": "PlayerAnimConfig",
+            "path": "Configs/Gameplay/Player/Combat/PlayerAnimConfig"
+        },
+        {
+            "key": "PlayerArchetypeConfig",
+            "path": "Configs/Gameplay/Player/Combat/PlayerArchetypeConfig"
+        },
+        {
+            "key": "PlayerBrainConfig",
+            "path": "Configs/Gameplay/Player/Combat/PlayerBrainConfig"
+        },
+        {
+            "key": "PlayerCombatConfig",
+            "path": "Configs/Gameplay/Player/Combat/PlayerCombatConfig"
+        },
+        {
+            "key": "SurfaceFX_Default",
+            "path": "Configs/Gameplay/Player/Combat/Surface/SurfaceFX_Default"
+        },
+        {
+            "key": "SurfaceFX_Organic",
+            "path": "Configs/Gameplay/Player/Combat/Surface/SurfaceFX_Organic"
+        },
+        {
+            "key": "SurfaceMaterial_Default",
+            "path": "Configs/Gameplay/Player/Combat/Surface/SurfaceMaterial_Default"
+        },
+        {
+            "key": "VoiceAudio_player",
+            "path": "Configs/Gameplay/Player/Combat/VoiceAudio_player"
+        },
+        {
+            "key": "WeaponAnimLibrary",
+            "path": "Configs/Gameplay/Player/Combat/WeaponAnimLibrary"
+        },
+        {
+            "key": "ID.buff.hunger",
+            "path": "Configs/Gameplay/Player/Consumption/_Ids/ID.buff.hunger"
+        },
+        {
+            "key": "ID.buff.thirst",
+            "path": "Configs/Gameplay/Player/Consumption/_Ids/ID.buff.thirst"
+        },
+        {
+            "key": "HungerBuff",
+            "path": "Configs/Gameplay/Player/Consumption/HungerBuff"
+        },
+        {
+            "key": "SurvivorConsumptionConfig",
+            "path": "Configs/Gameplay/Player/Consumption/SurvivorConsumptionConfig"
+        },
+        {
+            "key": "ThirstBuff",
+            "path": "Configs/Gameplay/Player/Consumption/ThirstBuff"
+        },
+        {
+            "key": "DragonEquipmentConfig",
+            "path": "Configs/Gameplay/Player/Inventory/DragonEquipmentConfig"
+        },
+        {
+            "key": "DragonEquipmentData",
+            "path": "Configs/Gameplay/Player/Inventory/DragonEquipmentData"
+        },
+        {
+            "key": "DragonInventoryData",
+            "path": "Configs/Gameplay/Player/Inventory/DragonInventoryData"
+        },
+        {
+            "key": "PlayerEquipmentConfig",
+            "path": "Configs/Gameplay/Player/Inventory/PlayerEquipmentConfig"
+        },
+        {
+            "key": "PlayerEquipmentData",
+            "path": "Configs/Gameplay/Player/Inventory/PlayerEquipmentData"
+        },
+        {
+            "key": "PlayerInventoryData",
+            "path": "Configs/Gameplay/Player/Inventory/PlayerInventoryData"
+        },
+        {
+            "key": "PlayerCharacterConfig",
+            "path": "Configs/Gameplay/Player/PlayerCharacterConfig"
+        },
+        {
+            "key": "PlayerDragonConfig",
+            "path": "Configs/Gameplay/Player/PlayerDragonConfig"
+        },
+        {
+            "key": "PlayerDragonStatsBase",
+            "path": "Configs/Gameplay/Player/PlayerDragonStatsBase"
+        },
+        {
+            "key": "PlayerStatsBase",
+            "path": "Configs/Gameplay/Player/PlayerStatsBase"
+        },
+        {
+            "key": "DailyRewardConfig",
+            "path": "Configs/Gameplay/Progression/DailyRewardConfig"
+        },
+        {
+            "key": "ProgressionConfig",
+            "path": "Configs/Gameplay/Progression/ProgressionConfig"
+        },
+        {
+            "key": "RecruitEquipmentAccessConfig",
+            "path": "Configs/Gameplay/Recruitment/RecruitEquipmentAccessConfig"
+        },
+        {
+            "key": "RecruitmentDatabase",
+            "path": "Configs/Gameplay/Recruitment/RecruitmentDatabase"
+        },
+        {
+            "key": "RecruitmentSettingsConfig",
+            "path": "Configs/Gameplay/Recruitment/RecruitmentSettingsConfig"
+        },
+        {
+            "key": "UnitIdentityPoolConfig",
+            "path": "Configs/Gameplay/Recruitment/UnitIdentityPoolConfig"
+        },
+        {
+            "key": "WorldStartConfig",
+            "path": "Configs/Gameplay/WorldStart/WorldStartConfig"
+        },
+        {
+            "key": "EconomyConfig",
+            "path": "Configs/GameRules/EconomyConfig"
+        },
+        {
+            "key": "AdRewardsConfig",
+            "path": "Configs/GameRules/RewardSystem/AdRewardsConfig"
+        },
+        {
+            "key": "StartKitConfig_all_resources",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_all_resources"
+        },
+        {
+            "key": "StartKitConfig_constr_kit",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_constr_kit"
+        },
+        {
+            "key": "StartKitConfig_consumables",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_consumables"
+        },
+        {
+            "key": "StartKitConfig_equip_armor",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_equip_armor"
+        },
+        {
+            "key": "StartKitConfig_equip_weapon",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_equip_weapon"
+        },
+        {
+            "key": "StartKitConfig_purchase_reward",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_purchase_reward"
+        },
+        {
+            "key": "StartKitConfig_start_game_01",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_start_game_01"
+        },
+        {
+            "key": "StartKitConfig_weapon_ammo",
+            "path": "Configs/GameRules/StartKIt/StartKitConfig_weapon_ammo"
+        },
+        {
+            "key": "StartKitData",
+            "path": "Configs/GameRules/StartKIt/StartKitData"
+        },
+        {
+            "key": "ID.ammo.heavy_crate",
+            "path": "Configs/IAP/_Ids/ID.ammo.heavy_crate"
+        },
+        {
+            "key": "ID.ammo.light_crate",
+            "path": "Configs/IAP/_Ids/ID.ammo.light_crate"
+        },
+        {
+            "key": "ID.ammo.mixed_crate",
+            "path": "Configs/IAP/_Ids/ID.ammo.mixed_crate"
+        },
+        {
+            "key": "ID.ammo.rifle_crate",
+            "path": "Configs/IAP/_Ids/ID.ammo.rifle_crate"
+        },
+        {
+            "key": "ID.ammo.shotgun_crate",
+            "path": "Configs/IAP/_Ids/ID.ammo.shotgun_crate"
+        },
+        {
+            "key": "ID.bundle.builder_pack",
+            "path": "Configs/IAP/_Ids/ID.bundle.builder_pack"
+        },
+        {
+            "key": "ID.bundle.demolition_pack",
+            "path": "Configs/IAP/_Ids/ID.bundle.demolition_pack"
+        },
+        {
+            "key": "ID.bundle.grenadier_pack",
+            "path": "Configs/IAP/_Ids/ID.bundle.grenadier_pack"
+        },
+        {
+            "key": "ID.bundle.medical_supply_pack",
+            "path": "Configs/IAP/_Ids/ID.bundle.medical_supply_pack"
+        },
+        {
+            "key": "ID.bundle.squad_assault_kit",
+            "path": "Configs/IAP/_Ids/ID.bundle.squad_assault_kit"
+        },
+        {
+            "key": "ID.bundle.squad_cqb_kit",
+            "path": "Configs/IAP/_Ids/ID.bundle.squad_cqb_kit"
+        },
+        {
+            "key": "ID.bundle.squad_defense_kit",
+            "path": "Configs/IAP/_Ids/ID.bundle.squad_defense_kit"
+        },
+        {
+            "key": "ID.bundle.squad_heavy_kit",
+            "path": "Configs/IAP/_Ids/ID.bundle.squad_heavy_kit"
+        },
+        {
+            "key": "ID.bundle.squad_sniper_kit",
+            "path": "Configs/IAP/_Ids/ID.bundle.squad_sniper_kit"
+        },
+        {
+            "key": "ID.bundle.survivor_pack",
+            "path": "Configs/IAP/_Ids/ID.bundle.survivor_pack"
+        },
+        {
+            "key": "ID.coins.mid",
+            "path": "Configs/IAP/_Ids/ID.coins.mid"
+        },
+        {
+            "key": "ID.coins.safe",
+            "path": "Configs/IAP/_Ids/ID.coins.safe"
+        },
+        {
+            "key": "ID.coins.small",
+            "path": "Configs/IAP/_Ids/ID.coins.small"
+        },
+        {
+            "key": "ID.multy.ammo",
+            "path": "Configs/IAP/_Ids/ID.multy.ammo"
+        },
+        {
+            "key": "ID.multy.weapon_1",
+            "path": "Configs/IAP/_Ids/ID.multy.weapon_1"
+        },
+        {
+            "key": "ID.multy.weapon_2",
+            "path": "Configs/IAP/_Ids/ID.multy.weapon_2"
+        },
+        {
+            "key": "ID.weapon.benelli_military",
+            "path": "Configs/IAP/_Ids/ID.weapon.benelli_military"
+        },
+        {
+            "key": "ID.weapon.glock17_military",
+            "path": "Configs/IAP/_Ids/ID.weapon.glock17_military"
+        },
+        {
+            "key": "ID.weapon.mk14_military",
+            "path": "Configs/IAP/_Ids/ID.weapon.mk14_military"
+        },
+        {
+            "key": "ID.weapon.mp5sd_military",
+            "path": "Configs/IAP/_Ids/ID.weapon.mp5sd_military"
+        },
+        {
+            "key": "ID.weapon.pkp_military",
+            "path": "Configs/IAP/_Ids/ID.weapon.pkp_military"
+        },
+        {
+            "key": "ID.weapon.scarl_military",
+            "path": "Configs/IAP/_Ids/ID.weapon.scarl_military"
+        },
+        {
+            "key": "iap.ammo.mixed_crate",
+            "path": "Configs/IAP/iap.ammo.mixed_crate"
+        },
+        {
+            "key": "iap.bundle.builder_pack",
+            "path": "Configs/IAP/iap.bundle.builder_pack"
+        },
+        {
+            "key": "iap.bundle.demolition_pack",
+            "path": "Configs/IAP/iap.bundle.demolition_pack"
+        },
+        {
+            "key": "iap.bundle.grenadier_pack",
+            "path": "Configs/IAP/iap.bundle.grenadier_pack"
+        },
+        {
+            "key": "iap.bundle.medical_supply_pack",
+            "path": "Configs/IAP/iap.bundle.medical_supply_pack"
+        },
+        {
+            "key": "iap.bundle.squad_assault_kit",
+            "path": "Configs/IAP/iap.bundle.squad_assault_kit"
+        },
+        {
+            "key": "iap.bundle.squad_cqb_kit",
+            "path": "Configs/IAP/iap.bundle.squad_cqb_kit"
+        },
+        {
+            "key": "iap.bundle.squad_defense_kit",
+            "path": "Configs/IAP/iap.bundle.squad_defense_kit"
+        },
+        {
+            "key": "iap.bundle.squad_heavy_kit",
+            "path": "Configs/IAP/iap.bundle.squad_heavy_kit"
+        },
+        {
+            "key": "iap.bundle.squad_sniper_kit",
+            "path": "Configs/IAP/iap.bundle.squad_sniper_kit"
+        },
+        {
+            "key": "iap.bundle.survivor_pack",
+            "path": "Configs/IAP/iap.bundle.survivor_pack"
+        },
+        {
+            "key": "iap.coins.mid",
+            "path": "Configs/IAP/iap.coins.mid"
+        },
+        {
+            "key": "iap.coins.safe",
+            "path": "Configs/IAP/iap.coins.safe"
+        },
+        {
+            "key": "iap.coins.small",
+            "path": "Configs/IAP/iap.coins.small"
+        },
+        {
+            "key": "iap.multy.ammo",
+            "path": "Configs/IAP/iap.multy.ammo"
+        },
+        {
+            "key": "iap.multy.weapon_1",
+            "path": "Configs/IAP/iap.multy.weapon_1"
+        },
+        {
+            "key": "iap.multy.weapon_2",
+            "path": "Configs/IAP/iap.multy.weapon_2"
+        },
+        {
+            "key": "iap.ammo.heavy_crate",
+            "path": "Configs/IAP/Single/iap.ammo.heavy_crate"
+        },
+        {
+            "key": "iap.ammo.light_crate",
+            "path": "Configs/IAP/Single/iap.ammo.light_crate"
+        },
+        {
+            "key": "iap.ammo.rifle_crate",
+            "path": "Configs/IAP/Single/iap.ammo.rifle_crate"
+        },
+        {
+            "key": "iap.ammo.shotgun_crate",
+            "path": "Configs/IAP/Single/iap.ammo.shotgun_crate"
+        },
+        {
+            "key": "iap.weapon.benelli_military",
+            "path": "Configs/IAP/Single/iap.weapon.benelli_military"
+        },
+        {
+            "key": "iap.weapon.glock17_military",
+            "path": "Configs/IAP/Single/iap.weapon.glock17_military"
+        },
+        {
+            "key": "iap.weapon.mk14_military",
+            "path": "Configs/IAP/Single/iap.weapon.mk14_military"
+        },
+        {
+            "key": "iap.weapon.mp5sd_military",
+            "path": "Configs/IAP/Single/iap.weapon.mp5sd_military"
+        },
+        {
+            "key": "iap.weapon.pkp_military",
+            "path": "Configs/IAP/Single/iap.weapon.pkp_military"
+        },
+        {
+            "key": "iap.weapon.scarl_military",
+            "path": "Configs/IAP/Single/iap.weapon.scarl_military"
+        },
+        {
+            "key": "DamagePopupStyleConfig",
+            "path": "Configs/Visual/DamagePopupStyleConfig"
+        },
+        {
+            "key": "ButtonAdLong",
+            "path": "Configs/Visual/StylesLive/Buttons/Ad/ButtonAdLong"
+        },
+        {
+            "key": "ButtonAdLongRegular",
+            "path": "Configs/Visual/StylesLive/Buttons/Ad/ButtonAdLongRegular"
+        },
+        {
+            "key": "ButtonAdMid",
+            "path": "Configs/Visual/StylesLive/Buttons/Ad/ButtonAdMid"
+        },
+        {
+            "key": "ButtonGarageSlot",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonGarageSlot"
+        },
+        {
+            "key": "ButtonIAPPriceLong",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonIAPPriceLong"
+        },
+        {
+            "key": "ButtonIAPPriceShort",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonIAPPriceShort"
+        },
+        {
+            "key": "ButtonLongNormal",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonLongNormal"
+        },
+        {
+            "key": "ButtonLongYellow",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonLongYellow"
+        },
+        {
+            "key": "ButtonMenuConstruction",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonMenuConstruction"
+        },
+        {
+            "key": "ButtonMenuInventory",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonMenuInventory"
+        },
+        {
+            "key": "ButtonMenuTab",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonMenuTab"
+        },
+        {
+            "key": "ButtonRegularBlue",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonRegularBlue"
+        },
+        {
+            "key": "ButtonRegularNormal",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonRegularNormal"
+        },
+        {
+            "key": "ButtonRegularYellow",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonRegularYellow"
+        },
+        {
+            "key": "ButtonSquareClose",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonSquareClose"
+        },
+        {
+            "key": "ButtonSquareNormal",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonSquareNormal"
+        },
+        {
+            "key": "ButtonSquareRed",
+            "path": "Configs/Visual/StylesLive/Buttons/ButtonSquareRed"
+        },
+        {
+            "key": "IntelStyleConfig",
+            "path": "Configs/Visual/StylesLive/IntelStyleConfig"
+        },
+        {
+            "key": "ItemRarityStyleConfig",
+            "path": "Configs/Visual/StylesLive/ItemRarityStyleConfig"
+        },
+        {
+            "key": "ManagerUIStyleConfig",
+            "path": "Configs/Visual/StylesLive/ManagerUIStyleConfig"
+        },
+        {
+            "key": "RaidReportIconConfig",
+            "path": "Configs/Visual/StylesLive/RaidReportIconConfig"
+        },
+        {
+            "key": "StatLayoutConfig",
+            "path": "Configs/Visual/StylesLive/StatLayoutConfig"
+        },
+        {
+            "key": "StatStyleConfig",
+            "path": "Configs/Visual/StylesLive/StatStyleConfig"
+        },
+        {
+            "key": "ValueRangeColorStyleConfig",
+            "path": "Configs/Visual/StylesLive/ValueRangeColorStyleConfig"
+        },
+        {
+            "key": "WorldMapStyleConfig",
+            "path": "Configs/Visual/StylesLive/WorldMapStyleConfig"
+        },
+        {
+            "key": "UIStyleDatabase",
+            "path": "Configs/Visual/UIStyleDatabase"
+        }
+    ]
+}

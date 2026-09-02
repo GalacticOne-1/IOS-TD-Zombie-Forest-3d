@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b34730399c84368807bb8c25a6eb1a8, type: 3}
+  m_Name: enemy_infected_melee_runner_t1
+  m_EditorClassIdentifier: 
+  Id: {fileID: 11400000, guid: 6298a5ac4dd8142e08d0538eae3ded1f, type: 2}
+  DisplayName: Fast Biter
+  Description: "\u0420\u0430\u0437\u0440\u0443\u0448\u0430\u0435\u0442 \u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044E."
+  Presentation: {fileID: 11400000, guid: 962fda054aba545729d561af9b6aad3c, type: 2}
+  Stats: {fileID: 11400000, guid: c53c2377955ab4ceab311096b5985631, type: 2}
+  Combat: {fileID: 11400000, guid: 5b1fd9f254aed418484705a42fb56998, type: 2}
+  AI: {fileID: 11400000, guid: 9c5e82d90d584474a9c72baff47c54fb, type: 2}
+  Movement: {fileID: 11400000, guid: c135abc816a354ff7b150884e76753e6, type: 2}
+  Targeting: {fileID: 11400000, guid: a62989b789209432e96c817c0a62e0ea, type: 2}
+  Perception: {fileID: 11400000, guid: fda3ee88214064e849c87f95303d36fc, type: 2}
+  Pack: {fileID: 11400000, guid: d62c4dc8aa73e4efead4bfbdcc16dc21, type: 2}

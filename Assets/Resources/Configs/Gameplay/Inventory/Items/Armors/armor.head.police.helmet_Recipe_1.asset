@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716483fa65ee4ee789440202871cf5a8, type: 3}
+  m_Name: armor.head.police.helmet_Recipe_1
+  m_EditorClassIdentifier: 
+  outputItem: {fileID: 11400000, guid: ece7ae77d4dbc46929d677afcab59568, type: 2}
+  outputCount: 1
+  requirement:
+  - Item: {fileID: 11400000, guid: 27c1bc635c51f4293b3960704f43ff4c, type: 2}
+    Amount: 10
+  - Item: {fileID: 11400000, guid: a2bb03bd9454040ec945bb8f00163910, type: 2}
+    Amount: 8
+  - Item: {fileID: 11400000, guid: 6bf48663564b7466b8b537cfc248ddd5, type: 2}
+    Amount: 2
+  requiredStationItem: {fileID: 11400000, guid: 925376de34fa044d7bd8308845b9abdb, type: 2}
+  requiredTier: 1
+  craftTime: 3
+  stackOrderLimit: 1
+  requiredPlayerLevel: 0
+  requiredTags: []

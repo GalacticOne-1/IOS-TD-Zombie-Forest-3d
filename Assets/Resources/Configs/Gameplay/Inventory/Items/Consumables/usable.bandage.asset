@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: usable.bandage
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: 20348407d85cc4332b66bb53f2ef04cc, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Bandage
+    descriptionLid: Provides steady healing over time and is ideal for treating minor
+      injuries during combat.
+    order: 0
+    icon: {fileID: 21300000, guid: e8c49826d32e24b0b9c0b71d0eeb3e30, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 20
+    economyCategory: 30
+    tier: 1
+    flag: 0
+    itemLabel: 2
+    rarity: 0
+    maxStack: 20
+    sortCategory: 1
+    sortPriority: 5
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags:
+  - {fileID: 11400000, guid: c1caf52c2f5054bd9b416b63751fcd90, type: 2}
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: 0b1abca59f20f4c19859fd58b441fd04, type: 2}
+  baseModifiers: []
+  prefabName: 
+  prefabPath: 
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 5930764054454075498
+  - rid: 5930764054454075499
+  - rid: 5930764054454075500
+  references:
+    version: 2
+    RefIds:
+    - rid: 5930764054454075498
+      type: {class: UseModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        consumeOnUse: 1
+        effects: []
+        slotType: 10
+        behaviour:
+          rid: 5930764076990333012
+        range: 10
+    - rid: 5930764054454075499
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: df0e289d18f1d41f4ac61945e4398a9d, type: 2}
+    - rid: 5930764054454075500
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 6
+    - rid: 5930764076990333012
+      type: {class: HealBehaviour, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        audioDefinition: {fileID: 11400000, guid: dc926b65ebb0f4b4ba700fabe93f239e, type: 2}
+        supportsSmartTarget: 1
+        doubleTapWindow: 0.35
+        requiresCast: 1
+        castTime: 1.5
+        healAmount: 40
+        isInstant: 0
+        isHoT: 1
+        hotDuration: 4
+        hotTickInterval: 1
+        hotDivideAmount: 1
+        allowInCombat: 1
+        slowInCombat: 0
+        combatMultiplier: 0.5
+        coverBonus: 0
+        coverMultiplier: 1.25
+        cooldown: 2

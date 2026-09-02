@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a61e12a38c4747a050b3f5b19d6836, type: 3}
+  m_Name: LP_Ammo_T2
+  m_EditorClassIdentifier: 
+  _pool:
+  - Item: {fileID: 11400000, guid: 5679707f9db7044a086d2a020e826626, type: 2}
+    Weight: 100
+    MinAmount: 40
+    MaxAmount: 120
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: 42239969d9fbb42bfb3af26205d44f5f, type: 2}
+    Weight: 50
+    MinAmount: 20
+    MaxAmount: 60
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0

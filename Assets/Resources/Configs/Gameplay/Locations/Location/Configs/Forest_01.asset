@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d80bf3b3b354415d9d664ccde78a2b0b, type: 3}
+  m_Name: Forest_01
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: 09a01a765ac894c2e83988570065df1f, type: 2}
+  <Header>k__BackingField:
+    TitleLid: Forest
+    DescriptionLid: 
+    Order: 0
+    Icon: {fileID: 0}
+    SizeUI: 0
+    IconOffset: {x: 0, y: 0}
+  <LocationType>k__BackingField: 1
+  <PrefabPath>k__BackingField: Prefabs/Gameplay/Locations/Forest
+  <LocationBorder>k__BackingField: {x: 0, y: 0}
+  <RequiresLevel>k__BackingField: 0
+  <Difficulty>k__BackingField: 1
+  <VisitCostConfig>k__BackingField: {fileID: 11400000, guid: 52b4de145f00c40769980966a1b34239, type: 2}
+  <EnemyVisualRules>k__BackingField: {fileID: 11400000, guid: 5db884be6af6c41afb9802411de46db2, type: 2}
+  <LocationIntel>k__BackingField:
+    threatLevel: 2
+    enemyType: 1
+    hazardType: 0
+    riskLevel: 1
+    guaranteedLootProfile: {fileID: 11400000, guid: ce60dcaccd11849a7b076e27aafd2955, type: 2}
+    lootProfile: {fileID: 11400000, guid: 37c07019433074816b49a2a6295bc2ad, type: 2}
+    loot: 2
+    resources: []
+    resourcesVolume:
+    - volume: 1
+      lootEconomyCategory: 03000000040000001400000019000000
+    - volume: 2
+      lootEconomyCategory: 14000000
+    - volume: 3
+      lootEconomyCategory: 0000000001000000640000000d0000001e000000
+    - volume: 4
+      lootEconomyCategory: 
+    - volume: 5
+      lootEconomyCategory: 0e000000
+    - volume: 6
+      lootEconomyCategory: 0a0000000b000000
+  <PlayerPreset>k__BackingField: {fileID: 11400000, guid: 9ad31468a7beb464fada57283dbe5a01, type: 2}
+  <PlayerSpawnPoint>k__BackingField: {x: 0, y: 9}

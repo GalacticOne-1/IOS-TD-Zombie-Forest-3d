@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: vehicle.transport.military_apc
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: f77946b4904eb4321b6e6989a69e2634, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Military APC
+    descriptionLid: "A heavily reinforced military armored personnel carrier for
+      late-game operations. \nIt accommodates a full squad of 6 survivors while providing
+      maximum cargo capacity, matching the Pickup Truck. \nThe ultimate vehicle for
+      dangerous missions, allowing to deploy their max squad without sacrificing
+      loot space."
+    order: 0
+    icon: {fileID: 21300000, guid: ed9438ae85b2a482d84eb48818b6c548, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 11400000, guid: c2079fe9fa72a4a0e9a8fb32d6957fd6, type: 2}
+  classification:
+    category: 30
+    economyCategory: 0
+    tier: 3
+    flag: 0
+    itemLabel: 2
+    rarity: 0
+    maxStack: 1
+    sortCategory: 0
+    sortPriority: 0
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags: []
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: 09352e5e6ed85400b880f48462bd11ed, type: 2}
+  baseModifiers: []
+  prefabName: vehicle_military_apc
+  prefabPath: Transport/
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 2903138462915887104
+  references:
+    version: 2
+    RefIds:
+    - rid: 2903138462915887104
+      type: {class: VehicleModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        cargoCapacity: 50
+        squadSlots: 6

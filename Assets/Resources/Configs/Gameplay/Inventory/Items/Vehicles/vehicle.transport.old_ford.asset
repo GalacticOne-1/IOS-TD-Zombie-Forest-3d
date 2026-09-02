@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: vehicle.transport.old_ford
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: 8ae1a31e6d2fc440d90eb5e2284c43fa, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Old Rusty Car
+    descriptionLid: "A worn-out civilian car with 4 passenger seats and a standard
+      cargo capacity. \nA reliable early-game vehicle that offers a balanced mix
+      of squad transport and loot hauling for everyday expeditions."
+    order: 0
+    icon: {fileID: 21300000, guid: ab2a222b644a84406876139a2bd4d66d, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 11400000, guid: c2079fe9fa72a4a0e9a8fb32d6957fd6, type: 2}
+  classification:
+    category: 30
+    economyCategory: 0
+    tier: 0
+    flag: 0
+    itemLabel: 2
+    rarity: 0
+    maxStack: 1
+    sortCategory: 0
+    sortPriority: 0
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags: []
+  isCraftable: 1
+  recipes: []
+  baseModifiers: []
+  prefabName: vehicle_old_car
+  prefabPath: Transport/
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 5200815938352185439
+  references:
+    version: 2
+    RefIds:
+    - rid: 5200815938352185439
+      type: {class: VehicleModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        cargoCapacity: 20
+        squadSlots: 4

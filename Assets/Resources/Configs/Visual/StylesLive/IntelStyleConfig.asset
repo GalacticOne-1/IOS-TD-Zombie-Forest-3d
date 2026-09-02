@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bcb47e85789471491e3be9bece90712, type: 3}
+  m_Name: IntelStyleConfig
+  m_EditorClassIdentifier: 
+  <ConfigId>k__BackingField: intel_style_config
+  <unknownIcon>k__BackingField: {fileID: -386571108, guid: ac1363787948d404d8abf86f67573aee, type: 3}
+  <noneIcon>k__BackingField: {fileID: 21300000, guid: db47cbf3376964cb19dcae1a994bc400, type: 3}
+  <threatLevel>k__BackingField:
+    activeIcon: {fileID: 21300000, guid: 7d0202680d2b341a391de011f2b95252, type: 3}
+    category: 
+  <enemyType>k__BackingField:
+    activeIcon: {fileID: -5280560661001562868, guid: a7b4506934acb4192a55ed7d2b7f6cd8, type: 3}
+    category: 
+  <hazardType>k__BackingField:
+    activeIcon: {fileID: 0}
+    category: 
+  <riskLevel>k__BackingField:
+    activeIcon: {fileID: 0}
+    category: 
+  resourcesVolume:
+  - type: 1
+    color: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
+    sprite: {fileID: 21300000, guid: 7a92ceabd9ccb4edda7db06e1d0dfa93, type: 3}
+  - type: 2
+    color: {r: 0.9176471, g: 0.28235295, b: 0.24705884, a: 1}
+    sprite: {fileID: 21300000, guid: 692b0be5082844fa58f72ff75f2c7862, type: 3}
+  - type: 3
+    color: {r: 1, g: 0.7411765, b: 0.34901962, a: 1}
+    sprite: {fileID: 21300000, guid: a1790250f76724ffc82b5f1ee7c799ed, type: 3}
+  - type: 4
+    color: {r: 1, g: 0.7411765, b: 0.34901962, a: 1}
+    sprite: {fileID: 21300000, guid: 3071f7e35af974b5a8895f9c73cebbb2, type: 3}
+  - type: 5
+    color: {r: 0.3137255, g: 0.68235296, b: 0.38431373, a: 1}
+    sprite: {fileID: 21300000, guid: 7c84f82a493244176b29d3a1f8387b98, type: 3}
+  - type: 6
+    color: {r: 0.3137255, g: 0.68235296, b: 0.38431373, a: 1}
+    sprite: {fileID: 21300000, guid: dc37f7deb4ef6463db34c9c8f87a5b9f, type: 3}
+  lootCategories:
+  - activeIcon: {fileID: 21300000, guid: 61f7eef99b1e6490ebe2dd83037600df, type: 3}
+    category: 64000000
+  - activeIcon: {fileID: 21300000, guid: 147520fd41eb94baa9a41fd1abb669da, type: 3}
+    category: 65000000
+  - activeIcon: {fileID: 21300000, guid: 960c822d8fa0f42319458e20aec4c610, type: 3}
+    category: 0000000001000000
+  - activeIcon: {fileID: 21300000, guid: 29efbb7a0751a4a98a33d15a77c872ba, type: 3}
+    category: 02000000
+  - activeIcon: {fileID: 21300000, guid: 25b0562fcf6c2475a92aa4c8da036cea, type: 3}
+    category: 03000000
+  - activeIcon: {fileID: 21300000, guid: 3201a637d781044499b1f4bd94af7afe, type: 3}
+    category: 0a000000
+  - activeIcon: {fileID: 21300000, guid: bb8f66bb487d745ea836747bad443498, type: 3}
+    category: 0b000000
+  - activeIcon: {fileID: 21300000, guid: af72bcabc3a764f94b090a8eee1b2e30, type: 3}
+    category: 0c000000
+  - activeIcon: {fileID: 21300000, guid: 36508ff6d73c440059dee7ba3bf28e65, type: 3}
+    category: 14000000
+  - activeIcon: {fileID: 21300000, guid: 5b3a932c39817475c97ca54b75ae8da7, type: 3}
+    category: 15000000
+  - activeIcon: {fileID: 21300000, guid: e1682b48a3d4e45a597a92bea89eeea2, type: 3}
+    category: 16000000
+  - activeIcon: {fileID: 21300000, guid: 62f389f83eec943aeb9b9e760428e514, type: 3}
+    category: 330000003400000035000000
+  - activeIcon: {fileID: 21300000, guid: a25ff4e6453964568843e611ae466b8b, type: 3}
+    category: 1e000000
+  - activeIcon: {fileID: 21300000, guid: c7051e49978dc48f0989ed8e97578cc3, type: 3}
+    category: 0e000000
+  - activeIcon: {fileID: 21300000, guid: bf10774cb519043fbba5b4a62c91d3e5, type: 3}
+    category: 0d000000
+  - activeIcon: {fileID: 21300000, guid: ac310198c65be48ababd1c116183528d, type: 3}
+    category: 19000000
+  - activeIcon: {fileID: 21300000, guid: 47b55b68af2e64e02a4696a987397533, type: 3}
+    category: 04000000
+  - activeIcon: {fileID: 21300000, guid: 79c0695ea55ba4df687bc3ea524667df, type: 3}
+    category: 18000000
+  - activeIcon: {fileID: 21300000, guid: d91d0e6e5a1484503a71b2a13faba1a7, type: 3}
+    category: 17000000
+  - activeIcon: {fileID: 21300000, guid: b96527bd4925e42fda7eb56e411f4d22, type: 3}
+    category: 32000000

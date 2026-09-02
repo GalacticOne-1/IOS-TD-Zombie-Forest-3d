@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713b42ba7fdb46b1a423efd67431fdca, type: 3}
+  m_Name: presentation_bloater
+  m_EditorClassIdentifier: 
+  BasePrefabId: Zombies/zombie_bloater_t1
+  BaseVisualId: Zombies/Visual/Bloater/Civil/civil_01
+  Animator: {fileID: 9100000, guid: 2b6b3d219490941f5ac16252a4591a9e, type: 2}
+  LocomotionSet: {fileID: 11400000, guid: be1f040afafe44dc59f6102f6fbc1636, type: 2}
+  AnimationVariants: {fileID: 11400000, guid: 3729015814ee14c5980303dcec1296e3, type: 2}
+  Avatar: {fileID: 0}
+  audioConfig: {fileID: 11400000, guid: 1f59fb97e8d794c7da1a9fb9013d8580, type: 2}
+  DeathVfx: {fileID: 0}
+  Themes:
+  - Theme: {fileID: 11400000, guid: 8a880e8f6f7794b638f2cf158016fd15, type: 2}
+    PrefabPrefix: Zombies/Visual/Bloater/Civil/civil_
+    VariantsCount: 1

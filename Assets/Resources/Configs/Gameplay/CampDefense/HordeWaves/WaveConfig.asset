@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8f871d394e4ece90c14fb23dc3af25, type: 3}
+  m_Name: WaveConfig
+  m_EditorClassIdentifier: 
+  Waves:
+  - WaveId: wave_01
+    CompletionMode: 1
+    DelayBeforeNextWave: 10
+    Instructions:
+    - Group: {fileID: 11400000, guid: 868e57549b3554ea691c1d5d65c2e008, type: 2}
+      SpawnPointId: {fileID: 11400000, guid: a14f2683b977e4b2ca7424399c3490c5, type: 2}
+      Delay: 0
+      Interval: 1
+      WaitPreviousInstruction: 0
+  - WaveId: wave_02
+    CompletionMode: 1
+    DelayBeforeNextWave: 10
+    Instructions:
+    - Group: {fileID: 11400000, guid: ba91e8b12db6d458c80efd94806bf048, type: 2}
+      SpawnPointId: {fileID: 11400000, guid: 6d1225cc76a664acf9f7e63c3e078e39, type: 2}
+      Delay: 0
+      Interval: 1
+      WaitPreviousInstruction: 0
+  - WaveId: wave_03
+    CompletionMode: 1
+    DelayBeforeNextWave: 10
+    Instructions:
+    - Group: {fileID: 11400000, guid: 28cb99ce1a4524f92884896de082885c, type: 2}
+      SpawnPointId: {fileID: 11400000, guid: db29110ab55b5487691295a45783dbca, type: 2}
+      Delay: 0
+      Interval: 1
+      WaitPreviousInstruction: 0
+  - WaveId: wave_04
+    CompletionMode: 1
+    DelayBeforeNextWave: 10
+    Instructions:
+    - Group: {fileID: 11400000, guid: e5931db084402426c9f7b129ad56089f, type: 2}
+      SpawnPointId: {fileID: 11400000, guid: dfb0364356e334956b16a543e451c173, type: 2}
+      Delay: 0
+      Interval: 1
+      WaitPreviousInstruction: 0
+  - WaveId: wave_01
+    CompletionMode: 1
+    DelayBeforeNextWave: 5
+    Instructions:
+    - Group: {fileID: 11400000, guid: 730a607bd4eda4c95a3f91c805e8b5cd, type: 2}
+      SpawnPointId: {fileID: 11400000, guid: 4e6218a016dad4824807404749ae9d97, type: 2}
+      Delay: 0
+      Interval: 1
+      WaitPreviousInstruction: 0

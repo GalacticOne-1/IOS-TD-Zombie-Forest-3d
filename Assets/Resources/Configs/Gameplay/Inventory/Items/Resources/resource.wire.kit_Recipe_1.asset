@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716483fa65ee4ee789440202871cf5a8, type: 3}
+  m_Name: resource.wire.kit_Recipe_1
+  m_EditorClassIdentifier: 
+  outputItem: {fileID: 11400000, guid: 628ed9f3ce63d4614902da6bb93ee8ac, type: 2}
+  outputCount: 3
+  requirement:
+  - Item: {fileID: 11400000, guid: 4dbf8d6ae0ad94802833f0a31221e0a4, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: fa740051e07b7430fab4639bfa27c7fe, type: 2}
+    Amount: 1
+  requiredStationItem: {fileID: 11400000, guid: 29e9bb6da7a95499aac263faf4cac1d0, type: 2}
+  requiredTier: 1
+  craftTime: 1
+  stackOrderLimit: 20
+  requiredPlayerLevel: 0
+  requiredTags: []

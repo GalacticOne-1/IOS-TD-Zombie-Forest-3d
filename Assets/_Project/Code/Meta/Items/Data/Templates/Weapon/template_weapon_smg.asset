@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c80b5b40b24275a6239725b07a785c, type: 3}
+  m_Name: template_weapon_smg
+  m_EditorClassIdentifier: 
+  templateId: item.template.weapon.smg
+  displayName: weapon.smg.
+  menuName: Weapon.SMG
+  previewConfig: {fileID: 0}
+  category: 10
+  economyCategory: 20
+  label: 2
+  rarity: 0
+  sortCategory: 3
+  maxStack: 1
+  buyPrice: 0
+  sellPrice: 0
+  weight: 0
+  volume: 0
+  modules:
+  - rid: 5200815429693472856
+  - rid: 5930763668418985988
+  - rid: 5930763743127142413
+  references:
+    version: 2
+    RefIds:
+    - rid: 5200815429693472856
+      type: {class: WeaponModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        settings:
+          slotType: 1
+          equipType: 2
+        equipRestrictions:
+          requiredLevel: 0
+          allowedUnits: 
+        baseStats: []
+        info:
+          weaponType: 7
+          weaponSystem: 1
+          ammoType: 1
+          isTwoHanded: 1
+          canBeModified: 0
+        definition: {fileID: 11400000, guid: 29d788bc42130453690dce4ba8163fd4, type: 2}
+    - rid: 5930763668418985988
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: fdbd36406db2548d38d345bdfd962bf5, type: 2}
+    - rid: 5930763743127142413
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        tier: 1
+        isStrategicResource: 0
+        dropTag: 0

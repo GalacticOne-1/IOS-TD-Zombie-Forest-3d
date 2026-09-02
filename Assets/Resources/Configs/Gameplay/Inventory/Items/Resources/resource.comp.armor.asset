@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: resource.comp.armor
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: f690016677a78459d8b09dac781239da, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Composite Armor
+    descriptionLid: 
+    order: 0
+    icon: {fileID: 21300000, guid: 34a3d680f9b14405d907c294b50fb177, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 0
+    economyCategory: 25
+    tier: 2
+    flag: 0
+    itemLabel: 1
+    rarity: 0
+    maxStack: 40
+    sortCategory: 0
+    sortPriority: 0
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags: []
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: 1241b67488da0482caad514d0b2b1280, type: 2}
+  baseModifiers: []
+  prefabName: 
+  prefabPath: 
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 5930763871608111237
+  - rid: 5930763871608111238
+  references:
+    version: 2
+    RefIds:
+    - rid: 5930763871608111237
+      type: {class: ResourceModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data: 
+    - rid: 5930763871608111238
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 0

@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: usable.first.aid
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: 0aa6444c65a684c3aa4920936095d540, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Military First Aid Kit
+    descriptionLid: Restores a large amount of health and stops bleeding, making
+      it ideal for combat recovery.
+    order: 0
+    icon: {fileID: 21300000, guid: 285013675a8ff42bb9d8ae5f5d1a9e4d, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 20
+    economyCategory: 30
+    tier: 2
+    flag: 0
+    itemLabel: 2
+    rarity: 1
+    maxStack: 10
+    sortCategory: 1
+    sortPriority: 5
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags:
+  - {fileID: 11400000, guid: c1caf52c2f5054bd9b416b63751fcd90, type: 2}
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: a6a065229317a4d87a94d4c0489147d9, type: 2}
+  baseModifiers: []
+  prefabName: 
+  prefabPath: 
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 5200815447593975898
+  - rid: 5200815447593975899
+  - rid: 5930763737138200677
+  references:
+    version: 2
+    RefIds:
+    - rid: 5200815447593975898
+      type: {class: UseModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        consumeOnUse: 1
+        effects: []
+        slotType: 10
+        behaviour:
+          rid: 6515183203126870100
+        range: 10
+    - rid: 5200815447593975899
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: df0e289d18f1d41f4ac61945e4398a9d, type: 2}
+    - rid: 5930763737138200677
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 6
+    - rid: 6515183203126870100
+      type: {class: HealBehaviour, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        audioDefinition: {fileID: 11400000, guid: b6ac6ebe9c3384138ad7945139fb6c48, type: 2}
+        supportsSmartTarget: 1
+        doubleTapWindow: 0.35
+        requiresCast: 1
+        castTime: 1.5
+        healAmount: 120
+        isInstant: 0
+        isHoT: 1
+        hotDuration: 4
+        hotTickInterval: 1
+        hotDivideAmount: 1
+        allowInCombat: 1
+        slowInCombat: 0
+        combatMultiplier: 0.5
+        coverBonus: 0
+        coverMultiplier: 1.25
+        cooldown: 2

@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bda2fe43889841da8623d5e2cd0435bd, type: 3}
+  m_Name: iap.multy.ammo
+  m_EditorClassIdentifier: 
+  <Use>k__BackingField: 1
+  <CardType>k__BackingField: 0
+  <Id>k__BackingField: {fileID: 11400000, guid: 2bae733f9e0ab49eeb105081f44692c4, type: 2}
+  <PrefabPath>k__BackingField: IAP/IAP Offer View_ MId multy
+  <CardVariant>k__BackingField: 0
+  <Header>k__BackingField:
+    TitleLid: Ammo Pack
+    DescriptionLid: All ammo types for loadouts.
+    Order: 10
+    Icon: {fileID: 1194004978328193750, guid: 8328bd6cd1d4649ab9ffaa7de3d4b2d2, type: 3}
+    SizeUI: 0
+    IconOffset: {x: 0, y: 0}
+  <Category>k__BackingField: 8
+  <ViewType>k__BackingField: 5
+  <UseIAP>k__BackingField: 1
+  <ProductId>k__BackingField: 
+  <ProductType>k__BackingField: 0
+  <OneTimePurchase>k__BackingField: 0
+  <MainOption>k__BackingField:
+    purchaseLimit: 5
+    limited: 0
+    price: 0
+    discount: 0
+    hot: 0
+    sale:
+      active: 0
+      onlyPercentLabel: 0
+      percent: 60
+    bonus:
+      active: 0
+      multiplier: 0
+  <DisableAd>k__BackingField: 1
+  <RewardType>k__BackingField: 0
+  <RewardSingle>k__BackingField:
+    rewardValue: 0
+  <RewardItems>k__BackingField: []
+  <LinkedItems>k__BackingField:
+  - {fileID: 11400000, guid: ca634659272244d8c84b022149f4262e, type: 2}
+  - {fileID: 11400000, guid: e4e5e8033845d42dfa91dade861b232c, type: 2}
+  - {fileID: 11400000, guid: a7ab5d5bcac064acdb9b88dd85adb78f, type: 2}
+  - {fileID: 11400000, guid: bd501da9e0a2b4f82b5bc4e50f02cbef, type: 2}

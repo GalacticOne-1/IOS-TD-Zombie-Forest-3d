@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b34730399c84368807bb8c25a6eb1a8, type: 3}
+  m_Name: enemy_infected_bloater_t1
+  m_EditorClassIdentifier: 
+  Id: {fileID: 11400000, guid: 9572a9054abc34262b1fe5f1bcd6ac53, type: 2}
+  DisplayName: Floater Bloater
+  Description: Disruption tank.
+  Presentation: {fileID: 11400000, guid: 3eab11d55f6844914adfede818a1ad88, type: 2}
+  Stats: {fileID: 11400000, guid: db50591a065c14648a7a03c63932ae69, type: 2}
+  Combat: {fileID: 11400000, guid: a7173adf954f548ba9110b42df4d88db, type: 2}
+  AI: {fileID: 11400000, guid: d978902aa97d7498e87627989cee37da, type: 2}
+  Movement: {fileID: 11400000, guid: 562f6268283254dd08af2568cb554b66, type: 2}
+  Targeting: {fileID: 11400000, guid: a4698da0602f043c08f851e81708dbee, type: 2}
+  Perception: {fileID: 11400000, guid: fd6c64c92b50a42be911991a086ba335, type: 2}
+  Pack: {fileID: 11400000, guid: 54a172b6d62f74cffa4a36856cf79359, type: 2}

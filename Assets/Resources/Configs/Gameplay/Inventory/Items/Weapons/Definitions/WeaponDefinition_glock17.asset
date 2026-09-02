@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ac72406c93404fbb17fc90de08bf90, type: 3}
+  m_Name: WeaponDefinition_glock17
+  m_EditorClassIdentifier: 
+  weaponType: 1
+  fireMode: 0
+  fireType: 1
+  ammoType: 1
+  supportedAmmo: {fileID: 11400000, guid: e5f6654603dfd4ad3ab53c99078737c6, type: 2}
+  audio: {fileID: 11400000, guid: 2506842e4604d4b418b0249c8870a072, type: 2}
+  damage: 22
+  projectilesPerShot: 1
+  damageVariance: 0.1
+  range: 18
+  armorPiercing: 8
+  roundsPerMinute: 320
+  burstCount: 3
+  burstPauseSec: 0.4
+  magazineSize: 17
+  reloadTimeSec: 1.3
+  hasHeat: 0
+  heatPerShot: 8
+  heatCoolRate: 20
+  overheatThreshold: 100
+  cooldownSec: 3
+  hasSuppression: 0
+  suppressionAngle: 60
+  suppressionRange: 15
+  baseSpreadDeg: 3.1
+  movingSpreadMul: 1.7
+  stressSpreadMul: 1.3
+  minDamageMultiplierAtMaxRange: 0.6
+  tracerEveryNthShot: 2
+  tracerPelletFraction: 1

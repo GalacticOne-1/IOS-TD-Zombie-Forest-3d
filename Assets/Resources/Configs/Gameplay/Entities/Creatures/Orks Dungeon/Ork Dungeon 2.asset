@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fe29bc1ac94924af6dbb5cc2c865a9, type: 3}
+  m_Name: Ork Dungeon 2
+  m_EditorClassIdentifier: 
+  name: Fast Biter
+  description: Seek and slowly.
+  sprite: {fileID: 3465286685962602723, guid: 7abbf7ccff24240dd807fee8dc941675, type: 3}
+  prefab: {fileID: 7071873720091452625, guid: 2873ba9b1445346a296d3571161e8e78, type: 3}
+  difficult: 0
+  type: 1
+  amountPool: 30
+  addInWave: 1
+  visualVariantId: 0
+  rewardBasic: 1
+  rewardGold: 1
+  requiredGoldReward: 0
+  expDefault: 80
+  hpDefault: 80
+  speed: 4
+  upgrade:
+    addSumm: 1
+    damage: 1
+    hp: 0.4
+    hp_extra: 0
+  weapon:
+    variantAttack: 0
+    typeTarget: 1
+    status: 1
+    rangeDetect: 14
+    rangeAttack: 1
+    accuracy: 0
+    recoil: 0
+    fireRate: 0
+    reload: 1
+    ammo: 1
+    damage: 6
+    damagePerSec: 0
+    manualMode: 0
+    piercing: 50
+    shred: 0
+    aoeDamage: 0
+    aoeRange: 0
+    critHitChance: 0
+    critHitPercent: 0
+    hitForce: 0
+    countTargets: 0
+  spawnY: 0

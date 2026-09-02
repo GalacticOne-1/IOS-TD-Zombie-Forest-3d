@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d96c7336248421284abe183a49fde7c, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  <General>k__BackingField:
+    requiresDeviceSetup: 1
+    review: 1
+    tutorial: 1
+    alwaysShowPayOffer: 1
+  <Ios>k__BackingField:
+    requiresATT: 1
+  <Ad>k__BackingField:
+    dailyLimit: 8
+    interDelayTimer: 30
+    interRequiresGames: 3
+  _gameplay:
+    NEW_GAME:
+      soft: 600
+      hard: 0
+    REWARD_GAME_LOOP:
+      multiplier: 1
+    IAP_SHOP:
+      freeMoney: 100
+    AD_SHOP:
+      shopLimit: 3
+      hard: 50
+      soft: 22100
+      runesLevelUp: 12730
+      runesAscension: 9
+      scrollHero: 40

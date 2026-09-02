@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4657b644f044a3a447887a5201540d, type: 3}
+  m_Name: LootTable_MedicalStorage
+  m_EditorClassIdentifier: 
+  _id: {fileID: 11400000, guid: 395ae5907e2724202be5d412723f41bf, type: 2}
+  _guaranteedEntries: []
+  _slots:
+  - SlotId: med_primary
+    SharedPool: {fileID: 11400000, guid: 85c8402931f8440ddbb8a965478396f6, type: 2}
+    RepeatCount: 3
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 1
+    MaxTier: 2

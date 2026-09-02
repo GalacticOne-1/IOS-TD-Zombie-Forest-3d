@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: usable.grenade.f1
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: 77e5210df152548c5b88cd4502b0f270, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: F-1 Grenade
+    descriptionLid: A lethal fragmentation grenade that deals heavy area damage to
+      groups of enemies.
+    order: 0
+    icon: {fileID: 21300000, guid: e2a24fcead50241bb9e5cfb06e9c87cf, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 20
+    economyCategory: 53
+    tier: 2
+    flag: 0
+    itemLabel: 2
+    rarity: 1
+    maxStack: 5
+    sortCategory: 1
+    sortPriority: 10
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags:
+  - {fileID: 11400000, guid: 80292b8689c6b4d73bc2f4370c887586, type: 2}
+  isCraftable: 0
+  recipes: []
+  baseModifiers: []
+  prefabName: f1_grenade
+  prefabPath: Equipments/
+  objectPoolParam:
+    InitialSize: 5
+    MaxSize: 5
+    Duration: 0
+  modules:
+  - rid: 6515183227451474010
+  - rid: 5930763668308623444
+  - rid: 5930763737138200678
+  references:
+    version: 2
+    RefIds:
+    - rid: 5930763668308623444
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: fdbd36406db2548d38d345bdfd962bf5, type: 2}
+    - rid: 5930763737138200678
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 12
+    - rid: 6515183227451474010
+      type: {class: UseModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        consumeOnUse: 0
+        effects: []
+        slotType: 10
+        behaviour:
+          rid: 6515183227451474012
+        range: 17
+    - rid: 6515183227451474012
+      type: {class: GrenadeBehaviour, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        audioConfig: {fileID: 11400000, guid: 3733f7089c9004fe78e91dc3434652a0, type: 2}
+        throwSpeed: 1
+        throwHeight: 3
+        detonationMode: 2
+        detonationDelay: 0
+        explosionRadius: 2.5
+        outerExplosionRadius: 5
+        damage: 180
+        bigRadiusDamagePercent: 0.4
+        damageFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.92019343
+            value: 0.9952202
+            inSlope: -2.4609761
+            outSlope: -2.4609761
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.1635912
+          - serializedVersion: 3
+            time: 1.002594
+            value: 0
+            inSlope: -17.01993
+            outSlope: -17.01993
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.06927329
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        _zoneType: 0
+        _zoneConfig: {fileID: 0}
+        vfxId: {fileID: 11400000, guid: f2c8e6c241a2449998bed2231afc378f, type: 2}

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4657b644f044a3a447887a5201540d, type: 3}
+  m_Name: LootTable_MetalCrate
+  m_EditorClassIdentifier: 
+  _id: {fileID: 11400000, guid: a5508f282a02c4d78b899d4fc651d9d6, type: 2}
+  _guaranteedEntries:
+  - _item: {fileID: 11400000, guid: bbef5db427aff47f09932afea46c6b06, type: 2}
+    _minAmount: 8
+    _maxAmount: 20
+    _durabilityPercent: 0
+  _slots:
+  - SlotId: industrial_primary
+    SharedPool: {fileID: 11400000, guid: b8f6baed938884fdfa26a569d89686ce, type: 2}
+    RepeatCount: 3
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 1
+    MaxTier: 2
+  - SlotId: industrial_rare
+    SharedPool: {fileID: 11400000, guid: d911845bf197542e4b447f91329c35d9, type: 2}
+    RepeatCount: 1
+    IsGuaranteed: 0
+    ActivationChance: 0.2
+    MinTier: 2
+    MaxTier: 3

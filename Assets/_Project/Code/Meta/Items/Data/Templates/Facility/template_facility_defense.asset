@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c80b5b40b24275a6239725b07a785c, type: 3}
+  m_Name: template_facility_defense
+  m_EditorClassIdentifier: 
+  templateId: item.template.facility.defense
+  displayName: facility.defense.
+  menuName: Facility.Defense
+  previewConfig: {fileID: 0}
+  category: 43
+  economyCategory: 0
+  label: 0
+  rarity: 0
+  sortCategory: 0
+  maxStack: 1
+  buyPrice: 0
+  sellPrice: 0
+  weight: 0
+  volume: 0
+  modules:
+  - rid: 4802526131553828949
+  - rid: 4802526131553828950
+  references:
+    version: 2
+    RefIds:
+    - rid: 4802526131553828949
+      type: {class: DefenseFacilityModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        facilityType: 10
+        footprint:
+          width: 1
+          height: 1
+          autoBuild: 1
+          allowRotation: 1
+          allowOverlap: 0
+          checkOccupancy: 1
+        buildLimit: 100
+        upgradeLevels: []
+    - rid: 4802526131553828950
+      type: {class: BuildingHealthModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        settings:
+          maxHealth: 0
+          armor: 0
+          resistances:
+            fireResistance: 0
+            explosiveResistance: 0
+          canRepair: 0
+          repairSpeed: 0
+          leaveRuins: 0
+          collapseDelay: 0

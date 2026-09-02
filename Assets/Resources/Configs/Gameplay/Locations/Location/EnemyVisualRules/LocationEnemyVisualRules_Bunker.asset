@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0b201bc619948aca7ee93bd6dd28f0f, type: 3}
+  m_Name: LocationEnemyVisualRules_Bunker
+  m_EditorClassIdentifier: 
+  _themeWeights:
+  - Theme: {fileID: 11400000, guid: 35fe848c7bf044a2fb210ec42f022471, type: 2}
+    Weight: 70
+  - Theme: {fileID: 11400000, guid: 1fa44f8aeb31846fe8d3940e26dbfa92, type: 2}
+    Weight: 30

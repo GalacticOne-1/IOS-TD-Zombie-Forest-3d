@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Construction_GridURP
+  m_Shader: {fileID: 4800000, guid: 9458d293945240459541c25c0b5e2c37, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BlockedMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CellSize: 2
+    - _CornerSize: 0.07
+    - _CornerWidth: 0.015
+    - _GridSize: 1
+    - _GridVisible: 0
+    - _LineWidth: 0
+    - _MajorLineWidth: 0
+    - _MajorStep: 0
+    m_Colors:
+    - _BaseColor: {r: 0.010679956, g: 0.104557015, b: 0.1509434, a: 0.59607846}
+    - _BlockedColor: {r: 0, g: 0, b: 0, a: 0.41960785}
+    - _CornerColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FootprintColor: {r: 0.06666667, g: 1, b: 0, a: 0.5803922}
+    - _FootprintMax: {r: -9999, g: -9999, b: 0, a: 0}
+    - _FootprintMin: {r: -9999, g: -9999, b: 0, a: 0}
+    - _GridOffset: {r: -71, g: -30, b: 0, a: 0}
+    - _HoverCell: {r: -9999, g: -9999, b: 0, a: 0}
+    - _HoverColor: {r: 1, g: 1, b: 0, a: 0.4}
+    - _LineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MajorColor: {r: 0.46342114, g: 0.67260146, b: 0.7735849, a: 0}
+    - _MajorLineColor: {r: 0, g: 1, b: 0, a: 1}
+    - _OriginColor: {r: 0.06666667, g: 1, b: 0, a: 0.5803922}
+    - _OriginMax: {r: -9999, g: -9999, b: 0, a: 0}
+    - _OriginMin: {r: -9999, g: -9999, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

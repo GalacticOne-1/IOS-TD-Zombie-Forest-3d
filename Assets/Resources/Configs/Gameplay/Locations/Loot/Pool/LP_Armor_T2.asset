@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a61e12a38c4747a050b3f5b19d6836, type: 3}
+  m_Name: LP_Armor_T2
+  m_EditorClassIdentifier: 
+  _pool:
+  - Item: {fileID: 11400000, guid: 7c5f84db2ca67481788f15b9bff9ec56, type: 2}
+    Weight: 100
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 60
+    MaxDurabilityPercent: 90
+  - Item: {fileID: 11400000, guid: c538483ad7e5d4403ab882bb2416f2b6, type: 2}
+    Weight: 80
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 60
+    MaxDurabilityPercent: 90
+  - Item: {fileID: 11400000, guid: b51a13749d0af4cab8ce7cff00c25ae7, type: 2}
+    Weight: 60
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 60
+    MaxDurabilityPercent: 90

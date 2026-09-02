@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bda2fe43889841da8623d5e2cd0435bd, type: 3}
+  m_Name: iap.multy.weapon_1
+  m_EditorClassIdentifier: 
+  <Use>k__BackingField: 1
+  <CardType>k__BackingField: 0
+  <Id>k__BackingField: {fileID: 11400000, guid: ed36f00de8e0947efa93d6a3170e5896, type: 2}
+  <PrefabPath>k__BackingField: IAP/IAP Offer View_ MId multy
+  <CardVariant>k__BackingField: 0
+  <Header>k__BackingField:
+    TitleLid: Light Weapon Pack
+    DescriptionLid: Reliable firearms for everyday survival and close-range combat.
+    Order: 10
+    Icon: {fileID: 1194004978328193750, guid: 8328bd6cd1d4649ab9ffaa7de3d4b2d2, type: 3}
+    SizeUI: 0
+    IconOffset: {x: 0, y: 0}
+  <Category>k__BackingField: 6
+  <ViewType>k__BackingField: 5
+  <UseIAP>k__BackingField: 1
+  <ProductId>k__BackingField: 
+  <ProductType>k__BackingField: 0
+  <OneTimePurchase>k__BackingField: 0
+  <MainOption>k__BackingField:
+    purchaseLimit: 5
+    limited: 0
+    price: 0
+    discount: 0
+    hot: 0
+    sale:
+      active: 0
+      onlyPercentLabel: 0
+      percent: 60
+    bonus:
+      active: 0
+      multiplier: 0
+  <DisableAd>k__BackingField: 1
+  <RewardType>k__BackingField: 0
+  <RewardSingle>k__BackingField:
+    rewardValue: 0
+  <RewardItems>k__BackingField: []
+  <LinkedItems>k__BackingField:
+  - {fileID: 11400000, guid: bcb20ebac346c475f94c0e482ec9f9ee, type: 2}
+  - {fileID: 11400000, guid: 4e52c8f271a8b478a9ad3effed2a66d0, type: 2}
+  - {fileID: 11400000, guid: 4db2bf53630a245c9907833769e49e1b, type: 2}

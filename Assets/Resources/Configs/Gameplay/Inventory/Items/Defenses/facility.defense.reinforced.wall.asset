@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: facility.defense.reinforced.wall
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: be6345aeaa71546539a354b4a69e0ccc, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Reinforced Wall
+    descriptionLid: 
+    order: 0
+    icon: {fileID: 21300000, guid: fdb8fb527c23f46e9b8dcbea9bb90849, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 43
+    economyCategory: 0
+    tier: 0
+    flag: 0
+    itemLabel: 0
+    rarity: 0
+    maxStack: 1
+    sortCategory: 0
+    sortPriority: 0
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags: []
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: 3fc20dd1a24584ca7831b9251b00cc2c, type: 2}
+  baseModifiers: []
+  prefabName: reinforced_wall
+  prefabPath: Defense/
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 4802526131553828966
+  - rid: 4802526131553828967
+  references:
+    version: 2
+    RefIds:
+    - rid: 4802526131553828966
+      type: {class: DefenseFacilityModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        facilityType: 10
+        footprint:
+          width: 1
+          height: 1
+          autoBuild: 1
+          allowRotation: 1
+          allowOverlap: 0
+          checkOccupancy: 1
+        buildLimit: 100
+        upgradeLevels: []
+        allowedZoneTags: 0a000000
+        allowedZonesOnly: 1
+    - rid: 4802526131553828967
+      type: {class: BuildingHealthModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        settings:
+          maxHealth: 900
+          armor: 0
+          resistances:
+            fireResistance: 0
+            explosiveResistance: 0
+          canRepair: 0
+          repairSpeed: 0
+          leaveRuins: 0
+          collapseDelay: 0

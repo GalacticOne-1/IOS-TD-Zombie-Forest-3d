@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2724b4d7e4a9494f863e3b62d2c623d5, type: 3}
+  m_Name: CameraConfig_Camp
+  m_EditorClassIdentifier: 
+  <UseCameraBounds>k__BackingField: 1
+  <MoveSpeed>k__BackingField: 10
+  <DragSpeed>k__BackingField: 0.25
+  <DragResponsiveness>k__BackingField: 18
+  <FocusOffsetZ>k__BackingField: 0
+  <FocusDuration>k__BackingField: 0.2
+  <FacilityFocusViewportOffsetY>k__BackingField: 0.15
+  <ConstructionModeFocusViewportOffsetY>k__BackingField: -0.15
+  <InertiaDamping>k__BackingField: 8
+  <MinInertiaSpeed>k__BackingField: 0.05
+  <ZoomSpeed>k__BackingField: 5
+  <ZoomSmoothTime>k__BackingField: 0.15
+  <PinchZoomSpeed>k__BackingField: 0.02
+  <MinZoom>k__BackingField: 3
+  <MaxZoom>k__BackingField: 10
+  <ConstructionMaxZoom>k__BackingField: 20
+  <DefaultTilt>k__BackingField: 45
+  <ConstructionTilt>k__BackingField: 60
+  <TiltSmooth>k__BackingField: 0.25
+  <DragButton>k__BackingField: 323
+  <InvertDrag>k__BackingField: 0

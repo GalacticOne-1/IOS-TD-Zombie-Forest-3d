@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c80b5b40b24275a6239725b07a785c, type: 3}
+  m_Name: template_usable_consumable
+  m_EditorClassIdentifier: 
+  templateId: item.template.usable.consumable
+  displayName: usable.consumable.
+  menuName: Usable.Consumable
+  previewConfig: {fileID: 0}
+  category: 20
+  label: 0
+  rarity: 0
+  sortCategory: 3
+  maxStack: 1
+  buyPrice: 0
+  sellPrice: 0
+  weight: 0
+  volume: 0
+  modules:
+  - rid: 6515183227451474009
+  - rid: 5930763668418985989
+  - rid: 5930763743127142410
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 5930763668418985989
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: df0e289d18f1d41f4ac61945e4398a9d, type: 2}
+    - rid: 5930763743127142410
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        value: 1
+        tier: 1
+        dropTag: 0
+    - rid: 6515183227451474009
+      type: {class: UseModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        consumeOnUse: 1
+        effects: []
+        slotType: 10
+        behaviour:
+          rid: -2
+        range: 10

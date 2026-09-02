@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a61e12a38c4747a050b3f5b19d6836, type: 3}
+  m_Name: LP_Scrap
+  m_EditorClassIdentifier: 
+  _pool:
+  - Item: {fileID: 11400000, guid: bbef5db427aff47f09932afea46c6b06, type: 2}
+    Weight: 20
+    MinAmount: 15
+    MaxAmount: 40
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: fa740051e07b7430fab4639bfa27c7fe, type: 2}
+    Weight: 70
+    MinAmount: 4
+    MaxAmount: 10
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: 27c1bc635c51f4293b3960704f43ff4c, type: 2}
+    Weight: 40
+    MinAmount: 3
+    MaxAmount: 8
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0

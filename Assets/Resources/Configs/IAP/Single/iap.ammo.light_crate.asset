@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bda2fe43889841da8623d5e2cd0435bd, type: 3}
+  m_Name: iap.ammo.light_crate
+  m_EditorClassIdentifier: 
+  <Use>k__BackingField: 0
+  <CardType>k__BackingField: 0
+  <Id>k__BackingField: {fileID: 11400000, guid: c7ff7575a1e1f44f084154ea8ae5287a, type: 2}
+  <PrefabPath>k__BackingField: IAP/IAP Offer View_ MId single
+  <CardVariant>k__BackingField: 0
+  <Header>k__BackingField:
+    TitleLid: Light Ammo Crate
+    DescriptionLid: Restock light ammunition for pistols and SMGs.
+    Order: 0
+    Icon: {fileID: 21300000, guid: b96527bd4925e42fda7eb56e411f4d22, type: 3}
+    SizeUI: 0
+    IconOffset: {x: 0, y: 0}
+  <Category>k__BackingField: 0
+  <ViewType>k__BackingField: 0
+  <UseIAP>k__BackingField: 1
+  <ProductId>k__BackingField: ammo.light_crate
+  <ProductType>k__BackingField: 0
+  <OneTimePurchase>k__BackingField: 0
+  <MainOption>k__BackingField:
+    purchaseLimit: 0
+    limited: 0
+    hot: 1
+    sale:
+      active: 0
+      onlyPercentLabel: 0
+      percent: 0
+    bonus:
+      active: 0
+      multiplier: 0
+  <DisableAd>k__BackingField: 1
+  <RewardType>k__BackingField: 5
+  <RewardSingle>k__BackingField:
+    rewardValue: 0
+  <RewardItems>k__BackingField:
+  - itemId: {fileID: 11400000, guid: 044c6e483e87041db98cd16f3a4f4da6, type: 2}
+    count: 500
+    oldCount: 0
+  <LinkedItems>k__BackingField: []

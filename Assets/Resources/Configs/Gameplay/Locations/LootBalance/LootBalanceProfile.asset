@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8708a407571e43fdbb6ba7830638df4a, type: 3}
+  m_Name: LootBalanceProfile
+  m_EditorClassIdentifier: 
+  _tierCaps:
+  - Tier: 1
+    MaxPerOpen: 999
+    DesignNote: 
+  - Tier: 2
+    MaxPerOpen: 999
+    DesignNote: 
+  - Tier: 3
+    MaxPerOpen: 3
+    DesignNote: 
+  _tagCaps:
+  - Tag: 11
+    MaxPerOpen: 1
+    DesignNote: 
+  - Tag: 12
+    MaxPerOpen: 1
+    DesignNote: 
+  - Tag: 6
+    MaxPerOpen: 3
+    DesignNote: 
+  _stackCaps:
+  - Tag: 10
+    MaxStack: 30
+    DesignNote: 
+  - Tag: 5
+    MaxStack: 20
+    DesignNote: 
+  - Tag: 6
+    MaxStack: 5
+    DesignNote: 
+  - Tag: 7
+    MaxStack: 20
+    DesignNote: 
+  _strategicRules:
+  - itemId: {fileID: 11400000, guid: cde5be47ccf1d4a6ba34c7847228f06e, type: 2}
+    _maxPerRaid: 6
+    _designNote: 
+  - itemId: {fileID: 11400000, guid: 0f75d288c1209465cb5820ce8de91606, type: 2}
+    _maxPerRaid: 80
+    _designNote: 
+  - itemId: {fileID: 11400000, guid: 875ea44ba699441e694fa86a2924aa26, type: 2}
+    _maxPerRaid: 120
+    _designNote: 
+  - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+    _maxPerRaid: 120
+    _designNote: 
+  - itemId: {fileID: 11400000, guid: 47423cdc35f1e4358bae88f8bef37b0f, type: 2}
+    _maxPerRaid: 40
+    _designNote: 

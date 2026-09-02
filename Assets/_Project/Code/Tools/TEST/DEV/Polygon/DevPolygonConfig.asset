@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cef61952d8e477095a77db0c61d3efb, type: 3}
+  m_Name: DevPolygonConfig
+  m_EditorClassIdentifier: 
+  startCoord: {x: 20, y: 0, z: 8}
+  devList:
+  - prefab: {fileID: 684638608984954378, guid: 661c4b0838ac04075bb25c79caee9e00, type: 3}
+  - prefab: {fileID: 684638608984954378, guid: 661c4b0838ac04075bb25c79caee9e00, type: 3}
+  - prefab: {fileID: 684638608984954378, guid: 661c4b0838ac04075bb25c79caee9e00, type: 3}
+  realEnemy: 1
+  realList:
+  - configId: {fileID: 11400000, guid: 0f373a0fe74f94ff480fc45efc99adba, type: 2}

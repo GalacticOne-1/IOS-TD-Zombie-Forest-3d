@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a61e12a38c4747a050b3f5b19d6836, type: 3}
+  m_Name: LP_Weapon_T1
+  m_EditorClassIdentifier: 
+  _pool:
+  - Item: {fileID: 11400000, guid: 170c56d0710ba4b8a9943766e97ca1f1, type: 2}
+    Weight: 100
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 40
+    MaxDurabilityPercent: 80
+  - Item: {fileID: 11400000, guid: f1f311f5c782847d8bd12618a4193f6d, type: 2}
+    Weight: 80
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 40
+    MaxDurabilityPercent: 80
+  - Item: {fileID: 11400000, guid: bd6cf1c24eee844fd914a322318c164d, type: 2}
+    Weight: 60
+    MinAmount: 1
+    MaxAmount: 1
+    MinDurabilityPercent: 40
+    MaxDurabilityPercent: 80

@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: weapon.sniper.rifle.mk14ebr
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: c9e3c4b14b1fd4f2f98f276b68ab48cd, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: '[Mil-Spec] Mk14 EBR'
+    descriptionLid: A powerful designated marksman rifle combining heavy damage with
+      excellent precision and range.
+    order: 0
+    icon: {fileID: 21300000, guid: 9c168723a9786420aa4a7cbce85322b1, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 10
+    economyCategory: 51
+    tier: 2
+    flag: 0
+    itemLabel: 2
+    rarity: 2
+    maxStack: 1
+    sortCategory: 3
+    sortPriority: 25
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 1
+    maxDurability: 340
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags:
+  - {fileID: 11400000, guid: 7749ecf7227c64d3e81a14ce4c077f14, type: 2}
+  isCraftable: 0
+  recipes: []
+  baseModifiers: []
+  prefabName: weapon_sniper_rifle_m14_ebr
+  prefabPath: Weapon/Military/
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 5930764030140743713
+  - rid: 5930764030140743714
+  - rid: 5930764030140743715
+  references:
+    version: 2
+    RefIds:
+    - rid: 5930764030140743713
+      type: {class: WeaponModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        settings:
+          slotType: 1
+          equipType: 2
+        equipRestrictions:
+          requiredLevel: 0
+          allowedUnits: 
+        baseStats: []
+        info:
+          weaponType: 4
+          weaponSystem: 1
+          ammoType: 1
+          isTwoHanded: 1
+          canBeModified: 0
+        definition: {fileID: 11400000, guid: c98ff7cfbd00840d7a8491a1c769ce93, type: 2}
+    - rid: 5930764030140743714
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: fdbd36406db2548d38d345bdfd962bf5, type: 2}
+    - rid: 5930764030140743715
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 12

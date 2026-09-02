@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716483fa65ee4ee789440202871cf5a8, type: 3}
+  m_Name: ammo.bullet.heavy.rifle_Recipe_1
+  m_EditorClassIdentifier: 
+  outputItem: {fileID: 11400000, guid: 42239969d9fbb42bfb3af26205d44f5f, type: 2}
+  outputCount: 30
+  requirement:
+  - Item: {fileID: 11400000, guid: 6bf48663564b7466b8b537cfc248ddd5, type: 2}
+    Amount: 3
+  - Item: {fileID: 11400000, guid: 7d790d1e97e0c43d5abee2eddcd412d3, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: 87b611b740a434461ae8c001511b607f, type: 2}
+    Amount: 1
+  requiredStationItem: {fileID: 11400000, guid: f3eaf1f3d25b441e88284017772148fa, type: 2}
+  requiredTier: 1
+  craftTime: 2
+  stackOrderLimit: 10
+  requiredPlayerLevel: 0
+  requiredTags: []

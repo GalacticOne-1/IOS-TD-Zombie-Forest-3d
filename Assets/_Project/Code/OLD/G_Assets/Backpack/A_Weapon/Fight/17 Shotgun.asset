@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f449f6bc3e2b490f958d64aa65f00c79, type: 3}
+  m_Name: 17 Shotgun
+  m_EditorClassIdentifier: 
+  <Use>k__BackingField: 0
+  <ConfigId>k__BackingField: 17_shotgun
+  <PrefabPath>k__BackingField: 
+  <Header>k__BackingField:
+    TitleLid: 
+    DescriptionLid: 
+    Order: 0
+    Icon: {fileID: 0}
+    SizeUI: 0
+    IconOffset: {x: 0, y: 0}
+  <Levels>k__BackingField: []
+  attributes: []
+  filtr: 1
+  availableSlot: 01000000020000000800000009000000
+  stackable: 0
+  levelRequired: 71
+  rare: 2
+  sortingTypeOrder: 10
+  sortingOrder: 28
+  sorting: 4
+  timeProduction: 0
+  requireFuel: 0
+  requireItem1:
+    craftedOutput: 1
+    inputItem:
+    - amount: 10
+      item: 43
+      useEquipment: 0
+      equipment: 0
+    - amount: 5
+      item: 1
+      useEquipment: 0
+      equipment: 0
+    - amount: 20
+      item: 15
+      useEquipment: 0
+      equipment: 0
+    - amount: 2
+      item: 71
+      useEquipment: 0
+      equipment: 0
+    - amount: 3
+      item: 23
+      useEquipment: 0
+      equipment: 0
+  requireItem2:
+    craftedOutput: 0
+    inputItem: []
+  requireItem3:
+    craftedOutput: 0
+    inputItem: []
+  requireItem4:
+    craftedOutput: 0
+    inputItem: []
+  assetKey: 34
+  durability: 40
+  skinSprite:
+    main: {fileID: 0}
+    arms: []
+    legs: []
+  equipmentType: 8
+  weaponDefault:
+    variantAttack: 0
+    typeTarget: 0
+    status: 2
+    rangeDetect: 5
+    rangeAttack: 5
+    accuracy: 65
+    recoil: 0.1
+    fireRate: 0.8
+    reload: 0.8
+    ammo: 6
+    damage: 70
+    damagePerSec: 0
+    manualMode: 1
+    piercing: 0
+    shred: 0
+    aoeDamage: 0
+    aoeRange: 0
+    critHitChance: 5
+    critHitPercent: 150
+    hitForce: 150
+    countTargets: 0

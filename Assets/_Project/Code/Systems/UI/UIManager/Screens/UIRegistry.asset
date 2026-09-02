@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e441da0eb4734b2b808ac643cd6c29d6, type: 3}
+  m_Name: UIRegistry
+  m_EditorClassIdentifier: 
+  entries:
+  - id: 1
+    path: Prefabs/UI/Root/SettingsScreen
+  - id: 2
+    path: Prefabs/UI/System/ReviewScreen
+  - id: 4
+    path: Prefabs/UI/IAP/RewardScreen
+  - id: 5
+    path: Prefabs/UI/IAP/GameStoreScreen
+  - id: 6
+    path: Prefabs/UI/IAP/GameStoreOfferSliderScreen
+  - id: 20
+    path: Prefabs/UI/Gameplay/Inventory/InventoryScreen
+  - id: 101
+    path: Prefabs/UI/Gameplay/DeathScreen
+  - id: 23
+    path: Prefabs/UI/Gameplay/Facilities/ConstructionScreen
+  - id: 24
+    path: Prefabs/UI/Gameplay/Facilities/FacilityScreen
+  - id: 28
+    path: Prefabs/UI/Gameplay/Facilities/FacilitiesListScreen
+  - id: 29
+    path: Prefabs/UI/Gameplay/ManagementScreen
+  - id: 100
+    path: Prefabs/UI/Gameplay/HUD/HUDInput
+  - id: 102
+    path: Prefabs/UI/Gameplay/HUD/HUDCamp
+  - id: 104
+    path: Prefabs/UI/Gameplay/HUD/HUDLocation
+  - id: 103
+    path: Prefabs/UI/Gameplay/HUD/HUDMap
+  - id: 25
+    path: Prefabs/UI/Gameplay/WorldMap/LocationOverviewScreen
+  - id: 26
+    path: Prefabs/UI/Gameplay/WorldMap/RaidReportScreen
+  - id: 30
+    path: Prefabs/UI/Gameplay/Camp/CampDefenseReportScreen
+  - id: 31
+    path: Prefabs/UI/Gameplay/WorldMap/CampDefenseMapReportScreen

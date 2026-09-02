@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30be31d1e0764eec8f851ed60f563098, type: 3}
+  m_Name: DirectorConfig
+  m_EditorClassIdentifier: 
+  ThreatDecayPerSecond: 2
+  ThreatMin: 0
+  ThreatMax: 100
+  FootstepWeight: 0.1
+  RunningWeight: 0.3
+  MeleeWeight: 0.5
+  GunshotWeight: 1
+  ExplosionWeight: 8
+  KillThreatWeight: 0.5
+  PlayerDamagedThreatReduction: 1.5
+  ThreatReductionAfterSpawn: 5
+  ThresholdSearching: 20
+  ThresholdPressure: 40
+  ThresholdHunting: 70
+  MaxAliveFromDirector: 8
+  GlobalAliveEnemyLimit: 20
+  MinThreatToSpawn: 20
+  SpawnCooldown: 20
+  GroupSizeSearching: 2
+  GroupSizePressure: 3
+  GroupSizeHunting: 5
+  MaxGroupSize: 6
+  MinSpawnDistance: 30
+  MaxSpawnDistance: 80
+  SpawnPositionAttempts: 10

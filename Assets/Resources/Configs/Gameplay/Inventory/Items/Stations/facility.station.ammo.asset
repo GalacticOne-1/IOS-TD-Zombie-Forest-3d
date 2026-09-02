@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: facility.station.ammo
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: d05e468fa6c494f4eaa0df4c13d39e44, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: Ammunition Press
+    descriptionLid: 
+    order: 0
+    icon: {fileID: 21300000, guid: a8658f3251bda4dcfb543e84319c7561, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 40
+    economyCategory: 0
+    tier: 1
+    flag: 0
+    itemLabel: 0
+    rarity: 0
+    maxStack: 1
+    sortCategory: 0
+    sortPriority: 0
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags: []
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: fe2bbbf22367c4d91b2615da952df7fd, type: 2}
+  baseModifiers: []
+  prefabName: ammunition_press
+  prefabPath: Production/
+  objectPoolParam:
+    InitialSize: 0
+    MaxSize: 0
+    Duration: 0
+  modules:
+  - rid: 5200815807896223828
+  references:
+    version: 2
+    RefIds:
+    - rid: 5200815807896223828
+      type: {class: CraftingStationModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        facilityType: 1
+        weaponProduction: 1
+        footprint:
+          width: 3
+          height: 3
+          autoBuild: 0
+          allowRotation: 1
+          allowOverlap: 0
+          checkOccupancy: 1
+        buildLimit: 1
+        upgradeLevels: []
+        allowedZoneTags: 05000000
+        allowedZonesOnly: 0

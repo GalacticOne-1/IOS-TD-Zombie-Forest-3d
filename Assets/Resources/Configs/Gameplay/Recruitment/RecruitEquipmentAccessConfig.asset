@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5a6412a3ffe44cc9e39992fc7ae89da, type: 3}
+  m_Name: RecruitEquipmentAccessConfig
+  m_EditorClassIdentifier: 
+  <Rules>k__BackingField:
+  - Category: 0
+    MaxWeaponTier: 1
+    MaxArmorTier: 1
+    armorDropRules:
+    - Slot: 20
+      DropChance: 0.3
+    - Slot: 21
+      DropChance: 0.8
+    WeaponDurabilityMin: 20
+    WeaponDurabilityMax: 55
+    ArmorDurabilityMin: 5
+    ArmorDurabilityMax: 22
+  - Category: 1
+    MaxWeaponTier: 2
+    MaxArmorTier: 2
+    armorDropRules:
+    - Slot: 20
+      DropChance: 0.6
+    - Slot: 21
+      DropChance: 0.9
+    - Slot: 22
+      DropChance: 1
+    - Slot: 23
+      DropChance: 1
+    WeaponDurabilityMin: 35
+    WeaponDurabilityMax: 60
+    ArmorDurabilityMin: 18
+    ArmorDurabilityMax: 40
+  - Category: 2
+    MaxWeaponTier: 3
+    MaxArmorTier: 3
+    armorDropRules:
+    - Slot: 20
+      DropChance: 0.5
+    - Slot: 21
+      DropChance: 0.8
+    - Slot: 22
+      DropChance: 1
+    - Slot: 23
+      DropChance: 1
+    WeaponDurabilityMin: 50
+    WeaponDurabilityMax: 80
+    ArmorDurabilityMin: 50
+    ArmorDurabilityMax: 70

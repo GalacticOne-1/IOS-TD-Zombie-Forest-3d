@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716483fa65ee4ee789440202871cf5a8, type: 3}
+  m_Name: resource.hydraulics_Recipe_1
+  m_EditorClassIdentifier: 
+  outputItem: {fileID: 11400000, guid: 663cc5d65d62344b8a44e8fb62a0e9a1, type: 2}
+  outputCount: 1
+  requirement:
+  - Item: {fileID: 11400000, guid: 6bf48663564b7466b8b537cfc248ddd5, type: 2}
+    Amount: 8
+  - Item: {fileID: 11400000, guid: c7317e0c0a7b94f87bf73c41dbf9c5e0, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: dd62db38732764a08b889ffaeb4c1d01, type: 2}
+    Amount: 2
+  - Item: {fileID: 11400000, guid: 315727f0dafa045348bb999b86a32f82, type: 2}
+    Amount: 4
+  requiredStationItem: {fileID: 11400000, guid: 29e9bb6da7a95499aac263faf4cac1d0, type: 2}
+  requiredTier: 1
+  craftTime: 10
+  stackOrderLimit: 1
+  requiredPlayerLevel: 0
+  requiredTags: []

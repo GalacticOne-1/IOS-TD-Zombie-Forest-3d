@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716483fa65ee4ee789440202871cf5a8, type: 3}
+  m_Name: armor.torso.heavy.vest_Recipe_1
+  m_EditorClassIdentifier: 
+  outputItem: {fileID: 11400000, guid: 7c5f84db2ca67481788f15b9bff9ec56, type: 2}
+  outputCount: 1
+  requirement:
+  - Item: {fileID: 11400000, guid: cb96dcd1a0bfe459787ac84adc1a581e, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: cf34ca5df07b64e7081efb9a086eb8fe, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: cf3fbd9cecd3c4bffb39ba90e98db994, type: 2}
+    Amount: 2
+  requiredStationItem: {fileID: 11400000, guid: 925376de34fa044d7bd8308845b9abdb, type: 2}
+  requiredTier: 2
+  craftTime: 16
+  stackOrderLimit: 1
+  requiredPlayerLevel: 0
+  requiredTags: []

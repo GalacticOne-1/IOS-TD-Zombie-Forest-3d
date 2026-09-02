@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f83b44734040d9afd8a8d8c349cf3d, type: 3}
+  m_Name: VoiceAudio_player
+  m_EditorClassIdentifier: 
+  damageClips:
+  - {fileID: 8300000, guid: 53b275ab25c506746b904db2207a3735, type: 3}
+  - {fileID: 8300000, guid: cfa5336fbf7141944ba46165803e4dbd, type: 3}
+  deathClips:
+  - {fileID: 8300000, guid: def382595752d4de0b5416f429cd5cc0, type: 3}
+  - {fileID: 8300000, guid: 4585c8d056ff54340acfc1ddc95c7531, type: 3}
+  aggroClips: []
+  volume: 1
+  pitchMin: 0.95
+  pitchMax: 1.05

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c80b5b40b24275a6239725b07a785c, type: 3}
+  m_Name: template_upgrade_weapon_Stock
+  m_EditorClassIdentifier: 
+  templateId: item.template.upgrade.weapon.stock
+  displayName: upgrade.weapon.stock.
+  menuName: Upgrade.Weapon.Stock
+  previewConfig: {fileID: 0}
+  category: 12
+  label: 2
+  rarity: 0
+  sortCategory: 4
+  maxStack: 1
+  buyPrice: 0
+  sellPrice: 0
+  weight: 0
+  volume: 0
+  modules:
+  - rid: 5200815831278682199
+  - rid: 5930763743127142408
+  references:
+    version: 2
+    RefIds:
+    - rid: 5200815831278682199
+      type: {class: UpgradeModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        slotType: 0
+        compatibleTags:
+        - {fileID: 11400000, guid: 7749ecf7227c64d3e81a14ce4c077f14, type: 2}
+        modifiers: []
+    - rid: 5930763743127142408
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        value: 1
+        tier: 1
+        dropTag: 0

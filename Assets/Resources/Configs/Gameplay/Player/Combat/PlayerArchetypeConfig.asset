@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc636cbba7ef44a98f3b11a0d7dcd21d, type: 3}
+  m_Name: PlayerArchetypeConfig
+  m_EditorClassIdentifier: 
+  Brain: {fileID: 11400000, guid: f665685ac91f447a8b1344b4b4e91fc1, type: 2}
+  Combat: {fileID: 11400000, guid: 98737ad342dc84ed98748a4264d40987, type: 2}
+  Perception: {fileID: 11400000, guid: eae95f9a5ae9c485d8c79ba50334db55, type: 2}
+  VoiceAudio: {fileID: 11400000, guid: b384b118775404e0099692e2a146bd78, type: 2}

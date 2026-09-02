@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c80b5b40b24275a6239725b07a785c, type: 3}
+  m_Name: template_ammo_bullet
+  m_EditorClassIdentifier: 
+  templateId: item.template.ammo.bullet
+  displayName: ammo.bullet.
+  menuName: Ammo.Bullet
+  previewConfig: {fileID: 0}
+  category: 13
+  label: 2
+  rarity: 0
+  sortCategory: 3
+  maxStack: 10
+  buyPrice: 0
+  sellPrice: 0
+  weight: 0
+  volume: 0
+  modules:
+  - rid: 5200815825228398684
+  - rid: 5930763743127142402
+  references:
+    version: 2
+    RefIds:
+    - rid: 5200815825228398684
+      type: {class: AmmoModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        ammoType: {fileID: 11400000, guid: e5f6654603dfd4ad3ab53c99078737c6, type: 2}
+        amount: 25
+        priority: 0
+    - rid: 5930763743127142402
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        value: 1
+        tier: 1
+        dropTag: 0

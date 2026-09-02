@@ -1,0 +1,107 @@
+{
+ 
+  "options" : ["Settings", "SFX","Music", "Hints"],
+
+  "ad_disabled": "Video is not available right now.",
+  "ad_restoring": "Technical break",
+  
+  "pause" : "Pause",
+  "defeat" : "Game Over",
+  "victory" : "Chapter complete!",
+
+  "default_text":
+  [
+    
+  ],
+
+
+
+  "wave" : "Wave",
+
+  "game": 
+  [
+    {"key" : "no", "value" : "No"},
+    
+    
+    {"key" : "menu_0", "value" : "Construct"},
+    {"key" : "menu_1", "value" : "Unit"},
+    {"key" : "menu_2", "value" : "Inventory"},
+    {"key" : "menu_3", "value" : "Depot"},
+    {"key" : "menu_4", "value" : "Map"},
+
+    
+    {"key" : "world_0", "value" : "Adventure Map"},
+    {"key" : "world_1", "value" : "Skill"},
+    {"key" : "world_2", "value" : "Gem Mine"},
+    {"key" : "world_3", "value" : "Ad Reward"},
+    {"key" : "world_4", "value" : "Digging"},
+    {"key" : "world_5", "value" : "Raid"}
+    
+  ],
+
+  "class_unit" : [
+      "Shooter", "Damager", "Support"
+    ],
+
+
+  "equipment_type" : [
+    "", "Fight", "Sidearm", "Rifle", "Assault Rifle", "Marksman Rifle", "MG", "SMG", "Shotgun",
+    "Granade Launcher", "Rocket Launcher", "Cannon", "Flamethrower", "Granade", "Ammo", "Mines",
+
+    "Helmet", "Torso", "Arms", "Legs", "Holsters",
+
+    "Mods", "Dron", "Shield", "Medikit",
+
+    "Reactor", "Battery"
+  ],
+  
+  "widget_units" : ["","Inventory", "Stats", "Talents", "Equipments", "Mods"],
+
+  "attributes" : [
+    "Hit Points", "Armor", "Dodge", "Accuracy", "Stability", "Speed", "Stealth", "Weight", 
+    "Detect Range", "Attack Range", "Reload", 
+    "Piercing", "Damage", "Damage Per Sec", "Shred Damage", "Fire Rate", "Ammo",
+    "Aoe Damage", "Aoe Range", "Critical Hit Chance", "Critical Hit Factor", 
+    "Variant Attack", "Variant Assist", "Cooldown Ability", "Slowdown", "Fire Damage"],
+  
+  "variant_attack" : ["One Target", "Several Targets", "Splash", "Close One Target", "Close Several Targets"],
+  "variant_assist" : ["One Unit", "Several Unit", "All Units"],
+  
+  "constructWidgetMark" : ["Defense", "Weapon", "Provisions", "Production", "Power"],
+  
+  
+  "inventory_full" : "Your inventory is full",
+  "not_space" : "Not enough space for",
+  "tool_broken" : "Tool is broken!",
+  "weapon_broken" : "Weapon is broken!",
+  "armor_broken" : "Armor is broken!",
+  
+  "dragon_too_far": "Dragon to far!",
+  "ground_too_far" : "Ground to far!",
+  
+  
+  "level": 
+  [
+    {"key" : "wave", "value" : "Wave"},
+    {"key" : "waves", "value" : "Waves"},
+    
+    {"key" : "revive_1", "value" : "Revive?"},
+    {"key" : "revive_2", "value" : "Use gems to Revive"},
+    {"key" : "revive_3", "value" : "Watch Ads to Revive"},
+
+    {"key" : "end_battle_1", "value" : "Get reward"},
+    {"key" : "end_battle_2", "value" : "Get 3X reward"},
+
+    {"key" : "cancel_battle", "value" : "Stop Battle"},
+
+    {"key" : "upgrade_module", "value" : "Select Module"},
+
+    {"key" : "new_module", "value" : "New Module"},
+
+    {"key" : "pause_title", "value" : "Pause"},
+    {"key" : "pause_end_battle", "value" : "End Battle"},
+    {"key" : "pause_continue", "value" : "Continue"}
+    
+  ]
+          
+}

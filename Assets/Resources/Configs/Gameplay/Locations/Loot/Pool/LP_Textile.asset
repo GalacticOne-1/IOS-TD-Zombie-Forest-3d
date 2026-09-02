@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a61e12a38c4747a050b3f5b19d6836, type: 3}
+  m_Name: LP_Textile
+  m_EditorClassIdentifier: 
+  _pool:
+  - Item: {fileID: 11400000, guid: 27c1bc635c51f4293b3960704f43ff4c, type: 2}
+    Weight: 100
+    MinAmount: 5
+    MaxAmount: 15
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: a2bb03bd9454040ec945bb8f00163910, type: 2}
+    Weight: 70
+    MinAmount: 3
+    MaxAmount: 8
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0
+  - Item: {fileID: 11400000, guid: e3a4c747c00f2496f8ab1d6e9f7bf4c2, type: 2}
+    Weight: 20
+    MinAmount: 1
+    MaxAmount: 3
+    MinDurabilityPercent: 0
+    MaxDurabilityPercent: 0

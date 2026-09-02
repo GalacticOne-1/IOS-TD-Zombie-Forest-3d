@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bda2fe43889841da8623d5e2cd0435bd, type: 3}
+  m_Name: iap.bundle.grenadier_pack
+  m_EditorClassIdentifier: 
+  <Use>k__BackingField: 1
+  <CardType>k__BackingField: 0
+  <Id>k__BackingField: {fileID: 11400000, guid: db9180dca18a84d8590c4bef6c5d0dd1, type: 2}
+  <PrefabPath>k__BackingField: IAP/IAP Offer View_ MId single
+  <CardVariant>k__BackingField: 0
+  <Header>k__BackingField:
+    TitleLid: Grenadier Pack
+    DescriptionLid: Throwable explosives for crowd control and area damage.
+    Order: 20
+    Icon: {fileID: 21300000, guid: 5a2e540438fa24b5a83e43ffcd4fb246, type: 3}
+    SizeUI: 0
+    IconOffset: {x: 0, y: 0}
+  <Category>k__BackingField: 10
+  <ViewType>k__BackingField: 0
+  <UseIAP>k__BackingField: 1
+  <ProductId>k__BackingField: bundle.grenadier_pack
+  <ProductType>k__BackingField: 0
+  <OneTimePurchase>k__BackingField: 0
+  <MainOption>k__BackingField:
+    purchaseLimit: 0
+    limited: 0
+    hot: 0
+    sale:
+      active: 0
+      onlyPercentLabel: 0
+      percent: 0
+    bonus:
+      active: 0
+      multiplier: 0
+  <DisableAd>k__BackingField: 1
+  <RewardType>k__BackingField: 5
+  <RewardSingle>k__BackingField:
+    rewardValue: 0
+  <RewardItems>k__BackingField:
+  - itemId: {fileID: 11400000, guid: 70568082268dd4711b9697ee8cc0acc0, type: 2}
+    count: 10
+    oldCount: 0
+  - itemId: {fileID: 11400000, guid: 0eaf9acc2a3c642c48fb907a6fdf0e76, type: 2}
+    count: 10
+    oldCount: 0
+  - itemId: {fileID: 11400000, guid: a45e677c542c84470ab3676c45dbcec0, type: 2}
+    count: 10
+    oldCount: 0
+  <LinkedItems>k__BackingField: []

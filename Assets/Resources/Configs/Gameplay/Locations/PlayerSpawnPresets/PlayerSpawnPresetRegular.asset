@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00969c44835b47e69e9abc9ac0e67729, type: 3}
+  m_Name: PlayerSpawnPresetRegular
+  m_EditorClassIdentifier: 
+  <ConfigId>k__BackingField: player_spawn_preset_regular
+  characterConfig: {fileID: 11400000, guid: 4894aada5506a49f6bca870ea6b8c4d0, type: 2}
+  playerStatsBase: {fileID: 11400000, guid: 3ee465d008c2349dcaa67ebb9220fb14, type: 2}
+  dragonConfig: {fileID: 11400000, guid: 9a7c4bf716026479d82065d58ed1347b, type: 2}
+  dragonStatsBase: {fileID: 11400000, guid: 555cd3f95534344e48493b5e4b389bf9, type: 2}
+  startingWeapon: {fileID: 0}
+  startingArmor: []
+  startingItems: []
+  level: 1
+  health: 100
+  energy: 100

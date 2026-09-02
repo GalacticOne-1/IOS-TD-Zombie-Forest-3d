@@ -1,0 +1,134 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa799785e514e909cc4b1365511597d, type: 3}
+  m_Name: usable.grenade.flash
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: a45e677c542c84470ab3676c45dbcec0, type: 2}
+  version: 1
+  isEnabled: 1
+  header:
+    titleLid: M84 Flashbang
+    descriptionLid: Blinds and disrupts enemies, making it effective for controlling
+      dangerous groups.
+    order: 0
+    icon: {fileID: 21300000, guid: 6da431faf30514d75a707a8be2487f3a, type: 3}
+    sizeUI: 0
+    iconOffset: {x: 0, y: 0}
+  previewConfig: {fileID: 0}
+  classification:
+    category: 20
+    economyCategory: 53
+    tier: 1
+    flag: 0
+    itemLabel: 2
+    rarity: 0
+    maxStack: 5
+    sortCategory: 1
+    sortPriority: 15
+  recruitAccess:
+    tier: 0
+    weight: 0
+    allowedCategories: 
+  economy:
+    buyPrice: 0
+    sellPrice: 0
+    scrapValue: 0
+    canBeSold: 0
+    canBeDestroyed: 0
+  physical:
+    weight: 0
+    volume: 0
+    usesDurability: 0
+    maxDurability: 0
+    durabilityLossType: 0
+    canBeRepaired: 0
+  requirements:
+    tier: 0
+    statRequirements: []
+  tags:
+  - {fileID: 11400000, guid: 80292b8689c6b4d73bc2f4370c887586, type: 2}
+  isCraftable: 1
+  recipes:
+  - {fileID: 11400000, guid: 7c9a79cf131544b3f9d1e9eb2a0d7507, type: 2}
+  baseModifiers: []
+  prefabName: flash_grenade
+  prefabPath: Equipments/
+  objectPoolParam:
+    InitialSize: 5
+    MaxSize: 5
+    Duration: 0
+  modules:
+  - rid: 3206989736049639510
+  - rid: 5930763668418985984
+  - rid: 5930763737138200679
+  references:
+    version: 2
+    RefIds:
+    - rid: 3206989736049639510
+      type: {class: UseModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        consumeOnUse: 0
+        effects: []
+        slotType: 10
+        behaviour:
+          rid: 3206989736049639512
+        range: 17
+    - rid: 3206989736049639512
+      type: {class: GrenadeBehaviour, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        audioConfig: {fileID: 11400000, guid: 777edf5dac1a74d6787a58c9f71e8d24, type: 2}
+        throwSpeed: 1
+        throwHeight: 3
+        detonationMode: 2
+        detonationDelay: 0
+        explosionRadius: 0
+        outerExplosionRadius: 5
+        damage: 0
+        bigRadiusDamagePercent: 0.4
+        damageFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: -1
+            outSlope: -1
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -1
+            outSlope: -1
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        _zoneType: 3
+        _zoneConfig: {fileID: 11400000, guid: ba941262a97b74fc2a5d99954114f96c, type: 2}
+        vfxId: {fileID: 11400000, guid: 3729f54e3a53749bcb385f16d3e1c9fd, type: 2}
+    - rid: 5930763668418985984
+      type: {class: ActionModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        actions:
+        - {fileID: 11400000, guid: fdbd36406db2548d38d345bdfd962bf5, type: 2}
+    - rid: 5930763737138200679
+      type: {class: LootModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
+      data:
+        lootCost: 1
+        isStrategicResource: 0
+        dropTag: 12

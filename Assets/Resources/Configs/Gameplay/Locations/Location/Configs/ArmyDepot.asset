@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d80bf3b3b354415d9d664ccde78a2b0b, type: 3}
+  m_Name: ArmyDepot
+  m_EditorClassIdentifier: 
+  id: {fileID: 11400000, guid: 7607f7f99ef564f4eb4a0fc89960fdb3, type: 2}
+  <Header>k__BackingField:
+    TitleLid: Army Depot
+    DescriptionLid: 
+    Order: 0
+    Icon: {fileID: 0}
+    SizeUI: 0
+    IconOffset: {x: 0, y: 0}
+  <LocationType>k__BackingField: 5
+  <PrefabPath>k__BackingField: Prefabs/Gameplay/Locations/ArmyDepot
+  <LocationBorder>k__BackingField: {x: 0, y: 0}
+  <RequiresLevel>k__BackingField: 0
+  <Difficulty>k__BackingField: 3
+  <VisitCostConfig>k__BackingField: {fileID: 11400000, guid: 52b4de145f00c40769980966a1b34239, type: 2}
+  <EnemyVisualRules>k__BackingField: {fileID: 11400000, guid: 42f87914b4efc4ef697456ef22a6d231, type: 2}
+  <LocationIntel>k__BackingField:
+    threatLevel: 4
+    enemyType: 1
+    hazardType: 0
+    riskLevel: 3
+    guaranteedLootProfile: {fileID: 11400000, guid: 913f38aa8c70148599d19703610c50d2, type: 2}
+    lootProfile: {fileID: 11400000, guid: c9dfa13fa69d64cf8974e8f886e03eec, type: 2}
+    loot: 5
+    resources: []
+    resourcesVolume:
+    - volume: 1
+      lootEconomyCategory: 00000000010000000300000004000000
+    - volume: 2
+      lootEconomyCategory: 0d0000006400000014000000
+    - volume: 3
+      lootEconomyCategory: 
+    - volume: 4
+      lootEconomyCategory: 15000000
+    - volume: 5
+      lootEconomyCategory: 330000003400000035000000
+    - volume: 6
+      lootEconomyCategory: 32000000
+  <PlayerPreset>k__BackingField: {fileID: 11400000, guid: 9ad31468a7beb464fada57283dbe5a01, type: 2}
+  <PlayerSpawnPoint>k__BackingField: {x: 0, y: 9}

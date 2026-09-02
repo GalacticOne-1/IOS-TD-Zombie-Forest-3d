@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716483fa65ee4ee789440202871cf5a8, type: 3}
+  m_Name: facility.storage.medical.supply_Recipe_1
+  m_EditorClassIdentifier: 
+  outputItem: {fileID: 11400000, guid: 2fe00b4b005b9474398699fe4299e674, type: 2}
+  outputCount: 1
+  requirement:
+  - Item: {fileID: 11400000, guid: 87b611b740a434461ae8c001511b607f, type: 2}
+    Amount: 14
+  - Item: {fileID: 11400000, guid: 6bf48663564b7466b8b537cfc248ddd5, type: 2}
+    Amount: 8
+  - Item: {fileID: 11400000, guid: 628ed9f3ce63d4614902da6bb93ee8ac, type: 2}
+    Amount: 4
+  - Item: {fileID: 11400000, guid: 5f43eb1f664844e89adf888b2d795062, type: 2}
+    Amount: 10
+  - Item: {fileID: 11400000, guid: 9955cdf5e538c443e9729580ae9df30e, type: 2}
+    Amount: 10
+  - Item: {fileID: 11400000, guid: 20a560e8e5608499d902ca21ea26fdaf, type: 2}
+    Amount: 3
+  requiredStationItem: {fileID: 0}
+  requiredTier: 2
+  craftTime: 5
+  stackOrderLimit: 1
+  requiredPlayerLevel: 0
+  requiredTags: []

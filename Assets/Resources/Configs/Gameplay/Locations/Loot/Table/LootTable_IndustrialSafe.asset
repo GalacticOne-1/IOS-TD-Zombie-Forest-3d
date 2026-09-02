@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4657b644f044a3a447887a5201540d, type: 3}
+  m_Name: LootTable_IndustrialSafe
+  m_EditorClassIdentifier: 
+  _id: {fileID: 11400000, guid: 734b759fba49f49dba9cf106f8ae9896, type: 2}
+  _guaranteedEntries: []
+  _slots:
+  - SlotId: industrial_primary
+    SharedPool: {fileID: 11400000, guid: 41a3d1f9a5ede466a9184616d52131b2, type: 2}
+    RepeatCount: 2
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 2
+    MaxTier: 3
+  - SlotId: industrial_rare
+    SharedPool: {fileID: 11400000, guid: d1119ae5df4e1486da61c5921c89ed94, type: 2}
+    RepeatCount: 2
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 2
+    MaxTier: 3
+  - SlotId: industrial_jackpot
+    SharedPool: {fileID: 11400000, guid: 4f066f9e916a346bdad2c6aa7c200a37, type: 2}
+    RepeatCount: 1
+    IsGuaranteed: 0
+    ActivationChance: 0.15
+    MinTier: 3
+    MaxTier: 3

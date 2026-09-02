@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16576257f359466f8f67e694ad2fd795, type: 3}
+  m_Name: GrenadeAudio_grenade_big
+  m_EditorClassIdentifier: 
+  throwClips: []
+  throwVolume: 0.8
+  throwPitchMin: 1
+  throwPitchMax: 1
+  explosionClips:
+  - {fileID: 8300000, guid: 6bc3b9e4d783d4efa95228cf0f53f291, type: 3}
+  explosionVolume: 1
+  explosionPitchMin: 0.97
+  explosionPitchMax: 1.03
+  throwPriority: 40
+  explosionPriority: 90

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac977875fef4ca4bda16297b0f3d19a, type: 3}
+  m_Name: StartKitConfig_purchase_reward
+  m_EditorClassIdentifier: 
+  items:
+  - configId: {fileID: 11400000, guid: 9143b85fa8fb84e129892d5cf42d7b97, type: 2}
+    amount: 1
+    durability: 0
+  - configId: {fileID: 11400000, guid: 083fa7cda0ca047c6953017584824fce, type: 2}
+    amount: 1
+    durability: 0
+  - configId: {fileID: 11400000, guid: 044c6e483e87041db98cd16f3a4f4da6, type: 2}
+    amount: 100
+    durability: 0
+  - configId: {fileID: 11400000, guid: 3f5bc68153c22493cae9f43c0e23cce7, type: 2}
+    amount: 250
+    durability: 0
+  - configId: {fileID: 11400000, guid: a45e677c542c84470ab3676c45dbcec0, type: 2}
+    amount: 5
+    durability: 0
+  - configId: {fileID: 11400000, guid: 20348407d85cc4332b66bb53f2ef04cc, type: 2}
+    amount: 8
+    durability: 0
+  - configId: {fileID: 11400000, guid: 70568082268dd4711b9697ee8cc0acc0, type: 2}
+    amount: 2
+    durability: 0
+  spawnAllResources: 0

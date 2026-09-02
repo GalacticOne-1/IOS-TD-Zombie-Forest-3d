@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4657b644f044a3a447887a5201540d, type: 3}
+  m_Name: LootTable_ElectricalCabinet
+  m_EditorClassIdentifier: 
+  _id: {fileID: 11400000, guid: 37133bc87bc2d47b8a6ec28e0ffab563, type: 2}
+  _guaranteedEntries: []
+  _slots:
+  - SlotId: elec_primary
+    SharedPool: {fileID: 11400000, guid: 468ffef0280d74eed9bcc921ff67f614, type: 2}
+    RepeatCount: 2
+    IsGuaranteed: 0
+    ActivationChance: 1
+    MinTier: 1
+    MaxTier: 2
+  - SlotId: elec_rare
+    SharedPool: {fileID: 11400000, guid: 7f23048d8704549c9b0d2208c6a296f3, type: 2}
+    RepeatCount: 1
+    IsGuaranteed: 0
+    ActivationChance: 0.15
+    MinTier: 2
+    MaxTier: 3

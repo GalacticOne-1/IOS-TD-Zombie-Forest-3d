@@ -1,0 +1,174 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a4cfdea9657438b931c4327663d5481, type: 3}
+  m_Name: NotificationMessageConfig
+  m_EditorClassIdentifier: 
+  entries:
+  - Id: premiun_currency
+    Reason: 1
+    Message: Not enought coins
+    UsePopup: 0
+    StyleCategory: 4
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: soft_currency
+    Reason: 2
+    Message: Not enought _soft_
+    UsePopup: 0
+    StyleCategory: 4
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: ad_not
+    Reason: 3
+    Message: Video is not available right now.
+    UsePopup: 0
+    StyleCategory: 4
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: ad_break
+    Reason: 4
+    Message: Technical break
+    UsePopup: 0
+    StyleCategory: 4
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: camp_capacity
+    Reason: 20
+    Message: There is no free capacity in the camp.
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: squad_empty
+    Reason: 21
+    Message: Squad is empty. Select at least one survivor.
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: drone_empty_slots
+    Reason: 50
+    Message: Add items to the slot.
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: drone_limit
+    Reason: 51
+    Message: Empty drone charge.
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: hunger
+    Reason: 60
+    Message: The unit is hungry. Accuracy -20%.
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: thirst
+    Reason: 61
+    Message: The unit is dehydrated. Movement speed -20%.
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: damage
+    Reason: 70
+    Message: Damage
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: armor
+    Reason: 71
+    Message: Armor
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: accuracy
+    Reason: 72
+    Message: Accuracy
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: dps
+    Reason: 73
+    Message: DPS
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  - Id: squad_destroyed
+    Reason: 22
+    Message: Squad is destroyed. Return to camp.
+    UsePopup: 0
+    StyleCategory: 1
+    Style:
+      Category: 0
+      BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      Icon: {fileID: 0}
+  styles:
+  - Category: 1
+    BackgroundColor: {r: 0.93333334, g: 0.75686276, b: 0.27450982, a: 1}
+    TextColor: {r: 0.93333334, g: 0.75686276, b: 0.27450982, a: 1}
+    Icon: {fileID: 0}
+  - Category: 4
+    BackgroundColor: {r: 0.9411765, g: 0.2901961, b: 0.34117648, a: 1}
+    TextColor: {r: 0.9411765, g: 0.2901961, b: 0.34117648, a: 1}
+    Icon: {fileID: 0}
