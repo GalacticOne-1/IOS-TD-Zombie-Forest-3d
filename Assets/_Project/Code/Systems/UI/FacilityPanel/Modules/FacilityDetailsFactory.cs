@@ -178,7 +178,8 @@ namespace Galactic1.Game.UI.Buildings
                 var weaponDTO = new GearSlotDTO()
                 {
                     Icon = gearItem.Header.icon,
-                    Durability = Mathf.CeilToInt(((float)offer.Equipment.WeaponItem.Durability / maxDurability) * 100),
+                    Durability = offer.Equipment.WeaponItem.Durability,
+                    DurabilityPrcnt = Mathf.CeilToInt(((float)offer.Equipment.WeaponItem.Durability / maxDurability) * 100),
                     Durability01 = (float)offer.Equipment.WeaponItem.Durability / maxDurability,
                     Rarity = gearItem.Classification.rarity,
                     Item = gearItem
@@ -200,7 +201,8 @@ namespace Galactic1.Game.UI.Buildings
                     gearDtoList.Add(new()
                     {
                         Icon = gearItem.Header.icon,
-                        Durability = Mathf.CeilToInt(((float)offer.Equipment.ArmorItem[i].Durability / maxDurability) * 100),
+                        Durability = offer.Equipment.ArmorItem[i].Durability,
+                        DurabilityPrcnt = Mathf.CeilToInt(((float)offer.Equipment.ArmorItem[i].Durability / maxDurability) * 100),
                         Durability01 = (float)offer.Equipment.ArmorItem[i].Durability / maxDurability,
                         Rarity = gearItem.Classification.rarity,
                         Item = gearItem

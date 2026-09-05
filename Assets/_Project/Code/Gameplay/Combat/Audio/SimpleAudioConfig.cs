@@ -1,3 +1,4 @@
+using Galactic1.UI.Core;
 using UnityEngine;
 
 namespace Galactic1.Code.Gameplay.Audio
@@ -5,8 +6,17 @@ namespace Galactic1.Code.Gameplay.Audio
     [CreateAssetMenu(
         fileName = "AudioCue_",
         menuName = "Game Configs/Audio/Simple Audio Cue")]
-    public sealed class SimpleAudioDefinition : ScriptableObject
+    public sealed class SimpleAudioConfig : ScriptableObject, IUIStyleConfig
     {
+        [field: SerializeField] public string ConfigId { get; private set; }
+
+        public string Id
+        {
+            get => ConfigId;
+            set => ConfigId = value;
+        }
+        
+        
         [SerializeField] private AudioClip clip;
 
         [Range(0f, 1f)] [SerializeField] private float volume = 1f;

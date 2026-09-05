@@ -4,6 +4,7 @@ using Galactic1.Code.Game.Rewards;
 using Galactic1.Code.GameDatabase;
 using Galactic1.Code.Gameplay.Animation;
 using Galactic1.Code.Gameplay.AoE;
+using Galactic1.Code.Gameplay.Audio;
 using Galactic1.Code.Gameplay.BaseBuilding;
 using Galactic1.Code.Gameplay.Enemies.Factories;
 using Galactic1.Code.Gameplay.Survivors.Repositories;
@@ -22,6 +23,11 @@ using Galactic1.Code.Systems.Runtime;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Code.Systems.GameTime;
 using Galactic1.Code.Systems.Survival;
+using Galactic1.Code.Systems.Tutorial.Analytics;
+using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Code.Systems.Tutorial.Objectives;
+using Galactic1.Code.Systems.Tutorial.Presentation;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.Systems.World.Threats;
 using Galactic1.Code.UI.Interaction;
 using Galactic1.Configs;
@@ -155,6 +161,10 @@ namespace Galactic1
             // =========================================================================================================
             // =========================================================================================================
 
+
+            // === audio for UI all scenes
+            rootContainer.RegisterInstance(new UIAudioSystem());
+            
             
             // !!! ПОРЯДОК НЕ МЕНЯТЬ !!!
             
@@ -200,6 +210,50 @@ namespace Galactic1
             var interactionPolicy = new InteractionPolicyService();
             rootContainer.RegisterInstance(interactionPolicy);
             ServiceLocator.Current.Register(interactionPolicy);
+            
+            
+            // === Tutorial =============================================================
+            var tutorialGameStateQuery = new TutorialGameStateQuery(
+                gameSession.GameLoopContext,
+                rootContainer.Resolve<GameLoopStateMachine>());
+
+            var tutorialObjectiveFactory = new TutorialObjectiveFactory(
+                tutorialGameStateQuery,  // ITutorialInventoryQuery
+                tutorialGameStateQuery,  // ITutorialSquadQuery
+                tutorialGameStateQuery); // IGameLoopStateQuery
+
+            var tutorialCheckpointService = new TutorialCheckpointService();
+            var tutorialInputPolicyService = new TutorialInputPolicyService(interactionPolicy);
+
+            var tutorialTargetRegistry = new TutorialTargetRegistry();
+            rootContainer.RegisterInstance(tutorialTargetRegistry);
+            ServiceLocator.Current.Register(tutorialTargetRegistry);
+
+            var tutorialPresentationService = new TutorialPresentationService(tutorialTargetRegistry);
+            rootContainer.RegisterInstance(tutorialPresentationService);
+            ServiceLocator.Current.Register(tutorialPresentationService);
+
+            var tutorialService = new TutorialService(
+                configProvider.Get<TutorialCampaignRegistry>(),
+                tutorialObjectiveFactory,
+                tutorialCheckpointService,
+                tutorialGameStateQuery,
+                tutorialInputPolicyService,
+                tutorialPresentationService,
+                new NullTutorialAnalytics(),
+                gameStateProvider,
+                gameStateProvider.GameStateProxy.Tutorial);
+
+            rootContainer.RegisterInstance<ITutorialService>(tutorialService);
+            rootContainer.RegisterInstance<ITutorialDebugService>(tutorialService);
+            ServiceLocator.Current.Register<ITutorialService>(tutorialService);
+#if UNITY_EDITOR
+            ServiceLocator.Current.Register<ITutorialDebugService>(tutorialService);
+#endif
+            
+            // ===========================================================================
+            
+            
             
             // =========================================================================================================
             // =========================================================================================================

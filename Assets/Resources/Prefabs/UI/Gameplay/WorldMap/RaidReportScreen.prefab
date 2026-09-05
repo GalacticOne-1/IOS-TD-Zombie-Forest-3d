@@ -1046,7 +1046,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000091552734}
+  m_AnchoredPosition: {x: 0, y: 0.00015258789}
   m_SizeDelta: {x: 600, y: 516.08}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2746179232683087522
@@ -1687,7 +1687,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000091552734}
+  m_AnchoredPosition: {x: 0, y: 0.00012207031}
   m_SizeDelta: {x: 600, y: 516.08}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4308822041597515413
@@ -4107,6 +4107,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1896689101827896402}
     m_Modifications:
+    - target: {fileID: 246296206297512618, guid: 8c79b843bcccc46e1b67925c420d7004, type: 3}
+      propertyPath: audio.useSound
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 517101730235958129, guid: 8c79b843bcccc46e1b67925c420d7004, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4325,6 +4329,10 @@ PrefabInstance:
     - target: {fileID: 3921179093135099634, guid: 9a366a53df0624802814b5e421c0ec8a, type: 3}
       propertyPath: m_Name
       value: b_continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 5436333654184119119, guid: 9a366a53df0624802814b5e421c0ec8a, type: 3}
+      propertyPath: audio.useSound
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

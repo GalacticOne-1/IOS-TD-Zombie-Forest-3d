@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Galactic1.Code.GameDatabase;
+using Galactic1.Code.Gameplay.Audio;
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Gameplay.Units.Stats;
 using Galactic1.Code.Systems.Economy;
 using Galactic1.Code.Systems.Economy.Configs;
@@ -16,6 +18,7 @@ using Galactic1.Game.Meta.Items;
 using Galactic1.Meta.Configs.Recruitment;
 using Galactic1.Structs;
 using Galactic1.UI.CharacterPreview;
+using Galactic1.UI.Core;
 using Galactic1.Utility;
 
 namespace Galactic1.Code.Systems.Runtime.Building
@@ -60,6 +63,9 @@ namespace Galactic1.Code.Systems.Runtime.Building
                 return daysLeft < 0 ? 0 : daysLeft;
             }
         }
+
+        // audio data
+        private SimpleAudioData hireSurvivorAudio;
         
         
         
@@ -92,6 +98,13 @@ namespace Galactic1.Code.Systems.Runtime.Building
 
             recruitmentPremiumCost = economyConfig.RecruitPremium;
             refreshPremiumCost = economyConfig.RefreshPremium;
+            
+            // === audio
+            hireSurvivorAudio = ServiceLocator.Current.Get<ConfigProvider>()
+                .Get<UIAudioDatabase>()
+                .Get<SimpleAudioConfig>("audio_cue_tavern_hire_survivor")
+                .ToData();
+            
 
             TimeService.DayPassed += OnDayPassed;
 
@@ -278,6 +291,8 @@ namespace Galactic1.Code.Systems.Runtime.Building
             // === создание нового юнита, вынес в делегат что бы view сам закончил
             Action finishRecruit = () =>
             {
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(hireSurvivorAudio));
+                
                 var configProvider = ServiceLocator.Current.Get<ConfigProvider>();
                 var statsDefault = configProvider.Get<PlayerStatsBase>();
                 ItemConfig item;

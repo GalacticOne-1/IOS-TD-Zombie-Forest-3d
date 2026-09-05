@@ -2,11 +2,12 @@
 using Galactic1;
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Units;
-using Galactic1.Code.Systems.GameLoop.Tactical;
 using Galactic1.Code.Systems.Raid.Enemies;
 using Galactic1.Code.Systems.Raid.Mission;
+using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
-using Galactic1.Items;
+using Galactic1.UI.Core;
 using UnityEngine;
 
 
@@ -46,6 +47,13 @@ public struct SoundUnitsEnableEvent : IEvent {}
 /// <br/>Единственное событие по готовности кор сцены
 /// </summary>
 public struct LoadAndStartCoreEvent : IEvent {}
+
+/// <summary>
+/// Отписыватся не нужно!
+/// <br/>Событие по готовности игры (игровая сцена загружена)
+/// <br/>Вызов один раз при старте аппы
+/// </summary>
+public struct StartGameEvent : IEvent {}
 
 /// <summary>
 /// Нужно отписыватся !
@@ -258,6 +266,38 @@ public struct UnitReadyForDespawnEvent : IEvent
 //
 
 
+
+
+
+
+public sealed class ItemEquippedEvent : IEvent
+{
+    public EquipSlotType Slot;
+    public RuntimeId ItemId;
+}
+
+public sealed class UITargetInteractedEvent : IEvent
+{
+    public TutorialTargetId TargetId;
+}
+public sealed class CampStorageChangedEvent : IEvent {}
+public sealed class StrategicSquadChangedEvent : IEvent {}
+public sealed class TargetSelectedEvent : IEvent {}
+
+public sealed class UIScreenOpenedEvent : IEvent
+{
+    public UIScreenId ScreenId;
+}
+public sealed class UnitMovedEvent : IEvent {}
+public sealed class WeaponFiredEvent : IEvent {}
+
+public sealed class WorldMapLocationSelectedEvent : IEvent
+{
+    public LocationId LocationId;
+}
+
+    
+
 /// <summary>
 /// Поднимается при смерти ЛЮБОГО врага (ambient/wave/director —
 /// источник различается через Runtime.SpawnSource). Единая точка входа
@@ -274,7 +314,6 @@ public sealed class EnemyKilledEvent : IEvent
         Runtime = runtime;
     }
 }
-
 
 public struct SurvivorStatusChangedEvent : IEvent
 {

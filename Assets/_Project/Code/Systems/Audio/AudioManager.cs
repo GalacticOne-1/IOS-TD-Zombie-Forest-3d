@@ -303,6 +303,27 @@ namespace Galactic1.Systems
             activeSFX[name].Add(src);
             StartCoroutine(ReleaseAfterPlay(name, src));
         }
+        
+        public void PlaySFX(AudioClip clip, float volume, float pitch)
+        {
+            if (clip == null || sfxPoolInstance == null) 
+                return;
+
+#if UNITY_EDITOR
+            DLog.Alert($"{clip.name}; volume = {volume}; pitch = {pitch}", EDlogColor.YELLOW);
+#endif
+
+            
+            AudioSource src = sfxPoolInstance.GetAudioSource();
+            src.clip = clip;
+            src.volume = volume;
+            src.pitch = pitch;
+            src.spatialBlend = 0; // 2D
+            src.outputAudioMixerGroup = sfxGroup;
+            src.Play();
+
+            StartCoroutine(ReleaseRawAfterPlay(src));
+        }
 
         /// <summary>
         /// Воспроизводит 3D-звук в заданной позиции.

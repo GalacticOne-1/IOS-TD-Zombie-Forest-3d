@@ -107,6 +107,9 @@ namespace Galactic1.UI.Core
             activeScreens[id] = panel;
             // NEW
 
+
+            EventBus<UIScreenOpenedEvent>.Raise(new UIScreenOpenedEvent() { ScreenId = id });
+
             // Вызываем метод OnShow с данными
             onShow?.Invoke(panel.gameObject);
             panel.OnShow(data);
@@ -158,7 +161,8 @@ namespace Galactic1.UI.Core
                 UIScreenId.HUDInput or
                     UIScreenId.HUDCamp or
                     UIScreenId.HUDLocation or
-                    UIScreenId.HUDMap
+                    UIScreenId.HUDMap or 
+                    UIScreenId.TutorialHUD
                     => _layerRoot.hudRoot,
 
                 UIScreenId.BaseConstructionMenu

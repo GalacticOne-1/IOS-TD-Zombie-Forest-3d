@@ -28,8 +28,8 @@ namespace Galactic1.Game.UI.Buildings.DTO
         public bool Disable; // true - слот пустой
         
         public Sprite Icon;
+        public int DurabilityPrcnt;
         public int Durability;
-        public int MaxDurability;
         public float Durability01;
         public ItemRarity Rarity;
 

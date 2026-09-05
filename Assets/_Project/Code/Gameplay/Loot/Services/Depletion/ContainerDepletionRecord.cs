@@ -1,6 +1,4 @@
 
-using Galactic1.RaidLoot.Authoring;
-
 namespace Galactic1.RaidLoot.Runtime
 {
     /// <summary>

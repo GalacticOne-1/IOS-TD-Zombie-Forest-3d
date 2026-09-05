@@ -36,6 +36,7 @@ namespace Galactic1.Configs
             "Assets/Resources/Configs/Gameplay/Inventory/Items",
             "Assets/Resources/Configs/Gameplay/Recruitment/Units",
             "Assets/Resources/Configs/Gameplay/Enemies/Variants",
+            "Assets/Resources/Configs/Tutorial/Campaigns",
         };
 
         
@@ -60,6 +61,7 @@ namespace Galactic1.Configs
             var results = guids
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(path => ignoreFolders.All(ignore => !IsInFolder(path, ignore)))
+                .Where(path => !IsInsideIdsFolder(path)) // 👈 исключаем всё, что находится внутри папок _Ids
                 .ToArray();
             
             
@@ -107,6 +109,28 @@ namespace Galactic1.Configs
             folderPath = folderPath.TrimEnd('/');
     
             return assetPath.StartsWith(folderPath + "/");
+        }
+        
+        // 👈 Метод для проверки, находится ли файл внутри папки _Ids на любом уровне вложенности
+        private static bool IsInsideIdsFolder(string assetPath)
+        {
+            // Нормализуем слеши на случай разных ОС
+            string normalizedPath = assetPath.Replace('\\', '/');
+            
+            // Разбиваем путь на папки
+            string[] folders = normalizedPath.Split('/');
+            
+            // Проверяем, есть ли среди родительских папок папка с именем "_Ids"
+            // (исключаем последний элемент, так как это имя самого файла)
+            for (int i = 0; i < folders.Length - 1; i++)
+            {
+                if (folders[i] == "_Ids")
+                {
+                    return int.TryParse(folders[i], out _) == false; // просто возвращаем true, если имя совпало
+                }
+            }
+            
+            return false;
         }
 
         [System.Serializable]

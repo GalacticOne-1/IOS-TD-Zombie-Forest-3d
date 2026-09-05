@@ -92,6 +92,11 @@ namespace Galactic1.Systems
             ServiceLocator.Current.Get<AudioManager>()?.PlaySFXAtPosition(clip, position, volume, pitch);
         }
         
+        public static void PlaySFX(AudioClip clip, float volume, float pitch)
+        {
+            ServiceLocator.Current.Get<AudioManager>()?.PlaySFX(clip, volume, pitch);
+        }
+        
         /// <summary>
         /// Проигрывает 2D-звук UI, игрока, врага, окружения или спецэффекта.
         /// </summary>

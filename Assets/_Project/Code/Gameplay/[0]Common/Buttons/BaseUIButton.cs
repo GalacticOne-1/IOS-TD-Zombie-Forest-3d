@@ -1,7 +1,9 @@
 using System;
+using Galactic1.Code.Gameplay.Audio;
+using Galactic1.Code.Gameplay.Combat.Events;
+using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Configs;
 using Galactic1.Systems;
-using Galactic1.Code.Utility;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -24,20 +26,14 @@ namespace Galactic1.UI.Core
         IPointerEnterHandler, IPointerExitHandler
     {
 
-        public enum EBtnSound
-        {
-            noSound,
-            defaultSound,
-            soundUI
-        }
-
         // -------------------- STRUCTURES --------------------
 
         [System.Serializable]
         public struct Audio
         {
-            public EBtnSound useSound;
-            public int clipId;
+            public bool useSound;
+            [Tooltip("Установить конфиг, если нужен другой звук вместо default")]
+            public SimpleAudioConfig config;
         }
 
         [System.Serializable]
@@ -82,7 +78,8 @@ namespace Galactic1.UI.Core
 
         // -------------------- SETTINGS --------------------
 
-        [Header("Basic")] [SerializeField] protected Audio audio;
+        [Header("Basic")] 
+        [SerializeField] protected Audio audio;
 
         [SerializeField, Tooltip("true - будет работать даже в обучении")]
         protected bool workInTutorial;
@@ -93,6 +90,8 @@ namespace Galactic1.UI.Core
         [SerializeField] protected bool interactable = true;
         [SerializeField] protected bool useVibration = false;
 
+        private TutorialTargetBehaviour _tutorialBehaviour;
+        
 
         [Space]
         [Header("Style Config")] 
@@ -153,15 +152,26 @@ namespace Galactic1.UI.Core
             if (isInitialized) 
                 return;
             isInitialized = true;
+
+            
+            _tutorialBehaviour = GetComponent<TutorialTargetBehaviour>();
             
             originalScale = transform.localScale;
 
-            // если стиля нет, загружаем сами
+            // === если стиля нет, загружаем сами
             if (_styleConfig == null && ServiceLocator.Current != null)
             {
                 var styleDatabase = ServiceLocator.Current.Get<ConfigProvider>().Get<UIStyleDatabase>();
                 _styleConfig = styleDatabase.Get<ButtonStyleConfig>(styleId);
                 AutoState(ButtonState.Normal);
+            }
+            
+            // === если нет звука берем базовый
+            if (audio.config == null && ServiceLocator.Current != null)
+            {
+                audio.config = ServiceLocator.Current.Get<ConfigProvider>()
+                    .Get<UIAudioDatabase>()
+                    .Get<SimpleAudioConfig>("audio_cue_button_default");
             }
         }
 
@@ -304,23 +314,23 @@ namespace Galactic1.UI.Core
 
             events.onClick?.Invoke();
             
+            // === событие для тутора вызывается только если на кнопке есть TutorialTargetBehaviour
+            if(_tutorialBehaviour != null)
+            {
+                EventBus<UITargetInteractedEvent>.Raise(new UITargetInteractedEvent()
+                {
+                    TargetId = _tutorialBehaviour.TargetId
+                });
+            }
+            
             return true;
         }
 
         protected void PlayClickFeedback()
         {
-            if (audio.useSound != EBtnSound.noSound)
+            if (audio.useSound)
             {
-                switch (audio.useSound)
-                {
-                    case EBtnSound.defaultSound:
-                        //ServiceLocator.Current.Get<AudioController>().Sound_UI(0);
-                        break;
-
-                    case EBtnSound.soundUI:
-                        //ServiceLocator.Current.Get<AudioController>().Sound_UI(soundId);
-                        break;
-                }
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audio.config?.ToData()));
             }
 
             if (useVibration)

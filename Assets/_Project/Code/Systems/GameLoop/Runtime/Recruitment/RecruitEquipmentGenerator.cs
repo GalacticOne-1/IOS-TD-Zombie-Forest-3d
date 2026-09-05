@@ -70,12 +70,14 @@ namespace Galactic1.Code.Systems.Runtime
                 ? _rng.PickWeighted(allowedWeapons, w => w.RecruitAccess.weight)
                 : null;
 
-            
-            
+
+            var weaponDurability = weapon.Physical.maxDurability;
+            var range = Random.Range(rule.WeaponDurabilityMin, rule.WeaponDurabilityMax + 1) / 100f;
+            weaponDurability = (int)(weaponDurability * range);
             var weaponLoadout = new RecruitEquipmentLoadout.RecruitEquipmentLoadoutBox
             {
                 Id = weapon?.Id.Guid,
-                Durability = Random.Range(rule.WeaponDurabilityMin, rule.WeaponDurabilityMax + 1)
+                Durability = weaponDurability
             };
 
             var armorLoadoutList = new List<RecruitEquipmentLoadout.RecruitEquipmentLoadoutBox>();
@@ -100,10 +102,13 @@ namespace Galactic1.Code.Systems.Runtime
 
                 var picked = _rng.PickWeighted(slotItems, x => x.RecruitAccess.weight);
 
+                var armorDurability = picked.Physical.maxDurability;
+                range = Random.Range(rule.ArmorDurabilityMin, rule.ArmorDurabilityMax + 1) / 100f;
+                armorDurability = (int)(armorDurability * range);
                 armorLoadoutList[armorLoadoutList.Count - 1] = new RecruitEquipmentLoadout.RecruitEquipmentLoadoutBox
                 {
                     Id = picked.Id.Guid,
-                    Durability = Random.Range(rule.ArmorDurabilityMin, rule.ArmorDurabilityMax + 1)
+                    Durability = armorDurability
                 };
             }
 

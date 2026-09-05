@@ -180,6 +180,12 @@ namespace Galactic1.Code.WorldMap
                 null, 
                 _ =>
             {
+                
+                EventBus<WorldMapLocationSelectedEvent>.Raise(new WorldMapLocationSelectedEvent()
+                {
+                    LocationId = targetNode.Id,
+                });
+                
                 locationOverview.ShowNodeInfo(
                     targetNode,
                     true,

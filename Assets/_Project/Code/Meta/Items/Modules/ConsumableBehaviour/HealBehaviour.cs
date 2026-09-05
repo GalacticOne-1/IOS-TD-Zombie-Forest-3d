@@ -5,13 +5,14 @@ using Galactic1.Code.Gameplay.Effect;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.Raid;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Galactic1.Game.Meta.Items
 {
     [Serializable]
     public sealed class HealBehaviour : ConsumableBehaviour
     {
-        [SerializeField] private SimpleAudioDefinition audioDefinition;
+        [FormerlySerializedAs("audioDefinition")] [SerializeField] private SimpleAudioConfig audioConfig;
         
         [Header("Targeting")] 
         public bool supportsSmartTarget = true;
@@ -95,7 +96,7 @@ namespace Galactic1.Game.Meta.Items
                 EventBus<AudioCueEvent>.Raise(
                     new AudioCueEvent(
                         ctx.SpawnOrigin.position,
-                        audioDefinition?.ToData()));
+                        audioConfig?.ToData()));
             }
 
 #if UNITY_EDITOR

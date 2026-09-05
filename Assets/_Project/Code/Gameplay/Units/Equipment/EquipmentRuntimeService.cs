@@ -102,6 +102,12 @@ namespace Galactic1.Code.Gameplay.Equipment
             RefreshStats();
             //BindVisual(item.EquipSlotType, item);
             OnEquipped?.Invoke(item.GetEquipSlot(), item);
+            
+            EventBus<ItemEquippedEvent>.Raise(new ItemEquippedEvent()
+            {
+                Slot = Source.GetEquipmentSlotType(slotIndex),
+                ItemId = item.Id
+            });
 
             return true;
         }

@@ -1,6 +1,18 @@
 {
     "files": [
         {
+            "key": "AudioCue_button_default",
+            "path": "Configs/Audio/DefaultUI/AudioCue_button_default"
+        },
+        {
+            "key": "AudioCue_tavern_hire_survivor",
+            "path": "Configs/Audio/DefaultUI/AudioCue_tavern_hire_survivor"
+        },
+        {
+            "key": "UIAudioDatabase",
+            "path": "Configs/Audio/UIAudioDatabase"
+        },
+        {
             "key": "ApplicationConfig",
             "path": "Configs/Core/ApplicationConfig"
         },
@@ -31,26 +43,6 @@
         {
             "key": "CampDefenseConfig",
             "path": "Configs/Gameplay/CampDefense/CampDefenseConfig"
-        },
-        {
-            "key": "ID.horde.spawn_01",
-            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_01"
-        },
-        {
-            "key": "ID.horde.spawn_02",
-            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_02"
-        },
-        {
-            "key": "ID.horde.spawn_03",
-            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_03"
-        },
-        {
-            "key": "ID.horde.spawn_04",
-            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_04"
-        },
-        {
-            "key": "ID.horde.spawn_05",
-            "path": "Configs/Gameplay/CampDefense/HordeWaves/_Ids/ID.horde.spawn_05"
         },
         {
             "key": "WaveConfig",
@@ -229,14 +221,6 @@
             "path": "Configs/Gameplay/Player/Combat/WeaponAnimLibrary"
         },
         {
-            "key": "ID.buff.hunger",
-            "path": "Configs/Gameplay/Player/Consumption/_Ids/ID.buff.hunger"
-        },
-        {
-            "key": "ID.buff.thirst",
-            "path": "Configs/Gameplay/Player/Consumption/_Ids/ID.buff.thirst"
-        },
-        {
             "key": "HungerBuff",
             "path": "Configs/Gameplay/Player/Consumption/HungerBuff"
         },
@@ -361,114 +345,6 @@
             "path": "Configs/GameRules/StartKIt/StartKitData"
         },
         {
-            "key": "ID.ammo.heavy_crate",
-            "path": "Configs/IAP/_Ids/ID.ammo.heavy_crate"
-        },
-        {
-            "key": "ID.ammo.light_crate",
-            "path": "Configs/IAP/_Ids/ID.ammo.light_crate"
-        },
-        {
-            "key": "ID.ammo.mixed_crate",
-            "path": "Configs/IAP/_Ids/ID.ammo.mixed_crate"
-        },
-        {
-            "key": "ID.ammo.rifle_crate",
-            "path": "Configs/IAP/_Ids/ID.ammo.rifle_crate"
-        },
-        {
-            "key": "ID.ammo.shotgun_crate",
-            "path": "Configs/IAP/_Ids/ID.ammo.shotgun_crate"
-        },
-        {
-            "key": "ID.bundle.builder_pack",
-            "path": "Configs/IAP/_Ids/ID.bundle.builder_pack"
-        },
-        {
-            "key": "ID.bundle.demolition_pack",
-            "path": "Configs/IAP/_Ids/ID.bundle.demolition_pack"
-        },
-        {
-            "key": "ID.bundle.grenadier_pack",
-            "path": "Configs/IAP/_Ids/ID.bundle.grenadier_pack"
-        },
-        {
-            "key": "ID.bundle.medical_supply_pack",
-            "path": "Configs/IAP/_Ids/ID.bundle.medical_supply_pack"
-        },
-        {
-            "key": "ID.bundle.squad_assault_kit",
-            "path": "Configs/IAP/_Ids/ID.bundle.squad_assault_kit"
-        },
-        {
-            "key": "ID.bundle.squad_cqb_kit",
-            "path": "Configs/IAP/_Ids/ID.bundle.squad_cqb_kit"
-        },
-        {
-            "key": "ID.bundle.squad_defense_kit",
-            "path": "Configs/IAP/_Ids/ID.bundle.squad_defense_kit"
-        },
-        {
-            "key": "ID.bundle.squad_heavy_kit",
-            "path": "Configs/IAP/_Ids/ID.bundle.squad_heavy_kit"
-        },
-        {
-            "key": "ID.bundle.squad_sniper_kit",
-            "path": "Configs/IAP/_Ids/ID.bundle.squad_sniper_kit"
-        },
-        {
-            "key": "ID.bundle.survivor_pack",
-            "path": "Configs/IAP/_Ids/ID.bundle.survivor_pack"
-        },
-        {
-            "key": "ID.coins.mid",
-            "path": "Configs/IAP/_Ids/ID.coins.mid"
-        },
-        {
-            "key": "ID.coins.safe",
-            "path": "Configs/IAP/_Ids/ID.coins.safe"
-        },
-        {
-            "key": "ID.coins.small",
-            "path": "Configs/IAP/_Ids/ID.coins.small"
-        },
-        {
-            "key": "ID.multy.ammo",
-            "path": "Configs/IAP/_Ids/ID.multy.ammo"
-        },
-        {
-            "key": "ID.multy.weapon_1",
-            "path": "Configs/IAP/_Ids/ID.multy.weapon_1"
-        },
-        {
-            "key": "ID.multy.weapon_2",
-            "path": "Configs/IAP/_Ids/ID.multy.weapon_2"
-        },
-        {
-            "key": "ID.weapon.benelli_military",
-            "path": "Configs/IAP/_Ids/ID.weapon.benelli_military"
-        },
-        {
-            "key": "ID.weapon.glock17_military",
-            "path": "Configs/IAP/_Ids/ID.weapon.glock17_military"
-        },
-        {
-            "key": "ID.weapon.mk14_military",
-            "path": "Configs/IAP/_Ids/ID.weapon.mk14_military"
-        },
-        {
-            "key": "ID.weapon.mp5sd_military",
-            "path": "Configs/IAP/_Ids/ID.weapon.mp5sd_military"
-        },
-        {
-            "key": "ID.weapon.pkp_military",
-            "path": "Configs/IAP/_Ids/ID.weapon.pkp_military"
-        },
-        {
-            "key": "ID.weapon.scarl_military",
-            "path": "Configs/IAP/_Ids/ID.weapon.scarl_military"
-        },
-        {
             "key": "iap.ammo.mixed_crate",
             "path": "Configs/IAP/iap.ammo.mixed_crate"
         },
@@ -575,6 +451,10 @@
         {
             "key": "iap.weapon.scarl_military",
             "path": "Configs/IAP/Single/iap.weapon.scarl_military"
+        },
+        {
+            "key": "TutorialCampaignRegistry",
+            "path": "Configs/Tutorial/TutorialCampaignRegistry"
         },
         {
             "key": "DamagePopupStyleConfig",

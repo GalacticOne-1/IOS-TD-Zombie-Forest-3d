@@ -1123,7 +1123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audio:
     useSound: 0
-    clipId: 0
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -1177,6 +1177,10 @@ PrefabInstance:
     - target: {fileID: 6535022196499764840, guid: 1d702932708254c4da97a8e3ca07bdb7, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7540873499580985786, guid: 1d702932708254c4da97a8e3ca07bdb7, type: 3}
+      propertyPath: audio.useSound
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8126444685899518074, guid: 1d702932708254c4da97a8e3ca07bdb7, type: 3}
       propertyPath: m_Pivot.x
@@ -1305,6 +1309,10 @@ PrefabInstance:
     - target: {fileID: 1954854022167017529, guid: b720507eccc3e43159d13143cdec3a5e, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -91
+      objectReference: {fileID: 0}
+    - target: {fileID: 3171580800936261235, guid: b720507eccc3e43159d13143cdec3a5e, type: 3}
+      propertyPath: audio.useSound
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3171580800936261235, guid: b720507eccc3e43159d13143cdec3a5e, type: 3}
       propertyPath: <styleId>k__BackingField

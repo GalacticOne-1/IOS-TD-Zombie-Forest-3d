@@ -79,6 +79,8 @@ namespace Galactic1.Code.Systems.Squad
             _gameLoopContext.SelectForStrategicSquad(playerUnit.Proxy.Id);
             SyncToProxy();
             OnSquadChanged?.Invoke(playerUnit.Proxy.Id, true);
+            EventBus<StrategicSquadChangedEvent>.Raise(new StrategicSquadChangedEvent());
+            
             return true;
         }
 
@@ -90,6 +92,7 @@ namespace Galactic1.Code.Systems.Squad
             _gameLoopContext.DeselectFromStrategicSquad(playerUnit.Proxy.Id);
             SyncToProxy();
             OnSquadChanged?.Invoke(playerUnit.Proxy.Id, false);
+            EventBus<StrategicSquadChangedEvent>.Raise(new StrategicSquadChangedEvent());
         }
 
         // public void ClearSquad()

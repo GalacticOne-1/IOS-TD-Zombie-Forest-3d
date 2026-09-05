@@ -227,8 +227,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -431,8 +431,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -574,8 +574,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -717,8 +717,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -1303,6 +1303,7 @@ GameObject:
   - component: {fileID: 8256472247979723863}
   - component: {fileID: 9026693501333147452}
   - component: {fileID: 4071075761767227009}
+  - component: {fileID: 537887626264418048}
   m_Layer: 5
   m_Name: b_inventory
   m_TagString: Untagged
@@ -1381,8 +1382,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -1434,6 +1435,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   group: 0
+--- !u!114 &537887626264418048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2517837529320425789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
 --- !u!1 &2559507423958614692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1525,8 +1539,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -2649,6 +2663,7 @@ GameObject:
   - component: {fileID: 323453352369128186}
   - component: {fileID: 841191498575167889}
   - component: {fileID: 2580659847658189591}
+  - component: {fileID: 4482577933068310412}
   m_Layer: 5
   m_Name: b_map
   m_TagString: Untagged
@@ -2727,8 +2742,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -2780,6 +2795,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   group: 0
+--- !u!114 &4482577933068310412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059845341915006864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: b7a72bd201354493691e06a3c3d454d0, type: 2}
 --- !u!1 &6078784898859863631
 GameObject:
   m_ObjectHideFlags: 0
@@ -2793,6 +2821,7 @@ GameObject:
   - component: {fileID: 304530154954443557}
   - component: {fileID: 858015605885601870}
   - component: {fileID: 1054715646083246257}
+  - component: {fileID: 3386036649348691715}
   m_Layer: 5
   m_Name: b_shop
   m_TagString: Untagged
@@ -2871,8 +2900,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -2924,6 +2953,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   group: 0
+--- !u!114 &3386036649348691715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6078784898859863631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: 0c455925e56194682aefcc703cd290d2, type: 2}
 --- !u!1 &7092934685519344920
 GameObject:
   m_ObjectHideFlags: 0
@@ -3089,8 +3131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio:
-    useSound: 0
-    clipId: 0
+    useSound: 1
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1

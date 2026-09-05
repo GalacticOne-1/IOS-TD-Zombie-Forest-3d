@@ -76,7 +76,7 @@ namespace Galactic1.Core
             DailyQuest = new(gameState.DailyQuest);
             
             Tutorial = new(gameState.Tutorial);
-            
+            Tutorial.Skip(1).Subscribe(_ => gameState.Tutorial = _);
             
            
             Inbox = new ReactiveProperty<CPlayerInventory>[gameState.Inbox.Length];

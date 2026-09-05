@@ -44,6 +44,7 @@ namespace Galactic1.Configs
 
             IAP = new IAPConfigRegistry(allConfigs);
             Get<UIStyleDatabase>().Initialize(allConfigs);
+            Get<UIAudioDatabase>().Initialize(allConfigs);
             CombatSurfaceFX = new CombatSurfaceFXDatabase(allConfigs);
             CombatTracers = new CombatTracerDatabase(Get<ItemDatabase>().Items);
             

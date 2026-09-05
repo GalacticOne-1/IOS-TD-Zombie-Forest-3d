@@ -31,7 +31,7 @@ namespace Galactic1.Code.UI.Buildings
             itemImg.sprite = dto.Icon;
             
             
-            durabilityText.text = $"{dto.Durability}%";
+            durabilityText.text = $"{dto.DurabilityPrcnt}%";
             durabilityText.color = styleResolver.ResolveValueColor(ValueRangeType.Durability, dto.Durability01);
             durabilityBar.fillAmount = dto.Durability01;
             

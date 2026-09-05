@@ -2497,7 +2497,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 8134018895662938951}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999977
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3626,6 +3626,10 @@ PrefabInstance:
     - target: {fileID: 3921179093135099634, guid: 9a366a53df0624802814b5e421c0ec8a, type: 3}
       propertyPath: m_Name
       value: b_continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 5436333654184119119, guid: 9a366a53df0624802814b5e421c0ec8a, type: 3}
+      propertyPath: audio.useSound
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

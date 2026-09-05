@@ -661,7 +661,8 @@ namespace Galactic1
             // ...
             
             
-            
+            // === запускаем одноразовое событие при старте игры === 
+            EventBus<StartGameEvent>.Raise(new StartGameEvent(), true);
             
             
             // включаем звуки юнитов
@@ -744,7 +745,8 @@ namespace Galactic1
             // ...
             
             
-            
+            // === запускаем одноразовое событие при старте игры === 
+            EventBus<StartGameEvent>.Raise(new StartGameEvent(), true);
             
             
             
@@ -826,7 +828,8 @@ namespace Galactic1
             // ...
             
             
-            
+            // === запускаем одноразовое событие при старте игры === 
+            EventBus<StartGameEvent>.Raise(new StartGameEvent(), true);
             
             
             

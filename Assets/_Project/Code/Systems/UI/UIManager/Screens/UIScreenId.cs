@@ -9,6 +9,7 @@ namespace Galactic1.UI.Core
         PurchaseRewardScreen = 4,
         GameStore = 5,
         GameStoreOfferSlide = 6,
+        TutorialHUD = 7,
         
         ConfirmPopup = 10,
         ConfirmPaidPopup = 11,
@@ -33,11 +34,14 @@ namespace Galactic1.UI.Core
         CampDefenseMapReport = 31,
         
         
+        
+        
         HUDInput = 100,
         DeathScreen = 101,
         HUDCamp = 102,
         HUDMap = 103,
         HUDLocation = 104,
+        
         
     }
 }

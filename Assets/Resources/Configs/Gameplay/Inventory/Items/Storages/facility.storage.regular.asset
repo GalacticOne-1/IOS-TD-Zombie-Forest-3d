@@ -73,6 +73,7 @@ MonoBehaviour:
       type: {class: StorageModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
       data:
         facilityType: 3
+        weaponProduction: 0
         footprint:
           width: 2
           height: 3
@@ -80,7 +81,7 @@ MonoBehaviour:
           allowRotation: 1
           allowOverlap: 0
           checkOccupancy: 1
-        buildLimit: 6
+        buildLimit: 60
         upgradeLevels: []
         allowedZoneTags: 05000000
         allowedZonesOnly: 0
