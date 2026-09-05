@@ -113,9 +113,9 @@ namespace Galactic1.RaidLoot.Services
                     continue;
                 }
 
-                var category = g.Item.Classification.economyCategory;
+                
                 int rolledAmount = g.RollAmount(rng);
-                var amountMul = _profile?.GetAmountMultiplier(category) ?? 1f;
+                var amountMul = _profile?.GetAmountMultiplier(g.Item) ?? 1f;
                 int finalAmount = Mathf.Max(1, Mathf.RoundToInt(rolledAmount * amountMul));
 
                 trace.AddGuaranteed(new LootGenerationTrace.GuaranteedTrace

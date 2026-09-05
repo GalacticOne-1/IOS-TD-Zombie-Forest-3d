@@ -16,8 +16,12 @@ public class LootSimulatorWindow : EditorWindow
     [MenuItem("Tools/Loot Simulator")]
     public static void Open() => GetWindow<LootSimulatorWindow>("Loot Simulator");
 
-    [SerializeField] private LootTableConfig _lootTableConfig;
+    [Header("Location")]
     [SerializeField] private LocationZonesEditorTool _locationZonesEditorTool;
+    [SerializeField] private LocationLootProfileConfig _lootProfileConfig;
+    
+    [Header("Container")]
+    [SerializeField] private LootTableConfig _lootTableConfig;
     [SerializeField] private LootBalanceProfile _balanceProfile;
     [SerializeField] private DepletionCurveConfig _depletionCurve;
     [SerializeField] private Tier _containerTier = Tier.T1;
@@ -90,6 +94,8 @@ public class LootSimulatorWindow : EditorWindow
                 "Loot Table", _lootTableConfig, typeof(LootTableConfig), false);
             _locationZonesEditorTool = (LocationZonesEditorTool)EditorGUILayout.ObjectField(
                 "Location", _locationZonesEditorTool, typeof(LocationZonesEditorTool), true);
+            _lootProfileConfig = (LocationLootProfileConfig)EditorGUILayout.ObjectField(
+                "Location Loot Profile", _lootProfileConfig, typeof(LocationLootProfileConfig), false);
             _balanceProfile = (LootBalanceProfile)EditorGUILayout.ObjectField(
                 "Balance Profile", _balanceProfile, typeof(LootBalanceProfile), false);
             _depletionCurve = (DepletionCurveConfig)EditorGUILayout.ObjectField(
@@ -151,7 +157,7 @@ public class LootSimulatorWindow : EditorWindow
     private void RunSimulation()
     {
         var table = BuildTable(_lootTableConfig);
-        var svc = new LootSimulationService(_balanceProfile, _depletionCurve);
+        var svc = new LootSimulationService(_balanceProfile, _depletionCurve, BuildLootProfile());
 
         var report = _mode == LootSimulationMode.Deterministic
             ? svc.RunDeterministic(table, _containerTier, _seed, _iterations, _openCountStage)
@@ -209,7 +215,7 @@ public class LootSimulatorWindow : EditorWindow
             .OrderBy(g => g.Key.Id.ToString())
             .ToList();
 
-        var svc = new LootSimulationService(_balanceProfile, _depletionCurve);
+        var svc = new LootSimulationService(_balanceProfile, _depletionCurve, BuildLootProfile());
         var totals = new Dictionary<string, ItemAggregate>();
 
         foreach (var group in groups)
@@ -240,23 +246,46 @@ public class LootSimulatorWindow : EditorWindow
         _locationTotals.AddRange(totals.Values.OrderByDescending(a => a.ExpectedAmount));
         Repaint();
     }
+    
+    
+    private LocationLootProfile BuildLootProfile()
+    {
+        if (_lootProfileConfig == null) return null;
 
+        return new LocationLootProfile(
+            default, // LocationId — для симулятора не важен, используется только для queries по item/category
+            _lootProfileConfig.CategoryMultipliers,
+            _lootProfileConfig.ItemMultipliers);
+    }
+
+    // private static void AccumulateTotals(Dictionary<string, ItemAggregate> totals,
+    //     LootSimulationService.SimulationReport report, int count)
+    // {
+    //     if (report.Iterations <= 0) return;
+    //
+    //     foreach (var kv in report.ItemTotalAmount)
+    //     {
+    //         var avgAmountPerOpen = kv.Value / (float)report.Iterations;
+    //         GetOrAdd(totals, kv.Key).ExpectedAmount += avgAmountPerOpen * count;
+    //     }
+    //
+    //     foreach (var kv in report.ItemFrequency)
+    //     {
+    //         var avgAppearancePerOpen = kv.Value / (float)report.Iterations;
+    //         GetOrAdd(totals, kv.Key).ExpectedAppearances += avgAppearancePerOpen * count;
+    //     }
+    // }
+    
     private static void AccumulateTotals(Dictionary<string, ItemAggregate> totals,
         LootSimulationService.SimulationReport report, int count)
     {
         if (report.Iterations <= 0) return;
 
         foreach (var kv in report.ItemTotalAmount)
-        {
-            var avgAmountPerOpen = kv.Value / (float)report.Iterations;
-            GetOrAdd(totals, kv.Key).ExpectedAmount += avgAmountPerOpen * count;
-        }
+            GetOrAdd(totals, kv.Key).ExpectedAmount += kv.Value * count;
 
         foreach (var kv in report.ItemFrequency)
-        {
-            var avgAppearancePerOpen = kv.Value / (float)report.Iterations;
-            GetOrAdd(totals, kv.Key).ExpectedAppearances += avgAppearancePerOpen * count;
-        }
+            GetOrAdd(totals, kv.Key).ExpectedAppearances += kv.Value * count;
     }
 
     private static ItemAggregate GetOrAdd(Dictionary<string, ItemAggregate> totals, string name)
@@ -293,7 +322,7 @@ public class LootSimulatorWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.LabelField(
-            $"Expected resources across {_totalContainers} containers (per full sweep, sorted by amount):",
+            $"Expected resources across {_totalContainers} containers over {_iterations} visits:",
             _totalsSubStyle);
         EditorGUILayout.Space(4);
 

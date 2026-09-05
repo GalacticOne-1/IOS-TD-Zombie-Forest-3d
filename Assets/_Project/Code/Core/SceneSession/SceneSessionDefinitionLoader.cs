@@ -51,7 +51,8 @@ namespace Galactic1.Core.GameSession
             var lootProfile = locationContext.LocationConfig.LocationIntel.lootProfile;
             locationContext.LocationLootProfile = new LocationLootProfile(
                 locationContext.LocationConfig.Id,
-                lootProfile.Multipliers);
+                lootProfile.CategoryMultipliers,
+                lootProfile.ItemMultipliers);
             
             locationContext.LootSpawnPoints = sceneData.LootSpawnPoints;
             

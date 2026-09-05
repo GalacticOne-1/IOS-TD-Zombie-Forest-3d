@@ -68,8 +68,6 @@ namespace Galactic1.RaidLoot.Services
                 if (entry.Item == null)
                     continue;
 
-                var category = entry.Item.Classification.economyCategory;
-
                 // =====================================================
                 // Stage 1: RNG
                 // =====================================================
@@ -80,13 +78,10 @@ namespace Galactic1.RaidLoot.Services
                 // Stage 2: Location Economy Matrix
                 // =====================================================
 
-                var amountMultiplier =
-                    _lootProfile?.GetAmountMultiplier(category) ?? 1f;
+                var amountMultiplier = _lootProfile?.GetAmountMultiplier(entry.Item) ?? 1f;
 
                 var locationAdjustedAmount =
-                    Mathf.Max(
-                        1,
-                        Mathf.RoundToInt(baseAmount * amountMultiplier));
+                    Mathf.Max(1, Mathf.RoundToInt(baseAmount * amountMultiplier));
 
                 var context = new LootGenerationContext(
                     "",
@@ -110,11 +105,9 @@ namespace Galactic1.RaidLoot.Services
                 // Stage 3: Raid Economy Matrix
                 // =====================================================
 
-                var normalizedRecord =
-                    _normalizer.Normalize(generatedRecord);
+                var normalizedRecord = _normalizer.Normalize(generatedRecord);
 
-                var finalAmount =
-                    normalizedRecord?.Amount ?? 0;
+                var finalAmount = normalizedRecord?.Amount ?? 0;
 
                 // =====================================================
                 // Trace

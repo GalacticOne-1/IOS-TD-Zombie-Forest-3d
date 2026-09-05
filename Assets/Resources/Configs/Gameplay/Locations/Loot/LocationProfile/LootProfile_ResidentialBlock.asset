@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f777919e1ca4fa6b7323d2f63afccfe, type: 3}
+  m_Name: LootProfile_ResidentialBlock
+  m_EditorClassIdentifier: 
+  _categoryMultipliers: []
+  _itemMultipliers:
+  - itemId: {fileID: 11400000, guid: 875ea44ba699441e694fa86a2924aa26, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.35
+  - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.3
+  - itemId: {fileID: 11400000, guid: 24573ef080bd145a58e601ed8a25c1e4, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.6
+  - itemId: {fileID: 11400000, guid: f919b87d268f04348a1ecde2c4d1e695, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.75
+  - itemId: {fileID: 11400000, guid: fef5645cfc412495db43b5ae83dbb8ec, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.8
+  - itemId: {fileID: 11400000, guid: 20348407d85cc4332b66bb53f2ef04cc, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.8

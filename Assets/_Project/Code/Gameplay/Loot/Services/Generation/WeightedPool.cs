@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Galactic1.Game.Meta.Items;
 using Galactic1.RaidLoot.Authoring;
 using Galactic1.RaidLoot.Definition;
 
@@ -40,7 +39,7 @@ namespace Galactic1.RaidLoot.Services.Probability
                 var c = candidates[i];
 
                 // WeightMultiplier — только spawn probability, не quantity
-                var weightMul = profile?.GetWeightMultiplier(c.Item.Classification.economyCategory) ?? 1f;
+                var weightMul = profile?.GetWeightMultiplier(c.Item) ?? 1f;
                 var adjusted = c.Weight * weightMul;
 
                 totalWeight += adjusted;

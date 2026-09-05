@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
-using Galactic1.Gameplay;
 using Galactic1.RaidLoot.Authoring;
 using Galactic1.RaidLoot.Definition;
 using Galactic1.RaidLoot.Services;
@@ -65,13 +64,16 @@ namespace Galactic1.RaidLoot.Diagnostics
 
         private readonly LootBalanceProfile _balanceProfile;
         private readonly DepletionCurveConfig _depletionCurve;
+        private readonly LocationLootProfile _lootProfile;
 
         public LootSimulationService(
             LootBalanceProfile balanceProfile,
-            DepletionCurveConfig depletionCurve)
+            DepletionCurveConfig depletionCurve,
+            LocationLootProfile lootProfile = null)
         {
             _balanceProfile = balanceProfile;
             _depletionCurve = depletionCurve;
+            _lootProfile = lootProfile;
         }
 
         // ── Public API ────────────────────────────────────────────────────────
@@ -87,7 +89,7 @@ namespace Galactic1.RaidLoot.Diagnostics
             var stage = _depletionCurve.GetStage(openCountForStage);
 
             for (var i = 0; i < iterations; i++)
-                RunIteration(table, containerTier, stage, new SeededRandom(seed), report);
+                RunIteration(table, containerTier, stage, new SeededRandom(seed), _lootProfile, report);
 
             return report;
         }
@@ -103,7 +105,7 @@ namespace Galactic1.RaidLoot.Diagnostics
             var stage = _depletionCurve.GetStage(openCountForStage);
 
             for (var i = 0; i < iterations; i++)
-                RunIteration(table, containerTier, stage, new SeededRandom(baseSeed + i), report);
+                RunIteration(table, containerTier, stage, new SeededRandom(baseSeed + i), _lootProfile, report);
 
             return report;
         }
@@ -151,13 +153,18 @@ namespace Galactic1.RaidLoot.Diagnostics
             Tier containerTier,
             DepletionCurveConfig.DepletionStageRule stage,
             SeededRandom rng,
+            LocationLootProfile lootProfile,
             SimulationReport report)
         {
             var iterItems = 0;
 
+            // Guaranteed layer — теперь тоже применяет AmountMultiplier, как в реальном runtime
             foreach (var g in table.GuaranteedEntries)
             {
-                var amount = g.RollAmount(rng);
+                var rolledAmount = g.RollAmount(rng);
+                var amountMul = lootProfile?.GetAmountMultiplier(g.Item) ?? 1f;
+                var amount = Mathf.Max(1, Mathf.RoundToInt(rolledAmount * amountMul));
+
                 RecordItem(g.Item.Header.titleLid, amount, g.Item, report);
                 iterItems++;
             }
@@ -174,11 +181,11 @@ namespace Galactic1.RaidLoot.Diagnostics
                     var candidates = ContextFilter.Filter(slot.SharedPool.Pool, tierLimits);
                     if (candidates.Count == 0) continue;
 
-                    var pool = WeightedPool.Build(candidates, null);
+                    var pool = WeightedPool.Build(candidates, lootProfile);
                     var selected = WeightedSelector.Select(pool, rng, out _);
                     if (selected == null) continue;
 
-                    var amount = QuantityRoller.Roll(selected.Value.Source, null, rng);
+                    var amount = QuantityRoller.Roll(selected.Value.Source, lootProfile, rng);
                     RecordItem(selected.Value.Source.Item.Header.titleLid, amount,
                         selected.Value.Source.Item, report);
 

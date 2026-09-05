@@ -19,9 +19,9 @@ namespace Galactic1.RaidLoot.Services
             var raw = rng.NextInt(entry.MinAmount, entry.MaxAmount);
 
             // AmountMultiplier — только quantity, не probability
-            var modifier = profile?.GetAmountMultiplier(entry.Item.Classification.economyCategory) ?? 1f;
+            var modifier = profile?.GetAmountMultiplier(entry.Item) ?? 1f;
 
-            return Mathf.Max(1, UnityEngine.Mathf.RoundToInt(raw * modifier));
+            return Mathf.Max(1, Mathf.RoundToInt(raw * modifier));
         }
     }
 }

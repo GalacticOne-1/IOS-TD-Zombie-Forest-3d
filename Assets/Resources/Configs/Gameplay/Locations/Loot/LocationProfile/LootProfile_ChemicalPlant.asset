@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f777919e1ca4fa6b7323d2f63afccfe, type: 3}
+  m_Name: LootProfile_ChemicalPlant
+  m_EditorClassIdentifier: 
+  _categoryMultipliers: []
+  _itemMultipliers:
+  - itemId: {fileID: 11400000, guid: 74aa7500886624cdf9177bb45670183f, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.75
+  - itemId: {fileID: 11400000, guid: 0f75d288c1209465cb5820ce8de91606, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.7
+  - itemId: {fileID: 11400000, guid: 983f9e5771045486ca73b09ee49ecd4c, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.9
+  - itemId: {fileID: 11400000, guid: ff12cea370ac14e46b1ca036d076eb8d, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.9
+  - itemId: {fileID: 11400000, guid: f29c4b3acf7c1434d83dfc7cd45ae85c, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.9
+  - itemId: {fileID: 11400000, guid: 842156a9f3bab48b88df2d462d725164, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.9
+  - itemId: {fileID: 11400000, guid: ba9bf9b5c9d7f4f15b048da8f075f600, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.8
+  - itemId: {fileID: 11400000, guid: 5cda6679c1add462e8ead1a28930e990, type: 2}
+    _weightMultiplier: 1
+    _amountMultiplier: 0.9

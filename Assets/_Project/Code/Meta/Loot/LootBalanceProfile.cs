@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Galactic1.Code.GameDatabase;
-using Galactic1.Configs;
 using Galactic1.Core.Enums;
-using Galactic1.Gameplay;
 using Galactic1.Game.Meta.Items;
-using Galactic1.Items;
 using UnityEngine;
 
 namespace Galactic1.RaidLoot.Authoring
