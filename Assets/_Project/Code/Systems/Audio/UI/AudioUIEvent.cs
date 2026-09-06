@@ -4,9 +4,9 @@ namespace Galactic1.Code.Gameplay.Combat.Events
 {
     public readonly struct AudioUIEvent : IEvent
     {
-        public readonly SimpleAudioData Data;
+        public readonly AudioCueData Data;
 
-        public AudioUIEvent(SimpleAudioData data)
+        public AudioUIEvent(AudioCueData data)
         {
             Data = data;
         }

@@ -39,7 +39,7 @@ namespace Galactic1.Code.Gameplay.Audio.Weapons
             if (e.Audio == null)
                 return;
             
-            WeaponAudioCueData cue = GetCue(e.Audio, e.Type);
+            AudioCueData cue = GetCue(e.Audio, e.Type);
 
             if (cue == null || !cue.HasClips)
                 return;
@@ -62,7 +62,7 @@ namespace Galactic1.Code.Gameplay.Audio.Weapons
 
         
         
-        private static WeaponAudioCueData GetCue(
+        private static AudioCueData GetCue(
             WeaponAudioData audio,
             WeaponAudioEventType type)
         {

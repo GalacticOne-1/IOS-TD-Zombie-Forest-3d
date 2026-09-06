@@ -4,6 +4,7 @@ using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Configs;
 using Galactic1.Systems;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -387,18 +388,23 @@ namespace Galactic1.UI.Core
             {
                 case ButtonState.Normal:
                     gameObject.CMP_Image().sprite = _styleConfig.normal;
+                    transform.GetComponentInChildren<TMP_Text>()?.SetAlpha(1f);
                     break;
                 case ButtonState.Disabled:
                     gameObject.CMP_Image().sprite = _styleConfig.disabled;
+                    transform.GetComponentInChildren<TMP_Text>()?.SetAlpha(.7f);
                     break;
                 case ButtonState.Highlighted:
                     gameObject.CMP_Image().sprite = _styleConfig.highlighted;
+                    transform.GetComponentInChildren<TMP_Text>()?.SetAlpha(1f);
                     break;
                 case ButtonState.Pressed:
                     gameObject.CMP_Image().sprite = _styleConfig.pressed;
+                    transform.GetComponentInChildren<TMP_Text>()?.SetAlpha(1f);
                     break;
                 case ButtonState.Selected:
                     gameObject.CMP_Image().sprite = _styleConfig.selected;
+                    transform.GetComponentInChildren<TMP_Text>()?.SetAlpha(1f);
                     break;
             }
         }

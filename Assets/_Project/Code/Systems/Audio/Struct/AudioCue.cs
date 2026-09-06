@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Galactic1.Code.Gameplay.Audio.Weapons
 {
     [System.Serializable]
-    public sealed class WeaponAudioCue
+    public sealed class AudioCue
     {
         [Tooltip("One or more clips. A random clip is selected at playback time.")]
         public AudioClip[] clips;
@@ -19,6 +19,26 @@ namespace Galactic1.Code.Gameplay.Audio.Weapons
 
         public bool HasClips =>
             clips != null && clips.Length > 0;
+        
+        
+        
+        public AudioCueData ToData()
+        {
+            if (!HasClips)
+                return null;
+
+            float min = pitchMin;
+            float max = pitchMax;
+
+            if (min > max)
+                (min, max) = (max, min);
+
+            return new AudioCueData(
+                clips,
+                volume,
+                min,
+                max);
+        }
     }
     
 }

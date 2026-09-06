@@ -7,6 +7,7 @@ using Galactic1.Code.Systems.Economy;
 using Galactic1.Code.Systems.Economy.Configs;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.GameTime;
+using Galactic1.Code.UI.Buildings;
 using Galactic1.Configs;
 using Galactic1.Core;
 using Galactic1.Core.Systems.GameLoopSession;
@@ -15,6 +16,7 @@ using Galactic1.Game.Camp.Proxy;
 using Galactic1.Game.Meta.Items;
 using Galactic1.Game.Runtime.Production;
 using Galactic1.Meta.Configs.Recruitment;
+using Galactic1.Meta.Configs.Trader;
 using Galactic1.Utility;
 
 namespace Galactic1.Code.Systems.Runtime.Building
@@ -79,6 +81,18 @@ namespace Galactic1.Code.Systems.Runtime.Building
             
             switch (facilityItem.FacilityType)
             {
+                
+                case FacilityType.CampTrader:
+                    runtime = new CampTraderFacilityRuntime(
+                        proxy,
+                        (CampTraderModule)facilityItem,
+                        _timeService,
+                        _configProvider.Get<CampTraderConfig>(),
+                        _economyService);
+                    break;
+                
+                
+                
                 case FacilityType.MainContainer:
                     var mainContainer = new InboxFacilityRuntime(
                         proxy,

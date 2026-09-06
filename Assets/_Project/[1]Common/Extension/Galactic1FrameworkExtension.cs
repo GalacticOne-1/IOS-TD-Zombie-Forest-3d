@@ -2219,6 +2219,25 @@ namespace Galactic1
         
         
         #endregion
+
+        #region SET CMP
+
+        /// <summary>
+        /// Установление прозрачности для TMP текста
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="alpha"></param>
+        public static void SetAlpha(this TMP_Text text, float alpha)
+        {
+            var c = text.color;
+            c.a = alpha;
+            text.color = c;
+        }
+        
+        public static void SetTextAlpha(this GameObject g, float alpha)
+            => g.CMP_Text().SetAlpha(alpha);
+
+        #endregion
         
         #region JSON
         

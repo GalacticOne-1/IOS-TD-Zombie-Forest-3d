@@ -15,8 +15,11 @@ namespace Galactic1.Code.Systems.Runtime.Building
         CampHQ = 8,
 
         Defense = 10,
+        
 
         Medical = 20,
         ResearchLab = 21,
+        
+        CampTrader = 30,
     }
 }

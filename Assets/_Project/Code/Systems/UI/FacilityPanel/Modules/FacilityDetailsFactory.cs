@@ -41,6 +41,9 @@ namespace Galactic1.Game.UI.Buildings
         {
             switch (runtime)
             {
+                case ICampTraderRuntime trader:
+                    return BuildTrader(trader);
+                
                 case IInboxFacilityRuntime inbox:
                     return BuildMainContainer(inbox);
                 
@@ -69,6 +72,46 @@ namespace Galactic1.Game.UI.Buildings
                     return null;
             }
         }
+
+
+        #region PREMIUM
+
+        CampTraderDetailsDTO BuildTrader(ICampTraderRuntime runtime)
+        {
+            var list = new List<CampTraderOfferDTO>();
+
+            foreach (var offerCfg in runtime.Offers)
+            {
+                if (offerCfg?.Item == null)
+                    continue;
+
+                var item = offerCfg.Item;
+
+                list.Add(new CampTraderOfferDTO
+                {
+                    Id = item.Id.Guid,
+                    ItemNameLid = item.Header.titleLid,
+                    Icon = item.Header.icon,
+                    Rarity = item.Classification.rarity,
+
+                    UsesDurability = item.Physical.usesDurability,
+                    Durability = offerCfg.Durability,
+                    Durability01 = (float)offerCfg.Durability / item.Physical.maxDurability,
+
+                    Amount = offerCfg.Amount,
+
+                    Cost = offerCfg.Cost,
+                    Item = item
+                });
+            }
+
+            return new CampTraderDetailsDTO(list);
+        }
+
+        #endregion
+        
+        
+        
 
         #region Production
 
@@ -271,7 +314,7 @@ namespace Galactic1.Game.UI.Buildings
 
                
                 int maxDurability = item.Physical.maxDurability;
-                int durability = (int)(slot.Durability.Value.PercentFrom(maxDurability) * 100);
+                int durability = slot.Durability.Value;
 
                 float durability01 = maxDurability > 0
                     ? slot.Durability.Value / (float)maxDurability
@@ -287,7 +330,7 @@ namespace Galactic1.Game.UI.Buildings
                     Item = slot.Item.Value,
                     Count = slot.Amount.Value,
 
-                    DurabilityCurrent = durability,
+                    Durability = durability,
                     Durability01 = durability01,
 
                     RemainingHours = remainingHours

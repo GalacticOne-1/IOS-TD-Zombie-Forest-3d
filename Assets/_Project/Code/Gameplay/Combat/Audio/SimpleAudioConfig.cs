@@ -6,7 +6,10 @@ namespace Galactic1.Code.Gameplay.Audio
     [CreateAssetMenu(
         fileName = "AudioCue_",
         menuName = "Game Configs/Audio/Simple Audio Cue")]
-    public sealed class SimpleAudioConfig : ScriptableObject, IUIStyleConfig
+    public sealed class SimpleAudioConfig : 
+        ScriptableObject, 
+        IUIStyleConfig,
+        IUIAudioConfig
     {
         [field: SerializeField] public string ConfigId { get; private set; }
 
@@ -27,13 +30,8 @@ namespace Galactic1.Code.Gameplay.Audio
 
         [Range(0, 100)] [SerializeField] private int priority = 50;
 
-        public AudioClip Clip => clip;
-        public float Volume => volume;
-        public float PitchMin => pitchMin;
-        public float PitchMax => pitchMax;
-        public int Priority => priority;
 
-        public SimpleAudioData ToData()
+        public AudioCueData ToData()
         {
             float min = pitchMin;
             float max = pitchMax;
@@ -41,12 +39,11 @@ namespace Galactic1.Code.Gameplay.Audio
             if (min > max)
                 (min, max) = (max, min);
 
-            return new SimpleAudioData(
-                clip,
+            return new AudioCueData(
+                new[] { clip },
                 volume,
                 min,
-                max,
-                priority);
+                max);
         }
     }
 }

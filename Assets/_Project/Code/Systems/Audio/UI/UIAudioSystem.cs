@@ -4,9 +4,6 @@ using UnityEngine;
 
 namespace Galactic1.Code.Gameplay.Audio
 {
-    /// <summary>
-    /// Для UI во всей игре
-    /// </summary>
     public sealed class UIAudioSystem
     {
         private readonly EventBinding<AudioUIEvent> _binding;
@@ -14,6 +11,7 @@ namespace Galactic1.Code.Gameplay.Audio
         public UIAudioSystem()
         {
             _binding = new EventBinding<AudioUIEvent>(OnAudioCue);
+
             EventBus<AudioUIEvent>.Register(_binding);
         }
 
@@ -24,29 +22,35 @@ namespace Galactic1.Code.Gameplay.Audio
 
         private void OnAudioCue(AudioUIEvent e)
         {
-            var data = e.Data;
+            AudioCueData data = e.Data;
 
-            if (data == null)
+            if (data == null || !data.HasClips)
                 return;
 
-            if (data.Clip == null)
+            AudioClip clip = PickClip(data.Clips);
+
+            if (clip == null)
                 return;
 
-            float pitch = SelectPitch(
+            float pitch = PickPitch(
                 data.PitchMin,
                 data.PitchMax);
 
             AudioService.PlaySFX(
-                data.Clip,
+                clip,
                 data.Volume,
                 pitch);
         }
 
-        private static float SelectPitch(float min, float max)
+        private static AudioClip PickClip(AudioClip[] clips)
         {
-            if (min > max)
-                (min, max) = (max, min);
+            return clips.Length == 1
+                ? clips[0]
+                : clips[Random.Range(0, clips.Length)];
+        }
 
+        private static float PickPitch(float min, float max)
+        {
             if (Mathf.Approximately(min, max))
                 return min;
 

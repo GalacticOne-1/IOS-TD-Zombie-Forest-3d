@@ -65,7 +65,7 @@ namespace Galactic1.Code.Systems.Runtime.Building
         }
 
         // audio data
-        private SimpleAudioData hireSurvivorAudio;
+        private AudioCueData hireSurvivorAudio;
         
         
         

@@ -6,11 +6,11 @@ namespace Galactic1.Code.Gameplay.Combat.Events
     public readonly struct AudioCueEvent : IEvent
     {
         public readonly Vector3 Position;
-        public readonly SimpleAudioData Data;
+        public readonly AudioCueData Data;
 
         public AudioCueEvent(
             Vector3 position,
-            SimpleAudioData data)
+            AudioCueData data)
         {
             Position = position;
             Data = data;

@@ -16,12 +16,13 @@ public class LootSimulatorWindow : EditorWindow
     [MenuItem("Tools/Loot Simulator")]
     public static void Open() => GetWindow<LootSimulatorWindow>("Loot Simulator");
 
-    [Header("Location")]
-    [SerializeField] private LocationZonesEditorTool _locationZonesEditorTool;
+    [Header("Location")] [SerializeField] private LocationZonesEditorTool _locationZonesEditorTool;
     [SerializeField] private LocationLootProfileConfig _lootProfileConfig;
-    
-    [Header("Container")]
-    [SerializeField] private LootTableConfig _lootTableConfig;
+
+    [Header("Batch (multiple locations)")] [SerializeField]
+    private List<LocationBatchEntry> _batchEntries = new();
+
+    [Header("Container")] [SerializeField] private LootTableConfig _lootTableConfig;
     [SerializeField] private LootBalanceProfile _balanceProfile;
     [SerializeField] private DepletionCurveConfig _depletionCurve;
     [SerializeField] private Tier _containerTier = Tier.T1;
@@ -34,11 +35,15 @@ public class LootSimulatorWindow : EditorWindow
 
     private Vector2 _scroll;
     private bool _configFoldout = true;
+    private bool _batchFoldout = true;
 
     private string _locationName;
     private int _totalContainers;
     private readonly List<ContainerSection> _containerSections = new();
     private readonly List<ItemAggregate> _locationTotals = new();
+
+    // Результаты batch-симуляции (Simulate All Locations) — отдельно от single-location view.
+    private readonly List<LocationSimResult> _batchResults = new();
 
     // ── styling ──────────────────────────────────────────────────────────────
 
@@ -68,8 +73,6 @@ public class LootSimulatorWindow : EditorWindow
         _skippedNameStyle = new GUIStyle(EditorStyles.boldLabel)
             { fontSize = 12, normal = { textColor = SkippedColor } };
 
-        // wordWrap выключен: отчёт форматирован фиксированными колонками (padding пробелами),
-        // перенос строк поломает выравнивание. Высоту считаем сами через CalcHeight.
         _bodyStyle = new GUIStyle(EditorStyles.textArea)
         {
             wordWrap = false,
@@ -114,10 +117,22 @@ public class LootSimulatorWindow : EditorWindow
             EditorGUI.indentLevel--;
         }
 
+        EditorGUILayout.Space(4);
+
+        _batchFoldout = EditorGUILayout.Foldout(_batchFoldout, "Batch Locations", true);
+        if (_batchFoldout)
+        {
+            EditorGUI.indentLevel++;
+            DrawBatchEntryList();
+            EditorGUI.indentLevel--;
+        }
+
         EditorGUILayout.Space(6);
 
         var singleReady = _lootTableConfig != null && _balanceProfile != null && _depletionCurve != null;
         var locationReady = _locationZonesEditorTool != null && _balanceProfile != null && _depletionCurve != null;
+        var batchReady = _balanceProfile != null && _depletionCurve != null &&
+                         _batchEntries.Count > 0 && _batchEntries.All(e => e.Location != null);
 
         EditorGUILayout.BeginHorizontal();
 
@@ -127,6 +142,10 @@ public class LootSimulatorWindow : EditorWindow
 
         EditorGUI.BeginDisabledGroup(!locationReady);
         if (GUILayout.Button("Simulate Location")) SimulateLocation();
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUI.BeginDisabledGroup(!batchReady);
+        if (GUILayout.Button("Simulate All Locations")) SimulateAllLocations();
         EditorGUI.EndDisabledGroup();
 
         EditorGUI.BeginDisabledGroup(!singleReady);
@@ -140,10 +159,20 @@ public class LootSimulatorWindow : EditorWindow
         if (!locationReady)
             EditorGUILayout.HelpBox(
                 "Assign Location, Balance Profile and Depletion Curve to simulate a whole location.", MessageType.Info);
+        if (!batchReady)
+            EditorGUILayout.HelpBox(
+                "Add at least one Batch Location (with an assigned Location) plus Balance Profile and Depletion Curve.",
+                MessageType.Info);
 
         EditorGUILayout.Space(4);
 
-        if (_containerSections.Count > 0)
+        if (_batchResults.Count > 0)
+        {
+            _scroll = EditorGUILayout.BeginScrollView(_scroll);
+            DrawBatchResults();
+            EditorGUILayout.EndScrollView();
+        }
+        else if (_containerSections.Count > 0)
         {
             _scroll = EditorGUILayout.BeginScrollView(_scroll);
             DrawTotalsPanel();
@@ -152,12 +181,40 @@ public class LootSimulatorWindow : EditorWindow
         }
     }
 
+    // ── batch entry list UI ──────────────────────────────────────────────────
+
+    private void DrawBatchEntryList()
+    {
+        for (int i = 0; i < _batchEntries.Count; i++)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            var entry = _batchEntries[i];
+            entry.Location = (LocationZonesEditorTool)EditorGUILayout.ObjectField(
+                entry.Location, typeof(LocationZonesEditorTool), true);
+            entry.LootProfile = (LocationLootProfileConfig)EditorGUILayout.ObjectField(
+                entry.LootProfile, typeof(LocationLootProfileConfig), false);
+            _batchEntries[i] = entry;
+
+            if (GUILayout.Button("✕", GUILayout.Width(24)))
+            {
+                _batchEntries.RemoveAt(i);
+                i--;
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        if (GUILayout.Button("+ Add Location", GUILayout.Width(140)))
+            _batchEntries.Add(new LocationBatchEntry());
+    }
+
     // ── actions ──────────────────────────────────────────────────────────────
 
     private void RunSimulation()
     {
         var table = BuildTable(_lootTableConfig);
-        var svc = new LootSimulationService(_balanceProfile, _depletionCurve, BuildLootProfile());
+        var svc = new LootSimulationService(_balanceProfile, _depletionCurve, BuildLootProfile(_lootProfileConfig));
 
         var report = _mode == LootSimulationMode.Deterministic
             ? svc.RunDeterministic(table, _containerTier, _seed, _iterations, _openCountStage)
@@ -166,6 +223,7 @@ public class LootSimulatorWindow : EditorWindow
         _locationName = null;
         _locationTotals.Clear();
         _containerSections.Clear();
+        _batchResults.Clear();
         _containerSections.Add(new ContainerSection(
             _lootTableConfig.name, _containerTier, 0, LootSimulationService.FormatReport(report)));
 
@@ -182,6 +240,7 @@ public class LootSimulatorWindow : EditorWindow
         _locationName = null;
         _locationTotals.Clear();
         _containerSections.Clear();
+        _batchResults.Clear();
         _containerSections.Add(new ContainerSection("RNG Validation", _containerTier, 0, text));
 
         Debug.Log(text);
@@ -190,24 +249,62 @@ public class LootSimulatorWindow : EditorWindow
 
     private void SimulateLocation()
     {
-        var spawnPoints = _locationZonesEditorTool.ZoneRootParent
+        var result = SimulateOneLocation(_locationZonesEditorTool, _lootProfileConfig);
+
+        _batchResults.Clear();
+        _containerSections.Clear();
+        _locationTotals.Clear();
+
+        _locationName = result.LocationName;
+        _totalContainers = result.TotalContainers;
+        _containerSections.AddRange(result.Sections);
+        _locationTotals.AddRange(result.Totals);
+
+        Repaint();
+    }
+
+    private void SimulateAllLocations()
+    {
+        _containerSections.Clear();
+        _locationTotals.Clear();
+        _locationName = null;
+        _batchResults.Clear();
+
+        foreach (var entry in _batchEntries)
+        {
+            if (entry.Location == null) continue;
+            _batchResults.Add(SimulateOneLocation(entry.Location, entry.LootProfile));
+        }
+
+        Repaint();
+    }
+
+    /// <summary>
+    /// Прогоняет симуляцию для одной локации: находит все LootSpawnPoint,
+    /// группирует по конфигу контейнера, симулирует каждую группу и агрегирует totals.
+    /// Используется и для одиночного "Simulate Location", и для batch-режима —
+    /// поведение идентично в обоих случаях.
+    /// </summary>
+    private LocationSimResult SimulateOneLocation(
+        LocationZonesEditorTool locationTool,
+        LocationLootProfileConfig profileConfig)
+    {
+        var result = new LocationSimResult { LocationName = locationTool.name };
+
+        var spawnPoints = locationTool.ZoneRootParent
             .GetComponentsInChildren<LootSpawnPoint>(true)
             .Where(sp => sp.Config != null)
             .ToList();
 
-        _containerSections.Clear();
-        _locationTotals.Clear();
-        _locationName = _locationZonesEditorTool.name;
-        _totalContainers = spawnPoints.Count;
+        result.TotalContainers = spawnPoints.Count;
 
         if (spawnPoints.Count == 0)
         {
-            _containerSections.Add(new ContainerSection(
+            result.Sections.Add(new ContainerSection(
                 "No containers found", _containerTier, 0,
-                $"No LootSpawnPoint under '{_locationZonesEditorTool.name}' " +
-                $"(zone root: '{_locationZonesEditorTool.ZoneRootParent.name}')."));
-            Repaint();
-            return;
+                $"No LootSpawnPoint under '{locationTool.name}' " +
+                $"(zone root: '{locationTool.ZoneRootParent.name}')."));
+            return result;
         }
 
         var groups = spawnPoints
@@ -215,7 +312,8 @@ public class LootSimulatorWindow : EditorWindow
             .OrderBy(g => g.Key.Id.ToString())
             .ToList();
 
-        var svc = new LootSimulationService(_balanceProfile, _depletionCurve, BuildLootProfile());
+        var lootProfile = BuildLootProfile(profileConfig);
+        var svc = new LootSimulationService(_balanceProfile, _depletionCurve, lootProfile);
         var totals = new Dictionary<string, ItemAggregate>();
 
         foreach (var group in groups)
@@ -225,7 +323,7 @@ public class LootSimulatorWindow : EditorWindow
 
             if (config.LootTableConfig == null)
             {
-                _containerSections.Add(new ContainerSection(
+                result.Sections.Add(new ContainerSection(
                     config.Id.ToString(), config.ContainerTier, count,
                     "SKIPPED: LootTableConfig not assigned.", isSkipped: true));
                 continue;
@@ -236,46 +334,27 @@ public class LootSimulatorWindow : EditorWindow
                 ? svc.RunDeterministic(table, config.ContainerTier, _seed, _iterations, _openCountStage)
                 : svc.RunStatistical(table, config.ContainerTier, _baseSeed, _iterations, _openCountStage);
 
-            _containerSections.Add(new ContainerSection(
+            result.Sections.Add(new ContainerSection(
                 $"{config.Id}  ({config.LootTableConfig.Id})", config.ContainerTier, count,
                 LootSimulationService.FormatReport(report)));
 
             AccumulateTotals(totals, report, count);
         }
 
-        _locationTotals.AddRange(totals.Values.OrderByDescending(a => a.ExpectedAmount));
-        Repaint();
+        result.Totals.AddRange(totals.Values.OrderByDescending(a => a.ExpectedAmount));
+        return result;
     }
-    
-    
-    private LocationLootProfile BuildLootProfile()
+
+    private LocationLootProfile BuildLootProfile(LocationLootProfileConfig config)
     {
-        if (_lootProfileConfig == null) return null;
+        if (config == null) return null;
 
         return new LocationLootProfile(
             default, // LocationId — для симулятора не важен, используется только для queries по item/category
-            _lootProfileConfig.CategoryMultipliers,
-            _lootProfileConfig.ItemMultipliers);
+            config.CategoryMultipliers,
+            config.ItemMultipliers);
     }
 
-    // private static void AccumulateTotals(Dictionary<string, ItemAggregate> totals,
-    //     LootSimulationService.SimulationReport report, int count)
-    // {
-    //     if (report.Iterations <= 0) return;
-    //
-    //     foreach (var kv in report.ItemTotalAmount)
-    //     {
-    //         var avgAmountPerOpen = kv.Value / (float)report.Iterations;
-    //         GetOrAdd(totals, kv.Key).ExpectedAmount += avgAmountPerOpen * count;
-    //     }
-    //
-    //     foreach (var kv in report.ItemFrequency)
-    //     {
-    //         var avgAppearancePerOpen = kv.Value / (float)report.Iterations;
-    //         GetOrAdd(totals, kv.Key).ExpectedAppearances += avgAppearancePerOpen * count;
-    //     }
-    // }
-    
     private static void AccumulateTotals(Dictionary<string, ItemAggregate> totals,
         LootSimulationService.SimulationReport report, int count)
     {
@@ -302,7 +381,7 @@ public class LootSimulatorWindow : EditorWindow
     private LootTableDefinition BuildTable(LootTableConfig config)
         => new LootTableDefinition(config.Id, config.Slots, config.GuaranteedEntries);
 
-    // ── drawing ──────────────────────────────────────────────────────────────
+    // ── drawing: single-location view ────────────────────────────────────────
 
     private void DrawTotalsPanel()
     {
@@ -315,7 +394,7 @@ public class LootSimulatorWindow : EditorWindow
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Copy List", GUILayout.Width(80)))
         {
-            EditorGUIUtility.systemCopyBuffer = BuildTotalsText();
+            EditorGUIUtility.systemCopyBuffer = BuildTotalsText(_locationName, _totalContainers, _locationTotals);
             ShowNotification(new GUIContent("Copied to clipboard"));
         }
 
@@ -326,9 +405,17 @@ public class LootSimulatorWindow : EditorWindow
             _totalsSubStyle);
         EditorGUILayout.Space(4);
 
-        var maxAmount = Mathf.Max(0.0001f, _locationTotals[0].ExpectedAmount);
+        DrawTotalsBars(_locationTotals);
 
-        foreach (var item in _locationTotals)
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.Space(6);
+    }
+
+    private void DrawTotalsBars(List<ItemAggregate> totals)
+    {
+        var maxAmount = Mathf.Max(0.0001f, totals[0].ExpectedAmount);
+
+        foreach (var item in totals)
         {
             var barRect = EditorGUILayout.GetControlRect(GUILayout.Height(18));
             EditorGUI.DrawRect(barRect, new Color(1f, 1f, 1f, 0.05f));
@@ -341,22 +428,19 @@ public class LootSimulatorWindow : EditorWindow
                 $"  {item.Name}   —   {item.ExpectedAmount:F1} total   (~{item.ExpectedAppearances:F1} drops)",
                 _barLabelStyle);
         }
-
-        EditorGUILayout.EndVertical();
-        EditorGUILayout.Space(6);
     }
 
     /// <summary>
     /// Плоский текстовый список ресурсов локации, готовый для вставки в таблицу/Excel/чат —
     /// одна строка на предмет, значения через табуляцию.
     /// </summary>
-    private string BuildTotalsText()
+    private static string BuildTotalsText(string locationName, int totalContainers, List<ItemAggregate> totals)
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"Location Totals — {_locationName} ({_totalContainers} containers)");
+        sb.AppendLine($"Location Totals — {locationName} ({totalContainers} containers)");
         sb.AppendLine("Item\tTotal Amount\tExpected Drops");
 
-        foreach (var item in _locationTotals)
+        foreach (var item in totals)
             sb.AppendLine($"{item.Name}\t{item.ExpectedAmount:F1}\t{item.ExpectedAppearances:F1}");
 
         return sb.ToString();
@@ -391,6 +475,66 @@ public class LootSimulatorWindow : EditorWindow
         }
     }
 
+    // ── drawing: batch (multiple locations) view ─────────────────────────────
+
+    private void DrawBatchResults()
+    {
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField($"◆ Batch Simulation — {_batchResults.Count} location(s)", _totalsHeaderStyle);
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Copy List", GUILayout.Width(80)))
+        {
+            EditorGUIUtility.systemCopyBuffer = BuildBatchTotalsText();
+            ShowNotification(new GUIContent("Copied to clipboard"));
+        }
+
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.LabelField($"Expected resources per location, over {_iterations} visits each:",
+            _totalsSubStyle);
+        EditorGUILayout.Space(6);
+
+        foreach (var result in _batchResults)
+        {
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+
+            EditorGUILayout.LabelField(
+                $"{result.LocationName}   —   {result.TotalContainers} containers", _headerStyle);
+            EditorGUILayout.Space(2);
+
+            if (result.Totals.Count == 0)
+                EditorGUILayout.LabelField("No loot data.", _totalsSubStyle);
+            else
+                DrawTotalsBars(result.Totals);
+
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space(6);
+        }
+    }
+
+    /// <summary>
+    /// Объединённый текстовый отчёт по всем локациям batch-режима —
+    /// один блок на локацию, разделены пустой строкой. Готов для вставки в Excel/чат.
+    /// </summary>
+    private string BuildBatchTotalsText()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"Batch Simulation — {_batchResults.Count} location(s), {_iterations} visits each");
+        sb.AppendLine();
+
+        foreach (var result in _batchResults)
+        {
+            sb.AppendLine($"=== {result.LocationName} ({result.TotalContainers} containers) ===");
+            sb.AppendLine("Item\tTotal Amount\tExpected Drops");
+
+            foreach (var item in result.Totals)
+                sb.AppendLine($"{item.Name}\t{item.ExpectedAmount:F1}\t{item.ExpectedAppearances:F1}");
+
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
+    }
+
     /// <summary>
     /// LabelField резервирует высоту только под одну строку — многострочный отчёт
     /// либо обрезается, либо съедает соседние элементы. Тут высота считается явно
@@ -415,6 +559,21 @@ public class LootSimulatorWindow : EditorWindow
         var hash = tier.ToString().GetHashCode();
         var hue = (Mathf.Abs(hash) % 360) / 360f;
         return Color.HSVToRGB(hue, 0.55f, 0.95f);
+    }
+
+    [System.Serializable]
+    private struct LocationBatchEntry
+    {
+        public LocationZonesEditorTool Location;
+        public LocationLootProfileConfig LootProfile;
+    }
+
+    private sealed class LocationSimResult
+    {
+        public string LocationName;
+        public int TotalContainers;
+        public readonly List<ItemAggregate> Totals = new();
+        public readonly List<ContainerSection> Sections = new();
     }
 
     private sealed class ItemAggregate

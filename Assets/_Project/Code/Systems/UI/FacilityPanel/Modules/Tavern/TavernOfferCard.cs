@@ -204,9 +204,6 @@ namespace Galactic1.Code.UI.Buildings
 
             recruit();
             
-            // todo
-            // sound
-            // animation
             ServiceLocator.Current.Get<INotificationService>().Push(
                 new NotificationRequest(
                     "recruit",

@@ -19,6 +19,7 @@ namespace Galactic1.Game.UI.Inbox
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text countText;
 
+        [SerializeField] private Image durabilityBar;
         [SerializeField] private TMP_Text durabilityText;
 
         [SerializeField] private TMP_Text timeLeftText;
@@ -37,7 +38,7 @@ namespace Galactic1.Game.UI.Inbox
         public void Bind(InboxItemDTO dto, UIStyleResolver styleResolver)
         {
             item = dto.Item;
-            durability = dto.DurabilityCurrent;
+            durability = dto.Durability;
             _slotId = dto.SlotId;
 
             nameText.text = dto.Item.Header.titleLid;
@@ -48,15 +49,18 @@ namespace Galactic1.Game.UI.Inbox
             itemImg.sprite = item.Header.icon;
             
             // durability
-            if (dto.DurabilityCurrent > 0)
+            if (dto.Durability > 0)
             {
                 durabilityText.gameObject.SetActive(true);
-                durabilityText.text = $"{dto.DurabilityCurrent}%";
+                durabilityBar.transform.parent.gameObject.SetActive(true);
+                durabilityText.text = $"{Mathf.CeilToInt(dto.Durability01 * 100)}%";
                 durabilityText.color = styleResolver.ResolveValueColor(ValueRangeType.Durability, dto.Durability01);
+                durabilityBar.fillAmount = dto.Durability01;
             }
             else
             {
                 durabilityText.gameObject.SetActive(false);
+                durabilityBar.transform.parent.gameObject.SetActive(false);
             }
 
             // time

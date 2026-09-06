@@ -82,7 +82,7 @@ namespace Galactic1.Code.Systems.Ads
                 return AdDecision.Deny("Show failed");
 
             Economy.RegisterShow();
-            cooldowns.SetCooldown(10); // пауза между следующим показом рекламы
+            cooldowns.SetCooldown(30); // пауза между следующим показом рекламы
 
             NotifyDecision();
 

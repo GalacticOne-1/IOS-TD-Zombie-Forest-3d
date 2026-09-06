@@ -7,6 +7,7 @@ using Galactic1.Code.Systems.Inbox;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Game.Runtime.Production;
 using Galactic1.Game.Runtime.Recruitment;
+using Galactic1.Game.Runtime.Trader;
 using Galactic1.Items;
 using Galactic1.Runtime.Production;
 using UnityEngine;
@@ -28,6 +29,10 @@ namespace Galactic1.Code.Systems.Runtime
             StorageRegistry storageRegistry)
         {
             gameLoopContext = glc;
+            
+            
+            Register<ICampTraderRuntime>(runtime =>
+                new CampTraderSceneAdapter(runtime));
 
             Register<IInboxFacilityRuntime>(runtime =>
                 new InboxSceneAdapter(

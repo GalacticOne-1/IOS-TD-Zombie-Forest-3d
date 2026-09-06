@@ -22,20 +22,20 @@ namespace Galactic1.Code.Gameplay.Audio.Weapons
     public sealed class WeaponAudioConfig : ScriptableObject
     {
         [Header("Fire")]
-        public WeaponAudioCue fire = new();
+        public AudioCue fire = new();
 
         [Header("Reload")]
-        public WeaponAudioCue reloadStart = new();
-        public WeaponAudioCue reloadComplete = new();
+        public AudioCue reloadStart = new();
+        public AudioCue reloadComplete = new();
 
         [Header("Dry Fire")]
-        public WeaponAudioCue empty = new();
+        public AudioCue empty = new();
 
         [Header("Overheat")]
-        public WeaponAudioCue overheat = new();
+        public AudioCue overheat = new();
 
         [Header("Broken")]
-        public WeaponAudioCue broken = new();
+        public AudioCue broken = new();
 
         [Header("Audio Priority")]
         [Range(0, 100)]
@@ -67,8 +67,8 @@ namespace Galactic1.Code.Gameplay.Audio.Weapons
             return _cached;
         }
 
-        private static WeaponAudioCueData CreateCueData(
-            WeaponAudioCue cue)
+        private static AudioCueData CreateCueData(
+            AudioCue cue)
         {
             if (cue == null)
                 return null;
@@ -82,7 +82,7 @@ namespace Galactic1.Code.Gameplay.Audio.Weapons
                     (pitchMax, pitchMin);
             }
 
-            return new WeaponAudioCueData(
+            return new AudioCueData(
                 cue.clips,
                 cue.volume,
                 pitchMin,

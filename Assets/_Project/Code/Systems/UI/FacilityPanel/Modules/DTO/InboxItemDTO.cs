@@ -1,7 +1,5 @@
-using System;
-using Galactic1.Core.Enums;
+
 using Galactic1.Game.Meta.Items;
-using UnityEngine;
 
 namespace Galactic1.Game.UI.Buildings.DTO
 {
@@ -16,8 +14,9 @@ namespace Galactic1.Game.UI.Buildings.DTO
 
         public int Count;
 
+        
+        public int Durability;
         public float Durability01;
-        public int DurabilityCurrent;
         
         public int RemainingHours;
     }

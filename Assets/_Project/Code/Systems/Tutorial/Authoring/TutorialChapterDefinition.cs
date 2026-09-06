@@ -9,7 +9,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     /// </summary>
     [CreateAssetMenu(
         fileName = "TutorialChapter_",
-        menuName = "Galactic1/Tutorial/Chapter")]
+        menuName = "Game Configs/Tutorial/Chapter")]
     public sealed class TutorialChapterDefinition : ScriptableObject
     {
         public TutorialChapterId chapterId;

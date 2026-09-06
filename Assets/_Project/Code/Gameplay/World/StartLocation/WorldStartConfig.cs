@@ -62,11 +62,15 @@ namespace Galactic1.Game.World.StartLocation
             if (config.HasModule<CampHQModule>())
                 return ("Camp HQ", config.Id);
             
+            if (config.HasModule<GarageModule>())
+                return ("Garage", config.Id);
+            
             if (config.HasModule<TavernModule>())
                 return ("CampTavern", config.Id);
             
-            if (config.HasModule<GarageModule>())
-                return ("Garage", config.Id);
+            if (config.HasModule<CampTraderModule>())
+                return ("CampTrader", config.Id);
+            
             
             // if (config.HasModule<StorageModule>())
             //     return (inventoryConfig.GetInventoryId(config.Storage.StorageType), 

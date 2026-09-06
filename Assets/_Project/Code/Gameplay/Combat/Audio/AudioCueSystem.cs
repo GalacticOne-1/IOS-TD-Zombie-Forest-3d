@@ -34,7 +34,7 @@ namespace Galactic1.Code.Gameplay.Audio
             if (data == null)
                 return;
 
-            if (data.Clip == null)
+            if (data.Clips == null || data.Clips.Length == 0)
                 return;
 
             float pitch = SelectPitch(
@@ -42,7 +42,7 @@ namespace Galactic1.Code.Gameplay.Audio
                 data.PitchMax);
 
             AudioService.PlaySFXAtPosition(
-                data.Clip,
+                data.Clips[0],
                 e.Position,
                 data.Volume,
                 pitch);

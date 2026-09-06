@@ -10,7 +10,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     /// </summary>
     [CreateAssetMenu(
         fileName = "TutorialStep_",
-        menuName = "Galactic1/Tutorial/Step")]
+        menuName = "Game Configs/Tutorial/Step")]
     public sealed class TutorialStepDefinition : ScriptableObject
     {
         [Tooltip("Стабильный уникальный идентификатор шага (RuntimeId-ассет).")]

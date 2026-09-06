@@ -15,7 +15,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     /// </summary>
     [CreateAssetMenu(
         fileName = "TutorialCampaignRegistry",
-        menuName = "Galactic1/Tutorial/Campaign Registry")]
+        menuName = "Game Configs/Tutorial/Campaign Registry")]
     public sealed class TutorialCampaignRegistry : ScriptableObject
     {
         public List<TutorialDefinition> campaigns = new();

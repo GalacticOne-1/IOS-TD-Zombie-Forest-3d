@@ -13,7 +13,7 @@ namespace Galactic1.UI.Core
     public class UIAudioDatabase : ScriptableObject
     {
         // стили лежат как отдельные конфиги
-        private Dictionary<string, SimpleAudioConfig> _map = new();
+        private Dictionary<string, IUIAudioConfig> _map = new();
 
         
         
@@ -24,12 +24,12 @@ namespace Galactic1.UI.Core
             {
                 foreach (var config in rawConfigs.Values)
                 {
-                    if (config is SimpleAudioConfig style)
+                    if (config is IUIAudioConfig audioConfig)
                     {
-                        if (!_map.ContainsKey(style.ConfigId))
-                            _map.Add(style.ConfigId, style);
+                        if (!_map.ContainsKey(audioConfig.ConfigId))
+                            _map.Add(audioConfig.ConfigId, audioConfig);
                         else
-                            Debug.LogError($"Duplicate SimpleAudioConfig id: {style.ConfigId}");
+                            Debug.LogError($"Duplicate SimpleAudioConfig id: {audioConfig.ConfigId}");
                     }
                 }
             }

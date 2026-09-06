@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audio:
     useSound: 0
-    clipId: 0
+    config: {fileID: 0}
   workInTutorial: 0
   ignoreBlock: 0
   interactable: 1
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1591020541240034472}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1070,6 +1070,7 @@ MonoBehaviour:
   itemImg: {fileID: 3024403912821240908}
   nameText: {fileID: 3804782651770655417}
   countText: {fileID: 8555025056227925487}
+  durabilityBar: {fileID: 2148929132944837035}
   durabilityText: {fileID: 680800362531505348}
   timeLeftText: {fileID: 5846772373512108302}
   takeButton: {fileID: 966432615912371425}
@@ -1127,7 +1128,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8022444772613353229}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

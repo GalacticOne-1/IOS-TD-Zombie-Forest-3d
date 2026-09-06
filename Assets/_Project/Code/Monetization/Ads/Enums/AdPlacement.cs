@@ -18,5 +18,8 @@ namespace Galactic1.Code.Core.Ads
         Revive = 21,
         RecruitmentTavern = 22,
         RaidReportDrone,
+        
+        
+        CampTrader = 50,
     }
 }

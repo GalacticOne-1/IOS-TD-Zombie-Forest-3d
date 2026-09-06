@@ -20,7 +20,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     /// </summary>
     [CreateAssetMenu(
         fileName = "TutorialCampaign_",
-        menuName = "Galactic1/Tutorial/Campaign")]
+        menuName = "Game Configs/Tutorial/Campaign")]
     public sealed class TutorialDefinition : ScriptableObject
     {
         [Tooltip("Стабильный уникальный идентификатор кампании (RuntimeId-ассет, например FIRST_TIME_PLAYER).")]
