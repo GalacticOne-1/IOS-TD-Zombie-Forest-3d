@@ -1,16 +1,17 @@
-
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.Gameplay.Abilities;
 using Galactic1.Code.Gameplay.Effect;
 using Galactic1.Code.Systems.GameModes;
-using Galactic1.Code.Systems.Raid;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.Raid.Survivors;
 using Galactic1.Code.UI.Interaction;
 using Galactic1.Code.UI.Inventory;
 using Galactic1.Code.UI.UnitCard;
 using Galactic1.UI.Core;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Galactic1.Core.UI.HUD
 {
@@ -22,7 +23,11 @@ namespace Galactic1.Core.UI.HUD
         [SerializeField] private AbilityTargetingHUD abilityTargetingHUD;
         //public UIJoystick joystick;
         //[field: SerializeField] public TargetHPBarUI targetHPBar { get; private set; }
-        
+
+        [Header("Progression")]
+        [SerializeField] private TMP_Text playerLevelText;
+        [SerializeField] private Image playerExperienceFillBar;
+
        
         //[field: SerializeField] public GameObject jump { get; private set; }
         //[field: SerializeField] public UIButtonPocket quickButton1 { get; private set; }
@@ -35,6 +40,10 @@ namespace Galactic1.Core.UI.HUD
         //private EventBinding<SceneClearEvent> onSwitchClear;
         
         private UnitCardBindingSystem _cardBindings;
+
+        private ProgressionService _progressionService;
+        private EventBinding<ProgressionExperienceChangedEvent> _experienceChangedBinding;
+        private EventBinding<ProgressionLevelUpEvent> _levelUpBinding;
         
         
         
@@ -55,6 +64,20 @@ namespace Galactic1.Core.UI.HUD
             // === когда отряд заспавнен создаем карточки
             EventBus<SceneActivateEvent>.Register(new EventBinding<SceneActivateEvent>(
                 () => BindSquad(container.Resolve<Systems.GameLoopSession.GameSession>().GameLoopContext.CurrentRaid.Squad)));
+
+            // === PROGRESSION HUD ===================================================
+            _progressionService = container.Resolve<ProgressionService>();
+
+            _experienceChangedBinding = new EventBinding<ProgressionExperienceChangedEvent>(OnExperienceChanged);
+            EventBus<ProgressionExperienceChangedEvent>.Register(_experienceChangedBinding);
+
+            _levelUpBinding = new EventBinding<ProgressionLevelUpEvent>(OnLevelUp);
+            EventBus<ProgressionLevelUpEvent>.Register(_levelUpBinding);
+
+            // Save may already have Level 3 / XP 420 loaded before this HUD ever
+            // existed — don't wait for the next event to show the right state.
+            RefreshProgressionHUD();
+            // ========================================================================
         }
 
         public override void Remove()
@@ -63,6 +86,11 @@ namespace Galactic1.Core.UI.HUD
             
             _cardBindings?.Dispose();
             unitCardRoot.MakeEmpty();
+
+            // === PROGRESSION HUD ===================================================
+            EventBus<ProgressionExperienceChangedEvent>.Deregister(_experienceChangedBinding);
+            EventBus<ProgressionLevelUpEvent>.Deregister(_levelUpBinding);
+            // ========================================================================
         }
 
 
@@ -137,8 +165,32 @@ namespace Galactic1.Core.UI.HUD
             // quickButton1.gameObject.SetActive(profile.showQuick1);
             // quickButton2.gameObject.SetActive(profile.showQuick2);
         }
-        
-        
+
+
+        // === PROGRESSION HUD ========================================================
+
+        private void OnExperienceChanged(ProgressionExperienceChangedEvent e)
+        {
+            playerLevelText.text = $"Lvl. {e.CurrentLevel}";
+            playerExperienceFillBar.fillAmount = e.ExperienceProgress;
+        }
+
+        private void OnLevelUp(ProgressionLevelUpEvent e)
+        {
+            // ExperienceProgress for the new level already arrived via the
+            // ProgressionExperienceChangedEvent raised just before this one
+            // (see ProgressionService.AddExperience ordering) — this handler
+            // only needs to make sure the level number itself is current.
+            playerLevelText.text = $"Lvl. {e.NewLevel}";
+        }
+
+        private void RefreshProgressionHUD()
+        {
+            playerLevelText.text = $"Lvl. {_progressionService.CurrentLevel}";
+            playerExperienceFillBar.fillAmount = _progressionService.ExperienceProgress;
+        }
+
+        // =============================================================================
         
     }
 }

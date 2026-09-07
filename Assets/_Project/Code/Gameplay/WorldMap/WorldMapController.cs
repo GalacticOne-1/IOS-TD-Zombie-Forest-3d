@@ -1,9 +1,9 @@
-
 using System;
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Systems.GameTime;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.World.Threats;
 using Galactic1.Configs;
 using Galactic1.Core;
@@ -185,10 +185,16 @@ namespace Galactic1.Code.WorldMap
                 {
                     LocationId = targetNode.Id,
                 });
+
+                
+                // === unlock status
+                var status = 
+                    targetNode.IsUnlockedFor(ServiceLocator.Current.Get<UnlockService>());
+                
                 
                 locationOverview.ShowNodeInfo(
                     targetNode,
-                    true,
+                    status,
                     toTargetTime,
                     backHomeTime,
                     remainingDays.HasValue ? remainingDays.Value : -1,

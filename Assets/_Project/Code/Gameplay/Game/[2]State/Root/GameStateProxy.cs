@@ -1,13 +1,10 @@
 using System.Linq;
 using Galactic1.Code.Core;
-using Galactic1.Code.Systems.GameLoop;
-using Galactic1.Code.Systems.World.Threats;
 using Galactic1.UI.Shop;
 using Galactic1.Structs;
 using Galactic1.Window;
 using ObservableCollections;
 using R3;
-using UnityEngine;
 
 namespace Galactic1.Core
 {
@@ -34,8 +31,9 @@ namespace Galactic1.Core
         
         // ********************         DEFAULT        ************************************************************
         public readonly GameLoopContextProxy GameLoopContext;
-        
-        
+
+        // === PROGRESSION ===
+        public readonly ProgressionProxy Progression;
         
         
         public ObservableList<BankResourceProxy> BankResources { get; } = new();
@@ -83,6 +81,8 @@ namespace Galactic1.Core
             
             
             GameLoopContext = new(gameState.GameLoopContext);
+
+            Progression = new(gameState.Progression);
             
             
             InitializeBankResources(_gameState);

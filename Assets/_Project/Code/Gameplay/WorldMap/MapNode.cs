@@ -1,6 +1,7 @@
 using System;
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Interaction;
+using Galactic1.Code.Systems.Progression;
 using UnityEngine;
 
 namespace Galactic1.Code.WorldMap
@@ -41,9 +42,22 @@ namespace Galactic1.Code.WorldMap
         
         public void SetDiscovered(bool discovered)
         {
+            bool wasDiscovered = IsDiscovered;
             IsDiscovered = discovered;
             OnNodeStateChanged?.Invoke(this);
+
+            // Gameplay fact for progression — raised exactly once per location,
+            // on the false→true transition only.
+            if (discovered && !wasDiscovered)
+                EventBus<LocationDiscoveredEvent>.Raise(new LocationDiscoveredEvent(Id));
         }
+
+        /// <summary>
+        /// Available/Locked per section 10 of the progression spec.
+        /// No hardcoded level check here — delegates entirely to UnlockService.
+        /// </summary>
+        public (bool unlocked, int level) IsUnlockedFor(UnlockService unlockService)
+            => Config == null ? (true, 0) : unlockService.GetStatus(Config.RequiredUnlock);
         
         public float GetVisitCost()
         {

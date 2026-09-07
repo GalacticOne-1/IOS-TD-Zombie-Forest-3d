@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af2235698c344249bd1be1600fe4e2b, type: 3}
+  m_Name: ProgressionUnlockDefinition
+  m_EditorClassIdentifier: 
+  entries:
+  - Id: {fileID: 11400000, guid: ed001c58ccce848eba830326dddf7032, type: 2}
+    Requirements:
+    - rid: 2031038939400765528
+  - Id: {fileID: 11400000, guid: a8d9f74349bbb4041b54b8b43e07bde2, type: 2}
+    Requirements:
+    - rid: 2031038941366583296
+  references:
+    version: 2
+    RefIds:
+    - rid: 2031038939400765528
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 2
+    - rid: 2031038941366583296
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 5

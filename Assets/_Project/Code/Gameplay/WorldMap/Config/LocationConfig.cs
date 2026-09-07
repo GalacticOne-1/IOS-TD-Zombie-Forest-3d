@@ -1,4 +1,3 @@
-
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.WorldMap.Intel;
 using Galactic1.Code.WorldMap.Visuals;
@@ -74,11 +73,13 @@ namespace Galactic1.Code.WorldMap
         // =========================
 
         [field: Header("Difficulty")]
-        [field: SerializeField]
-        public int RequiresLevel { get; private set; }
-
         [field: SerializeField, Range(1, 3)] public int Difficulty { get; private set; }
 
+
+        [field: Tooltip("Unlock requirement for this location (see ProgressionUnlockDefinition). " +
+                        "Null/none = always available.")]
+        [field: SerializeField]
+        public UnlockId RequiredUnlock { get; private set; }
 
         // =========================
         // Time

@@ -1,8 +1,8 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Galactic1.Code.GameDatabase;
+using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Systems.Economy;
 using Galactic1.Code.Systems.Economy.Configs;
 using Galactic1.Code.Systems.GameLoop;
@@ -230,6 +230,14 @@ namespace Galactic1.Code.Systems.Runtime.Building
             {
                 _gameLoopContext.CampRuntime.RegisterAndResizeStorage((StorageModule)facilityItem);
             }
+
+            // === PROGRESSION: gameplay fact — facility finished construction.
+            // ProgressionXPService resolves the XP reward; this service still
+            // knows nothing about XP amounts. Item.Id is statically typed as
+            // the base RuntimeId on ItemConfig, but facility items are always
+            // authored as ItemId assets — cast to the specific type so the
+            // event stays type-safe end to end.
+            EventBus<FacilityBuiltEvent>.Raise(new FacilityBuiltEvent((ItemId)facilityItem.Item.Id));
             
             ServiceLocator.Current.Get<IGameStateProvider>().SaveGameState();
             

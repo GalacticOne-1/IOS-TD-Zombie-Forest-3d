@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Galactic1.Configs
 {
     [CreateAssetMenu(fileName = "ProgressionConfig", menuName = "Game Configs/Gameplay/New Progression Config")]
-    public class ProgressionConfig : ScriptableObject, IUpdateFromJson
+    public class ProgressionConfig_OLD : ScriptableObject, IUpdateFromJson
     {
         [field: SerializeField] public List<ProgressLevelData> progress { get; private set; } = new();
         

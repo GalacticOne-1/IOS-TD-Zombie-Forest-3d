@@ -1,4 +1,5 @@
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.RaidLoot.Authoring;
 
 namespace Galactic1.Configs.Galactic1.Code.GameDatabase
 {
@@ -29,6 +30,8 @@ namespace Galactic1.Configs.Galactic1.Code.GameDatabase
         
         
         public static LocationId Home => _config.Home;
+        
+        public static LootContainerTagId LootContainerTag => _config.LootContainerTag;
 
         // =========================================================
         // FACILITIES

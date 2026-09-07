@@ -118,6 +118,11 @@ namespace Galactic1.Core
             gameLoopContext.LastRaidResult.LootReceived = new();
             gameLoopContext.LastRaidResult.ResourcesLost = new();
 
+            
+            // === PROGRESSION ===
+            var progressionData = new ProgressionData();
+
+            
             // === player
             gameLoopContext.PlayerUnitData = new ();
             var playerStatsBase = _configsProvider.Get<PlayerStatsBase>();
@@ -236,6 +241,7 @@ namespace Galactic1.Core
                 
                 
                 GameLoopContext = gameLoopContext,
+                Progression = progressionData,
                 // CurrentDay = 1,
                 // RemainingHour = 24,
                 // ThreatData = null,

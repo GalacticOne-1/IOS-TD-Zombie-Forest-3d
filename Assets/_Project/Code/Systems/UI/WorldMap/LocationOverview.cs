@@ -24,6 +24,10 @@ namespace Galactic1.Code.WorldMap
         [SerializeField] private GameObject intelBlockRoot;
         [SerializeField] private GameObject equipmentAlert;
 
+        [Header("Lock")] 
+        [SerializeField] private TMP_Text lockLevelText;
+        [SerializeField] private GameObject lockRoot;
+
         [Header("Resources Volume")]
         [SerializeField] private ScrollRect scrollResources;
         [SerializeField] private GameObject resourcesCategoryItemPrefab;
@@ -79,7 +83,7 @@ namespace Galactic1.Code.WorldMap
         /// </summary>
         public void ShowNodeInfo(
             MapNode node,
-            bool canVisit,
+            (bool unlocked, int level) locationStatus,
             float raidCost,
             float backToBaseCost,
             float daysUntilThreat,
@@ -159,9 +163,19 @@ namespace Galactic1.Code.WorldMap
             equipmentAlert.SetActive(false);
             
             
-            // TODO
-            // 3. Requires level
-            // ...
+            
+            // 4. Requires level
+            if (!locationStatus.unlocked)
+            {
+                startButton.SetActive(false);
+                lockRoot.SetActive(true);
+                lockLevelText.text = $"Reach Level {locationStatus.level}";
+            }
+            else
+            {
+                lockRoot.SetActive(false);
+                startButton.SetActive(true);
+            }
         }
 
 

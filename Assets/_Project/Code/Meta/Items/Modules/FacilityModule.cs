@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Items;
 using Galactic1.Code.Gameplay.Grid;
 using Galactic1.Code.Systems.Runtime.Building;
@@ -32,6 +33,15 @@ namespace Galactic1.Game.Meta.Items
                  "если явно не добавлена в список.")]
         [SerializeField]
         private bool allowedZonesOnly = false;
+
+        [Header("Progression")]
+        [Tooltip("Unlock requirement for building this facility (see ProgressionUnlockDefinition). " +
+                 "Null/none = always available. Availability MUST be queried through " +
+                 "UnlockService.IsUnlocked(RequiredUnlock) — never hardcode a level check here.")]
+        [SerializeField]
+        private UnlockId requiredUnlock;
+
+        public UnlockId RequiredUnlock => requiredUnlock;
 
 
         public FacilityModule FacilityConfig => this;

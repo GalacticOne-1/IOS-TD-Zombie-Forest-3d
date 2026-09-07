@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Galactic1.RaidLoot.Authoring;
 using Galactic1.RaidLoot.Runtime;
 
 namespace Galactic1.RaidLoot.Events

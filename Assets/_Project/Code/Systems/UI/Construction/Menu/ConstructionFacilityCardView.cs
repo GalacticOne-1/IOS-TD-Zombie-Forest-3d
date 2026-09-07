@@ -27,7 +27,7 @@ namespace Galactic1.Code.UI.Construction
         [Header("Recipe")]
         [SerializeField] private Transform recipesRoot;
 
-        [Header("Limit")]
+        [Header("Limit / Locked")]
         [SerializeField] private GameObject dimOverlay;
         [SerializeField] private GameObject limitLabel;
 
@@ -45,6 +45,7 @@ namespace Galactic1.Code.UI.Construction
             FacilityModule facility,
             UIStyleResolver styleResolver,
             Action<FacilityModule> onSelected,
+            (bool unlocked, int level) status,
             bool limitReached = false)
         {
             _requirementService = requirementService;
@@ -61,11 +62,21 @@ namespace Galactic1.Code.UI.Construction
             // );
 
             gameObject.RegisterButtonClick(OnClick);
+
             
-            // Затемнение / блокировка если лимит исчерпан
-            dimOverlay.SetActive(limitReached);
-            limitLabel.SetActive(limitReached); 
-            SetInteractable(!limitReached);
+            // #1 доступ по лвл игрока
+            dimOverlay.SetActive(!status.unlocked);
+            limitLabel.CMP_Text().text = !status.unlocked ? $"Reach Lvl {status.level}" : "";
+            SetInteractable(status.unlocked);
+            
+            // #2 лимит только для доступных объектов
+            if(status.unlocked)
+            {
+                // Затемнение / блокировка если лимит исчерпан
+                dimOverlay.SetActive(limitReached);
+                limitLabel.CMP_Text().text = limitReached ? "Max Limit" : "";
+                SetInteractable(!limitReached);
+            }
 
             UpdateView(limitReached);
         }

@@ -6,7 +6,7 @@ using Galactic1.Code.Core;
 namespace Galactic1.Core
 {
     /*
-     *      Хранилище всех состояний в игре 
+     *      Хранилище всех состояний в игре
      *      ! синхронизировано с сохранением !
      */
     
@@ -40,7 +40,9 @@ namespace Galactic1.Core
         // public int RemainingHour; // 0–24
         // public ThreatSaveData ThreatData { get; set; }
 
-        
+        // === PROGRESSION === (Player Progression & Content Unlock system)
+        public ProgressionData Progression { get; set; } = new();
+
         public int GlobalEntityId { get; set; }
         
         

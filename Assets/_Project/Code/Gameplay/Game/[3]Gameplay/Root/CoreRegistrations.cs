@@ -1,4 +1,3 @@
-
 using Galactic1.Code.Cameras;
 using Galactic1.Code.Game.Rewards;
 using Galactic1.Code.GameDatabase;
@@ -19,6 +18,7 @@ using Galactic1.Code.Systems.Inbox;
 using Galactic1.Code.Systems.Interaction;
 using Galactic1.Code.Systems.Lifecycle;
 using Galactic1.Code.Systems.ProductionPipeline;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.Runtime;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Code.Systems.GameTime;
@@ -154,8 +154,40 @@ namespace Galactic1
                         CampDefense = true,
                     })));
             
-            // === meta progress
-            // ...
+            
+            // === PLAYER PROGRESSION & CONTENT UNLOCK =================================================================
+            // Порядок важен: ProgressionService → UnlockService → ProgressionUnlockService (подписывается на
+            // ProgressionLevelUpEvent) → ProgressionXPService (подписывается на gameplay-события) →
+            // ProgressionSkillChoiceService (тоже подписывается на ProgressionLevelUpEvent).
+
+            var progressionService = new ProgressionService(
+                gameStateProxy.Progression,
+                configProvider.Get<ProgressionDefinition>());
+            rootContainer.RegisterInstance(progressionService);
+            ServiceLocator.Current.Register(progressionService);
+
+            var unlockService = new UnlockService(
+                gameStateProxy.Progression, 
+                configProvider.Get<ProgressionUnlockDefinition>());
+            rootContainer.RegisterInstance(unlockService);
+            ServiceLocator.Current.Register(unlockService);
+
+            var progressionUnlockService = new ProgressionUnlockService(
+                unlockService,
+                configProvider.Get<ProgressionUnlockDefinition>(),
+                progressionService);
+            rootContainer.RegisterInstance(progressionUnlockService);
+
+            var progressionXPService = new ProgressionXPService(
+                progressionService,
+                configProvider.Get<ProgressionXPDefinition>());
+            rootContainer.RegisterInstance(progressionXPService);
+
+            rootContainer.RegisterInstance(new ProgressionSkillChoiceService());
+
+            // покрывает случаи, когда ProgressionUnlockDefinition изменился между
+            // сессиями — не полагаемся только на будущие level-up события
+            progressionUnlockService.EvaluateAll();
             
             
             // =========================================================================================================

@@ -1,3 +1,5 @@
+
+using Galactic1.Configs.Galactic1.Code.GameDatabase;
 using Galactic1.RaidLoot.Authoring;
 
 namespace Galactic1.RaidLoot.Events
@@ -9,10 +11,12 @@ namespace Galactic1.RaidLoot.Events
     public sealed class ContainerOpenedEvent : IEvent
     {
         public string RuntimeId { get; }
+        public LootContainerTagId ContainerTagId { get; } 
 
         public ContainerOpenedEvent(string runtimeId)
         {
             RuntimeId = runtimeId;
+            ContainerTagId = GameIdProvider.LootContainerTag;
         }
     }
 }

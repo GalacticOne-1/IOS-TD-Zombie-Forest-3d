@@ -24,7 +24,7 @@ namespace Galactic1.Tools
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log("RuntimeIds initialized");
+            DLog.Alert("RuntimeIds initialized");
         }
     }
 }

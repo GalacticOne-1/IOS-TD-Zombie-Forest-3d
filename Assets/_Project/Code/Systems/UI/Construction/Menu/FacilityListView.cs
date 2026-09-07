@@ -4,6 +4,7 @@ using System.Linq;
 using Galactic1.Code.Inventory.Services;
 using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.GameLoop;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.Game.Meta.Items;
 using Galactic1.UI.Core;
@@ -37,8 +38,10 @@ namespace Galactic1.Code.UI.Construction
 
             _categoryMap = categories.ToDictionary(c => c.Category);
 
+            var unlockService = container.Resolve<UnlockService>();
             var requirementService = container.Resolve<ConstructionRequirementService>();
             var gameLoopContext = container.Resolve<GameSession>().GameLoopContext;
+
 
             // Сортировка:
             // 1. Сначала доступные здания.
@@ -63,6 +66,7 @@ namespace Galactic1.Code.UI.Construction
                     facility,
                     styleResolver,
                     onSelected,
+                    unlockService.GetStatus(facility.RequiredUnlock),
                     reached); // ← передаём флаг лимита в карточку
 
                 _cards.Add(card);

@@ -1,4 +1,5 @@
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.RaidLoot.Authoring;
 using UnityEngine;
 
 namespace Galactic1.Configs
@@ -13,6 +14,8 @@ namespace Galactic1.Configs
         
         [Space]
         public LocationId Home;
+        public LootContainerTagId LootContainerTag;
+        
         
         [Header("Camp")]
         public ItemId Transport;
@@ -20,6 +23,7 @@ namespace Galactic1.Configs
         public ItemId Garage;
         public ItemId MainContainer;
 
+        
         [Header("VFX")]
         public VfxId StunVfx;
         public VfxId FacilityExplosionVfx;
