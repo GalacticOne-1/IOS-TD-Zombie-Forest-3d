@@ -82,6 +82,17 @@ MonoBehaviour:
           allowOverlap: 0
           checkOccupancy: 1
         buildLimit: 1
-        upgradeLevels: []
+        upgradeLevels:
+        - tier: 2
+          requirements:
+          - Item: {fileID: 11400000, guid: 6bf48663564b7466b8b537cfc248ddd5, type: 2}
+            Amount: 20
+          - Item: {fileID: 11400000, guid: fa740051e07b7430fab4639bfa27c7fe, type: 2}
+            Amount: 12
+          - Item: {fileID: 11400000, guid: b811c953694984262ba8994851fcba85, type: 2}
+            Amount: 14
+          - Item: {fileID: 11400000, guid: 20a560e8e5608499d902ca21ea26fdaf, type: 2}
+            Amount: 3
         allowedZoneTags: 05000000
         allowedZonesOnly: 0
+        requiredUnlock: {fileID: 0}

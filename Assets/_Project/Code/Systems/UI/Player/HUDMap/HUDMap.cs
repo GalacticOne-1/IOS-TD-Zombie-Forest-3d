@@ -110,7 +110,7 @@ namespace Galactic1.Core.UI.HUD
 
         private void OnExperienceChanged(ProgressionExperienceChangedEvent e)
         {
-            playerLevelText.text = $"Lvl. {e.CurrentLevel}";
+            playerLevelText.text = $"{e.CurrentLevel}";
             playerExperienceFillBar.fillAmount = e.ExperienceProgress;
         }
 
@@ -120,12 +120,12 @@ namespace Galactic1.Core.UI.HUD
             // ProgressionExperienceChangedEvent raised just before this one
             // (see ProgressionService.AddExperience ordering) — this handler
             // only needs to make sure the level number itself is current.
-            playerLevelText.text = $"Lvl. {e.NewLevel}";
+            playerLevelText.text = $"{e.NewLevel}";
         }
 
         private void RefreshProgressionHUD()
         {
-            playerLevelText.text = $"Lvl. {_progressionService.CurrentLevel}";
+            playerLevelText.text = $"{_progressionService.CurrentLevel}";
             playerExperienceFillBar.fillAmount = _progressionService.ExperienceProgress;
         }
 

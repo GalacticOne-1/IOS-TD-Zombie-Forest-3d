@@ -1,8 +1,8 @@
-
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
@@ -24,6 +24,15 @@ namespace Galactic1.EditorTools.PrefabScreenshot
         /// Temporary directional light.
         /// </summary>
         private static Light _light;
+
+        /// <summary>
+        /// Ambient/light-rig constants. Key light offset is expressed relative to
+        /// the camera's own rotation, so the lit side of the object always matches
+        /// the side the camera is actually looking at, regardless of cameraYaw/Pitch.
+        /// </summary>
+        private static readonly Quaternion KeyLightCameraOffset = Quaternion.Euler(40f, -35f, 0f);
+
+        private static readonly Color AmbientFillColor = new Color(0.35f, 0.35f, 0.4f);
 
         /// <summary>
         /// Main entry point.
@@ -162,7 +171,7 @@ namespace Galactic1.EditorTools.PrefabScreenshot
 
             _camera = cameraGO.AddComponent<Camera>();
 
-            _camera.scene = _previewScene; 
+            _camera.scene = _previewScene;
             _camera.enabled = false;
             _camera.fieldOfView = 30f;
             _camera.nearClipPlane = 0.01f;
@@ -173,7 +182,7 @@ namespace Galactic1.EditorTools.PrefabScreenshot
                 settings.transparentBackground
                     ? new Color(0, 0, 0, 0)
                     : Color.gray;
-            
+
             var camData = cameraGO.AddComponent<UniversalAdditionalCameraData>();
             camData.renderType = CameraRenderType.Base;
 
@@ -190,6 +199,12 @@ namespace Galactic1.EditorTools.PrefabScreenshot
             _light.shadows = LightShadows.None;
 
             lightGO.transform.rotation = Quaternion.Euler(40, -35, 0);
+
+            // FIX (dark screenshots): give the preview scene a soft ambient fill so
+            // the shadow side of the object never falls to pure black. Preview
+            // scenes have no skybox/ambient by default under URP.
+            RenderSettings.ambientMode = AmbientMode.Flat;
+            RenderSettings.ambientLight = AmbientFillColor;
         }
 
         /// <summary>
@@ -227,6 +242,8 @@ namespace Galactic1.EditorTools.PrefabScreenshot
             Bounds bounds = CalculateBounds(renderers);
             bounds.Expand(bounds.size * (settings.padding - 1f));
 
+            // Camera must be positioned before the light: the light's direction
+            // is derived from the camera's final rotation (key-light-relative-to-view).
             SetupCamera(bounds, settings);
             SetupLight(bounds, settings);
 
@@ -275,11 +292,21 @@ namespace Galactic1.EditorTools.PrefabScreenshot
 
         // ---------------- LIGHT ----------------
 
+        /// <summary>
+        /// FIX (dark / wrongly-lit screenshots): a Directional Light's position is
+        /// meaningless — only its rotation matters. The previous implementation set
+        /// `_light.transform.position` (a no-op for a directional light) and pointed
+        /// it at a fixed world-space offset, so the lit side never followed the
+        /// camera as cameraYaw/cameraPitch changed, leaving the visible side in shadow.
+        /// Now the key light's rotation is derived from the camera's rotation, so the
+        /// object's lit side always matches the side the camera is looking at.
+        /// </summary>
         private static void SetupLight(Bounds bounds, ScreenshotSettings settings)
         {
             _light.intensity = settings.lightIntensity;
-            _light.transform.position = bounds.center + new Vector3(3, 6, -3);
-            _light.transform.LookAt(bounds.center);
+
+            Quaternion cameraRotation = _camera.transform.rotation;
+            _light.transform.rotation = cameraRotation * KeyLightCameraOffset;
         }
 
         // ---------------- BOUNDS ----------------

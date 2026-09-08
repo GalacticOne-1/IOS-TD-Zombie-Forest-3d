@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using System.Linq;
 
 namespace Galactic1.EditorTools.PrefabScreenshot
@@ -27,22 +28,46 @@ namespace Galactic1.EditorTools.PrefabScreenshot
             settings ??= new ScreenshotSettings();
 
             _previewUtility = new PreviewRenderUtility();
+
+            // FIX (pink material bug): under URP the preview camera must carry
+            // UniversalAdditionalCameraData, otherwise URP/Lit resolves to the
+            // error shader (magenta/pink) inside PreviewRenderUtility's camera.
+            var previewCameraGO = _previewUtility.camera.gameObject;
+
+            if (previewCameraGO.GetComponent<UniversalAdditionalCameraData>() == null)
+            {
+                var camData = previewCameraGO.AddComponent<UniversalAdditionalCameraData>();
+                camData.renderType = CameraRenderType.Base;
+            }
+
             _previewUtility.cameraFieldOfView = settings.fieldOfView;
             _previewUtility.camera.clearFlags = CameraClearFlags.SolidColor;
             _previewUtility.camera.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1f);
             _previewUtility.lights[0].intensity = settings.lightIntensity;
             _previewUtility.lights[0].transform.rotation = Quaternion.Euler(40, -35, 0);
 
+            // FIX (undo/redo): repaint + resync preview instance whenever an undo/redo
+            // touches this window's serialized state.
+            Undo.undoRedoPerformed += OnUndoRedoPerformed;
+
             RefreshPrefabList();
         }
 
         private void OnDisable()
         {
+            Undo.undoRedoPerformed -= OnUndoRedoPerformed;
+
             if (_previewInstance != null)
                 DestroyImmediate(_previewInstance);
 
             _previewUtility?.Cleanup();
             _previewUtility = null;
+        }
+
+        private void OnUndoRedoPerformed()
+        {
+            RefreshPrefabList();
+            Repaint();
         }
 
         // ---------------- PREFAB LIST ----------------
@@ -67,7 +92,7 @@ namespace Galactic1.EditorTools.PrefabScreenshot
 
             _prefabNames = _prefabs.Select(p => p.name).ToArray();
 
-            _selectedPrefabIndex = 0;
+            _selectedPrefabIndex = Mathf.Clamp(_selectedPrefabIndex, 0, Mathf.Max(0, _prefabNames.Length - 1));
 
             UpdatePreviewInstance();
         }
@@ -111,6 +136,12 @@ namespace Galactic1.EditorTools.PrefabScreenshot
 
         private void DrawSettingsPanel()
         {
+            // FIX (undo/redo): register this window (a ScriptableObject) with the
+            // Undo system every OnGUI pass, before any control can mutate `settings`.
+            // Unity only records a real undo step when a tracked value actually changes,
+            // so calling this unconditionally each frame is the standard pattern.
+            Undo.RecordObject(this, "Prefab Screenshot Settings");
+
             _settingsScroll = EditorGUILayout.BeginScrollView(_settingsScroll);
 
             GUILayout.Space(8);
@@ -166,7 +197,7 @@ namespace Galactic1.EditorTools.PrefabScreenshot
             GUILayout.Space(10);
 
             EditorGUILayout.LabelField("Camera", EditorStyles.boldLabel);
-            
+
 
             settings.cameraPitch =
                 EditorGUILayout.Slider("Pitch", settings.cameraPitch, -90, 90);
@@ -186,13 +217,15 @@ namespace Galactic1.EditorTools.PrefabScreenshot
             settings.padding =
                 EditorGUILayout.Slider("Padding", settings.padding, 1.0f, 2.0f);
 
-            
+
             EditorGUILayout.LabelField("Target Offset (norm.)");
-            settings.targetOffsetNormalized = EditorGUILayout.Vector3Field(GUIContent.none, settings.targetOffsetNormalized);
+            settings.targetOffsetNormalized =
+                EditorGUILayout.Vector3Field(GUIContent.none, settings.targetOffsetNormalized);
             settings.targetOffsetNormalized = ClampNormalized(settings.targetOffsetNormalized);
 
             EditorGUILayout.LabelField("Position Offset (norm.)");
-            settings.positionOffsetNormalized = EditorGUILayout.Vector3Field(GUIContent.none, settings.positionOffsetNormalized);
+            settings.positionOffsetNormalized =
+                EditorGUILayout.Vector3Field(GUIContent.none, settings.positionOffsetNormalized);
             settings.positionOffsetNormalized = ClampNormalized(settings.positionOffsetNormalized);
 
             GUILayout.Space(10);
@@ -276,7 +309,7 @@ namespace Galactic1.EditorTools.PrefabScreenshot
 
             Repaint();
         }
-        
+
         private static Vector3 ClampNormalized(Vector3 v)
         {
             return new Vector3(

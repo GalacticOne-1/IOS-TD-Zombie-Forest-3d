@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ac72406c93404fbb17fc90de08bf90, type: 3}
+  m_Name: WeaponDefinition_primitive
+  m_EditorClassIdentifier: 
+  weaponType: 1
+  fireMode: 0
+  fireType: 1
+  ammoType: 1
+  supportedAmmo: {fileID: 11400000, guid: c49d785b8714c4ddab55c90b515036e3, type: 2}
+  audio: {fileID: 11400000, guid: 44015382842c341c5a71862b1ffe25dc, type: 2}
+  damage: 12
+  projectilesPerShot: 1
+  damageVariance: 0.1
+  range: 15
+  armorPiercing: 2
+  roundsPerMinute: 120
+  burstCount: 3
+  burstPauseSec: 0.4
+  magazineSize: 20
+  reloadTimeSec: 2
+  hasHeat: 0
+  heatPerShot: 8
+  heatCoolRate: 20
+  overheatThreshold: 100
+  cooldownSec: 3
+  hasSuppression: 0
+  suppressionAngle: 60
+  suppressionRange: 15
+  baseSpreadDeg: 3.4
+  movingSpreadMul: 1.8
+  stressSpreadMul: 1.4
+  minDamageMultiplierAtMaxRange: 0.6
+  tracerEveryNthShot: 2
+  tracerPelletFraction: 1

@@ -151,8 +151,8 @@ namespace Galactic1.Code.WorldMap
                 timeBlockRoot.GetChild(4, 0).CMP_Text().text = TimeUtils.FormatTime(daysUntilThreat);
                     //$"{DayTimeFormatter.Format(daysUntilThreat)} days";
                 
-                timeBlockRoot.GetChild(3).SetActive(true);
-                timeBlockRoot.GetChild(4).SetActive(true);
+                //timeBlockRoot.GetChild(3).SetActive(true);  // время орды убрал что бы не нагрудать игрока
+                //timeBlockRoot.GetChild(4).SetActive(true);
                 threatAlert.SetActive(timeLeft < 0);
             }
             

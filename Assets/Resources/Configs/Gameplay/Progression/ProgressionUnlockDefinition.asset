@@ -13,12 +13,30 @@ MonoBehaviour:
   m_Name: ProgressionUnlockDefinition
   m_EditorClassIdentifier: 
   entries:
-  - Id: {fileID: 11400000, guid: ed001c58ccce848eba830326dddf7032, type: 2}
+  - Id: {fileID: 11400000, guid: 748922467e1214c9584b3ef8bd51b80e, type: 2}
     Requirements:
     - rid: 2031038939400765528
-  - Id: {fileID: 11400000, guid: a8d9f74349bbb4041b54b8b43e07bde2, type: 2}
+  - Id: {fileID: 11400000, guid: d589a607df74f47ed9798b32815782f0, type: 2}
     Requirements:
-    - rid: 2031038941366583296
+    - rid: 2031038959687303168
+  - Id: {fileID: 11400000, guid: 8f879e17a38784089ae3e7acd7a3d5de, type: 2}
+    Requirements:
+    - rid: 2031038959687303169
+  - Id: {fileID: 11400000, guid: ed001c58ccce848eba830326dddf7032, type: 2}
+    Requirements:
+    - rid: 2031038959687303170
+  - Id: {fileID: 11400000, guid: 5b93ae046171b4d96a4f50d2c42385c5, type: 2}
+    Requirements:
+    - rid: 2031038959687303171
+  - Id: {fileID: 11400000, guid: 454c7e1c620f648f485623b77cbeca56, type: 2}
+    Requirements:
+    - rid: 2031038959687303172
+  - Id: {fileID: 11400000, guid: fe631d6245f2e411893cc48213faaf7e, type: 2}
+    Requirements:
+    - rid: 2031038959687303173
+  - Id: {fileID: 11400000, guid: 07788e281959046b7adda14113983bfb, type: 2}
+    Requirements:
+    - rid: 2031038959687303174
   references:
     version: 2
     RefIds:
@@ -26,7 +44,31 @@ MonoBehaviour:
       type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
       data:
         requiredLevel: 2
-    - rid: 2031038941366583296
+    - rid: 2031038959687303168
       type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
       data:
-        requiredLevel: 5
+        requiredLevel: 4
+    - rid: 2031038959687303169
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 6
+    - rid: 2031038959687303170
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 9
+    - rid: 2031038959687303171
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 11
+    - rid: 2031038959687303172
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 14
+    - rid: 2031038959687303173
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 17
+    - rid: 2031038959687303174
+      type: {class: ProgressionLevelRequirement, ns: Galactic1.Code.Systems.Progression, asm: Assembly-CSharp}
+      data:
+        requiredLevel: 21
