@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Enemies.Spawning;
 using Galactic1.Code.Gameplay.Enemies.Spawning.Requests;
 using Galactic1.Code.Systems.Raid;
@@ -7,16 +8,6 @@ using UnityEngine;
 
 namespace Galactic1.Code.Gameplay.Enemies.Waves
 {
-    /// <summary>
-    /// Оркестратор волн Camp Defense.
-    ///
-    /// НЕ хранит прогресс — это WaveProgressRuntime.
-    /// НЕ знает про Mission/RaidStatus/GameLoopState — сообщает наружу
-    /// только через EventBus (WaveCompletedEvent / AllWavesCompletedEvent).
-    /// НЕ ищет врагов через RaidEnemyRegistry.All/AliveCount — отслеживает
-    /// только своих (SpawnSource.Wave) через события OnRegistered/EnemyKilledEvent.
-    /// НЕ зависит от CampDefenseScenario — тот вызывает только StartFirstWave()/Tick().
-    /// </summary>
     public sealed class WaveSystem
     {
         private readonly WaveConfig _config;
@@ -26,6 +17,9 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
         private readonly WaveProgressRuntime _progress;
         private readonly EnemySpawnSystem _enemySpawnSystem;
 
+        private readonly float _waveScale;
+        private readonly HashSet<EnemyId> _excludedEnemyIds;
+
         private readonly EventBinding<EnemyKilledEvent> _killedBinding;
 
         private List<InstructionRuntime> _activeInstructions;
@@ -33,10 +27,11 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
 
         public WaveSystem(
             WaveConfig config,
+            WaveDifficultyResolution difficulty,
             EnemySpawnSystem spawnSystem,
             RaidEnemyRegistry enemies,
             WaveSpawnPointResolver pointResolver,
-            WaveProgressRuntime progress, 
+            WaveProgressRuntime progress,
             EnemySpawnSystem enemySpawnSystem)
         {
             _config = config;
@@ -45,6 +40,9 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
             _pointResolver = pointResolver;
             _progress = progress;
             _enemySpawnSystem = enemySpawnSystem;
+
+            _waveScale = Mathf.Clamp01(difficulty.Scale);
+            _excludedEnemyIds = new HashSet<EnemyId>(difficulty.ExcludedEnemyIds);
 
             _progress.Configure(_config.Waves.Count);
 
@@ -92,14 +90,11 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
                     MarkInstructionFinished(instr);
             }
 
-            // Спавн волны закончен, когда все инструкции отдали своих врагов в очередь.
-            // Срабатывает ровно один раз благодаря IsSpawningFinished.
             if (_progress.PendingInstructions == 0 && !_progress.IsSpawningFinished)
             {
                 CompleteCurrentWave();
             }
 
-            // AllWavesCompletedEvent — тоже ровно один раз.
             if (!_progress.IsDefenseCompleted &&
                 _progress.CanFinishAllWaves())
             {
@@ -113,8 +108,6 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
                 AdvanceToWave(_progress.CurrentWaveIndex + 1);
             }
         }
-
-        // ── Спавн: только Enqueue. Очередь обрабатывает EnemySpawnSystem.Tick() сам, как обычно. ──
 
         private void SpawnNext(InstructionRuntime instr)
         {
@@ -137,7 +130,7 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
             while (instr.EntryCountdown <= 0 && instr.EntryCursor < group.Enemies.Count - 1)
             {
                 instr.EntryCursor++;
-                instr.EntryCountdown = group.Enemies[instr.EntryCursor].Count;
+                instr.EntryCountdown = instr.EntryCounts[instr.EntryCursor];
             }
         }
 
@@ -146,8 +139,6 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
             instr.Finished = true;
             _progress.NotifyInstructionFinished();
         }
-
-        // ── Отслеживание только своих (SpawnSource.Wave) врагов ──────────────
 
         private void HandleEnemyRegistered(EnemyRuntime runtime)
         {
@@ -161,16 +152,9 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
             _progress.RegisterDeath(e.Runtime);
         }
 
-        // ── Переходы между волнами — только события, никаких прямых решений о миссии ──
-
-        /// <summary>
-        /// Означает "спавнер данной волны полностью закончил свою работу" —
-        /// НЕ "пришла следующая волна". Индекс волны здесь не трогаем:
-        /// его меняет только AdvanceToWave() → _progress.StartWave().
-        /// </summary>
         private void CompleteCurrentWave()
         {
-            _progress.CompleteSpawning(); // сначала выставляет IsFinished, если это была последняя волна
+            _progress.CompleteSpawning();
             EventBus<WaveCompletedEvent>.Raise(new WaveCompletedEvent
             {
                 AllWavesCompleted = _progress.IsFinished
@@ -183,7 +167,7 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
 
             _activeInstructions = new List<InstructionRuntime>(wave.Instructions.Count);
             foreach (var instruction in wave.Instructions)
-                _activeInstructions.Add(new InstructionRuntime(instruction));
+                _activeInstructions.Add(new InstructionRuntime(instruction, _waveScale, _excludedEnemyIds));
 
             int pending = 0;
             foreach (var instr in _activeInstructions)
@@ -199,13 +183,11 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
             EventBus<EnemyKilledEvent>.Deregister(_killedBinding);
         }
 
-        // ── Тайминг конкретной инструкции. Это НЕ прогресс волны —
-        //    это внутренняя механика "когда именно спавнить следующего врага". ──
-
         private sealed class InstructionRuntime
         {
             public readonly WaveSpawnInstruction Definition;
             public readonly int TotalCount;
+            public readonly int[] EntryCounts;
 
             public float ElapsedSinceUnlocked;
             public float IntervalTimer;
@@ -214,18 +196,44 @@ namespace Galactic1.Code.Gameplay.Enemies.Waves
             public int SpawnedCount;
             public bool Finished;
 
-            public InstructionRuntime(WaveSpawnInstruction definition)
+            public InstructionRuntime(
+                WaveSpawnInstruction definition,
+                float waveScale,
+                HashSet<EnemyId> excludedEnemyIds)
             {
                 Definition = definition;
 
-                int total = 0;
-                foreach (var e in definition.Group.Enemies)
-                    total += e.Count;
-                TotalCount = total;
+                var enemies = definition.Group.Enemies; // List<AmbientEnemyEntry> — не мутируем
+                EntryCounts = new int[enemies.Count];
 
+                int total = 0;
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    var enemyEntry = enemies[i];
+
+                    // Исключённые для текущего диапазона уровней типы не спавнятся вовсе.
+                    bool isExcluded = enemyEntry.Enemy != null &&
+                                      excludedEnemyIds.Contains(enemyEntry.Enemy.Id);
+
+                    int scaledCount = isExcluded
+                        ? 0
+                        : Mathf.CeilToInt(enemyEntry.Count * waveScale);
+
+                    EntryCounts[i] = scaledCount;
+                    total += scaledCount;
+                }
+
+                TotalCount = total;
                 Finished = TotalCount == 0;
-                EntryCountdown = definition.Group.Enemies.Count > 0
-                    ? definition.Group.Enemies[0].Count
+
+                // Пропускаем ведущие исключённые/нулевые записи, чтобы курсор сразу
+                // указывал на первую реально спавнящуюся запись группы.
+                EntryCursor = 0;
+                while (EntryCursor < EntryCounts.Length - 1 && EntryCounts[EntryCursor] == 0)
+                    EntryCursor++;
+
+                EntryCountdown = EntryCounts.Length > 0
+                    ? EntryCounts[EntryCursor]
                     : 0;
             }
         }

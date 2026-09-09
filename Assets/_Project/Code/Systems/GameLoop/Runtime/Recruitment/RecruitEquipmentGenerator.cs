@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Galactic1.Code.GameDatabase;
 using Galactic1.Core.Enums;
 using Galactic1.Items;
 using Galactic1.Meta.Configs.Recruitment;
@@ -51,11 +52,12 @@ namespace Galactic1.Code.Systems.Runtime
                 .First(r => r.Category == category);
 
             // === получаем список доступного оружия для категории выжившего
-            var allowedWeapons = _itemDatabase.GetAllWeapons()
+            var allowedWeapons = GameContent.Weapons.All
                 .Where(w =>
-                    w.RecruitAccess.tier <= rule.MaxWeaponTier &&
-                    w.RecruitAccess.allowedCategories.Contains(category) &&
-                    archetype.AllowedWeaponTypes.Contains(w.Weapon.Info.weaponType))
+                    w.Value.RecruitAccess.tier <= rule.MaxWeaponTier &&
+                    w.Value.RecruitAccess.allowedCategories.Contains(category) &&
+                    archetype.AllowedWeaponTypes.Contains(w.Value.Weapon.Info.weaponType))
+                .Select(w => w.Value)
                 .ToList();
 
             // === получаем список доступной защиты для категории выжившего
@@ -70,6 +72,12 @@ namespace Galactic1.Code.Systems.Runtime
                 ? _rng.PickWeighted(allowedWeapons, w => w.RecruitAccess.weight)
                 : null;
 
+#if UNITY_EDITOR
+            var wpLog = "=== Recruit equipment generation ===\n";
+            wpLog += $"Allowed weapons by types: {allowedWeapons.Count}\n";
+            wpLog += $"Allowed armors by types: {allowedArmor.Count}\n";
+            DLog.Alert(wpLog, EDlogColor.YELLOW);
+#endif
 
             var weaponDurability = weapon.Physical.maxDurability;
             var range = Random.Range(rule.WeaponDurabilityMin, rule.WeaponDurabilityMax + 1) / 100f;

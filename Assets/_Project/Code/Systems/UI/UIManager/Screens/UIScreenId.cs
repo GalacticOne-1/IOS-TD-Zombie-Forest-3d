@@ -41,7 +41,7 @@ namespace Galactic1.UI.Core
         HUDCamp = 102,
         HUDMap = 103,
         HUDLocation = 104,
-        
+        PlayerDamageFrame = 105,
         
     }
 }

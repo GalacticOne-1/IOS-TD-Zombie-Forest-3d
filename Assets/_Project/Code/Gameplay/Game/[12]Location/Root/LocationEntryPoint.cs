@@ -122,6 +122,7 @@ namespace Galactic1
                                 UIScreenId.PurchaseRewardScreen,
                                 UIScreenId.DeathScreen,
                                 UIScreenId.TutorialHUD,
+                                UIScreenId.PlayerDamageFrame,
                                 UIScreenId.HUDInput,
                                 UIScreenId.HUDLocation,
                                 

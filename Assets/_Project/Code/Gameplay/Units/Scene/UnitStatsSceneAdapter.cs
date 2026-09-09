@@ -17,6 +17,7 @@ namespace Galactic1.Code.UI.Units.Presentation
         public bool IsDead => _statsRuntime.IsDead;
         public float MaxHP => _statsRuntime.MaxHP;
 
+        public event Action OnDamageTaken; 
         public event Action OnDeath;
         
         
@@ -28,6 +29,7 @@ namespace Galactic1.Code.UI.Units.Presentation
             // 🔹 прокидываем все ReactiveProperty напрямую
             _stats = statsRuntime.CurrentStats_;
 
+            _statsRuntime.OnDamageTaken += HandleDamageTaken;
             _statsRuntime.OnDeath += HandleDeath;
         }
 
@@ -44,11 +46,13 @@ namespace Galactic1.Code.UI.Units.Presentation
 
         public void ModifyStat(StatId type, float delta)
             => _statsRuntime.ModifyStat(type, delta);
-        
+
+        private void HandleDamageTaken() => OnDamageTaken?.Invoke();
         private void HandleDeath() => OnDeath?.Invoke();
 
         public void Dispose()
         {
+            _statsRuntime.OnDamageTaken -= HandleDamageTaken;
             _statsRuntime.OnDeath -= HandleDeath;
         }
     }

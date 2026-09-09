@@ -154,14 +154,15 @@ namespace Galactic1.UI.Core
             => id switch
             {
                 UIScreenId.Settings or
-                    UIScreenId.DeathScreen or
-                    UIScreenId.PurchaseRewardScreen
+                    UIScreenId.PurchaseRewardScreen or
+                    UIScreenId.PlayerDamageFrame or
+                    UIScreenId.DeathScreen
                     => _layerRoot.overlayRoot,
 
                 UIScreenId.HUDInput or
                     UIScreenId.HUDCamp or
                     UIScreenId.HUDLocation or
-                    UIScreenId.HUDMap or 
+                    UIScreenId.HUDMap or
                     UIScreenId.TutorialHUD
                     => _layerRoot.hudRoot,
 

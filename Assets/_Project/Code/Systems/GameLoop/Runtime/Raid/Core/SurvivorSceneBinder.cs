@@ -5,7 +5,10 @@ using Galactic1.Code.Gameplay.Units;
 using Galactic1.Code.Systems.Runtime;
 using Galactic1.Core.Enums;
 using Galactic1.Core.GameSession;
+using Galactic1.Core.UI;
+using Galactic1.Core.UI.HUD;
 using Galactic1.Gameplay.Player;
+using UnityEngine;
 
 namespace Galactic1.Code.Systems.Raid.Survivors
 {
@@ -45,6 +48,7 @@ namespace Galactic1.Code.Systems.Raid.Survivors
         private readonly WeaponAnimLibrary _animLibrary;
 
         private ItemBrokenHandler _itemBrokenHandler;
+        private UIDamageFeedback _uiDamageFeedback;
 
         // ─────────────────────────────────────────────────────────────
         // Constructor
@@ -100,6 +104,14 @@ namespace Galactic1.Code.Systems.Raid.Survivors
             _itemBrokenHandler = new ItemBrokenHandler(
                 Runtime.EquipmentService as EquipmentRuntimeService,
                 () => Instance.gameObject);
+
+            // === UI damage frame
+            var uiDamageFeedback = ServiceLocator.Current.Get<UIDamageFeedback>();
+            if (uiDamageFeedback != null)
+            {
+                _uiDamageFeedback = uiDamageFeedback;
+                _sceneAdapter.OnDamageTaken += OnDamageTaken;
+            }
         }
 
         private void ApplyEquipment(PlayerLoadData loadData)
@@ -113,6 +125,11 @@ namespace Galactic1.Code.Systems.Raid.Survivors
                     () => PlayerEquipmentApplier.Apply(loadData, Instance));
         }
 
+        
+        private void OnDamageTaken()
+        {
+            _uiDamageFeedback.OnShow();
+        }
 
         private void HandleDeath()
         {
@@ -130,6 +147,7 @@ namespace Galactic1.Code.Systems.Raid.Survivors
             
             if (_sceneAdapter != null)
             {
+                _sceneAdapter.OnDamageTaken -= OnDamageTaken;
                 _sceneAdapter.OnDeath -= HandleDeath;
             }
 

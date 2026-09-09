@@ -23,6 +23,7 @@ namespace Galactic1.Code.Gameplay.Units.Stats
         
 
         public event Action<StatChangedEvent, bool> OnStatChanged;
+        public event Action OnDamageTaken;
         public event Action OnDeath;
         
         public BuffController Buffs { get; protected set; }
@@ -177,41 +178,46 @@ namespace Galactic1.Code.Gameplay.Units.Stats
         {
             if (!CurrentStats.ContainsKey(stat))
                 return;
+            
+            float previousValue = CurrentStats[stat];
 
             CurrentStats[stat] = Mathf.Clamp(CurrentStats[stat] + amount, 0, CalculatedStats[stat]);
             _reactiveStats[stat].Value = CurrentStats[stat];
             NotifyStatChanged(stat);
             
             if (stat == StatId.Health)
-            {
-                EventBus<HealthChangedEvent>.Raise(
-                    new HealthChangedEvent(
-                        Owner,
-                        CurrentStats[StatId.Health],
-                        GetMax(StatId.Health)));
-                
-                CheckDeath();
-            }
+                HandleHealthChanged(previousValue);
         }
         public virtual void SetStat(StatId stat, float amount)
         {
             if (!CurrentStats.ContainsKey(stat))
                 return;
+            
+            float previousValue = CurrentStats[stat];
 
             CurrentStats[stat] = Mathf.Clamp(amount, 0, CalculatedStats[stat]);
             _reactiveStats[stat].Value = CurrentStats[stat];
             NotifyStatChanged(stat);
             
             if (stat == StatId.Health)
-            {
-                EventBus<HealthChangedEvent>.Raise(
-                    new HealthChangedEvent(
-                        Owner,
-                        CurrentStats[StatId.Health],
-                        GetMax(StatId.Health)));
-                
-                CheckDeath();
-            }
+                HandleHealthChanged(previousValue);
+        }
+        
+        
+        private void HandleHealthChanged(float previousHP)
+        {
+            float currentHP = CurrentStats[StatId.Health];
+
+            if (currentHP < previousHP)
+                OnDamageTaken?.Invoke();
+
+            EventBus<HealthChangedEvent>.Raise(
+                new HealthChangedEvent(
+                    Owner,
+                    currentHP,
+                    GetMax(StatId.Health)));
+
+            CheckDeath();
         }
 
 

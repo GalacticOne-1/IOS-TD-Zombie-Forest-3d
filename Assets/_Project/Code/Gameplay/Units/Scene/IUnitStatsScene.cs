@@ -8,6 +8,8 @@ namespace Galactic1.Code.UI.Units.Presentation
     {
         bool IsDead { get; }
         float MaxHP { get; }
+        
+        event Action OnDamageTaken;
         event Action OnDeath;
         
         ReactiveProperty<float> Get(StatId type);

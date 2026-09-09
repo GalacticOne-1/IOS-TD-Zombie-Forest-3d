@@ -59,6 +59,7 @@ namespace Galactic1.Code.Gameplay.Units.Abstractions
         /// Событие изменения любого стата.
         /// </summary>
         event Action<StatChangedEvent, bool> OnStatChanged;
+        event Action OnDamageTaken;
         event Action OnDeath;
         
         

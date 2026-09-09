@@ -21,6 +21,7 @@ namespace Galactic1.Core.UI.HUD
         [SerializeField] private Transform unitCardRoot;
         [SerializeField] private GameObject ButtonSquadFocus;
         [SerializeField] private AbilityTargetingHUD abilityTargetingHUD;
+        [SerializeField] private UIDamageFeedback _uiDamageFeedback;
         //public UIJoystick joystick;
         //[field: SerializeField] public TargetHPBarUI targetHPBar { get; private set; }
 
@@ -38,7 +39,9 @@ namespace Galactic1.Core.UI.HUD
 
         //private HUDSlotsController _hudSlotsController;
         //private EventBinding<SceneClearEvent> onSwitchClear;
-        
+
+        public UIDamageFeedback UIDamageFeedback => _uiDamageFeedback;
+
         private UnitCardBindingSystem _cardBindings;
 
         private ProgressionService _progressionService;
@@ -62,8 +65,11 @@ namespace Galactic1.Core.UI.HUD
             
             
             // === когда отряд заспавнен создаем карточки
-            EventBus<SceneActivateEvent>.Register(new EventBinding<SceneActivateEvent>(
-                () => BindSquad(container.Resolve<Systems.GameLoopSession.GameSession>().GameLoopContext.CurrentRaid.Squad)));
+            EventBus<SceneActivateEvent>.Register(new EventBinding<SceneActivateEvent>(() =>
+                BindSquad(container.Resolve<Systems.GameLoopSession.GameSession>()
+                    .GameLoopContext.CurrentRaid.Squad)));
+            
+            
 
             // === PROGRESSION HUD ===================================================
             _progressionService = container.Resolve<ProgressionService>();

@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: WorldThreatConfig
   m_EditorClassIdentifier: 
   testThreat: 0
-  initialQuietDaysMin: 2
-  initialQuietDaysMax: 3
-  initialPreparationDaysMin: 2
-  initialPreparationDaysMax: 2
-  quietDaysMin: 5
-  quietDaysMax: 8
-  longQuietThreshold: 6
-  fastAttackDaysMin: 4
-  fastAttackDaysMax: 6
-  slowAttackDaysMin: 7
-  slowAttackDaysMax: 9
+  initialQuietDaysMin: 30
+  initialQuietDaysMax: 30
+  initialPreparationDaysMin: 8
+  initialPreparationDaysMax: 8
+  quietDaysMin: 7
+  quietDaysMax: 10
+  longQuietThreshold: 8
+  fastAttackDaysMin: 6
+  fastAttackDaysMax: 8
+  slowAttackDaysMin: 9
+  slowAttackDaysMax: 11

@@ -12,6 +12,7 @@ using Galactic1.Code.Systems.CampDefense.Penalty;
 using Galactic1.Code.Systems.CampDefense.Preparation;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.Interaction;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.Raid.Mission;
 using Galactic1.Code.Systems.Raid.Survivors;
 using Galactic1.Code.Systems.Runtime;
@@ -138,12 +139,17 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
             // === Wave spawner ===
             var waveConfig = _container.Resolve<IConfigProvider>().Get<WaveConfig>();
             var waveSpawnPoints = scene.LocationContext.WaveSpawnPoints;
+            
+            // scale + excluded enemy ids резолвятся один раз здесь, из уровня игрока на момент старта
+            int playerLevel = _container.Resolve<ProgressionService>().CurrentLevel;
+            var difficulty = new CampDefenseWaveDifficultyResolver(waveConfig).Resolve(playerLevel);
 
             _waveProgress = new WaveProgressRuntime();
             _gameLoopContext.CurrentRaid.WaveProgress = _waveProgress;
 
             _waveSystem = new WaveSystem(
                 waveConfig,
+                difficulty,
                 _container.Resolve<EnemySpawnSystem>(),
                 _gameLoopContext.CurrentRaid.Enemies,
                 new WaveSpawnPointResolver(waveSpawnPoints),

@@ -33,6 +33,7 @@ namespace Galactic1.Code.Systems.Runtime
         // <<< NEW — implements IUnitSceneContext.Cover
         public UnitCoverState Cover => _cover;
 
+        public event Action OnDamageTaken; 
         public event Action OnDeath; 
 
         public SceneUnitAdapter(IUnitRuntime runtime)
@@ -50,6 +51,7 @@ namespace Galactic1.Code.Systems.Runtime
             };
 
             // ✅ ПРАВИЛЬНО: прокидываем через метод
+            Stats.OnDamageTaken += HandleDamageTaken;
             Stats.OnDeath += HandleDeath;
         }
         
@@ -58,12 +60,14 @@ namespace Galactic1.Code.Systems.Runtime
             _cover = cover;
         }
 
+        void HandleDamageTaken() => OnDamageTaken?.Invoke();
         private void HandleDeath() => OnDeath?.Invoke();
 
         public void Dispose()
         {
             if (Stats != null)
             {
+                Stats.OnDamageTaken -= HandleDamageTaken;
                 Stats.OnDeath -= HandleDeath;
                 Stats.Dispose();
             }
