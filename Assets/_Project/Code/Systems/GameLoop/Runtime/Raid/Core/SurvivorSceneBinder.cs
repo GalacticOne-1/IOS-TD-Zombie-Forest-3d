@@ -22,7 +22,7 @@ namespace Galactic1.Code.Systems.Raid.Survivors
     /// - unbind
     /// - despawn
     /// </summary>
-    public sealed class SurvivorSceneBinder : IDisposable
+    public sealed class SurvivorSceneBinder
     {
         // ─────────────────────────────────────────────────────────────
         // Runtime

@@ -186,40 +186,42 @@ namespace Galactic1.Code.Gameplay.Units.Stats
             NotifyStatChanged(stat);
             
             if (stat == StatId.Health)
-                HandleHealthChanged(previousValue);
+            {
+                if (CurrentStats[StatId.Health] < previousValue)
+                    OnDamageTaken?.Invoke(); // !!! вызов только в ModifyStat, здесь приходит дамаг !!!
+                // в SetStat будут баги из-за ApplyMeta, при выходе с локации отписка OnDamageTaken еще не сработает!
+                
+                
+                EventBus<HealthChangedEvent>.Raise(
+                    new HealthChangedEvent(
+                        Owner,
+                        CurrentStats[StatId.Health],
+                        GetMax(StatId.Health)));
+
+                CheckDeath();
+            }   
         }
         public virtual void SetStat(StatId stat, float amount)
         {
             if (!CurrentStats.ContainsKey(stat))
                 return;
             
-            float previousValue = CurrentStats[stat];
-
             CurrentStats[stat] = Mathf.Clamp(amount, 0, CalculatedStats[stat]);
             _reactiveStats[stat].Value = CurrentStats[stat];
             NotifyStatChanged(stat);
             
             if (stat == StatId.Health)
-                HandleHealthChanged(previousValue);
+            {
+                EventBus<HealthChangedEvent>.Raise(
+                    new HealthChangedEvent(
+                        Owner,
+                        CurrentStats[StatId.Health],
+                        GetMax(StatId.Health)));
+
+                CheckDeath();
+            }   
         }
         
-        
-        private void HandleHealthChanged(float previousHP)
-        {
-            float currentHP = CurrentStats[StatId.Health];
-
-            if (currentHP < previousHP)
-                OnDamageTaken?.Invoke();
-
-            EventBus<HealthChangedEvent>.Raise(
-                new HealthChangedEvent(
-                    Owner,
-                    currentHP,
-                    GetMax(StatId.Health)));
-
-            CheckDeath();
-        }
-
 
         protected void ClampAllCurrentStats()
         {

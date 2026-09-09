@@ -40,13 +40,17 @@ namespace Galactic1.Gameplay.Locations.Authoring
         {
             var col = GetComponent<BoxCollider>();
             if (!col.isTrigger)
-                Debug.LogWarning($"[SceneExitZone] Collider on '{name}' is not marked as Trigger.");
+                Debug.Log($"[SceneExitZone] Collider on '{name}' is not marked as Trigger.");
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (_triggered || !other.CompareTag(PlayerTag))
+            {
+                DLog.Alert($"[SceneExitZone] Trigger enter: {_triggered}/{other.CompareTag(PlayerTag)}", 
+                    EDlogColor.ORANGE);
                 return;
+            }
             
             _triggered = true;
             

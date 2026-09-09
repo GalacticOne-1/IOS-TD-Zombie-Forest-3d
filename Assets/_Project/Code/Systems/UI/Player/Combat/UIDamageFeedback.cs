@@ -22,7 +22,7 @@ namespace Galactic1.Core.UI
             ServiceLocator.Current.Register(this);
             
             gameObject.SetActive(true);
-            hideCoroutine = StartCoroutine(HideRoutine());
+            damageFrame.alpha = 0f;
         }
         
         public override void Remove()
