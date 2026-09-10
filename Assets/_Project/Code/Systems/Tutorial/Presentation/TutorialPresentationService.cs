@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
 {
@@ -65,10 +66,6 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         {
             if (_renderer == null) return;
 
-            if (!string.IsNullOrEmpty(presentation.instructionTextKey))
-                _renderer.RenderInstruction(presentation.instructionTextKey);
-            else
-                _renderer.ClearInstruction();
 
             ResolveTarget(presentation.highlightTargetId, _renderer.RenderHighlight, _renderer.ClearHighlight);
             ResolveTarget(presentation.arrowTargetId, _renderer.RenderArrow, _renderer.ClearArrow);

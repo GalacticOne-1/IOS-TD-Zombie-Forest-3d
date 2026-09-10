@@ -21,6 +21,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         private readonly ObjectiveCompositionMode _mode;
 
         public event Action OnStepCompleted;
+        public event Action OnProgressChanged;
 
         private bool _startInProgress;
         private bool _completedFired;
@@ -53,6 +54,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 _completedFired = true;
                 return true;
             }
+
             return false;
         }
 
@@ -66,10 +68,27 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         {
             if (_completedFired) return;
             if (!IsCompleted) return;
-            if (_startInProgress) return; // Start() сам вернёт true — событие здесь не нужно
+            if (_startInProgress) return; // Start() сам синхронно обработает финальное состояние
+
+            OnProgressChanged?.Invoke();
+
+            if (!IsCompleted) return;
 
             _completedFired = true;
             OnStepCompleted?.Invoke();
+        }
+
+        /// <summary>Прогресс шага для generic Scenario Task layer — см. ITutorialObjective.
+        /// TryGetProgress. Экспонируется ТОЛЬКО когда в группе ровно один объектив: для
+        /// нескольких разнородных объективов (ALL/ANY) нет единого корректного
+        /// current/required без знания семантики конкретных типов, а генерик-слой обязан
+        /// оставаться objective-type-agnostic. Ограничение намеренное и задокументированное,
+        /// не забытый недосмотр — см. финальный отчёт, "Multi-objective progress".</summary>
+        public bool TryGetProgress(out int current, out int required)
+        {
+            current = 0;
+            required = 0;
+            return Objectives.Count == 1 && Objectives[0].Objective.TryGetProgress(out current, out required);
         }
     }
 }

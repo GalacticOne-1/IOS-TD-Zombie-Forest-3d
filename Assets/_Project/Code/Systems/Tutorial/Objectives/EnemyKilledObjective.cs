@@ -15,5 +15,12 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             _current++;
             return _current >= _requiredCount;
         }
+
+        public override bool TryGetProgress(out int current, out int required)
+        {
+            current = _current;
+            required = _requiredCount;
+            return true;
+        }
     }
 }

@@ -113,6 +113,22 @@ namespace Galactic1.Code.WorldMap
             timeToLocation.CMP_Text().text = "Path to location:";
             timeToLocation.GetChild(0).CMP_Text().text = TimeUtils.FormatTime(raidCost);
                 // $"{DayTimeFormatter.Format(raidCost)} days";
+                
+        
+            // 2. Requires level
+            if (!locationStatus.unlocked)
+            {
+                startButton.SetActive(false);
+                lockRoot.SetActive(true);
+                lockLevelText.text = $"Reach Level {locationStatus.level}";
+            }
+            else
+            {
+                lockRoot.SetActive(false);
+                startButton.SetActive(true);
+            }
+            
+            
 
             if (isHome)
             {
@@ -126,7 +142,7 @@ namespace Galactic1.Code.WorldMap
             
             homeDescriptionText.gameObject.SetActive(false);
             
-            // 2. Блок времени
+            // 3. Блок времени
             timeBlockRoot.SetActive(true);
             timeBlockRoot.GetChild(1).CMP_Text().text = "Back to camp:";
             timeBlockRoot.GetChild(1,0).CMP_Text().text = TimeUtils.FormatTime(backToBaseCost);
@@ -157,25 +173,10 @@ namespace Galactic1.Code.WorldMap
             }
             
             
-            // 3. Блок разведки (что есть в локации)
+            // 4. Блок разведки (что есть в локации)
             UpdateIntelBlock(config);
             // алерт спец. требования локации
             equipmentAlert.SetActive(false);
-            
-            
-            
-            // 4. Requires level
-            if (!locationStatus.unlocked)
-            {
-                startButton.SetActive(false);
-                lockRoot.SetActive(true);
-                lockLevelText.text = $"Reach Level {locationStatus.level}";
-            }
-            else
-            {
-                lockRoot.SetActive(false);
-                startButton.SetActive(true);
-            }
         }
 
 

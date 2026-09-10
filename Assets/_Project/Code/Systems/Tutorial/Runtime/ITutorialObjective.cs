@@ -14,5 +14,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         bool EvaluateCurrentState();
         bool EvaluateEvent(object gameplayEvent);
         bool IsCompleted { get; }
+        
+        bool TryGetProgress(out int current, out int required);
     }
 }

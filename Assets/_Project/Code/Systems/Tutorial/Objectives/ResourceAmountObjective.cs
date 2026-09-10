@@ -21,5 +21,12 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
 
         public override bool EvaluateCurrentState()
             => _inventory.GetCampStorageAmount(_itemId) >= _requiredAmount;
+
+        public override bool TryGetProgress(out int current, out int required)
+        {
+            current = _inventory.GetCampStorageAmount(_itemId);
+            required = _requiredAmount;
+            return true;
+        }
     }
 }

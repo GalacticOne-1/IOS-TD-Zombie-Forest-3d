@@ -55,6 +55,13 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         /// Переопределяется там, где ретроактивность осмысленна (ItemEquippedObjective).</summary>
         public virtual bool EvaluateCurrentState() => false;
 
+        public virtual bool TryGetProgress(out int current, out int required)
+        {
+            current = 0;
+            required = 0;
+            return false;
+        }
+
         bool ITutorialObjective.EvaluateEvent(object gameplayEvent)
             => gameplayEvent is TEvent typed && EvaluateEvent(typed);
 

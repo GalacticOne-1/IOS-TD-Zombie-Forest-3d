@@ -7,6 +7,7 @@ using Galactic1.Code.Gameplay.Audio;
 using Galactic1.Code.Gameplay.BaseBuilding;
 using Galactic1.Code.Gameplay.Enemies.Factories;
 using Galactic1.Code.Gameplay.Survivors.Repositories;
+using Galactic1.Code.Gameplay.Tasks;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.CampDefense.Penalty;
 using Galactic1.Code.Systems.CampDefense.Preparation;
@@ -27,6 +28,7 @@ using Galactic1.Code.Systems.Tutorial.Analytics;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Objectives;
 using Galactic1.Code.Systems.Tutorial.Presentation;
+using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.Systems.World.Threats;
 using Galactic1.Code.UI.Interaction;
@@ -244,6 +246,12 @@ namespace Galactic1
             ServiceLocator.Current.Register(interactionPolicy);
             
             
+            // === Scenario Task (generic, source-agnostic task list presentation) ======
+           var scenarioTaskService = new ScenarioTaskService();
+            rootContainer.RegisterInstance<IScenarioTaskService>(scenarioTaskService);
+            ServiceLocator.Current.Register<IScenarioTaskService>(scenarioTaskService);
+           // ===========================================================================
+            
             // === Tutorial =============================================================
             var tutorialGameStateQuery = new TutorialGameStateQuery(
                 gameSession.GameLoopContext,
@@ -265,6 +273,9 @@ namespace Galactic1
             rootContainer.RegisterInstance(tutorialPresentationService);
             ServiceLocator.Current.Register(tutorialPresentationService);
 
+            var tutorialRewardService = new TutorialRewardService(gameStateProvider.GameStateProxy.Tutorial);
+            var tutorialTaskPresenter = new TutorialTaskPresenter(scenarioTaskService, tutorialRewardService);
+
             var tutorialService = new TutorialService(
                 configProvider.Get<TutorialCampaignRegistry>(),
                 tutorialObjectiveFactory,
@@ -272,6 +283,8 @@ namespace Galactic1
                 tutorialGameStateQuery,
                 tutorialInputPolicyService,
                 tutorialPresentationService,
+                tutorialRewardService,
+                tutorialTaskPresenter,
                 new NullTutorialAnalytics(),
                 gameStateProvider,
                 gameStateProvider.GameStateProxy.Tutorial);

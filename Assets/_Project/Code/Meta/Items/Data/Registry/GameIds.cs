@@ -1,4 +1,5 @@
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.RaidLoot.Authoring;
 using UnityEngine;
 
@@ -27,6 +28,10 @@ namespace Galactic1.Configs
         [Header("VFX")]
         public VfxId StunVfx;
         public VfxId FacilityExplosionVfx;
+        
+        
+        [Header("Tutorial")]
+        public TutorialCampaignId TutorialStart;
     }
 }
 

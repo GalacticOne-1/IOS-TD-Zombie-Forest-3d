@@ -27,6 +27,10 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
 
         [Header("Presentation")]
         public TutorialPresentationDefinition presentation = new();
+        
+        [Header("Reward")]
+        [Tooltip("Опционально. Выдаётся через Inbox строго при завершении шага (не при Skip).")]
+        public TutorialRewardDefinition reward = new();
 
         [Header("Graph")]
         [Tooltip("Переходы из этого шага. Пустой список = терминальный шаг тутора/главы.")]
@@ -50,6 +54,9 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
             }
 
             if (!objectives.Validate(stepId, out error))
+                return false;
+            
+            if (!reward.Validate(stepId, out error))
                 return false;
 
             for (int i = 0; i < transitions.Count; i++)

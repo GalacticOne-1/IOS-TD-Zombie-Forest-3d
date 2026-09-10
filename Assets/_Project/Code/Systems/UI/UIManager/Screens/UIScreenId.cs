@@ -10,6 +10,7 @@ namespace Galactic1.UI.Core
         GameStore = 5,
         GameStoreOfferSlide = 6,
         TutorialHUD = 7,
+        ScenarioTaskHUD = 8,
         
         ConfirmPopup = 10,
         ConfirmPaidPopup = 11,
@@ -42,6 +43,6 @@ namespace Galactic1.UI.Core
         HUDMap = 103,
         HUDLocation = 104,
         PlayerDamageFrame = 105,
-        
+
     }
 }

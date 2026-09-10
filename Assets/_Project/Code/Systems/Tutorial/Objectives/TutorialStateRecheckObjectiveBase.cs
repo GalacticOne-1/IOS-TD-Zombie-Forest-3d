@@ -51,5 +51,12 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
 
         public abstract bool EvaluateCurrentState();
         public bool EvaluateEvent(object gameplayEvent) => false;
+
+        public virtual bool TryGetProgress(out int current, out int required)
+        {
+            current = 0;
+            required = 0;
+            return false;
+        }
     }
 }

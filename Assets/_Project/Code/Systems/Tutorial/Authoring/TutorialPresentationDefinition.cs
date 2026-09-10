@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
 {
@@ -11,7 +12,10 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     public sealed class TutorialPresentationDefinition
     {
         [Header("Instruction")]
-        public string instructionTextKey;
+        public string instructionTitleKey;
+        
+        [TextArea]
+        public string instructionDesKey;
 
         [Header("Highlight / Arrow")]
         public TutorialTargetId highlightTargetId;
@@ -28,7 +32,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         public TutorialInputMode inputPolicy = TutorialInputMode.Free;
 
         public bool HasVisuals =>
-            !string.IsNullOrEmpty(instructionTextKey) ||
+            !string.IsNullOrEmpty(instructionTitleKey) ||
             highlightTargetId != null ||
             arrowTargetId != null ||
             !string.IsNullOrEmpty(dialogueId);

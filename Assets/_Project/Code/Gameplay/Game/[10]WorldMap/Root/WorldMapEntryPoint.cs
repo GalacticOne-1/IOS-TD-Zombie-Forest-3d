@@ -104,6 +104,7 @@ namespace Galactic1
                                 UIScreenId.Settings,
                                 UIScreenId.PurchaseRewardScreen,
                                 UIScreenId.Review,
+                                UIScreenId.ScenarioTaskHUD,
                                 UIScreenId.TutorialHUD,
                                 UIScreenId.PlayerDamageFrame,
                                 UIScreenId.HUDMap,

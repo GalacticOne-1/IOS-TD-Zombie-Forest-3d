@@ -18,5 +18,12 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         }
 
         public override bool EvaluateCurrentState() => _squad.GetStrategicSquadSize() >= _requiredSize;
+
+        public override bool TryGetProgress(out int current, out int required)
+        {
+            current = _squad.GetStrategicSquadSize();
+            required = _requiredSize;
+            return true;
+        }
     }
 }

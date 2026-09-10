@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
@@ -8,7 +9,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     public sealed class TutorialInstructionView : MonoBehaviour
     {
         [SerializeField] private GameObject root;
-        [SerializeField] private TMPro.TMP_Text text;
+        [SerializeField] private TMP_Text text;
 
         public void Show(string textKey)
         {

@@ -43,13 +43,7 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         private void Register<TDef>(Func<TDef, ITutorialObjective> factory) where TDef : TutorialObjectiveDefinition
             => _map[typeof(TDef)] = def => factory((TDef)def);
 
-        /// <summary>
-        /// Fix: раньше при неизвестном типе Definition сюда возвращался null, который потом
-        /// оседал в TutorialObjectiveRuntimeState и падал NRE где-то глубоко внутри
-        /// TutorialStepRuntimeState.IsCompleted — далеко от места настоящей ошибки. Теперь
-        /// авторинг-ошибка (незарегистрированный тип объектива) падает немедленно и явно,
-        /// прямо в точке Create(), с полным контекстом (тип + asset name + ObjectiveTypeId).
-        /// </summary>
+        
         public ITutorialObjective Create(TutorialObjectiveDefinition definition)
         {
             if (definition == null)

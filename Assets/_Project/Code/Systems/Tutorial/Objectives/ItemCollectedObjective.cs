@@ -26,5 +26,12 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             _collected += e.Amount;
             return _collected >= _requiredAmount;
         }
+
+        public override bool TryGetProgress(out int current, out int required)
+        {
+            current = _collected;
+            required = _requiredAmount;
+            return true;
+        }
     }
 }

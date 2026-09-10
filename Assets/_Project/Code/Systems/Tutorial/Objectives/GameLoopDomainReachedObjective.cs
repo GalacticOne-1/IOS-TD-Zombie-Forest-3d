@@ -46,5 +46,7 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
 
         public bool EvaluateCurrentState() => _query.CurrentDomain == _targetDomain;
         public bool EvaluateEvent(object gameplayEvent) => false;
+        
+        public bool TryGetProgress(out int current, out int required) { current = 0; required = 0; return false; }
     }
 }

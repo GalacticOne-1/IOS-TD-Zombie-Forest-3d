@@ -10,6 +10,7 @@ namespace Galactic1
         public string currentStepId;
         public string checkpointStepId;
         public List<string> completedStepIds;
+        public List<string> claimedRewardStepIds;
         public bool completed;
         public long startedAtUnixSeconds;
     }

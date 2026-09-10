@@ -17,17 +17,36 @@ MonoBehaviour:
   analyticsStepIndex: 0
   objectives:
     mode: 0
-    objectives: []
+    objectives:
+    - {fileID: 11400000, guid: 877436c7498ce4c35898d6eccc08efec, type: 2}
   presentation:
-    instructionTextKey: 
+    instructionTitleKey: Equipment gun
+    instructionDesKey: 'Equipment survivor with Glock17
+
+      lalalal'
     highlightTargetId: {fileID: 0}
     arrowTargetId: {fileID: 0}
-    dialogueId: 
+    dialogueId: Equip survivor Glock17
     cameraFocusTargetId: {fileID: 0}
     inputPolicy: 0
-  transitions: []
+  reward:
+    items:
+    - itemId: {fileID: 11400000, guid: 1163668eeee6a4f45a05c1eb668a9dca, type: 2}
+      amount: 1
+      durability: 150
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: ba4269c1a066c465b9ac794e89dae4d3, type: 2}
+      amount: 200
+      durability: 0
+      ammoInMagazine: 0
+  transitions:
+  - nextStepId: {fileID: 0}
+    condition:
+      rid: -2
   isCheckpoint: 1
   requiredDomain: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

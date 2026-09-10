@@ -1,4 +1,5 @@
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.RaidLoot.Authoring;
 
 namespace Galactic1.Configs.Galactic1.Code.GameDatabase
@@ -48,5 +49,12 @@ namespace Galactic1.Configs.Galactic1.Code.GameDatabase
 
         public static VfxId StunVfx => _config.StunVfx;
         public static VfxId FacilityExplosionVfx => _config.FacilityExplosionVfx;
+        
+        
+        
+        // =========================================================
+        // TUTORIAL
+        // =========================================================
+        public static TutorialCampaignId TutorialStart => _config.TutorialStart;
     }
 }

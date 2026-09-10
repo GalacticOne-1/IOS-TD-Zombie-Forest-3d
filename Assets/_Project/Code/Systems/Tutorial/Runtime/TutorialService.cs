@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Galactic1.Code.Core;
 using Galactic1.Code.Core.State;
 using Galactic1.Code.Systems.Tutorial.Analytics;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Objectives;
 using Galactic1.Code.Systems.Tutorial.Presentation;
+using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Core;
 using R3;
-using Galactic1.Window;
 using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Runtime
@@ -17,6 +16,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     public interface ITutorialService : IGameService
     {
         bool IsActive { get; }
+        void StartOrRestore(TutorialCampaignId campaignId);
         void StartTutorial(TutorialCampaignId campaignId);
         void Restore();
         void StopTutorial();
@@ -66,6 +66,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         private readonly IGameLoopStateQuery _gameLoopStateQuery;
         private readonly TutorialInputPolicyService _inputPolicyService;
         private readonly ITutorialPresentationService _presentation;
+        private readonly TutorialRewardService _rewardService;
+        private readonly TutorialTaskPresenter _taskPresenter;
         private readonly ITutorialAnalytics _analytics;
         private readonly IGameStateProvider _gameStateProvider;
         private readonly ReactiveProperty<CGameStateTutorial> _tutorialState;
@@ -82,6 +84,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             IGameLoopStateQuery gameLoopStateQuery,
             TutorialInputPolicyService inputPolicyService,
             ITutorialPresentationService presentation,
+            TutorialRewardService rewardService,
+            TutorialTaskPresenter taskPresenter,
             ITutorialAnalytics analytics,
             IGameStateProvider gameStateProvider,
             ReactiveProperty<CGameStateTutorial> tutorialState)
@@ -92,6 +96,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _gameLoopStateQuery = gameLoopStateQuery;
             _inputPolicyService = inputPolicyService;
             _presentation = presentation;
+            _rewardService = rewardService;
+            _taskPresenter = taskPresenter;
             _analytics = analytics;
             _gameStateProvider = gameStateProvider;
             _tutorialState = tutorialState;
@@ -100,6 +106,22 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         // =========================================================
         // PRODUCTION API
         // =========================================================
+        
+        public void StartOrRestore(TutorialCampaignId initialCampaignId)
+        {
+            var snapshot = _tutorialState.Value;
+
+            if (snapshot.completed)
+                return;
+
+            if (!string.IsNullOrEmpty(snapshot.campaignId))
+            {
+                Restore();
+                return;
+            }
+
+            StartTutorial(initialCampaignId);
+        }
 
         public void Restore()
         {
@@ -227,6 +249,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             if (_runtime == null) return;
             _activeStep?.Stop();
             _presentation.Hide();
+            _taskPresenter.Clear();
             _activeStep = null;
             ActivateStep(stepId);
         }
@@ -236,6 +259,9 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             if (_runtime == null) return;
             var campaignId = _runtime.Definition.campaignId;
             StopTutorial();
+            StateWriter.Write(
+                _tutorialState,
+                (ref CGameStateTutorial t) => t.claimedRewardStepIds = new List<string>());
             StartTutorial(campaignId);
         }
 
@@ -280,11 +306,13 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 }
 
                 stepState.OnStepCompleted += HandleAsyncStepCompleted;
+                stepState.OnProgressChanged += HandleActiveStepProgressChanged;
                 _activeStep = stepState;
                 _runtime.SetActiveStep(stepState);
 
                 _inputPolicyService.Apply(stepDef.presentation.inputPolicy);
                 _presentation.Show(stepDef.presentation);
+                _taskPresenter.ShowStep(stepState);
                 _analytics.StepStarted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
 
                 Persist();
@@ -303,6 +331,12 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             return new TutorialStepRuntimeState(stepDef, objectiveStates);
         }
 
+        private void HandleActiveStepProgressChanged()
+        {
+            if (_activeStep == null) return;
+            _taskPresenter.UpdateProgress(_activeStep);
+        }
+
         /// <summary>Срабатывает строго асинхронно — из EventBus-колбэка реального игрового
         /// события, никогда не изнутри ActivateStep.</summary>
         private void HandleAsyncStepCompleted() => FinishActiveStepAndAdvance(TutorialStepOutcome.Completed);
@@ -315,9 +349,15 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             var finishedState = _activeStep;
 
             finishedState.OnStepCompleted -= HandleAsyncStepCompleted;
+            finishedState.OnProgressChanged -= HandleActiveStepProgressChanged;
             _presentation.Hide();
             finishedState.Stop();
             _activeStep = null;
+
+            if (outcome == TutorialStepOutcome.Completed)
+                _taskPresenter.CompleteStep(stepDef);
+            else
+                _taskPresenter.RemoveStepImmediately(stepDef);
 
             var nextStepId = ResolveTransition(stepDef, outcome);
             if (nextStepId != null)
@@ -333,6 +373,10 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             if (outcome == TutorialStepOutcome.Completed)
             {
                 _runtime.MarkStepCompleted(stepDef.stepId);
+                // Награда — часть генуинного завершения шага, не самостоятельное событие:
+                // намеренно в той же точке, что и MarkStepCompleted (см. TutorialRewardService
+                // class docstring про совместное crash-окно). Skip сюда не попадает.
+                _rewardService.GrantIfNeeded(stepDef);
                 _analytics.StepCompleted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
             }
             else

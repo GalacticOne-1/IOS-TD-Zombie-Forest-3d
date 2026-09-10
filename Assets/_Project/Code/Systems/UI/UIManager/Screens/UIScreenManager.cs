@@ -163,7 +163,8 @@ namespace Galactic1.UI.Core
                     UIScreenId.HUDCamp or
                     UIScreenId.HUDLocation or
                     UIScreenId.HUDMap or
-                    UIScreenId.TutorialHUD
+                    UIScreenId.TutorialHUD or 
+                    UIScreenId.ScenarioTaskHUD
                     => _layerRoot.hudRoot,
 
                 UIScreenId.BaseConstructionMenu

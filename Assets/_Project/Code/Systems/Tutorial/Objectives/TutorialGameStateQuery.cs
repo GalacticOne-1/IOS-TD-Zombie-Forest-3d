@@ -3,6 +3,8 @@ using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Runtime;
+using Galactic1.Configs;
+using Galactic1.Configs.Galactic1.Code.GameDatabase;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
 
@@ -46,11 +48,11 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
 
 
                 /*
-                 * Restore() должен вызываться после того
+                 * Sart() or Restore() должен вызываться после того
                  * как gameSession.GameLoopContext уже полностью восстановлен из сейва
                  * (юниты/здания/CampRuntime загружены)
                  */
-                ServiceLocator.Current.Get<ITutorialService>().Restore();
+                ServiceLocator.Current.Get<ITutorialService>().StartOrRestore(GameIdProvider.TutorialStart);
             }));
         }
 

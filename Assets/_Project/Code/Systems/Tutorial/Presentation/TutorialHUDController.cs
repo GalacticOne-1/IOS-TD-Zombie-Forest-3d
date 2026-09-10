@@ -4,20 +4,23 @@ using UnityEngine;
 namespace Galactic1.Code.Systems.Tutorial.Presentation
 {
     /// <summary>
-    /// Scene-local рендерер тутор-презентации. Обычный UIScreenPanel под
-    /// _layerRoot.hudRoot (аналогично HUDInput/HUDCamp), пересоздаётся при каждой
-    /// загрузке сцены — presentation discovers active step, а не наоборот.
+    /// Scene-local рендерер Tutorial-специфичной презентации: ТОЛЬКО highlight/arrow/
+    /// camera focus. Инструкция/прогресс/награда шага больше не здесь — это generic
+    /// Scenario Task слой (см. Galactic1.Code.Gameplay.Tasks.Presentation.ScenarioTaskPanel),
+    /// который Tutorial лишь ПОПОЛНЯЕТ через TutorialTaskPresenter, но не владеет и не
+    /// рендерит напрямую.
+    ///
+    /// Обычный UIScreenPanel под _layerRoot.hudRoot, пересоздаётся при каждой загрузке
+    /// сцены — presentation discovers active step, а не наоборот.
     ///
     /// НЕ IGameService — единственная точка обнаружения этого класса это
-    /// AttachRenderer/DetachRenderer через TutorialPresentationService, регистрация
-    /// в ServiceLocator была мёртвым весом (ничто её не читало) и убрана.
+    /// AttachRenderer/DetachRenderer через TutorialPresentationService.
     ///
     /// ⚠️ Требует UIScreenId.TutorialHUD в enum + добавления в UIScreenManager.GetRoot
-    /// и PreloadScreens (см. Integration/).
+    /// и PreloadScreens.
     /// </summary>
     public sealed class TutorialHUDController : UIScreenPanel, ITutorialPresentationRenderer
     {
-        [SerializeField] private TutorialInstructionView instructionView;
         [SerializeField] private RectTransform highlightLayer;
         [SerializeField] private RectTransform arrowLayer;
         [SerializeField] private TutorialHighlightWidget highlightPrefab;
@@ -36,9 +39,6 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         {
             ServiceLocator.Current.Get<TutorialPresentationService>().DetachRenderer(this);
         }
-
-        public void RenderInstruction(string textKey) => instructionView.Show(textKey);
-        public void ClearInstruction() => instructionView.Hide();
 
         public void RenderHighlight(ITutorialTarget target)
         {
@@ -72,7 +72,6 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
 
         public void ClearAll()
         {
-            ClearInstruction();
             ClearHighlight();
             ClearArrow();
         }
