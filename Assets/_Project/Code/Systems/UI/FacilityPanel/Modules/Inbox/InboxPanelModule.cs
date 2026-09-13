@@ -16,7 +16,7 @@ namespace Galactic1.Game.UI.Inbox
 
         private InboxSceneAdapter _adapter;
 
-        bool opened = false;
+        private bool opened = false;
         
         
         public override bool IsSupported(FacilityDTO dto)
@@ -49,6 +49,11 @@ namespace Galactic1.Game.UI.Inbox
         {
             var details = dto.Details as InboxModuleDetailsDTO;
             listView.Build(details.Slots, opened);
+
+            if (!opened)
+                EventBus<FacilityPanelOpenedEvent>
+                    .Raise(new FacilityPanelOpenedEvent(dto.Details.Type), .1f);
+            
             opened = false;
         }
 

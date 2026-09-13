@@ -1,5 +1,8 @@
 
 using System.Collections.Generic;
+using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Inventory.Abstractions;
+using Galactic1.Mobile.EventBus;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,6 +21,10 @@ namespace Galactic1.Code.UI.Inventory
         private InventorySlotView draggedSlot;
         private bool dragStarted;
         private bool droppedOnSameSlot = false;
+        
+        private RuntimeId draggedItemId;
+        private IInventorySource draggedSource;
+        private int draggedSlotIndex;
 
         // Pointer
         private Vector2 pointerDownPos;
@@ -34,7 +41,13 @@ namespace Galactic1.Code.UI.Inventory
         private const float dragThreshold = 8f;
         
 
-        public DragManager(Canvas canvas, DragIcon iconPrefab, InventoryManagementWindow window, TooltipInventoryUI tooltip)
+        
+        
+        public DragManager(
+            Canvas canvas, 
+            DragIcon iconPrefab,
+            InventoryManagementWindow window, 
+            TooltipInventoryUI tooltip)
         {
             this.canvas = canvas;
             this.dragIconPrefab = iconPrefab;
@@ -52,6 +65,7 @@ namespace Galactic1.Code.UI.Inventory
             tooltipLoaded = false;
             tooltipShown = false;
             dragStarted = false;
+            droppedOnSameSlot = false;
         }
 
         public void OnPointerUp(InventorySlotView slot, PointerEventData eventData)
@@ -89,6 +103,19 @@ namespace Galactic1.Code.UI.Inventory
                 }
             }
         }
+        
+        /// <summary>Live-запрос "что сейчас перетаскивается" для guidance-условий тутора
+        /// (см. ItemDraggedGuidanceCondition). Null — драг не идёт, либо порог dragThreshold
+        /// ещё не превышен (намеренно: клик "с дрожащей рукой" не должен читаться как драг).</summary>
+        public RuntimeId DraggedItemId
+        {
+            get
+            {
+                if (!dragStarted || draggedSlot == null) return null;
+                var slot = draggedSlot.ParentUI.GetSlot(draggedSlot.SlotIndex);
+                return slot.IsEmpty ? null : slot.Item.Id;
+            }
+        }
 
         // ---- Update ----
         public void Update()
@@ -96,7 +123,7 @@ namespace Galactic1.Code.UI.Inventory
             // ---- Hold для Tooltip ----
             if (!dragStarted && pointerDownSlot != null && !tooltipShown)
             {
-                holdTimer += UnityEngine.Time.deltaTime;
+                holdTimer += Time.deltaTime;
                 
                 if(!tooltipLoaded)
                     LoadTooltip(pointerDownSlot);
@@ -114,6 +141,8 @@ namespace Galactic1.Code.UI.Inventory
                 ref smoothVelocity,
                 1f / smoothSpeed
             );
+            
+            //EventBus<InventorySlotDragEvent>.Raise(new InventorySlotDragEvent()); ???
 
             if (Input.GetMouseButtonUp(0))
                 TryDrop();
@@ -158,6 +187,15 @@ namespace Galactic1.Code.UI.Inventory
 
             draggedSlot = fromSlot;
             dragStarted = true;
+            
+            draggedItemId = slotData.Item.Id;
+            draggedSource = fromSlot.ParentUI._source;
+            draggedSlotIndex = fromSlot.SlotIndex;
+            
+            EventBus<InventoryDragStartedEvent>.Raise(new InventoryDragStartedEvent(
+                draggedSource,
+                draggedItemId,
+                draggedSlotIndex));
 
             dragIcon = GameObject.Instantiate(dragIconPrefab, canvas.transform);
             dragIcon.transform.position = fromSlot.transform.position;
@@ -186,12 +224,12 @@ namespace Galactic1.Code.UI.Inventory
                 if (targetSlot != null)
                 {
                     Drop(targetSlot);
-                    EndDrag();
+                    EndDrag(InventoryDragEndReason.Drop);
                     return;
                 }
             }
 
-            EndDrag();
+            EndDrag(InventoryDragEndReason.PointerReleased);
         }
 
         private void Drop(InventorySlotView target)
@@ -218,19 +256,22 @@ namespace Galactic1.Code.UI.Inventory
         }
 
 
-        private void EndDrag()
+        private void EndDrag(InventoryDragEndReason reason)
         {
             if (dragIcon != null)
                 GameObject.Destroy(dragIcon.gameObject);
 
+            if (droppedOnSameSlot)
+                reason = InventoryDragEndReason.Cancel;
+            
             // если дроп на тот же слот — НИЧЕГО НЕ СБРАСЫВАЕМ
             if (draggedSlot != null)
             {
                 draggedSlot.SetDimmed(false);
                 
                 var item = draggedSlot.ParentUI._source.GetSlot(draggedSlot.SlotIndex).Item;
-                draggedSlot.ParentUI.HighlightEquipmentSlots(item, false);
                 
+                draggedSlot.ParentUI.HighlightEquipmentSlots(item, false);
                 draggedSlot.SetHighlight(droppedOnSameSlot);
             }
 
@@ -238,6 +279,13 @@ namespace Galactic1.Code.UI.Inventory
             draggedSlot = null;
             dragStarted = false;
             droppedOnSameSlot = false;
+            
+            EventBus<InventoryDragEndedEvent>.Raise(
+                new InventoryDragEndedEvent(
+                    draggedSource,
+                    draggedItemId,
+                    draggedSlotIndex,
+                    reason));
         }
     }
 

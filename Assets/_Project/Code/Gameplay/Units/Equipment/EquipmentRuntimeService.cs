@@ -5,6 +5,7 @@ using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
 using Galactic1.Game.Meta.Stats;
+using Galactic1.Mobile.EventBus;
 using UnityEngine;
 
 namespace Galactic1.Code.Gameplay.Equipment
@@ -102,12 +103,10 @@ namespace Galactic1.Code.Gameplay.Equipment
             RefreshStats();
             //BindVisual(item.EquipSlotType, item);
             OnEquipped?.Invoke(item.GetEquipSlot(), item);
-            
-            EventBus<ItemEquippedEvent>.Raise(new ItemEquippedEvent()
-            {
-                Slot = Source.GetEquipmentSlotType(slotIndex),
-                ItemId = item.Id
-            });
+
+            EventBus<ItemEquippedEvent>.Raise(new ItemEquippedEvent(
+                Source.GetEquipmentSlotType(slotIndex),
+                item.Id));
 
             return true;
         }
@@ -118,10 +117,16 @@ namespace Galactic1.Code.Gameplay.Equipment
         {
             var equipSlotType = Source.GetEquipmentSlotType(slotIndex);
             //Inventory.SetItem(slot, null);
+            
+            var slot = Source.GetSlot(slotIndex);
 
             RefreshStats();
             //ClearVisual(equipSlotType);
             OnUnequipped?.Invoke(equipSlotType);
+            
+            EventBus<ItemUnequippedEvent>.Raise(new ItemUnequippedEvent(
+                Source.GetEquipmentSlotType(slotIndex),
+                slot.Item?.Id));
         }
 
 

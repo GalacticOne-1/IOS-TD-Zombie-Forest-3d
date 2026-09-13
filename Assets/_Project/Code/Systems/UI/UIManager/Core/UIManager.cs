@@ -199,6 +199,12 @@ namespace Galactic1.UI.Core
             return true;
         }
 
+        /// <summary>
+        /// Добавление активного окна для TabPanelController
+        /// </summary>
+        /// <param name="id"></param>
+        public void ScreenOpened(UIScreenId id) => screenManager.AddActiveScreen(id);
+
 
         bool IsTab(UIScreenId id)
             => id switch

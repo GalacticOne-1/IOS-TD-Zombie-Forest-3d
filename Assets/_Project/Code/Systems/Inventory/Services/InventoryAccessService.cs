@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Inventory.Context;
 using Galactic1.Code.Inventory.Rules;
 using Galactic1.Core.Enums;
 using Galactic1.Code.UI.Inventory;
 using Galactic1.Game.Meta.Items;
+using Galactic1.Mobile.EventBus;
 using UnityEngine;
 
 namespace Galactic1.Code.Inventory.Services
@@ -26,7 +28,9 @@ namespace Galactic1.Code.Inventory.Services
         
         
 
-        public InventoryAccessService(InventoryGameplayContextService contextService, InventoryManagementWindow window)
+        public InventoryAccessService(
+            InventoryGameplayContextService contextService,
+            InventoryManagementWindow window)
         {
             _contextService = contextService;
             _window = window;
@@ -43,6 +47,7 @@ namespace Galactic1.Code.Inventory.Services
         {
             PreviewUpdated();
             source?.NotifyChanged();
+            EventBus<InventoryContentsChangedEvent>.Raise(new InventoryContentsChangedEvent(source));
         }
 
         public void PreviewUpdated() => OnPreviewUpdated?.Invoke();
@@ -77,6 +82,38 @@ namespace Galactic1.Code.Inventory.Services
             return slotType != EquipmentSlotType.None;
         }
         
+        
+        
+        /// <summary>
+        /// Ищет слот, в котором СЕЙЧАС лежит предмет itemId
+        ///
+        /// <br/>Возвращает false, если этот источник предмет не содержит 
+        /// </summary>
+        public bool TryFindSlotRectByItem(
+            IInventorySource source, 
+            InventoryView view,
+            ItemId targetId, 
+            out RectTransform slotRect)
+        {
+            slotRect = null;
+            if (source == null || targetId == null)
+                return false;
+
+            var slotsUI = view.SlotsUI;
+            var slots = GetSlots(source);
+            var l = Mathf.Min(slots.Count, slotsUI.Count);
+
+            for (int i = 0; i < l; i++)
+            {
+                if (slots[i].IsEmpty) continue;
+                if (slots[i].Item.Id != targetId) continue;
+
+                slotRect = (RectTransform)slotsUI[i].transform;
+                return true;
+            }
+
+            return false;
+        }
         
         
         /// <summary>

@@ -20,6 +20,9 @@ namespace Galactic1.UI.Core.TabPanel
         [SerializeField] private GameObject tabButtonPrefab;
         [SerializeField] private Transform contentRoot;
 
+        private UIManager uiManager;
+        private CoroutineController coroutineController;
+
         private readonly List<TabEntry> tabs = new();
         private TabEntry activeTab;
 
@@ -44,10 +47,12 @@ namespace Galactic1.UI.Core.TabPanel
         // =========================================================
 
         // должен первым создаваться т.к другие панели его требуют
-        public override void Initialize(DIContainer diContainer, UIScreenId id)
+        public override void Initialize(DIContainer container, UIScreenId id)
         {
-            base.Initialize(diContainer, id);
+            base.Initialize(container, id);
 
+            uiManager = container.Resolve<UIManager>();
+            coroutineController = ServiceLocator.Current.Get<CoroutineController>();
             ServiceLocator.Current.Register(this);
             bClose.RegisterButtonClick(OnHide);
 
@@ -224,9 +229,12 @@ namespace Galactic1.UI.Core.TabPanel
                 onShow?.Invoke(activeTab.Panel.gameObject);
                 activeTab.Panel.OnShow(data);
             }
-            
+
             activeTab.Button.SetSelected(true);
             gameObject.SetActive(true);
+            
+            // ! вызов события через пару кадров !
+            coroutineController.Coroutine_wait(() => uiManager.ScreenOpened(entry.PanelId));
         }
 
         private BaseUIButton CreateTabButton(TabEntry entry)

@@ -1,5 +1,4 @@
 using Galactic1.Gameplay.Interaction;
-using Galactic1.Gameplay.Interaction.Objects;
 using UnityEngine;
 
 namespace Galactic1.Structs.UI
@@ -16,17 +15,5 @@ namespace Galactic1.Structs.UI
 
 
 
-        public Sprite GetIconFor(IInteractable interactable)
-        {
-            return interactable switch
-            {
-                HomeContainerInteractable or ContainerInteractable => openChestIcon,
-                ResourceNodeBase => miningResourceIcon,
-                //Corpse => lootCorpseIcon,
-                EnemyInteractable => attackEnemyIcon,
-                //Safe => unlockSafeIcon,
-                _ => defaultActionIcon
-            };
-        }
     }
 }

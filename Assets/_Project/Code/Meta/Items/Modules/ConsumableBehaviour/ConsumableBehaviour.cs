@@ -2,6 +2,7 @@ using System;
 using Galactic1.Code.Gameplay.Effect;
 using Galactic1.Code.Gameplay.Targeting;
 using Galactic1.Code.Inventory.Abstractions;
+using Galactic1.Mobile.EventBus;
 using UnityEngine;
 
 namespace Galactic1.Game.Meta.Items
@@ -63,6 +64,7 @@ namespace Galactic1.Game.Meta.Items
                 source.SetSlot(index, slot);
             
             source.NotifyChanged();
+            EventBus<ItemConsumabledEvent>.Raise(new ItemConsumabledEvent(slot.Item.Id, 1));
         }
     }
 }

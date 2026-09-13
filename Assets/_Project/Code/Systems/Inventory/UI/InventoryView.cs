@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using Galactic1.Code.Gameplay.Weapons.Services;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Inventory.Services;
+using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.Raid;
 using Galactic1.Code.Systems.Raid.Survivors;
+using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.UI.Utils;
 using Galactic1.Game.Meta.Items;
+using Galactic1.Mobile.EventBus;
 using Galactic1.UI.Core;
 using TMPro;
 using UnityEngine;
@@ -51,6 +54,7 @@ namespace Galactic1.Code.UI.Inventory
         private bool isRaidMode;
         
         private List<InventorySlotView> slotsUI = new();
+        public IReadOnlyList<InventorySlotView> SlotsUI => slotsUI;
         public InventorySlotView selectedSlot { get; private set; }
         private int selectedWeaponIndex = -1;
 
@@ -153,12 +157,16 @@ namespace Galactic1.Code.UI.Inventory
 
             RefreshUI();
             ClearSelection();
+            
+            ServiceLocator.Current.Get<TutorialInventoryViewRegistry>()?.Register(this);
         }
 
         private void OnDisable()
         {
             if (_source != null)
                 _source.OnChanged -= RefreshUI;
+
+            ServiceLocator.Current.Get<TutorialInventoryViewRegistry>()?.Unregister(this);
         }
 
 
@@ -236,9 +244,13 @@ namespace Galactic1.Code.UI.Inventory
             //     slotProxy.Durability);
             return _access.GetSlot(_source, index);
         }
-
+        
         public void SelectSlot(InventorySlotView slotView)
         {
+            var previousItem = selectedSlot != null
+                ? GetItem(selectedSlot.SlotIndex)
+                : null;
+            
             if (selectedSlot != null)
                 selectedSlot.SetHighlight(false);
 
@@ -248,6 +260,12 @@ namespace Galactic1.Code.UI.Inventory
             if (slotView.SlotIndex == 0)
                 selectedWeaponIndex = slotView.SlotIndex;
             UpdateButtons();
+
+            EventBus<InventorySelectionChangedEvent>.Raise(
+                new InventorySelectionChangedEvent(
+                    _source,
+                    previousItem?.Id,
+                    GetItem(selectedSlot.SlotIndex)?.Id));
 
             // 🔹 Обновляем кнопки при выборе
             Window.UpdateButtons();
@@ -260,11 +278,18 @@ namespace Galactic1.Code.UI.Inventory
         {
             if (selectedSlot != null)
             {
+                var previousItem = GetItem(selectedSlot.SlotIndex);
                 selectedSlot.SetHighlight(false);
                 selectedSlot = null;
                 
                 selectedWeaponIndex = -1;
                 UpdateButtons();
+                
+                EventBus<InventorySelectionChangedEvent>.Raise(
+                    new InventorySelectionChangedEvent(
+                        _source,
+                        previousItem?.Id,
+                        null));
 
                 // 🔹 Обновляем кнопки при выборе
                 Window.UpdateButtons();
@@ -311,9 +336,17 @@ namespace Galactic1.Code.UI.Inventory
                     slotUI.SetHighlight(highlight && allowed);
             }
         }
-        
-        
-        
+
+
+        ItemConfig GetItem(int slotIndex)
+        {
+            var slot = GetSlot(slotIndex);
+
+            return slot.IsEmpty ? null : slot.Item;
+        }
+
+
+
         public void UpdateButtons()
         {
             if (ammoWeaponRoot == null) 

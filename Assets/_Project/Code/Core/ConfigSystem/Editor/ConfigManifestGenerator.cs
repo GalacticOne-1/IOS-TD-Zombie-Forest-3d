@@ -38,6 +38,7 @@ namespace Galactic1.Configs
             "Assets/Resources/Configs/Gameplay/Enemies/Variants",
             "Assets/Resources/Configs/Tutorial/Campaigns",
             "Assets/Resources/Configs/Tutorial/Objectives",
+            "Assets/Resources/Configs/Tutorial/Conditions",
         };
 
         

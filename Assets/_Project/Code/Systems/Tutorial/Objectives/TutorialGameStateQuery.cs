@@ -1,36 +1,71 @@
 using System;
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Systems.GameLoop;
+using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Runtime;
+using Galactic1.Code.UI.Inventory;
 using Galactic1.Configs;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
+using Galactic1.UI.Core;
+using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Objectives
 {
     /// <summary>
-    /// Единственная реализация трёх узких интерфейсов (IGameLoopStateQuery,
-    /// ITutorialInventoryQuery, ITutorialSquadQuery) — один класс резолвит
-    /// GameLoopContext/GameLoopStateMachine через конструктор, но каждый объектив
-    /// принимает только тот интерфейс, который ему реально нужен (не God-интерфейс).
+    /// Единственная реализация четырёх узких интерфейсов (IGameLoopStateQuery,
+    /// ITutorialInventoryQuery, ITutorialSquadQuery, ITutorialUIStateQuery) — один класс
+    /// резолвит GameLoopContext/GameLoopStateMachine/UIScreenManager через конструктор
+    /// и ленивый ServiceLocator lookup, но каждый объектив/guidance condition принимает
+    /// только тот интерфейс, который ему реально нужен (не God-интерфейс).
     /// </summary>
     public sealed class TutorialGameStateQuery :
-        IGameLoopStateQuery, ITutorialInventoryQuery, ITutorialSquadQuery
+        IGameLoopStateQuery, 
+        ITutorialInventoryQuery, 
+        ITutorialInboxQuery,
+        ITutorialSquadQuery, 
+        ITutorialUIStateQuery,
+        ITutorialFacilityPanelQuery,
+        ITutorialInventoryInteractionQuery
     {
         private readonly GameLoopContext _context;
         private readonly GameLoopStateMachine _stateMachine;
+        private UIScreenManager _uiScreenManager;
+        
+        private readonly TutorialInventoryViewRegistry _inventoryViews;
 
         public event Action<TutorialStepDomain, TutorialStepDomain> OnDomainTransition;
 
         private TutorialStepDomain _lastDomain;
+        private FacilityType? _openFacilityType;
+        
+        
 
-        public TutorialGameStateQuery(GameLoopContext context, GameLoopStateMachine stateMachine)
+        public TutorialGameStateQuery(
+            GameLoopContext context, 
+            GameLoopStateMachine stateMachine, 
+            TutorialInventoryViewRegistry inventoryViews)
         {
             _context = context;
             _stateMachine = stateMachine;
+            _inventoryViews = inventoryViews;
             
+            
+            // Fix: source of truth — сам факт "какая панель сейчас открыта", а не флаг,
+            // управляемый вручную снаружи. Событие только обновляет это состояние, читается
+            // оно всегда через IsFacilityPanelOpen(), не наоборот (тот же принцип, что у
+            // остальных query этого класса).
+            EventBus<FacilityPanelOpenedEvent>.Register(new EventBinding<FacilityPanelOpenedEvent>(
+                e => _openFacilityType = e.Type));
+            EventBus<UIScreenClosedEvent>.Register(new EventBinding<UIScreenClosedEvent>(e =>
+            {
+                if (e.ScreenId == UIScreenId.FacilityPanel)
+                    _openFacilityType = null;
+            }));
+
             // === активация по одноразовому событию старта игры ===
             EventBus<StartGameEvent>.Register(new EventBinding<StartGameEvent>(() =>
             {
@@ -89,8 +124,69 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             var source = _context.CampRuntime.GetInventory(StorageType.Regular);
             return source?.GetTotalAmount(itemId) ?? 0;
         }
+        
+        
+        
+        // ── ITutorialInboxQuery ───────────────────────────────────────────
+        public bool HasItemInInbox(ItemId itemId)
+            => _context.InboxRuntime.GetTotalAmount(itemId) > 0;
+
+        
+        public event Action OnInboxChanged
+        {
+            add => _context.InboxRuntime.OnInboxChanged += value;
+            remove => _context.InboxRuntime.OnInboxChanged -= value;
+        }
+        
+            
+
+        
 
         // ── ITutorialSquadQuery ───────────────────────────────────────────
         public int GetStrategicSquadSize() => _context.StrategicSquadId.Count;
+
+        // ── ITutorialUIStateQuery ─────────────────────────────────────────
+        // Требует UIScreenManager.IsScreenOpen(UIScreenId) — если такого метода сегодня нет,
+        // это одна интеграционная точка той же природы, что уже существующие "требует одну
+        // строку в X" объективы (см. UIScreenOpenedObjective/ButtonPressedObjective), а не
+        // архитектурная переделка UI-системы. Пока метод не добавлен, guidance-условия на
+        // основе UIScreenOpenGuidanceConditionDefinition будут всегда считать экран закрытым
+        // (IsScreenOpen возвращает то, что вернёт заглушка/исключение UIScreenManager —
+        // явно проверьте это перед использованием этого condition в продакшн-контенте).
+        public bool IsScreenOpen(UIScreenId screenId)
+        {
+            if (screenId == null) return false;
+            _uiScreenManager ??= ServiceLocator.Current.Get<UIManager>().ScreenManager;
+            // var result = _uiScreenManager.IsScreenOpen(screenId);
+            // Debug.Log($"[Tutorial] IsScreenOpen({screenId}) = {result}");
+            return _uiScreenManager.IsScreenOpen(screenId);
+        }
+        
+        public bool IsFacilityPanelOpen(FacilityType type) 
+            => _openFacilityType == type;
+        
+        public bool IsItemSelected(ItemId itemId)
+        {
+            foreach (var view in _inventoryViews.Active)
+            {
+                var selected = view.selectedSlot;
+                if (selected == null) continue;
+                var slot = view.GetSlot(selected.SlotIndex);
+                if (!slot.IsEmpty && (itemId == null || slot.Item.Id == itemId))
+                    return true;
+            }
+            return false;
+        }
+        
+        // Намеренно БЕЗ кэширования InventoryManagementWindow (в отличие от _uiScreenManager
+        // выше): это screen-инстанс, а не persistent-менеджер — пересоздаётся при каждом
+        // открытии/закрытии инвентаря, кэш через ??= рисковал бы Unity fake-null после
+        // Destroy(). Резолвим заново на каждый вызов.
+        public bool IsItemBeingDragged(ItemId itemId)
+        {
+            var window = ServiceLocator.Current.Get<InventoryManagementWindow>();
+            var dragged = window?.Drag?.DraggedItemId;
+            return dragged != null && (itemId == null || dragged == itemId);
+        }
     }
 }

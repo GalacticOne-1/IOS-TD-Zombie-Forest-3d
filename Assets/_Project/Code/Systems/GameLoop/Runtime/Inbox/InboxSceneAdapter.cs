@@ -4,6 +4,7 @@ using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.Runtime;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Core.Systems.GameLoopSession;
+using Galactic1.Mobile.EventBus;
 
 namespace Galactic1.Code.Systems.Inbox
 {
@@ -125,6 +126,8 @@ namespace Galactic1.Code.Systems.Inbox
 
             // удаляем из inbox
             _runtime.Inbox.RemoveSlot(slot);
+            
+            EventBus<InboxItemColectedEvent>.Raise(new InboxItemColectedEvent(item.Id, slot.Amount.Value));
 
             return true;
         }

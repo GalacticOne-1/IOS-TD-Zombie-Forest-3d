@@ -24,7 +24,8 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
             for (int i = 0; i < l; i++)
                 itemsContainer.GetChild(i).SetActive(i < rewards.Count);
 
-            for (int i = 0; i < rewards.Count; i++)
+            var rewardQu = rewards.Count <= l ? rewards.Count : l;
+            for (int i = 0; i < rewardQu; i++)
                 itemsContainer.GetChild(i).GetComponent<ScenarioTaskRewardItem>().Set(rewards[i]);
 
             root.SetActive(true);

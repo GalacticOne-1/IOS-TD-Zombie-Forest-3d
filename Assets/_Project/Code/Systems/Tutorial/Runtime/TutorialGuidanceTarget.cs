@@ -1,0 +1,37 @@
+using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Systems.Tutorial.Authoring;
+
+namespace Galactic1.Code.Systems.Tutorial.Runtime
+{
+    /// <summary>
+    /// Рантайм-снэпшот "что сейчас показать" для одного guidance-варианта — Unity-free
+    /// подмножество presentation-данных, отражающее на рантайм-стороне авторскую
+    /// TutorialGuidanceTargetDefinition. Обёрнут в отдельный тип, а не передаётся как
+    /// голые поля, чтобы TutorialGuidanceRuntimeState могла сравнивать "старый/новый
+    /// resolved target" одной ссылкой (см. её докстринг про dedupe).
+    ///
+    /// HighlightTargetId / HighlightItemId — взаимоисключимые альтернативные способы
+    /// резолва highlight (см. TutorialGuidanceTargetDefinition докстринг): фиксированный
+    /// таргет из реестра или "слот, где сейчас лежит предмет X", резолвится заново на
+    /// каждый показ в TutorialPresentationService.
+    /// </summary>
+    public sealed class TutorialGuidanceTarget
+    {
+        public readonly TutorialTargetId HighlightTargetId;
+        public readonly ItemId HighlightItemId;
+        public readonly ItemId HighlightInboxItemId;
+        public readonly TutorialTargetId ArrowTargetId;
+        public readonly TutorialTargetId CameraFocusTargetId;
+
+        public TutorialGuidanceTarget(
+            TutorialTargetId highlightTargetId, ItemId highlightItemId, ItemId highlightInboxItemId,
+            TutorialTargetId arrowTargetId, TutorialTargetId cameraFocusTargetId)
+        {
+            HighlightTargetId = highlightTargetId;
+            HighlightItemId = highlightItemId;
+            HighlightInboxItemId = highlightInboxItemId;
+            ArrowTargetId = arrowTargetId;
+            CameraFocusTargetId = cameraFocusTargetId;
+        }
+    }
+}

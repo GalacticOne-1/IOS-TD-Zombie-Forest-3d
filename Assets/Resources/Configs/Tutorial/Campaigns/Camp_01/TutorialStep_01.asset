@@ -21,26 +21,79 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 877436c7498ce4c35898d6eccc08efec, type: 2}
   presentation:
     instructionTitleKey: Equipment gun
-    instructionDesKey: 'Equipment survivor with Glock17
-
-      lalalal'
+    instructionDesKey: Equipment survivor with Glock17
     highlightTargetId: {fileID: 0}
+    highlightItemId: {fileID: 0}
+    highlightInboxItemId: {fileID: 0}
     arrowTargetId: {fileID: 0}
-    dialogueId: Equip survivor Glock17
+    dialogueId: 
     cameraFocusTargetId: {fileID: 0}
     inputPolicy: 0
+  guidance:
+  - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
+    presentation:
+      highlightTargetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: dd80a929b1cf142b88d27c4d9dc640c4, type: 2}
+    presentation:
+      highlightTargetId: {fileID: 11400000, guid: 37e0fe69ff6e544c49df209c2dedec6d, type: 2}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 5cf9617bbdf1b4eff9de49ba507bc1b1, type: 2}
+    presentation:
+      highlightTargetId: {fileID: 11400000, guid: c9ebf5b20c10240eea0d2ba2e703cf67, type: 2}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: cf261f4238fef4367b75b6e3ad1cbf22, type: 2}
+    presentation:
+      highlightTargetId: {fileID: 0}
+      highlightItemId: {fileID: 11400000, guid: ab738d2c2cb164dc49b9e857c3424c58, type: 2}
+      highlightInboxItemId: {fileID: 0}
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
   reward:
     items:
-    - itemId: {fileID: 11400000, guid: 1163668eeee6a4f45a05c1eb668a9dca, type: 2}
-      amount: 1
-      durability: 150
+    - itemId: {fileID: 11400000, guid: 875ea44ba699441e694fa86a2924aa26, type: 2}
+      amount: 30
+      durability: 0
       ammoInMagazine: 0
-    - itemId: {fileID: 11400000, guid: ba4269c1a066c465b9ac794e89dae4d3, type: 2}
-      amount: 200
+    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+      amount: 30
+      durability: 0
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+      amount: 1
+      durability: 0
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+      amount: 1
+      durability: 0
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+      amount: 1
+      durability: 0
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+      amount: 1
+      durability: 0
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+      amount: 1
+      durability: 0
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+      amount: 1
       durability: 0
       ammoInMagazine: 0
   transitions:
-  - nextStepId: {fileID: 0}
+  - nextStepId: {fileID: 11400000, guid: 8aa08d2382a004b60ab4e8e4ec8e47d8, type: 2}
     condition:
       rid: -2
   isCheckpoint: 1

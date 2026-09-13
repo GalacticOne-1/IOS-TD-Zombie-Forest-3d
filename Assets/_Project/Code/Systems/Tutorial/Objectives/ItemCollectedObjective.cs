@@ -1,4 +1,5 @@
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Mobile.EventBus;
 
 namespace Galactic1.Code.Systems.Tutorial.Objectives
 {
@@ -8,7 +9,7 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
     /// исходного corrective ТЗ. Не ретроактивен: предмет, подобранный до активации
     /// шага, не засчитывается.
     /// </summary>
-    public sealed class ItemCollectedObjective : TutorialEventObjectiveBase<ItemPickedEvent>
+    public sealed class ItemCollectedObjective : TutorialEventObjectiveBase<LootItemCollectedEvent>
     {
         private readonly ItemId _itemId;
         private readonly int _requiredAmount;
@@ -20,9 +21,9 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             _requiredAmount = requiredAmount;
         }
 
-        protected override bool EvaluateEvent(ItemPickedEvent e)
+        protected override bool EvaluateEvent(LootItemCollectedEvent e)
         {
-            if (e.Item == null || e.Item.Id != _itemId) return false;
+            if (e.ItemId == null || e.ItemId != _itemId) return false;
             _collected += e.Amount;
             return _collected >= _requiredAmount;
         }

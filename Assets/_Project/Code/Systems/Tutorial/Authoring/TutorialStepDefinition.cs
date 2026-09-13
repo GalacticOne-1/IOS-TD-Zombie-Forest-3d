@@ -6,7 +6,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     /// <summary>
     /// Узел графа тутора. Идентичность узла — stepId (не индекс в списке).
     /// Не содержит императивной логики: поведение шага полностью описывается
-    /// objectiveGroup + presentation + transitions + requiredDomain.
+    /// objectiveGroup + presentation + guidance + transitions + requiredDomain.
     /// </summary>
     [CreateAssetMenu(
         fileName = "TutorialStep_",
@@ -27,7 +27,15 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
 
         [Header("Presentation")]
         public TutorialPresentationDefinition presentation = new();
-        
+
+        [Header("Guidance")]
+        [Tooltip("Опционально. Динамические подсказки (highlight/arrow/camera), выбираемые по " +
+                 "condition из текущего game state — независимо от Objectives (см. " +
+                 "TutorialGuidanceDefinition докстринг). Пусто = legacy-поведение: используются " +
+                 "presentation.highlightTargetId/arrowTargetId/cameraFocusTargetId напрямую, как раньше " +
+                 "(см. TutorialService.BuildEffectivePresentation).")]
+        public List<TutorialGuidanceDefinition> guidance = new();
+
         [Header("Reward")]
         [Tooltip("Опционально. Выдаётся через Inbox строго при завершении шага (не при Skip).")]
         public TutorialRewardDefinition reward = new();
@@ -55,7 +63,10 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
 
             if (!objectives.Validate(stepId, out error))
                 return false;
-            
+
+            if (!ValidateGuidance(out error))
+                return false;
+
             if (!reward.Validate(stepId, out error))
                 return false;
 
@@ -78,6 +89,44 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
                     error = $"Step '{stepId.DebugKey}': terminal transition must be last in the list.";
                     return false;
                 }
+            }
+
+            error = null;
+            return true;
+        }
+
+        /// <summary>Тот же "first satisfied wins" порядок, что у transitions — безусловный
+        /// guidance-вариант (condition == null) не в конце списка делает последующие варианты
+        /// недостижимыми, симметрично Fix в transitions-валидации выше. guidance == null/пусто
+        /// — валидное состояние (см. TutorialGuidanceDefinition докстринг про backward
+        /// compatibility), не ошибка.</summary>
+        private bool ValidateGuidance(out string error)
+        {
+            if (guidance == null)
+            {
+                error = null;
+                return true;
+            }
+
+            for (int i = 0; i < guidance.Count; i++)
+            {
+                var g = guidance[i];
+                if (g == null)
+                {
+                    error = $"Step '{stepId.DebugKey}': guidance list has a null entry at index {i}.";
+                    return false;
+                }
+
+                bool isUnconditional = g.condition == null;
+                if (isUnconditional && i != guidance.Count - 1)
+                {
+                    error = $"Step '{stepId.DebugKey}': unconditional guidance (condition = null) at index {i} " +
+                            "makes subsequent guidance entries unreachable — must be last in the list.";
+                    return false;
+                }
+
+                if (!g.Validate(stepId, i, out error))
+                    return false;
             }
 
             error = null;

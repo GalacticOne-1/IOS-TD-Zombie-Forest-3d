@@ -8788,6 +8788,7 @@ GameObject:
   - component: {fileID: 698426655122146956}
   - component: {fileID: 6401592937152476857}
   - component: {fileID: 8419291392906457306}
+  - component: {fileID: 4795975666562125620}
   m_Layer: 5
   m_Name: b_use
   m_TagString: Untagged
@@ -8906,6 +8907,19 @@ MonoBehaviour:
     autoRepeatRate: 0.5
     autoRepeatMinRate: 0.05
     autoRepeatAccel: 0.8
+--- !u!114 &4795975666562125620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3851364965339252941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: 37e0fe69ff6e544c49df209c2dedec6d, type: 2}
 --- !u!1 &3918622123727154351
 GameObject:
   m_ObjectHideFlags: 0
@@ -18734,6 +18748,7 @@ GameObject:
   - component: {fileID: 6739679220278424567}
   - component: {fileID: 6590964585426325321}
   - component: {fileID: 2676495549161198749}
+  - component: {fileID: 1047186883352243639}
   m_Layer: 5
   m_Name: weapon_1
   m_TagString: Inventory_Slot
@@ -18822,6 +18837,19 @@ MonoBehaviour:
   slotBar: {fileID: 3045746662202227364}
   highlight: {fileID: 3516291453840496143}
   canvasGroup: {fileID: 6584032696396237053}
+--- !u!114 &1047186883352243639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7376871177301272033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: c9ebf5b20c10240eea0d2ba2e703cf67, type: 2}
 --- !u!1 &7408667585815365015
 GameObject:
   m_ObjectHideFlags: 0

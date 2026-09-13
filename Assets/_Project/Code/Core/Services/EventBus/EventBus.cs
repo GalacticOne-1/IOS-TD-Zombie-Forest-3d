@@ -20,6 +20,10 @@ public static class EventBus<T> where T : IEvent
     public static void ClearAfterUsing(EventBinding<T> binding) => binding.ClearAfterUsing = true;
 
 
+    public static void Raise(T @event, float delay, bool instantClear = false)
+        => ServiceLocator.Current.Get<CoroutineController>()
+            .Coroutine_wait(delay, () => Raise(@event, instantClear));
+
     public static void Raise(T @event, bool instantClear = false)
     {
         List<IEventBinding<T>> _clear = new List<IEventBinding<T>>();

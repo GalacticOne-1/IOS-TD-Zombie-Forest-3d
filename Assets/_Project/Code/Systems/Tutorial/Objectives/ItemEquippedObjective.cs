@@ -1,5 +1,6 @@
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Core.Enums;
+using Galactic1.Mobile.EventBus;
 
 namespace Galactic1.Code.Systems.Tutorial.Objectives
 {

@@ -108,7 +108,7 @@ namespace Galactic1.UI.Core
             // NEW
 
 
-            EventBus<UIScreenOpenedEvent>.Raise(new UIScreenOpenedEvent() { ScreenId = id });
+            EventBus<UIScreenOpenedEvent>.Raise(new UIScreenOpenedEvent(id));
 
             // Вызываем метод OnShow с данными
             onShow?.Invoke(panel.gameObject);
@@ -136,6 +136,23 @@ namespace Galactic1.UI.Core
             }
 
             activeScreens.Clear();
+        }
+
+        public void AddActiveScreen(UIScreenId id)
+        {
+            activeScreens.Clear();
+            
+            var panel = screenCache[id];
+            if (panel == null) return;
+            activeScreens[id] = panel;
+            
+            EventBus<UIScreenOpenedEvent>.Raise(new UIScreenOpenedEvent(id));
+        }
+
+        public void RemoveActiveScreen(UIScreenId id)
+        {
+            activeScreens.Clear();
+            EventBus<UIScreenClosedEvent>.Raise(new UIScreenClosedEvent(id));
         }
 
         /// <summary>

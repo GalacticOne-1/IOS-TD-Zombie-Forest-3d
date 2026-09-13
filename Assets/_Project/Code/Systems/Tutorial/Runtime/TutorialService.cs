@@ -56,11 +56,17 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     ///      действительно указывать на реально активный шаг (presentation уже показана).
     ///   2) CompleteCampaign — после того, как completed=true уже записан.
     /// Никакого отложенного/флагового персиста (_pendingCheckpointPersist убран).
+    ///
+    /// Guidance (highlight/arrow/camera-подсказки, зависящие от текущего game state) — НЕ
+    /// отдельный механизм прогрессии, а чистый presentation-overlay поверх той же
+    /// stepDef.presentation: см. BuildEffectivePresentation. Он не меняет completion-логику
+    /// (Objectives/ResolveTransition) ни на строчку.
     /// </summary>
     public sealed class TutorialService : ITutorialService, ITutorialDebugService, IGameService
     {
         private readonly TutorialCampaignRegistry _registry;
         private readonly TutorialObjectiveFactory _objectiveFactory;
+        private readonly TutorialGuidanceFactory _guidanceFactory;
         private readonly TutorialGraphNavigator _navigator = new();
         private readonly TutorialCheckpointService _checkpointService;
         private readonly IGameLoopStateQuery _gameLoopStateQuery;
@@ -80,6 +86,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         public TutorialService(
             TutorialCampaignRegistry registry,
             TutorialObjectiveFactory objectiveFactory,
+            TutorialGuidanceFactory guidanceFactory,
             TutorialCheckpointService checkpointService,
             IGameLoopStateQuery gameLoopStateQuery,
             TutorialInputPolicyService inputPolicyService,
@@ -92,6 +99,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         {
             _registry = registry;
             _objectiveFactory = objectiveFactory;
+            _guidanceFactory = guidanceFactory;
             _checkpointService = checkpointService;
             _gameLoopStateQuery = gameLoopStateQuery;
             _inputPolicyService = inputPolicyService;
@@ -228,6 +236,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _analytics.TutorialAbandoned(_runtime.CampaignId, _activeStep?.Definition.stepId?.Guid);
             _activeStep?.Stop();
             _presentation.Hide();
+            _taskPresenter.Clear();
             _inputPolicyService.Reset();
             _activeStep = null;
             _runtime = null;
@@ -278,10 +287,12 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
         /// <summary>
         /// Итеративный обход графа (никакой рекурсии). Порядок: сначала stepState.Start()
-        /// (чистая оценка объективов, presentation ещё не тронута) — если шаг завершился
-        /// мгновенно, presentation/input policy/analytics/currentStepId НЕ трогаются вообще
-        /// и цикл идёт к следующему шагу. Только для реально активного шага применяются
-        /// видимые эффекты и происходит единственный Persist() для этой ветки.
+        /// (чистая оценка объективов И guidance, presentation ещё не тронута) — если шаг
+        /// завершился мгновенно, presentation/input policy/analytics/currentStepId НЕ
+        /// трогаются вообще и цикл идёт к следующему шагу (guidance для такого шага тоже
+        /// никогда не рендерится — Start()/Stop() парны и для него). Только для реально
+        /// активного шага применяются видимые эффекты и происходит единственный Persist()
+        /// для этой ветки.
         /// </summary>
         private void ActivateStep(TutorialStepId stepId)
         {
@@ -307,11 +318,16 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
                 stepState.OnStepCompleted += HandleAsyncStepCompleted;
                 stepState.OnProgressChanged += HandleActiveStepProgressChanged;
+                stepState.OnGuidanceChanged += HandleActiveStepGuidanceChanged;
                 _activeStep = stepState;
                 _runtime.SetActiveStep(stepState);
 
                 _inputPolicyService.Apply(stepDef.presentation.inputPolicy);
-                _presentation.Show(stepDef.presentation);
+                // BuildEffectivePresentation, не stepDef.presentation напрямую — guidance
+                // (если у шага она есть) уже успела резолвить свой initial target внутри
+                // stepState.Start() выше, читаем его здесь синхронно (см.
+                // TutorialStepRuntimeState.CurrentGuidanceTarget докстринг).
+                _presentation.Show(BuildEffectivePresentation(stepState));
                 _taskPresenter.ShowStep(stepState);
                 _analytics.StepStarted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
 
@@ -328,13 +344,78 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 var runtimeObjective = _objectiveFactory.Create(objDef);
                 objectiveStates.Add(new TutorialObjectiveRuntimeState(runtimeObjective, objDef.ObjectiveTypeId));
             }
-            return new TutorialStepRuntimeState(stepDef, objectiveStates);
+
+            return new TutorialStepRuntimeState(stepDef, objectiveStates, BuildGuidanceEntries(stepDef.guidance));
+        }
+
+        private List<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> BuildGuidanceEntries(
+            List<TutorialGuidanceDefinition> guidanceDefs)
+        {
+            var list = new List<(ITutorialGuidanceCondition, TutorialGuidanceTarget)>(guidanceDefs?.Count ?? 0);
+            if (guidanceDefs == null) return list;
+
+            foreach (var g in guidanceDefs)
+            {
+                var condition = _guidanceFactory.Create(g.condition);
+                var target = new TutorialGuidanceTarget(
+                    g.presentation?.highlightTargetId,
+                    g.presentation?.highlightItemId,
+                    g.presentation?.highlightInboxItemId,
+                    g.presentation?.arrowTargetId,
+                    g.presentation?.cameraFocusTargetId);
+                list.Add((condition, target));
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Строит presentation для рендера. instruction/dialogue/inputPolicy — ВСЕГДА из
+        /// авторского stepDef.presentation (guidance их не трогает — см.
+        /// TutorialGuidanceTargetDefinition докстринг). highlight/arrow/camera — из текущего
+        /// guidance target, ЕСЛИ у шага задан guidance-список; иначе — legacy fallback
+        /// напрямую на авторские stepDef.presentation.* поля (backward compatibility со
+        /// всеми существующими single-target шагами, см. TutorialStepDefinition.guidance
+        /// докстринг).
+        ///
+        /// Никогда не мутирует stepDef.presentation — то поле живёт внутри ScriptableObject-
+        /// ассета шага; in-place правка испортила бы авторинг-данные на диске. Вместо этого
+        /// каждый вызов строит новый лёгкий POCO-снэпшот (TutorialPresentationDefinition —
+        /// обычный [Serializable] класс, не сериализованное поле ассета).
+        /// </summary>
+        private TutorialPresentationDefinition BuildEffectivePresentation(TutorialStepRuntimeState stepState)
+        {
+            var authored = stepState.Definition.presentation;
+            bool hasGuidance = stepState.Definition.guidance != null && stepState.Definition.guidance.Count > 0;
+            var guidanceTarget = stepState.CurrentGuidanceTarget;
+
+            return new TutorialPresentationDefinition
+            {
+                instructionTitleKey = authored.instructionTitleKey,
+                instructionDesKey = authored.instructionDesKey,
+                dialogueId = authored.dialogueId,
+                inputPolicy = authored.inputPolicy,
+                highlightTargetId = hasGuidance ? guidanceTarget?.HighlightTargetId : authored.highlightTargetId,
+                highlightItemId = hasGuidance ? guidanceTarget?.HighlightItemId : authored.highlightItemId,
+                highlightInboxItemId = hasGuidance ? guidanceTarget?.HighlightInboxItemId : authored.highlightInboxItemId,
+                arrowTargetId = hasGuidance ? guidanceTarget?.ArrowTargetId : authored.arrowTargetId,
+                cameraFocusTargetId = hasGuidance ? guidanceTarget?.CameraFocusTargetId : authored.cameraFocusTargetId,
+            };
         }
 
         private void HandleActiveStepProgressChanged()
         {
             if (_activeStep == null) return;
             _taskPresenter.UpdateProgress(_activeStep);
+        }
+
+        /// <summary>Guidance резолвнула новый target (или "ничего") — перерисовываем
+        /// presentation. TutorialPresentationService.Show() сам бампает generation token и
+        /// корректно чистит/переустанавливает highlight/arrow/camera (см. её докстринг) —
+        /// здесь не нужна отдельная Clear-логика.</summary>
+        private void HandleActiveStepGuidanceChanged()
+        {
+            if (_activeStep == null) return;
+            _presentation.Show(BuildEffectivePresentation(_activeStep));
         }
 
         /// <summary>Срабатывает строго асинхронно — из EventBus-колбэка реального игрового
@@ -350,6 +431,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             finishedState.OnStepCompleted -= HandleAsyncStepCompleted;
             finishedState.OnProgressChanged -= HandleActiveStepProgressChanged;
+            finishedState.OnGuidanceChanged -= HandleActiveStepGuidanceChanged;
             _presentation.Hide();
             finishedState.Stop();
             _activeStep = null;

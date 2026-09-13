@@ -9,6 +9,7 @@ namespace Galactic1.UI.Core
         public UIScreenId PanelId { get; private set; }
         protected DIContainer _container;
 
+        private UIScreenManager _uiManager;
         public event Action OnClosed;
 
 
@@ -20,6 +21,8 @@ namespace Galactic1.UI.Core
         {
             PanelId = id;
             _container = container;
+
+            _uiManager = container.Resolve<UIManager>().ScreenManager;
         }
 
         /// <summary>
@@ -45,6 +48,7 @@ namespace Galactic1.UI.Core
         {
             OnClosed?.Invoke();
             OnClosed = null;
+            _uiManager.RemoveActiveScreen(PanelId);
         }
 
         public virtual void ResetState(){}

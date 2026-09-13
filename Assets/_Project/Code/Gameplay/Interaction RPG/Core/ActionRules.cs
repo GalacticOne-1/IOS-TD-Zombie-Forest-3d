@@ -1,7 +1,6 @@
 
 using Galactic1.Configs;
 using Galactic1.Core.UI;
-using Galactic1.Gameplay.Interaction.Objects;
 using Galactic1.Gameplay.UI;
 using Galactic1.Structs.UI;
 using Galactic1.UI.Core;
@@ -59,7 +58,7 @@ namespace Galactic1.Gameplay.Interaction
         private void UpdateButtons()
         {
             // Сначала скрываем все кнопки
-            actionButton.Hide(iconBase.GetIconFor(null));
+            //actionButton.Hide(iconBase.GetIconFor(null));
             attackButton.Hide();
 
             if (currentInteractable == null)
@@ -69,22 +68,22 @@ namespace Galactic1.Gameplay.Interaction
                 //return;
 
             // Определяем тип объекта и кнопку
-            switch (currentInteractable)
-            {
-                case EnemyInteractable _:
-                    attackButton.Show();
-                    //targetHPBar
-                    break;
-                
-                // +...
-                case HomeContainerInteractable _:
-                    actionButton.Show(iconBase.GetIconFor(currentInteractable));
-                    break;
-
-                default:
-                    actionButton.Show(iconBase.GetIconFor(currentInteractable));
-                    break;
-            }
+            // switch (currentInteractable)
+            // {
+            //     case EnemyInteractable _:
+            //         attackButton.Show();
+            //         //targetHPBar
+            //         break;
+            //     
+            //     // +...
+            //     case HomeContainerInteractable _:
+            //         actionButton.Show(iconBase.GetIconFor(currentInteractable));
+            //         break;
+            //
+            //     default:
+            //         actionButton.Show(iconBase.GetIconFor(currentInteractable));
+            //         break;
+            // }
         }
     }
 }

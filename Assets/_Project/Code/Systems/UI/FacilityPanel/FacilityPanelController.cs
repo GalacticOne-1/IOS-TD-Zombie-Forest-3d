@@ -182,6 +182,9 @@ namespace Galactic1.Code.UI.BuildingPanel
 
             var dto = _presentation.Create(runtime);
             view.Bind(dto, _adapter, a.upgrade);
+            
+            // открытия панели — см. FacilityPanelOpenedGuidanceCondition/Objective.
+            EventBus<FacilityPanelOpenedEvent>.Raise(new FacilityPanelOpenedEvent(dto.Details.Type));
         }
         
         private void Unbind()

@@ -4,8 +4,8 @@ using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Units;
 using Galactic1.Code.Systems.Raid.Enemies;
 using Galactic1.Code.Systems.Raid.Mission;
+using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Code.Systems.Tutorial.Authoring;
-using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
 using Galactic1.UI.Core;
 using UnityEngine;
@@ -269,13 +269,6 @@ public struct UnitReadyForDespawnEvent : IEvent
 
 
 
-
-public sealed class ItemEquippedEvent : IEvent
-{
-    public EquipSlotType Slot;
-    public RuntimeId ItemId;
-}
-
 public sealed class UITargetInteractedEvent : IEvent
 {
     public TutorialTargetId TargetId;
@@ -286,8 +279,22 @@ public sealed class TargetSelectedEvent : IEvent {}
 
 public sealed class UIScreenOpenedEvent : IEvent
 {
-    public UIScreenId ScreenId;
+    public readonly UIScreenId ScreenId;
+
+    public UIScreenOpenedEvent(UIScreenId screenId) => ScreenId = screenId;
 }
+public readonly struct UIScreenClosedEvent : IEvent
+{
+    public readonly UIScreenId ScreenId;
+    public UIScreenClosedEvent(UIScreenId screenId) => ScreenId = screenId;
+}
+public readonly struct FacilityPanelOpenedEvent : IEvent
+{
+    public readonly FacilityType Type;
+    public FacilityPanelOpenedEvent(FacilityType type) => Type = type;
+}
+
+
 public sealed class UnitMovedEvent : IEvent {}
 public sealed class WeaponFiredEvent : IEvent {}
 
@@ -339,35 +346,9 @@ public sealed class AllWavesCompletedEvent : IEvent {}
 
 
 
+             
 
-// -- события с объектами взаимодействия
 
-
-public struct ItemPickedEvent : IEvent                 
-{
-    public ItemConfig Item;
-    public int Amount;
-    public Vector3 WorldPos;
-    
-    public ItemPickedEvent(ItemConfig item, int amount, Vector3 pos)
-    {
-        Item = item;
-        Amount = amount;
-        WorldPos = pos;
-    }
-}              
-
-public struct ToolBrokenEvent : IEvent 
-{
-    public ItemConfig Tool;
-    public Vector3 WorldPos;
-    
-    public ToolBrokenEvent(ItemConfig tool, Vector3 pos)
-    {
-        Tool = tool;
-        WorldPos = pos;
-    }
-}
 
 public struct RequirementFailedEvent : IEvent 
 {

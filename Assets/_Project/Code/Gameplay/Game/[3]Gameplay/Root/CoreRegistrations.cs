@@ -32,12 +32,14 @@ using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.Systems.World.Threats;
 using Galactic1.Code.UI.Interaction;
+using Galactic1.Code.UI.Inventory;
 using Galactic1.Configs;
 using Galactic1.Core;
 using Galactic1.Core.Gameplay;
 using Galactic1.Core.Systems;
 using Galactic1.Core.Systems.Factories;
 using Galactic1.Core.Systems.GameLoopSession;
+using Galactic1.Game.UI.Inbox;
 using Galactic1.Game.UI.Stats;
 using Galactic1.Items;
 using Galactic1.Meta.Configs.Recruitment;
@@ -253,14 +255,29 @@ namespace Galactic1
            // ===========================================================================
             
             // === Tutorial =============================================================
+            
+            var inventoryViewRegistry = new TutorialInventoryViewRegistry();
+            ServiceLocator.Current.Register(inventoryViewRegistry);
+            var inboxViewRegistry = new TutorialInboxViewRegistry();
+            ServiceLocator.Current.Register(inboxViewRegistry);
+            
             var tutorialGameStateQuery = new TutorialGameStateQuery(
                 gameSession.GameLoopContext,
-                rootContainer.Resolve<GameLoopStateMachine>());
+                rootContainer.Resolve<GameLoopStateMachine>(),
+                inventoryViewRegistry);
 
             var tutorialObjectiveFactory = new TutorialObjectiveFactory(
                 tutorialGameStateQuery,  // ITutorialInventoryQuery
                 tutorialGameStateQuery,  // ITutorialSquadQuery
                 tutorialGameStateQuery); // IGameLoopStateQuery
+
+            var tutorialGuidanceFactory = new TutorialGuidanceFactory(
+                tutorialGameStateQuery,
+                tutorialGameStateQuery,
+                tutorialGameStateQuery,
+                tutorialGameStateQuery,
+                tutorialGameStateQuery,
+                tutorialGameStateQuery);
 
             var tutorialCheckpointService = new TutorialCheckpointService();
             var tutorialInputPolicyService = new TutorialInputPolicyService(interactionPolicy);
@@ -269,7 +286,13 @@ namespace Galactic1
             rootContainer.RegisterInstance(tutorialTargetRegistry);
             ServiceLocator.Current.Register(tutorialTargetRegistry);
 
-            var tutorialPresentationService = new TutorialPresentationService(tutorialTargetRegistry);
+            var inventorySlotTargetProvider = new TaskInventorySlotTargetProvider(inventoryViewRegistry);
+            var inboxSlotTargetProvider = new TaskInboxSlotTargetProvider(inboxViewRegistry);
+
+            var tutorialPresentationService = new TutorialPresentationService(
+                tutorialTargetRegistry,
+                inventorySlotTargetProvider,
+                inboxSlotTargetProvider);
             rootContainer.RegisterInstance(tutorialPresentationService);
             ServiceLocator.Current.Register(tutorialPresentationService);
 
@@ -279,6 +302,7 @@ namespace Galactic1
             var tutorialService = new TutorialService(
                 configProvider.Get<TutorialCampaignRegistry>(),
                 tutorialObjectiveFactory,
+                tutorialGuidanceFactory,
                 tutorialCheckpointService,
                 tutorialGameStateQuery,
                 tutorialInputPolicyService,

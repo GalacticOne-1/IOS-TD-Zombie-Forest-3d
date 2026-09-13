@@ -1,6 +1,7 @@
 using System.Linq;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Game.Meta.Items;
+using Galactic1.Mobile.EventBus;
 using Galactic1.UI.Core;
 using UnityEngine;
 using UnityEngine.UI;

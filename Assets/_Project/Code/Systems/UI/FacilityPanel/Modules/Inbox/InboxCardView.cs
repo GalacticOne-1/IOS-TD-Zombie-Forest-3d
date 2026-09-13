@@ -1,4 +1,6 @@
 using System;
+using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.UI.Tooltips;
 using Galactic1.Code.Utility;
 using Galactic1.Game.Meta.Items;
@@ -29,6 +31,9 @@ namespace Galactic1.Game.UI.Inbox
         private ItemConfig item;
         private int durability;
         private TooltipInputHandler inputHandler;
+        
+        public ItemId ItemId => (ItemId)item?.Id;
+        public RectTransform TakeButtonRect => takeButton.CMP_RectTr();
 
         public event Action<string> OnTakeClicked;
 
@@ -68,10 +73,17 @@ namespace Galactic1.Game.UI.Inbox
 
             takeButton.RegisterButtonClick(() => OnTakeClicked?.Invoke(_slotId));
             
+            ServiceLocator.Current.Get<TutorialInboxViewRegistry>()?.Register(this);
+            
             // === подсказка
             inputHandler = itemImg.GetComponent<TooltipInputHandler>();
             inputHandler.RegisterOnRequest(HandleHoldStart);
             inputHandler.RegisterOnCancell(HandleHoldEnd);
+        }
+        
+        private void OnDestroy()
+        {
+            ServiceLocator.Current.Get<TutorialInboxViewRegistry>()?.Unregister(this);
         }
 
         private void HandleHoldStart(RectTransform anchor)

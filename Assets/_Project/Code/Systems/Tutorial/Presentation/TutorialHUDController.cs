@@ -25,9 +25,11 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         [SerializeField] private RectTransform arrowLayer;
         [SerializeField] private TutorialHighlightWidget highlightPrefab;
         [SerializeField] private TutorialArrowWidget arrowPrefab;
+        [SerializeField] private TutorialWorldHighlightWidget worldHighlightPrefab;
 
         private TutorialHighlightWidget _activeHighlight;
         private TutorialArrowWidget _activeArrow;
+        private TutorialWorldHighlightWidget _activeWorldHighlight;
 
         public override void Initialize(DIContainer container, UIScreenId id)
         {
@@ -43,16 +45,35 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public void RenderHighlight(ITutorialTarget target)
         {
             ClearHighlight();
-            if (target?.UIAnchor == null) return;
-            _activeHighlight = Instantiate(highlightPrefab, highlightLayer);
-            _activeHighlight.AttachTo(target.UIAnchor);
+            if (target == null) return;
+
+            if (target.UIAnchor != null)
+            {
+                _activeHighlight = Instantiate(highlightPrefab, highlightLayer);
+                _activeHighlight.AttachTo(target.UIAnchor);
+            }
+            else if (target.WorldAnchor != null)
+            {
+                // World-таргеты (здания и т.п.) не имеют RectTransform — отдельный виджет,
+                // позиционируется в мировых координатах, не внутри Canvas-иерархии.
+                _activeWorldHighlight = Instantiate(worldHighlightPrefab);
+                _activeWorldHighlight.AttachTo(target.WorldAnchor);
+            }
         }
 
         public void ClearHighlight()
         {
-            if (_activeHighlight == null) return;
-            Destroy(_activeHighlight.gameObject);
-            _activeHighlight = null;
+            if (_activeHighlight != null)
+            {
+                Destroy(_activeHighlight.gameObject);
+                _activeHighlight = null;
+            }
+
+            if (_activeWorldHighlight != null)
+            {
+                Destroy(_activeWorldHighlight.gameObject);
+                _activeWorldHighlight = null;
+            }
         }
 
         public void RenderArrow(ITutorialTarget target)
