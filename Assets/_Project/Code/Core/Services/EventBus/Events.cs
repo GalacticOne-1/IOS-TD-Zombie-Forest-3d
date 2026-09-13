@@ -7,6 +7,7 @@ using Galactic1.Code.Systems.Raid.Mission;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Game.Meta.Items;
+using Galactic1.Meta.Configs.Recruitment;
 using Galactic1.UI.Core;
 using UnityEngine;
 
@@ -294,6 +295,13 @@ public readonly struct FacilityPanelOpenedEvent : IEvent
     public FacilityPanelOpenedEvent(FacilityType type) => Type = type;
 }
 
+
+
+public readonly struct RecruitCompletedEvent : IEvent
+{
+    public readonly RecruitCategory Category;
+    public RecruitCompletedEvent(RecruitCategory category) => Category = category;
+}
 
 public sealed class UnitMovedEvent : IEvent {}
 public sealed class WeaponFiredEvent : IEvent {}

@@ -92,12 +92,31 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _guidance.Stop();
         }
 
+        // private void OnObjectiveProgressChanged()  // этот давал баг при прогрессе [0/N]
+        // {
+        //     if (_completedFired) return;
+        //     if (!IsCompleted) return;
+        //     if (_startInProgress) return; // Start() сам синхронно обработает финальное состояние
+        //
+        //     OnProgressChanged?.Invoke();
+        //
+        //     if (!IsCompleted) return;
+        //
+        //     _completedFired = true;
+        //     OnStepCompleted?.Invoke();
+        // }
+        
         private void OnObjectiveProgressChanged()
         {
             if (_completedFired) return;
-            if (!IsCompleted) return;
             if (_startInProgress) return; // Start() сам синхронно обработает финальное состояние
 
+            // Fix: раньше OnProgressChanged вызывался только когда IsCompleted уже true —
+            // это делало прогресс-бар мёртвым для промежуточных состояний (например
+            // SquadSizeObjective "[0/2]" никогда не обновлялся до "[1/2]", т.к. событие
+            // долетало до TutorialTaskPresenter только в момент полного завершения,
+            // синхронно перед OnStepCompleted). Теперь сигнализируем на КАЖДОЕ изменение
+            // прогресса объективов, не только на финальное.
             OnProgressChanged?.Invoke();
 
             if (!IsCompleted) return;

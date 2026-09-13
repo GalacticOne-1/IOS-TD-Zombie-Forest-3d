@@ -15740,6 +15740,7 @@ GameObject:
   - component: {fileID: 7635688928604565791}
   - component: {fileID: 5650617804831392156}
   - component: {fileID: 6343357314555850889}
+  - component: {fileID: 6496512906494116423}
   m_Layer: 5
   m_Name: unit_delete_button
   m_TagString: Untagged
@@ -15858,6 +15859,19 @@ MonoBehaviour:
     autoRepeatRate: 0.5
     autoRepeatMinRate: 0.05
     autoRepeatAccel: 0.8
+--- !u!114 &6496512906494116423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6110849823450589137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: 43537efb46fd64578bc53bc791d3ce25, type: 2}
 --- !u!1 &6121619257864352773
 GameObject:
   m_ObjectHideFlags: 0
@@ -16843,6 +16857,7 @@ GameObject:
   - component: {fileID: 5404748580898386200}
   - component: {fileID: 2280537644552364750}
   - component: {fileID: 8035567308143811453}
+  - component: {fileID: 6207051240635858870}
   m_Layer: 5
   m_Name: squad_toggle_button
   m_TagString: Untagged
@@ -16961,6 +16976,19 @@ MonoBehaviour:
     autoRepeatRate: 0.5
     autoRepeatMinRate: 0.05
     autoRepeatAccel: 0.8
+--- !u!114 &6207051240635858870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6718883930596129520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: 818daf968e7b048f797af8994e95d79b, type: 2}
 --- !u!1 &6723616261054153470
 GameObject:
   m_ObjectHideFlags: 0

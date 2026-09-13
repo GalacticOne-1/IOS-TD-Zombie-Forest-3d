@@ -267,9 +267,10 @@ namespace Galactic1
                 inventoryViewRegistry);
 
             var tutorialObjectiveFactory = new TutorialObjectiveFactory(
-                tutorialGameStateQuery,  // ITutorialInventoryQuery
-                tutorialGameStateQuery,  // ITutorialSquadQuery
-                tutorialGameStateQuery); // IGameLoopStateQuery
+                tutorialGameStateQuery,  
+                tutorialGameStateQuery,  
+                tutorialGameStateQuery,
+                gameSession.GameLoopContext); 
 
             var tutorialGuidanceFactory = new TutorialGuidanceFactory(
                 tutorialGameStateQuery,

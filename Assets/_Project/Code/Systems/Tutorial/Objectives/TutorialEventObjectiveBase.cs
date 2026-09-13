@@ -40,14 +40,28 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             _onProgressChanged = null;
         }
 
+        // private void OnEvent(TEvent e) // баг - не работает на прогресс !!
+        // {
+        //     if (IsCompleted) return;
+        //     if (EvaluateEvent(e))
+        //     {
+        //         IsCompleted = true;
+        //         _onProgressChanged?.Invoke();
+        //     }
+        // }
+        // TutorialEventObjectiveBase.cs
         private void OnEvent(TEvent e)
         {
             if (IsCompleted) return;
+
             if (EvaluateEvent(e))
-            {
                 IsCompleted = true;
-                _onProgressChanged?.Invoke();
-            }
+
+            // Fix: тот же баг, что в TutorialStateRecheckObjectiveBase.OnChanged —
+            // EvaluateEvent может иметь побочный эффект (инкремент счётчика вроде
+            // EnemyKilledObjective._current) и вернуть false, не завершая объектив,
+            // но прогресс всё равно изменился и должен долететь до UI.
+            _onProgressChanged?.Invoke();
         }
 
         /// <summary>По умолчанию нет ретроактивного завершения — большинство event-объективов

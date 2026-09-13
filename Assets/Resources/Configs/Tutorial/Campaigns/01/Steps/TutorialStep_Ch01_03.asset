@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
-  m_Name: TutorialStep_03
+  m_Name: TutorialStep_Ch01_03
   m_EditorClassIdentifier: 
   stepId: {fileID: 11400000, guid: 114e9fa1738724655848e8eabd755606, type: 2}
   chapterId: {fileID: 11400000, guid: a29af8e35615648f8b9b8296331f200c, type: 2}
   analyticsStepIndex: 0
   objectives:
     mode: 0
-    objectives: []
+    objectives:
+    - {fileID: 11400000, guid: 8035c81dbe1dd4aacb3e94834f35a082, type: 2}
   presentation:
-    instructionTitleKey: 
-    instructionDesKey: 
+    instructionTitleKey: Recruitment
+    instructionDesKey: Hire new survivor in tavern
     highlightTargetId: {fileID: 0}
     highlightItemId: {fileID: 0}
     highlightInboxItemId: {fileID: 0}
@@ -28,12 +29,24 @@ MonoBehaviour:
     dialogueId: 
     cameraFocusTargetId: {fileID: 0}
     inputPolicy: 0
-  guidance: []
+  guidance:
+  - condition: {fileID: 11400000, guid: 0b09e2f0c9fdb49b0b4d97aabb3d02e6, type: 2}
+    presentation:
+      highlightTargetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
   reward:
     items: []
-  transitions: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: 431b0252386dd4c65b9dfe4dfdbc5ae3, type: 2}
+    condition:
+      rid: -2
   isCheckpoint: 1
   requiredDomain: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

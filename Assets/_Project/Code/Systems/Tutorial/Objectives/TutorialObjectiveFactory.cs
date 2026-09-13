@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Authoring.Objectives;
 using Galactic1.Code.Systems.Tutorial.Runtime;
@@ -19,7 +20,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         public TutorialObjectiveFactory(
             ITutorialInventoryQuery inventory,
             ITutorialSquadQuery squad,
-            IGameLoopStateQuery gameLoop)
+            IGameLoopStateQuery gameLoop,
+            GameLoopContext gameLoopContext)
         {
             Register<EnemyKilledObjectiveDefinition>(d => new EnemyKilledObjective(d.requiredCount));
             Register<ItemEquippedObjectiveDefinition>(d => new ItemEquippedObjective(inventory, d.slot, d.itemId));
@@ -40,6 +42,7 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             Register<UnitMovedObjectiveDefinition>(_ => new UnitMovedObjective());
             Register<TargetSelectedObjectiveDefinition>(_ => new TargetSelectedObjective());
             Register<WeaponFiredObjectiveDefinition>(_ => new WeaponFiredObjective());
+            Register<RecruitCompletedObjectiveDefinition>(_ => new RecruitCompletedObjective(gameLoopContext));
         }
 
         private void Register<TDef>(Func<TDef, ITutorialObjective> factory) where TDef : TutorialObjectiveDefinition

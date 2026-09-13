@@ -42,8 +42,11 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         public TutorialTargetId cameraFocusTargetId;
 
         public bool HasAnyTarget =>
-            highlightTargetId != null || highlightItemId != null ||
-            arrowTargetId != null || cameraFocusTargetId != null;
+            highlightTargetId != null
+            || highlightItemId != null
+            || highlightInboxItemId != null
+            || arrowTargetId != null
+            || cameraFocusTargetId != null;
 
 #if UNITY_EDITOR
         public bool Validate(out string error)

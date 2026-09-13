@@ -352,6 +352,8 @@ namespace Galactic1.Code.Systems.Runtime.Building
                 // ********************
                 Proxy.RemoveOffer(offer);
                 MarkStateChanged();
+                
+                EventBus<RecruitCompletedEvent>.Raise(new RecruitCompletedEvent(offer.Category));
             };
            
             return (NotificationResult.Ok(), finishRecruit);

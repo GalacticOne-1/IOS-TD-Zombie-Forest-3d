@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
-  m_Name: TutorialStep_01
+  m_Name: TutorialStep_Ch01_01
   m_EditorClassIdentifier: 
   stepId: {fileID: 11400000, guid: 68958435ddb8c461e88f84ac9b67d345, type: 2}
   chapterId: {fileID: 11400000, guid: a29af8e35615648f8b9b8296331f200c, type: 2}
@@ -61,36 +61,16 @@ MonoBehaviour:
   reward:
     items:
     - itemId: {fileID: 11400000, guid: 875ea44ba699441e694fa86a2924aa26, type: 2}
-      amount: 30
+      amount: 12
       durability: 0
       ammoInMagazine: 0
     - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
       amount: 30
       durability: 0
       ammoInMagazine: 0
-    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
+    - itemId: {fileID: 11400000, guid: ab738d2c2cb164dc49b9e857c3424c58, type: 2}
       amount: 1
-      durability: 0
-      ammoInMagazine: 0
-    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
-      amount: 1
-      durability: 0
-      ammoInMagazine: 0
-    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
-      amount: 1
-      durability: 0
-      ammoInMagazine: 0
-    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
-      amount: 1
-      durability: 0
-      ammoInMagazine: 0
-    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
-      amount: 1
-      durability: 0
-      ammoInMagazine: 0
-    - itemId: {fileID: 11400000, guid: db67fb0b92c9143618fe0d3b79bd1a2a, type: 2}
-      amount: 1
-      durability: 0
+      durability: 200
       ammoInMagazine: 0
   transitions:
   - nextStepId: {fileID: 11400000, guid: 8aa08d2382a004b60ab4e8e4ec8e47d8, type: 2}

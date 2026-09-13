@@ -39,14 +39,29 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             _onProgressChanged = null;
         }
 
+        // private void OnChanged(TChangeEvent e) // баг - не работает на прогресс !!
+        // {
+        //     if (IsCompleted) return;
+        //     if (EvaluateCurrentState())
+        //     {
+        //         IsCompleted = true;
+        //         _onProgressChanged?.Invoke();
+        //     }
+        // }
+        // TutorialStateRecheckObjectiveBase.cs
         private void OnChanged(TChangeEvent e)
         {
             if (IsCompleted) return;
+
             if (EvaluateCurrentState())
-            {
                 IsCompleted = true;
-                _onProgressChanged?.Invoke();
-            }
+
+            // Fix: раньше колбэк вызывался только когда объектив уже завершился —
+            // промежуточные изменения состояния (например SquadSizeObjective 0→1 из 2)
+            // никогда не сигнализировали наружу, и TutorialStepRuntimeState.OnProgressChanged
+            // не имел что пробрасывать. Теперь сигнализируем на КАЖДЫЙ recheck, не только
+            // на переход в Completed.
+            _onProgressChanged?.Invoke();
         }
 
         public abstract bool EvaluateCurrentState();
