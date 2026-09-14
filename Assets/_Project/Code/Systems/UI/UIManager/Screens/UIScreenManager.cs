@@ -152,7 +152,8 @@ namespace Galactic1.UI.Core
         public void RemoveActiveScreen(UIScreenId id)
         {
             activeScreens.Clear();
-            EventBus<UIScreenClosedEvent>.Raise(new UIScreenClosedEvent(id));
+            ServiceLocator.Current.Get<CoroutineController>().Coroutine_wait(() =>
+                EventBus<UIScreenClosedEvent>.Raise(new UIScreenClosedEvent(id, activeScreens.Count)));
         }
 
         /// <summary>
@@ -173,15 +174,15 @@ namespace Galactic1.UI.Core
                 UIScreenId.Settings or
                     UIScreenId.PurchaseRewardScreen or
                     UIScreenId.PlayerDamageFrame or
-                    UIScreenId.DeathScreen
+                    UIScreenId.DeathScreen or 
+                    UIScreenId.ScenarioTaskHUD
                     => _layerRoot.overlayRoot,
 
                 UIScreenId.HUDInput or
                     UIScreenId.HUDCamp or
                     UIScreenId.HUDLocation or
                     UIScreenId.HUDMap or
-                    UIScreenId.TutorialHUD or 
-                    UIScreenId.ScenarioTaskHUD
+                    UIScreenId.TutorialHUD 
                     => _layerRoot.hudRoot,
 
                 UIScreenId.BaseConstructionMenu

@@ -2,33 +2,11 @@ using System;
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.GameDatabase.Registries;
-using Galactic1.Code.Inventory.Services;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Mobile.EventBus;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
 {
-    /// <summary>
-    /// Единственная точка, которую вызывает TutorialService. Не знает про Unity-сцену:
-    /// хранит "что должно быть показано" и делегирует рендер текущему
-    /// ITutorialPresentationRenderer, если он есть. Сцена появляется/пропадает
-    /// асинхронно относительно смены tutorial-шага — AttachRenderer()/таргеты могут
-    /// "догонять" уже установленный Show().
-    ///
-    /// _generation — токен поколения (см. Show/Hide/ResolveTarget): колбэк ожидания
-    /// таргета из предыдущей презентации не может повлиять на текущую, даже если
-    /// сработает уже после Show() новой презентации.
-    ///
-    /// Highlight имеет ДВЕ стратегии резолва (presentation.highlightTargetId ИЛИ
-    /// presentation.highlightItemId, взаимоисключимы — см. TutorialPresentationDefinition
-    /// докстринг): фиксированный TutorialTargetId идёт через TutorialTargetRegistry
-    /// (ResolveTarget, с ожиданием "targetId появится позже" через OnTargetRegistered);
-    /// highlightItemId идёт через ITutorialItemSlotTargetProvider (ResolveItemTarget) —
-    /// это ВСЕГДА синхронный live-резолв без ожидания, т.к. у "слота с предметом X" нет
-    /// аналога OnTargetRegistered — если сейчас не найдено, просто ничего не подсвечиваем
-    /// до следующего Show() (guidance перерисовывает presentation на каждое relevant-
-    /// событие, см. TutorialGuidanceRuntimeState).
-    /// </summary>
     public sealed class TutorialPresentationService : ITutorialPresentationService, IGameService
     {
         private readonly TutorialTargetRegistry _targetRegistry;

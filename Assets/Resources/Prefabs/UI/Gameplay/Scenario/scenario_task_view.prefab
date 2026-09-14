@@ -1513,7 +1513,12 @@ MonoBehaviour:
   titleText: {fileID: 5310598207586052630}
   progressView: {fileID: 437602261105053677}
   rewardView: {fileID: 1132542424948334693}
-  completedBadge: {fileID: 3943183086445860468}
+  baseHeight: 90
+  activeSprite: {fileID: 21300000, guid: 3a68ed43dfafc4f459feecc6189fbf6b, type: 3}
+  completedSprite: {fileID: 21300000, guid: 7471fb664568845a6bab56940766358c, type: 3}
+  completedBadge: {fileID: 4018929472589617163}
+  activeColor: {r: 1, g: 0.7411765, b: 0.34901962, a: 1}
+  completedColor: {r: 0.3137255, g: 0.68235296, b: 0.38431373, a: 1}
 --- !u!1 &3943183086445860468
 GameObject:
   m_ObjectHideFlags: 0
@@ -2121,14 +2126,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.7411765, b: 0.34901962, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6595003298556353569, guid: dfa5c9b51990249328c5238eac140205, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3a68ed43dfafc4f459feecc6189fbf6b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2674,6 +2679,9 @@ MonoBehaviour:
   descriptionText: {fileID: 6428443590816343985}
   progressText: {fileID: 4005578384549736084}
   fillBar: {fileID: 0}
+  spacing: 0
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  completedColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &6599355563201238061
 GameObject:
   m_ObjectHideFlags: 0
@@ -3082,8 +3090,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4284071423
+  m_fontColor: {r: 1, g: 0.7411765, b: 0.34901962, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

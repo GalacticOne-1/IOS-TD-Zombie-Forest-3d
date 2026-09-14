@@ -195,7 +195,10 @@ namespace Galactic1.UI.Core.TabPanel
             var l = tabs.Count;
             for (int i = 0; i < l; i++)
             {
-                tabs[i].Panel.OnHide();
+                // ! UIScreenClosedEvent должно вызываться только при реальном закрытии окна  !
+                if(tabs[i].Panel.gameObject.activeInHierarchy)
+                    tabs[i].Panel.OnHide();
+                
                 tabs[i].Panel.gameObject.SetActive(false);
                 tabs[i].Button.SetSelected(false);
             }

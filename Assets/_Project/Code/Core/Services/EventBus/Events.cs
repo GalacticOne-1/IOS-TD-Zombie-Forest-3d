@@ -287,7 +287,13 @@ public sealed class UIScreenOpenedEvent : IEvent
 public readonly struct UIScreenClosedEvent : IEvent
 {
     public readonly UIScreenId ScreenId;
-    public UIScreenClosedEvent(UIScreenId screenId) => ScreenId = screenId;
+    public readonly bool AllScreensClosed;
+
+    public UIScreenClosedEvent(UIScreenId screenId, int allScreens)
+    {
+        ScreenId = screenId;
+        AllScreensClosed = allScreens <= 0;
+    }
 }
 public readonly struct FacilityPanelOpenedEvent : IEvent
 {

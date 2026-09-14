@@ -14,6 +14,7 @@ namespace Galactic1.Code.Gameplay.Tasks
     public interface IScenarioTaskService : IGameService
     {
         event Action OnTasksChanged;
+        event Action OnTaskActivity;
 
         /// <summary>Снэпшот в детерминированном порядке вставки — не Dictionary iteration.</summary>
         IReadOnlyList<ScenarioTaskViewData> GetTasks();
