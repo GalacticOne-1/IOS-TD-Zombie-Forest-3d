@@ -22,25 +22,38 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             ITutorialInboxQuery inbox,
             ITutorialUIStateQuery uiState,
             IGameLoopStateQuery gameLoop,
+            ITutorialSquadQuery squad,
             ITutorialInventoryInteractionQuery interaction,
             ITutorialFacilityPanelQuery facilityPanel)
         {
+            
             Register<UIScreenOpenGuidanceConditionDefinition>(
                 d => new UIScreenOpenGuidanceCondition(uiState, d.screenId, d.expectedOpen));
-            Register<ItemEquippedGuidanceConditionDefinition>(
-                d => new ItemEquippedGuidanceCondition(inventory, d.slot, d.itemId, d.expectedEquipped));
+            
             Register<GameLoopDomainGuidanceConditionDefinition>(
                 d => new GameLoopDomainGuidanceCondition(gameLoop, d.domain));
+            
             Register<AllOfGuidanceConditionDefinition>(
                 d => new AllOfGuidanceCondition(BuildChildren(d.conditions)));
             Register<AnyOfGuidanceConditionDefinition>(
                 d => new AnyOfGuidanceCondition(BuildChildren(d.conditions)));
+            
+            // squad
+            Register<UnitSelectGuidanceConditionDefinition>(
+                d => new UnitSelectGuidanceCondition(squad, d.expectedFree));
+            
+            // inventory
             Register<ItemSelectedGuidanceConditionDefinition>(
                 d => new ItemSelectedGuidanceCondition(interaction, d.itemId, d.expectedSelected));
             Register<ItemDraggedGuidanceConditionDefinition>(
                 d => new ItemDraggedGuidanceCondition(interaction, d.itemId, d.expectedDragged));
+            Register<ItemEquippedGuidanceConditionDefinition>(
+                d => new ItemEquippedGuidanceCondition(inventory, d.slot, d.itemId, d.expectedEquipped));
+            
             Register<InboxItemAvailableGuidanceConditionDefinition>(
                 d => new InboxItemAvailableGuidanceCondition(inbox, d.itemId, d.expectedAvailable));
+            
+            // facility
             Register<FacilityPanelOpenGuidanceConditionDefinition>(
                 d => new FacilityPanelOpenGuidanceCondition(facilityPanel, d.facilityType, d.expectedOpen));
         }

@@ -276,6 +276,16 @@ public sealed class UITargetInteractedEvent : IEvent
 }
 public sealed class CampStorageChangedEvent : IEvent {}
 public sealed class StrategicSquadChangedEvent : IEvent {}
+
+public sealed class SurvivorSelectedEvent : IEvent
+{
+    public readonly string unitId;
+
+    public SurvivorSelectedEvent(string unitId)
+    {
+        this.unitId = unitId;
+    }
+}
 public sealed class TargetSelectedEvent : IEvent {}
 
 public sealed class UIScreenOpenedEvent : IEvent

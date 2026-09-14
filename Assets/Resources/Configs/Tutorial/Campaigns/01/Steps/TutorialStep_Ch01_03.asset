@@ -22,9 +22,14 @@ MonoBehaviour:
   presentation:
     instructionTitleKey: Recruitment
     instructionDesKey: Hire new survivor in tavern
+    highlightMode: 0
     highlightTargetId: {fileID: 0}
     highlightItemId: {fileID: 0}
     highlightInboxItemId: {fileID: 0}
+    highlightUnitSearch:
+      requireFree: 1
+      filterByLevel: 0
+      requiredLevel: 1
     arrowTargetId: {fileID: 0}
     dialogueId: 
     cameraFocusTargetId: {fileID: 0}
@@ -32,9 +37,14 @@ MonoBehaviour:
   guidance:
   - condition: {fileID: 11400000, guid: 0b09e2f0c9fdb49b0b4d97aabb3d02e6, type: 2}
     presentation:
+      highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
       highlightItemId: {fileID: 0}
       highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 1
+        filterByLevel: 0
+        requiredLevel: 1
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:

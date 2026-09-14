@@ -20,7 +20,10 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         private Action _onMightHaveChanged;
 
         public ItemEquippedGuidanceCondition(
-            ITutorialInventoryQuery inventory, EquipSlotType slot, ItemId itemId, bool expectedEquipped)
+            ITutorialInventoryQuery inventory, 
+            EquipSlotType slot, 
+            ItemId itemId, 
+            bool expectedEquipped)
         {
             _inventory = inventory;
             _slot = slot;

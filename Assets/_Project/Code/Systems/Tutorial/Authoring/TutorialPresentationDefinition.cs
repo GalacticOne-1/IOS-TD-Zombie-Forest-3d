@@ -1,7 +1,6 @@
 using System;
 using Galactic1.Code.GameDatabase.Registries;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
 {
@@ -16,6 +15,9 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         public string instructionTitleKey;
         [TextArea]
         public string instructionDesKey;
+        
+        
+        public HighlightMode highlightMode = HighlightMode.None;
 
         [Header("Highlight / Arrow")]
         [Tooltip("Взаимоисключимо с highlightItemId — задавай только одно. Фиксированный " +
@@ -29,6 +31,11 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
                  "guidance-шаг 'найди и экипируй пистолет').")]
         public ItemId highlightItemId;
         public ItemId highlightInboxItemId;
+        
+        [Tooltip("Взаимоисключимо с highlightTargetId/highlightItemId/highlightInboxItemId. " +
+                 "Highlight динамически найденного юнита в списке по критериям — см. " +
+                 "TutorialUnitSearchCriteria.")]
+        public TutorialUnitSearchCriteria highlightUnitSearch;
 
         public TutorialTargetId arrowTargetId;
 
@@ -42,12 +49,23 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         [Header("Input")]
         public TutorialInputMode inputPolicy = TutorialInputMode.Free;
 
+
         public bool HasVisuals =>
             !string.IsNullOrEmpty(instructionTitleKey) ||
             highlightTargetId != null ||
             highlightItemId != null ||
             highlightInboxItemId != null ||
+            highlightUnitSearch != null ||
             arrowTargetId != null ||
             !string.IsNullOrEmpty(dialogueId);
+    }
+    
+    public enum HighlightMode
+    {
+        None,
+        FixedTarget,      // highlightTargetId
+        InventoryItem,     // highlightItemId
+        InboxItem,         // highlightInboxItemId
+        UnitSearch         // highlightUnitSearch
     }
 }

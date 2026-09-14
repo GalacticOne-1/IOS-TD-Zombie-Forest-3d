@@ -24,7 +24,10 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         private EventBinding<UIScreenClosedEvent> _closeBinding;
         private Action _onMightHaveChanged;
 
-        public UIScreenOpenGuidanceCondition(ITutorialUIStateQuery query, UIScreenId screenId, bool expectedOpen)
+        public UIScreenOpenGuidanceCondition(
+            ITutorialUIStateQuery query,
+            UIScreenId screenId, 
+            bool expectedOpen)
         {
             _query = query;
             _screenId = screenId;
@@ -53,6 +56,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             _onMightHaveChanged = null;
         }
 
-        public bool IsSatisfied() => _screenId != null && _query.IsScreenOpen(_screenId) == _expectedOpen;
+        public bool IsSatisfied() => 
+            _screenId != null && 
+            _query.IsScreenOpen(_screenId) == _expectedOpen;
     }
 }

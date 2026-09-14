@@ -55,6 +55,7 @@ namespace Galactic1.Code.UI.Inventory
         private GameSession _gameSession;
         
         
+        public UnitScrollListPresenter UnitList => unitListPresenter;
 
         [Serializable]
         public class UIElementRule

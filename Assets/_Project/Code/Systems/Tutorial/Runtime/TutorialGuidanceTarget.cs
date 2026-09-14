@@ -17,19 +17,28 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     /// </summary>
     public sealed class TutorialGuidanceTarget
     {
+        public readonly HighlightMode HighlightMode;
         public readonly TutorialTargetId HighlightTargetId;
         public readonly ItemId HighlightItemId;
         public readonly ItemId HighlightInboxItemId;
+        public readonly TutorialUnitSearchCriteria HighlightUnitSearch;
         public readonly TutorialTargetId ArrowTargetId;
         public readonly TutorialTargetId CameraFocusTargetId;
 
         public TutorialGuidanceTarget(
-            TutorialTargetId highlightTargetId, ItemId highlightItemId, ItemId highlightInboxItemId,
-            TutorialTargetId arrowTargetId, TutorialTargetId cameraFocusTargetId)
+            HighlightMode highlightMode,
+            TutorialTargetId highlightTargetId, 
+            ItemId highlightItemId, 
+            ItemId highlightInboxItemId, 
+            TutorialUnitSearchCriteria highlightUnitSearch,
+            TutorialTargetId arrowTargetId,
+            TutorialTargetId cameraFocusTargetId)
         {
+            HighlightMode = highlightMode;
             HighlightTargetId = highlightTargetId;
             HighlightItemId = highlightItemId;
             HighlightInboxItemId = highlightInboxItemId;
+            HighlightUnitSearch = highlightUnitSearch;
             ArrowTargetId = arrowTargetId;
             CameraFocusTargetId = cameraFocusTargetId;
         }

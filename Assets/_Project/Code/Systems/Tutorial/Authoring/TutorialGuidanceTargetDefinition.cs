@@ -21,6 +21,9 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     [Serializable]
     public sealed class TutorialGuidanceTargetDefinition
     {
+        
+        public HighlightMode highlightMode = HighlightMode.None;
+        
         [Tooltip("Взаимоисключимо с highlightItemId. Оставь пустым, если для этого guidance-" +
                  "варианта highlight не нужен, либо используется highlightItemId.")]
         public TutorialTargetId highlightTargetId;
@@ -34,17 +37,25 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
                  "во ВХОДЯЩИХ (Inbox) для этого предмета — резолвится ТОЛЬКО через Inbox-провайдер, " +
                  "инвентарь не участвует, даже если тот же предмет уже есть где-то ещё.")]
         public ItemId highlightInboxItemId;
+        
+        [Tooltip("Взаимоисключимо с highlightTargetId/highlightItemId/highlightInboxItemId. " +
+                 "Highlight динамически найденного юнита в списке по критериям — см. " +
+                 "TutorialUnitSearchCriteria.")]
+        public TutorialUnitSearchCriteria highlightUnitSearch;
 
         [Tooltip("Оставь пустым, если для этого guidance-варианта стрелка не нужна.")]
         public TutorialTargetId arrowTargetId;
 
         [Tooltip("Оставь пустым, если для этого guidance-варианта фокус камеры не нужен.")]
         public TutorialTargetId cameraFocusTargetId;
+        
+        
 
         public bool HasAnyTarget =>
             highlightTargetId != null
             || highlightItemId != null
             || highlightInboxItemId != null
+            || highlightUnitSearch != null
             || arrowTargetId != null
             || cameraFocusTargetId != null;
 
@@ -54,7 +65,9 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
             int highlightModeCount =
                 (highlightTargetId != null ? 1 : 0) +
                 (highlightItemId != null ? 1 : 0) +
-                (highlightInboxItemId != null ? 1 : 0);
+                (highlightInboxItemId != null ? 1 : 0) +
+                (highlightUnitSearch != null ? 1 : 0) +
+                (cameraFocusTargetId != null ? 1 : 0);
 
             if (highlightModeCount > 1)
             {

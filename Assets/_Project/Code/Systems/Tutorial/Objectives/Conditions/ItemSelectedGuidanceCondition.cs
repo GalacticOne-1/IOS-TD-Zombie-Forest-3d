@@ -14,7 +14,9 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         private Action _onMightHaveChanged;
 
         public ItemSelectedGuidanceCondition(
-            ITutorialInventoryInteractionQuery query, ItemId itemId, bool expectedSelected)
+            ITutorialInventoryInteractionQuery query, 
+            ItemId itemId, 
+            bool expectedSelected)
         {
             _query = query;
             _itemId = itemId;
@@ -24,18 +26,21 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         public void Start(Action onMightHaveChanged)
         {
             _onMightHaveChanged = onMightHaveChanged;
-            _selectBinding = new EventBinding<InventorySelectionChangedEvent>(_ => _onMightHaveChanged?.Invoke());
+            _selectBinding = 
+                new EventBinding<InventorySelectionChangedEvent>(_ => _onMightHaveChanged?.Invoke());
             EventBus<InventorySelectionChangedEvent>.Register(_selectBinding);
         }
 
         public void Stop()
         {
-            if (_selectBinding != null) EventBus<InventorySelectionChangedEvent>.Deregister(_selectBinding);
+            if (_selectBinding != null) 
+                EventBus<InventorySelectionChangedEvent>.Deregister(_selectBinding);
             _selectBinding = null;
             _onMightHaveChanged = null;
         }
 
         // IsSatisfied() без изменений — по-прежнему чистый query, без локального _selected.
-        public bool IsSatisfied() => _query.IsItemSelected(_itemId) == _expectedSelected;
+        public bool IsSatisfied() => 
+            _query.IsItemSelected(_itemId) == _expectedSelected;
     }
 }

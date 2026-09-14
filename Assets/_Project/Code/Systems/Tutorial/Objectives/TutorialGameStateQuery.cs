@@ -145,6 +145,16 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         // ── ITutorialSquadQuery ───────────────────────────────────────────
         public int GetStrategicSquadSize() => _context.StrategicSquadId.Count;
 
+        public bool SurvivorIsFree()
+        {
+            var unitId = ServiceLocator.Current.Get<InventoryManagementWindow>()
+                .modeController.SelectedUnit.unitId;
+            if (string.IsNullOrEmpty(unitId))
+                return false;
+            
+            return !_context.IsStrategicSquadMember(unitId);
+        }
+
         // ── ITutorialUIStateQuery ─────────────────────────────────────────
         // Требует UIScreenManager.IsScreenOpen(UIScreenId) — если такого метода сегодня нет,
         // это одна интеграционная точка той же природы, что уже существующие "требует одну

@@ -205,6 +205,7 @@ namespace Galactic1.Code.UI.Inventory
 
             SelectedUnit = (viewIndex, unitId);
             OnSelectionChanged?.Invoke(viewIndex, unitId);
+            EventBus<SurvivorSelectedEvent>.Raise(new SurvivorSelectedEvent(unitId));
             RefreshUnit();
         }
 

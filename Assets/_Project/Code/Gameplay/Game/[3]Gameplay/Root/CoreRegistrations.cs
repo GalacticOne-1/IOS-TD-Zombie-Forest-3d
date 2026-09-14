@@ -33,6 +33,7 @@ using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.Systems.World.Threats;
 using Galactic1.Code.UI.Interaction;
 using Galactic1.Code.UI.Inventory;
+using Galactic1.Code.UI.Units;
 using Galactic1.Configs;
 using Galactic1.Core;
 using Galactic1.Core.Gameplay;
@@ -278,6 +279,7 @@ namespace Galactic1
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
+                tutorialGameStateQuery,
                 tutorialGameStateQuery);
 
             var tutorialCheckpointService = new TutorialCheckpointService();
@@ -289,11 +291,13 @@ namespace Galactic1
 
             var inventorySlotTargetProvider = new TaskInventorySlotTargetProvider(inventoryViewRegistry);
             var inboxSlotTargetProvider = new TaskInboxSlotTargetProvider(inboxViewRegistry);
+            var tutorialUnitSlotProvider = new TutorialUnitSlotTargetProvider(gameSession.GameLoopContext);
 
             var tutorialPresentationService = new TutorialPresentationService(
                 tutorialTargetRegistry,
                 inventorySlotTargetProvider,
-                inboxSlotTargetProvider);
+                inboxSlotTargetProvider,
+                tutorialUnitSlotProvider);
             rootContainer.RegisterInstance(tutorialPresentationService);
             ServiceLocator.Current.Register(tutorialPresentationService);
 

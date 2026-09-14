@@ -358,9 +358,11 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             {
                 var condition = _guidanceFactory.Create(g.condition);
                 var target = new TutorialGuidanceTarget(
+                    g.presentation?.highlightMode ?? HighlightMode.None,
                     g.presentation?.highlightTargetId,
                     g.presentation?.highlightItemId,
                     g.presentation?.highlightInboxItemId,
+                    g.presentation?.highlightUnitSearch,
                     g.presentation?.arrowTargetId,
                     g.presentation?.cameraFocusTargetId);
                 list.Add((condition, target));
@@ -394,9 +396,11 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 instructionDesKey = authored.instructionDesKey,
                 dialogueId = authored.dialogueId,
                 inputPolicy = authored.inputPolicy,
+                highlightMode = hasGuidance ? guidanceTarget?.HighlightMode ?? HighlightMode.None : authored.highlightMode,
                 highlightTargetId = hasGuidance ? guidanceTarget?.HighlightTargetId : authored.highlightTargetId,
                 highlightItemId = hasGuidance ? guidanceTarget?.HighlightItemId : authored.highlightItemId,
                 highlightInboxItemId = hasGuidance ? guidanceTarget?.HighlightInboxItemId : authored.highlightInboxItemId,
+                highlightUnitSearch = hasGuidance ? guidanceTarget?.HighlightUnitSearch : authored.highlightUnitSearch,
                 arrowTargetId = hasGuidance ? guidanceTarget?.ArrowTargetId : authored.arrowTargetId,
                 cameraFocusTargetId = hasGuidance ? guidanceTarget?.CameraFocusTargetId : authored.cameraFocusTargetId,
             };

@@ -28,6 +28,9 @@ namespace Galactic1.Code.UI.Inventory
         
         
         private readonly CompositeDisposable _disposables = new();
+        public string UnitId { get; private set; }
+        public RectTransform RectTr => gameObject.CMP_RectTr();
+
 
         /// <summary>
         /// Bind unit data to this view.
@@ -45,6 +48,7 @@ namespace Galactic1.Code.UI.Inventory
             
             this.unit = unit;
             viewIndex = index;
+            UnitId = unit.Id;
             
             // Запрашиваем портрет
             portrait.texture = portraitCache.GetPortrait(unit.ArchetypeId);

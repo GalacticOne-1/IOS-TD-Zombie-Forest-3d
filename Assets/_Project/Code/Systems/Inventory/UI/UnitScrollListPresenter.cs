@@ -17,6 +17,8 @@ namespace Galactic1.Code.UI.Inventory
         private InventoryManagementController controller;
         
         private List<UnitBadgeView> itemViews = new();
+        
+        public IReadOnlyList<UnitBadgeView> ItemViews => itemViews;
 
         public void Initialize(InventoryManagementController controller)
         {

@@ -12,6 +12,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         private readonly TutorialTargetRegistry _targetRegistry;
         private readonly ITutorialItemSlotTargetProvider _inventorySlotProvider;
         private readonly ITutorialItemSlotTargetProvider _inboxSlotProvider;
+        private readonly ITutorialUnitSlotTargetProvider _unitSlotProvider;
 
         private ITutorialPresentationRenderer _renderer;
         private TutorialPresentationDefinition _activeDefinition;
@@ -21,11 +22,13 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public TutorialPresentationService(
             TutorialTargetRegistry targetRegistry,
             ITutorialItemSlotTargetProvider inventorySlotProvider, 
-            ITutorialItemSlotTargetProvider inboxSlotProvider)
+            ITutorialItemSlotTargetProvider inboxSlotProvider,
+            ITutorialUnitSlotTargetProvider unitSlotProvider)
         {
             _targetRegistry = targetRegistry;
             _inventorySlotProvider = inventorySlotProvider;
             _inboxSlotProvider = inboxSlotProvider;
+            _unitSlotProvider = unitSlotProvider;
         }
 
         public void Show(TutorialPresentationDefinition presentation)
@@ -63,21 +66,28 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         {
             if (_renderer == null) return;
 
-            if (presentation.highlightInboxItemId != null)
+            switch (presentation.highlightMode)
             {
-                ResolveItemTarget(_inboxSlotProvider, presentation.highlightInboxItemId,
-                    _renderer.RenderHighlight, _renderer.ClearHighlight);
-                SubscribeInboxHighlightRetrigger(presentation.highlightInboxItemId);
-            }
-            else if (presentation.highlightItemId != null)
-            {
-                ResolveItemTarget(_inventorySlotProvider, presentation.highlightItemId,
-                    _renderer.RenderHighlight, _renderer.ClearHighlight);
-                SubscribeInventoryHighlightRetrigger(presentation.highlightItemId);
-            }
-            else
-            {
-                ResolveTarget(presentation.highlightTargetId, _renderer.RenderHighlight, _renderer.ClearHighlight);
+                case HighlightMode.UnitSearch:
+                    ResolveUnitTarget(presentation.highlightUnitSearch, _renderer.RenderHighlight, _renderer.ClearHighlight);
+                    SubscribeUnitHighlightRetrigger(presentation.highlightUnitSearch);
+                    break;
+                case HighlightMode.InboxItem:
+                    ResolveItemTarget(_inboxSlotProvider, presentation.highlightInboxItemId,
+                        _renderer.RenderHighlight, _renderer.ClearHighlight);
+                    SubscribeInboxHighlightRetrigger(presentation.highlightInboxItemId);
+                    break;
+                case HighlightMode.InventoryItem:
+                    ResolveItemTarget(_inventorySlotProvider, presentation.highlightItemId,
+                        _renderer.RenderHighlight, _renderer.ClearHighlight);
+                    SubscribeInventoryHighlightRetrigger(presentation.highlightItemId);
+                    break;
+                case HighlightMode.FixedTarget:
+                    ResolveTarget(presentation.highlightTargetId, _renderer.RenderHighlight, _renderer.ClearHighlight);
+                    break;
+                default: // None
+                    _renderer.ClearHighlight();
+                    break;
             }
 
             ResolveTarget(presentation.arrowTargetId, _renderer.RenderArrow, _renderer.ClearArrow);
@@ -141,6 +151,30 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             }
             _targetRegistry.OnTargetRegistered += Handler;
             _pendingTargetUnsubs.Add(() => _targetRegistry.OnTargetRegistered -= Handler);
+        }
+        
+        
+        private void ResolveUnitTarget(
+            TutorialUnitSearchCriteria criteria, Action<ITutorialTarget> onFound, Action onEmpty)
+        {
+            if (_unitSlotProvider != null && _unitSlotProvider.TryGetUnitTarget(criteria, out var target))
+                onFound(target);
+            else
+                onEmpty();
+        }
+        
+        
+        private void SubscribeUnitHighlightRetrigger(TutorialUnitSearchCriteria criteria)
+        {
+            int capturedGeneration = _generation;
+            var binding = new EventBinding<StrategicSquadChangedEvent>(_ =>
+            {
+                if (capturedGeneration != _generation) return;
+                if (_renderer == null) return;
+                ResolveUnitTarget(criteria, _renderer.RenderHighlight, _renderer.ClearHighlight);
+            });
+            EventBus<StrategicSquadChangedEvent>.Register(binding);
+            _pendingTargetUnsubs.Add(() => EventBus<StrategicSquadChangedEvent>.Deregister(binding));
         }
 
         /// <summary>Синхронный live-резолв "слот, где сейчас предмет X" — см. class docstring

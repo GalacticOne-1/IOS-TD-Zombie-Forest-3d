@@ -22,9 +22,14 @@ MonoBehaviour:
   presentation:
     instructionTitleKey: Collect Provision
     instructionDesKey: Collect food from inbox
+    highlightMode: 0
     highlightTargetId: {fileID: 0}
     highlightItemId: {fileID: 0}
     highlightInboxItemId: {fileID: 0}
+    highlightUnitSearch:
+      requireFree: 1
+      filterByLevel: 0
+      requiredLevel: 1
     arrowTargetId: {fileID: 0}
     dialogueId: 
     cameraFocusTargetId: {fileID: 0}
@@ -32,23 +37,38 @@ MonoBehaviour:
   guidance:
   - condition: {fileID: 11400000, guid: e34ecbc8b71eb4ba68735223bee36e1e, type: 2}
     presentation:
+      highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: afa4a609935604f93b51dda9350b776e, type: 2}
       highlightItemId: {fileID: 0}
       highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 1
+        filterByLevel: 0
+        requiredLevel: 1
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 7cb3de62f888f409594f0259ac3ecaee, type: 2}
     presentation:
+      highlightMode: 3
       highlightTargetId: {fileID: 0}
       highlightItemId: {fileID: 0}
       highlightInboxItemId: {fileID: 11400000, guid: 875ea44ba699441e694fa86a2924aa26, type: 2}
+      highlightUnitSearch:
+        requireFree: 1
+        filterByLevel: 0
+        requiredLevel: 1
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 8d704d47054d74ca1b850259a7f4d2a4, type: 2}
     presentation:
+      highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: 63b46b0c95ff448698235412db7476d9, type: 2}
       highlightItemId: {fileID: 0}
       highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 1
+        filterByLevel: 0
+        requiredLevel: 1
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:

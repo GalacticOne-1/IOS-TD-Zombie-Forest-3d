@@ -22,9 +22,14 @@ MonoBehaviour:
   presentation:
     instructionTitleKey: Expand the squad
     instructionDesKey: Add a new survivor to the squad
+    highlightMode: 0
     highlightTargetId: {fileID: 0}
     highlightItemId: {fileID: 0}
     highlightInboxItemId: {fileID: 0}
+    highlightUnitSearch:
+      requireFree: 1
+      filterByLevel: 0
+      requiredLevel: 1
     arrowTargetId: {fileID: 0}
     dialogueId: 
     cameraFocusTargetId: {fileID: 0}
@@ -32,16 +37,38 @@ MonoBehaviour:
   guidance:
   - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
     presentation:
+      highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
       highlightItemId: {fileID: 0}
       highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 1
+        filterByLevel: 0
+        requiredLevel: 1
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
-  - condition: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 6d314c824d1d24504824aa6f9222d15d, type: 2}
     presentation:
+      highlightMode: 4
+      highlightTargetId: {fileID: 0}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 1
+        filterByLevel: 0
+        requiredLevel: 1
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 2397ed4eafd0d4c918632334a1324a68, type: 2}
+    presentation:
+      highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: 818daf968e7b048f797af8994e95d79b, type: 2}
       highlightItemId: {fileID: 0}
       highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 1
+        filterByLevel: 0
+        requiredLevel: 1
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:
