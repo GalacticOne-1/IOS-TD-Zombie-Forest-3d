@@ -10,6 +10,10 @@ namespace Galactic1.UI.Core
         protected DIContainer _container;
 
         private UIScreenManager _uiManager;
+        
+        /// <summary>
+        /// Вызов при закрытии окна и затем очищается
+        /// </summary>
         public event Action OnClosed;
 
 
@@ -46,9 +50,14 @@ namespace Galactic1.UI.Core
         /// </summary>
         public virtual void OnHide()
         {
+            RiseClosedEvent();
+            _uiManager.RemoveActiveScreen(PanelId);
+        }
+
+        protected void RiseClosedEvent()
+        {
             OnClosed?.Invoke();
             OnClosed = null;
-            _uiManager.RemoveActiveScreen(PanelId);
         }
 
         public virtual void ResetState(){}

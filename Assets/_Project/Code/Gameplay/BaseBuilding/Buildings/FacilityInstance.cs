@@ -2,9 +2,12 @@ using Galactic1.AbstractFactory;
 using Galactic1.Code.AbstractFactory;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.Gameplay.Grid;
+using Galactic1.Code.Notification;
 using Galactic1.Code.Systems.Interaction;
 using Galactic1.Code.Systems.Raid;
+using Galactic1.Code.Systems.Tutorial.Notification;
 using Galactic1.Code.Systems.Tutorial.Presentation;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.UI.BuildingPanel;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
 using Galactic1.Gameplay.Interaction;
@@ -58,19 +61,27 @@ namespace Galactic1.Code.Gameplay.BaseBuilding
 
 
 
+        // FacilityInstance.cs — изменённый OnInteract()
         public void OnInteract()
         {
             if (!_interactionPolicyService.CanInteractWithFacilities)
                 return;
 
+            var target = GetComponent<WorldTutorialTargetBehaviour>();
+
+            var gateResult = ServiceLocator.Current.Get<ITutorialTargetGateService>()
+                .Evaluate(target?.TargetId);
+
+            if (!gateResult.IsAllowed)
+            {
+                ServiceLocator.Current.Get<INotificationService>()
+                    .Push(TutorialNotificationIds.TargetGateBlocked, gateResult.BlockedMessage);
+                return;
+            }
+
             ServiceLocator.Current.Get<CameraController>().FocusOnPositionFacility(transform.position, false);
             ServiceLocator.Current.Get<FacilityPanelController>().Open(this);
-            
-            // Tutorial hook: переиспользуем UITargetInteractedEvent/TutorialTargetId — тот же
-            // паттерн, что у UI-кнопок (см. ButtonPressedObjective). WorldTutorialTargetBehaviour —
-            // опциональный sibling-компонент; если его нет на этом здании (обычное, не tutorial-
-            // релевантное здание), ничего не поднимается.
-            var target = GetComponent<WorldTutorialTargetBehaviour>();
+
             if (target != null && target.TargetId != null)
                 EventBus<UITargetInteractedEvent>.Raise(new UITargetInteractedEvent { TargetId = target.TargetId });
         }

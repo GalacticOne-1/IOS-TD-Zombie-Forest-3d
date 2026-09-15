@@ -6,6 +6,9 @@ using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.Runtime;
 using Galactic1.Code.Systems.Squad;
+using Galactic1.Code.Systems.Tutorial.Notification;
+using Galactic1.Code.Systems.Tutorial.Presentation;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.UI.Construction;
 using Galactic1.Code.UI.Inventory;
 using Galactic1.Code.UI.Stations;
@@ -90,14 +93,26 @@ namespace Galactic1.Core.UI.HUD
             gameShopButton.RegisterButtonClick(container.Resolve<GameStoreService>().ShowWindow);
             worldMapButton.RegisterButtonClick(() =>
             {
-                switch (_squadValidation.ValidateForWorldMap())
+                var target = worldMapButton.GetComponent<TutorialTargetBehaviour>();
+                var gateResult = ServiceLocator.Current.Get<ITutorialTargetGateService>()
+                    .Evaluate(target?.TargetId);
+
+                if (!gateResult.IsAllowed)
                 {
-                    case SquadValidationResult.Success:
-                        EventBus<WorldMapSceneRequestEvent>.Raise(new WorldMapSceneRequestEvent());
-                        break;
-                    case SquadValidationResult.EmptySquad:
-                        ServiceLocator.Current.Get<INotificationService>().Push(NotificationFailReason.SquadIsEmpty);
-                        break;
+                    ServiceLocator.Current.Get<INotificationService>()
+                        .Push(TutorialNotificationIds.TargetGateBlocked, gateResult.BlockedMessage);
+                }
+                else
+                {
+                    switch (_squadValidation.ValidateForWorldMap())
+                    {
+                        case SquadValidationResult.Success:
+                            EventBus<WorldMapSceneRequestEvent>.Raise(new WorldMapSceneRequestEvent());
+                            break;
+                        case SquadValidationResult.EmptySquad:
+                            ServiceLocator.Current.Get<INotificationService>().Push(NotificationFailReason.SquadIsEmpty);
+                            break;
+                    }
                 }
             });
 
@@ -207,10 +222,6 @@ namespace Galactic1.Core.UI.HUD
 
         private void OnLevelUp(ProgressionLevelUpEvent e)
         {
-            // ExperienceProgress for the new level already arrived via the
-            // ProgressionExperienceChangedEvent raised just before this one
-            // (see ProgressionService.AddExperience ordering) — this handler
-            // only needs to make sure the level number itself is current.
             playerLevelText.text = $"{e.NewLevel}";
         }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Galactic1
 {
     
-    /*   ! создается до ServiceLocator и конфиг провайдера !   */
+    /*   ! создается до CoreRegistrations, ServiceLocator и конфиг провайдера !   */
     
     
     public class GameplayEntryPoint : MonoBehaviour

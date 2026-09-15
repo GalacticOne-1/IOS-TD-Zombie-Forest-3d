@@ -30,8 +30,8 @@ namespace Galactic1.UI.Core
         }
 
         public override void OnShow(object data = null) { }
-        public override void OnHide() { base.OnHide(); }
+        public override void OnHide() => RiseClosedEvent();
 
-        
+
     }
 }

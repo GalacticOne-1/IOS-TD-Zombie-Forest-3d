@@ -17,9 +17,8 @@ namespace Galactic1.UI.Core
         ConfirmAdPopup = 12,
         AdAlertToast = 13,
         MessageToast = 14,
-        
-        Dialog = 15,
-        Tooltip = 16,
+        TaskPopup = 15,
+        Dialog = 16,
         
         Inventory = 20,
         Craft = 21,

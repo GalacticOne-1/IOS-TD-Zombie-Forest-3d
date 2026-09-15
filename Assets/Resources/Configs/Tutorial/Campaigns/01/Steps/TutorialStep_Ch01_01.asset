@@ -20,8 +20,8 @@ MonoBehaviour:
     objectives:
     - {fileID: 11400000, guid: 877436c7498ce4c35898d6eccc08efec, type: 2}
   presentation:
-    instructionTitleKey: Equipment gun
-    instructionDesKey: Equipment survivor with Glock17
+    instructionTitleKey: Equip a Weapon
+    instructionDesKey: Open a inventory and equip a pistol to unit.
     highlightMode: 0
     highlightTargetId: {fileID: 0}
     highlightItemId: {fileID: 0}
@@ -36,6 +36,10 @@ MonoBehaviour:
     inputPolicy: 0
   guidance:
   - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 1
     presentation:
       highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
@@ -48,6 +52,10 @@ MonoBehaviour:
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: dd80a929b1cf142b88d27c4d9dc640c4, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 1
     presentation:
       highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: 37e0fe69ff6e544c49df209c2dedec6d, type: 2}
@@ -60,6 +68,10 @@ MonoBehaviour:
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 5cf9617bbdf1b4eff9de49ba507bc1b1, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 1
     presentation:
       highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: c9ebf5b20c10240eea0d2ba2e703cf67, type: 2}
@@ -72,6 +84,10 @@ MonoBehaviour:
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: cf261f4238fef4367b75b6e3ad1cbf22, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 1
     presentation:
       highlightMode: 2
       highlightTargetId: {fileID: 0}

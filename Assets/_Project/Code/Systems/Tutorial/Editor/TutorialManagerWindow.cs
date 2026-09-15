@@ -536,6 +536,7 @@ namespace Galactic1.Tools
             var presentationProp = entryProp.FindPropertyRelative("presentation");
             var condition = conditionProp.objectReferenceValue as TutorialGuidanceConditionDefinition;
 
+            EditorGUILayout.Space(20);
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"#{index}", GUILayout.Width(25));
@@ -606,7 +607,33 @@ namespace Galactic1.Tools
             EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("cameraFocusTargetId"), 
                 new GUIContent("Camera Focus Target"));
 
+            DrawGuidanceDescriptionPanel(entryProp);
+
             EditorGUILayout.EndVertical();
+        }
+
+        /// <summary>Overlay-панель с текстом для этого guidance-entry — параллельный
+        /// highlight/arrow/camera канал, использует тот же condition (см.
+        /// TutorialGuidancePanelDefinition докстринг). enabled=false по умолчанию —
+        /// текстовые поля скрыты, пока панель явно не включена, чтобы не загромождать
+        /// UI для большинства entries, которые её не используют.</summary>
+        private void DrawGuidanceDescriptionPanel(SerializedProperty entryProp)
+        {
+            var panelProp = entryProp.FindPropertyRelative("descriptionPanel");
+            if (panelProp == null) return;
+
+            var enabledProp = panelProp.FindPropertyRelative("enabled");
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("Description Panel (overlay text, same condition as above)",
+                EditorStyles.miniBoldLabel);
+            EditorGUILayout.PropertyField(enabledProp, new GUIContent("Enabled"));
+
+            if (enabledProp.boolValue)
+            {
+                EditorGUILayout.PropertyField(panelProp.FindPropertyRelative("text"), new GUIContent("Text"));
+                EditorGUILayout.PropertyField(panelProp.FindPropertyRelative("oneShot"), new GUIContent("One Shot"));
+            }
         }
 
         // ---------------- Reward ----------------

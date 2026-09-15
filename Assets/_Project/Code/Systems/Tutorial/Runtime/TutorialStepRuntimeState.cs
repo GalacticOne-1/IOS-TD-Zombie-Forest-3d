@@ -25,15 +25,12 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         public readonly IReadOnlyList<TutorialObjectiveRuntimeState> Objectives;
         private readonly ObjectiveCompositionMode _mode;
         private readonly TutorialGuidanceRuntimeState _guidance;
+        private readonly TutorialGuidancePanelRuntimeState _panel;
 
         public event Action OnStepCompleted;
         public event Action OnProgressChanged;
-
-        /// <summary>Резолвнутый guidance target поменялся — вызывающий код (TutorialService)
-        /// обязан перерисовать presentation. Никак не связано с завершением шага; может
-        /// сработать сколько угодно раз за жизнь шага, в т.ч. ни разу (шаг без guidance,
-        /// или guidance, для которого ни одно condition ни разу не поменяло резолв).</summary>
         public event Action OnGuidanceChanged;
+        public event Action OnPanelChanged;
 
         private bool _startInProgress;
         private bool _completedFired;
@@ -41,12 +38,14 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         public TutorialStepRuntimeState(
             TutorialStepDefinition definition,
             IReadOnlyList<TutorialObjectiveRuntimeState> objectives,
-            IReadOnlyList<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> guidanceEntries)
+            IReadOnlyList<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> guidanceEntries,
+            IReadOnlyList<(ITutorialGuidanceCondition Condition, TutorialGuidancePanelDefinition Panel)> panelEntries)
         {
             Definition = definition;
             Objectives = objectives;
             _mode = definition.objectives.mode;
             _guidance = new TutorialGuidanceRuntimeState(guidanceEntries);
+            _panel = new TutorialGuidancePanelRuntimeState(panelEntries);
         }
 
         public bool IsCompleted => _mode == ObjectiveCompositionMode.All
@@ -59,6 +58,16 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// TutorialService сразу после Start() для начального presentation-снэпшота,
         /// дальше — из OnGuidanceChanged.</summary>
         public TutorialGuidanceTarget CurrentGuidanceTarget => _guidance.Current;
+        
+        
+        /// <summary>Текущий текст overlay-панели — null, если ничего показывать не нужно.
+        /// Читается TutorialService сразу после Start() для начального снэпшота, дальше —
+        /// из OnPanelChanged.</summary>
+        public string CurrentPanelText => _panel.CurrentText;
+
+        /// <summary>Игрок кликнул по панели — закрыть её (см. TutorialGuidancePanelRuntimeState.
+        /// Dismiss). Вызывается TutorialService из обработчика клика попапа.</summary>
+        public void DismissPanel() => _panel.Dismiss();
 
         /// <summary>Возвращает true, если шаг уже полностью завершён сразу после
         /// того, как все объективы были запущены — вызывающий код (TutorialService)
@@ -74,6 +83,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             foreach (var o in Objectives)
                 o.Objective.Start(OnObjectiveProgressChanged);
             _guidance.Start(() => OnGuidanceChanged?.Invoke());
+            _panel.Start(() => OnPanelChanged?.Invoke());
             _startInProgress = false;
 
             if (IsCompleted && !_completedFired)
@@ -90,6 +100,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             foreach (var o in Objectives)
                 o.Objective.Stop();
             _guidance.Stop();
+            _panel.Stop();
         }
 
         // private void OnObjectiveProgressChanged()  // этот давал баг при прогрессе [0/N]

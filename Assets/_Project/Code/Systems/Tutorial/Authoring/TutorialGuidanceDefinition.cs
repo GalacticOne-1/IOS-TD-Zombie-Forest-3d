@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
 {
@@ -24,8 +25,14 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     {
         [Tooltip("Пусто = условие всегда истинно (см. класс-докстринг).")]
         public TutorialGuidanceConditionDefinition condition;
+        
+        [Tooltip("Опционально. Overlay-панель с текстом для этого guidance-entry — см. " +
+                 "TutorialGuidancePanelDefinition докстринг. Использует тот же condition, что " +
+                 "highlight-таргет этого entry, но резолвится отдельным параллельным каналом.")]
+        public TutorialGuidancePanelDefinition descriptionPanel = new();
 
         public TutorialGuidanceTargetDefinition presentation = new();
+        
 
 #if UNITY_EDITOR
         public bool Validate(TutorialStepId stepId, int index, out string error)

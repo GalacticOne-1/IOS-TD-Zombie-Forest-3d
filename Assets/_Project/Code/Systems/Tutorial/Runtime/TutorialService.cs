@@ -7,6 +7,8 @@ using Galactic1.Code.Systems.Tutorial.Objectives;
 using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Core;
+using Galactic1.UI.Core;
+using Galactic1.UI.Shop.Rewards;
 using R3;
 using UnityEngine;
 
@@ -23,6 +25,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         TutorialProgress GetProgress();
         bool IsStepActive(TutorialStepId stepId);
         bool IsStepCompleted(TutorialStepId stepId);
+        
+        string GetStepTitleKey(TutorialStepId stepId);
     }
 
     /// <summary>Debug/QA API. Операции здесь намеренно нарушают обычную прогрессию —
@@ -80,6 +84,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
         private TutorialRuntime _runtime;
         private TutorialStepRuntimeState _activeStep;
+        private UIManager _uiManager;
 
         public bool IsActive => _runtime != null && _runtime.IsActive;
 
@@ -95,7 +100,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             TutorialTaskPresenter taskPresenter,
             ITutorialAnalytics analytics,
             IGameStateProvider gameStateProvider,
-            ReactiveProperty<CGameStateTutorial> tutorialState)
+            ReactiveProperty<CGameStateTutorial> tutorialState,
+            UIManager uiManager)
         {
             _registry = registry;
             _objectiveFactory = objectiveFactory;
@@ -109,6 +115,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _analytics = analytics;
             _gameStateProvider = gameStateProvider;
             _tutorialState = tutorialState;
+            _uiManager = uiManager;
         }
 
         // =========================================================
@@ -245,6 +252,15 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         public TutorialProgress GetProgress() => _runtime?.ToProgress(_activeStep?.Definition.chapterId);
         public bool IsStepActive(TutorialStepId stepId) => stepId != null && _activeStep?.Definition.stepId == stepId;
         public bool IsStepCompleted(TutorialStepId stepId) => _runtime?.IsStepCompleted(stepId) ?? false;
+        
+        public string GetStepTitleKey(TutorialStepId stepId)
+        {
+            if (stepId == null || _runtime == null)
+                return null;
+
+            var stepDef = _runtime.Definition.GetStep(stepId);
+            return stepDef?.presentation?.instructionTitleKey;
+        }
 
         // =========================================================
         // DEBUG API
@@ -319,15 +335,13 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 stepState.OnStepCompleted += HandleAsyncStepCompleted;
                 stepState.OnProgressChanged += HandleActiveStepProgressChanged;
                 stepState.OnGuidanceChanged += HandleActiveStepGuidanceChanged;
+                stepState.OnPanelChanged += HandleActivePanelChanged;
                 _activeStep = stepState;
                 _runtime.SetActiveStep(stepState);
 
                 _inputPolicyService.Apply(stepDef.presentation.inputPolicy);
-                // BuildEffectivePresentation, не stepDef.presentation напрямую — guidance
-                // (если у шага она есть) уже успела резолвить свой initial target внутри
-                // stepState.Start() выше, читаем его здесь синхронно (см.
-                // TutorialStepRuntimeState.CurrentGuidanceTarget докстринг).
                 _presentation.Show(BuildEffectivePresentation(stepState));
+                RefreshPanel(stepState);
                 _taskPresenter.ShowStep(stepState);
                 _analytics.StepStarted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
 
@@ -345,7 +359,11 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 objectiveStates.Add(new TutorialObjectiveRuntimeState(runtimeObjective, objDef.ObjectiveTypeId));
             }
 
-            return new TutorialStepRuntimeState(stepDef, objectiveStates, BuildGuidanceEntries(stepDef.guidance));
+            return new TutorialStepRuntimeState(
+                stepDef, 
+                objectiveStates, 
+                BuildGuidanceEntries(stepDef.guidance),
+                BuildPanelEntries(stepDef.guidance));
         }
 
         private List<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> BuildGuidanceEntries(
@@ -366,6 +384,21 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                     g.presentation?.arrowTargetId,
                     g.presentation?.cameraFocusTargetId);
                 list.Add((condition, target));
+            }
+            return list;
+        }
+        
+        private List<(ITutorialGuidanceCondition Condition, TutorialGuidancePanelDefinition Panel)> BuildPanelEntries(
+            List<TutorialGuidanceDefinition> guidanceDefs)
+        {
+            var list = new List<(ITutorialGuidanceCondition, TutorialGuidancePanelDefinition)>();
+            if (guidanceDefs == null) return list;
+
+            foreach (var g in guidanceDefs)
+            {
+                if (g.descriptionPanel == null || !g.descriptionPanel.enabled) continue;
+                var condition = _guidanceFactory.Create(g.condition);
+                list.Add((condition, g.descriptionPanel));
             }
             return list;
         }
@@ -436,7 +469,9 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             finishedState.OnStepCompleted -= HandleAsyncStepCompleted;
             finishedState.OnProgressChanged -= HandleActiveStepProgressChanged;
             finishedState.OnGuidanceChanged -= HandleActiveStepGuidanceChanged;
+            finishedState.OnPanelChanged -= HandleActivePanelChanged;
             _presentation.Hide();
+            _uiManager.ClosePopup(UIScreenId.TaskPopup);
             finishedState.Stop();
             _activeStep = null;
 
@@ -499,6 +534,30 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 default: // NextStep
                     return result.NextStepId;
             }
+        }
+        
+        private void HandleActivePanelChanged()
+        {
+            if (_activeStep == null) return;
+            RefreshPanel(_activeStep);
+        }
+
+        private void RefreshPanel(TutorialStepRuntimeState stepState)
+        {
+            var text = stepState.CurrentPanelText;
+
+            if (string.IsNullOrEmpty(text))
+            {
+                _uiManager.ClosePopup(UIScreenId.TaskPopup);
+                return;
+            }
+
+            var data = new TaskPopupData(
+                "",
+                text,
+                () => _activeStep?.DismissPanel()
+            );
+            _uiManager.OpenPopup(UIScreenId.TaskPopup, data);
         }
 
         private void CompleteCampaign()

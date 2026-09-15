@@ -570,7 +570,7 @@ namespace Galactic1
 
 
 
-        // техническая сцена
+        // техническая сцена, создается перед CoreRegistrations
         IEnumerator LoadAndStartGameplay()
         {
             yield return null;

@@ -316,7 +316,8 @@ namespace Galactic1
                 tutorialTaskPresenter,
                 new NullTutorialAnalytics(),
                 gameStateProvider,
-                gameStateProvider.GameStateProxy.Tutorial);
+                gameStateProvider.GameStateProxy.Tutorial,
+                ServiceLocator.Current.Get<UIManager>());
 
             rootContainer.RegisterInstance<ITutorialService>(tutorialService);
             rootContainer.RegisterInstance<ITutorialDebugService>(tutorialService);
@@ -324,6 +325,14 @@ namespace Galactic1
 #if UNITY_EDITOR
             ServiceLocator.Current.Register<ITutorialDebugService>(tutorialService);
 #endif
+            
+            // === Tutorial Target Gate (click-blocking until required step completed) ===
+            var tutorialTargetGateRegistry = configProvider.Get<TutorialTargetGateRegistry>();
+            var tutorialTargetGateService = new TutorialTargetGateService(
+                tutorialTargetGateRegistry,
+                tutorialService);
+            rootContainer.RegisterInstance<ITutorialTargetGateService>(tutorialTargetGateService);
+            ServiceLocator.Current.Register<ITutorialTargetGateService>(tutorialTargetGateService);
             
             // ===========================================================================
             

@@ -107,7 +107,6 @@ namespace Galactic1.Code.Systems.GameLoop.States
                                     var screen = _.GetComponent<Review>();
                                     screen.OnClosed += onDone;
                                     screen.OnShow();
-
                                 });
                         }
                     });
