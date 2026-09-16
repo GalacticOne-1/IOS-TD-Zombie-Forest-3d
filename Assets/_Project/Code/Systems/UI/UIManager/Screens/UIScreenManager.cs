@@ -82,7 +82,8 @@ namespace Galactic1.UI.Core
         public IEnumerator OpenScreen(UIScreenId id, object data = null, Action<GameObject> onShow = null)
         {
             // Закрываем все активные экраны (можно изменить для multi-layer)
-            foreach (var s in activeScreens.Values)
+            var cash = activeScreens.Values.ToList();
+            foreach (var s in cash)
             {
                 s.OnHide();
                 //Destroy(s.gameObject);

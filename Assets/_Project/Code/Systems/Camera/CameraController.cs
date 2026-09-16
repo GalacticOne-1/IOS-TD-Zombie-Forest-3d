@@ -173,21 +173,40 @@ namespace Galactic1.Code.Cameras
             ServiceLocator.Current.Get<MonoBehaviourMaster>().update.Remove(this);
         }
 
+        // public void UpdateM()
+        // {
+        //     // * что бы зум отработал при входе в режим строительства
+        //     if (_constructionModeZoom)
+        //     {
+        //         HandleZoom();
+        //     }
+        //     
+        //     UpdateTilt();
+        //     
+        //     if (CanProcessInput())
+        //     {
+        //         if(!_constructionModeZoom)
+        //         HandleZoom();
+        //
+        //         HandleMouseDrag();
+        //
+        //         if (!isDragging)
+        //             ApplyInertia();
+        //
+        //         ApplyMovement();
+        //     }
+        // }
+        
         public void UpdateM()
         {
-            // * что бы зум отработал при входе в режим строительства
-            if (_constructionModeZoom)
-            {
-                HandleZoom();
-            }
-            
+            // Автоматическое движение камеры к targetZoomDistance
+            UpdateZoom();
+
             UpdateTilt();
-            
+
             if (CanProcessInput())
             {
-                if(!_constructionModeZoom)
-                HandleZoom();
-
+                HandleZoomInput();
                 HandleMouseDrag();
 
                 if (!isDragging)
@@ -311,6 +330,60 @@ namespace Galactic1.Code.Cameras
 
             // Плавное движение к целевому зуму
             var localPos = trPivot.localPosition;
+            localPos.y = Mathf.SmoothDamp(
+                localPos.y,
+                targetZoomDistance,
+                ref zoomVelocity,
+                config.ZoomSmoothTime
+            );
+
+            trPivot.localPosition = localPos;
+        }
+        
+        private void HandleZoomInput()
+        {
+            float zoomInput = 0f;
+            isPinching = false;
+
+#if UNITY_EDITOR || UNITY_STANDALONE
+            zoomInput = Input.GetAxis("Mouse ScrollWheel") * config.ZoomSpeed;
+#endif
+
+#if UNITY_IOS || UNITY_ANDROID
+            if (Input.touchCount == 2)
+            {
+                t0 = Input.GetTouch(0);
+                t1 = Input.GetTouch(1);
+
+                t0Prev = t0.position - t0.deltaPosition;
+                t1Prev = t1.position - t1.deltaPosition;
+
+                prevDistance = Vector2.Distance(t0Prev, t1Prev);
+                currDistance = Vector2.Distance(t0.position, t1.position);
+
+                pinchDelta = currDistance - prevDistance;
+                zoomInput = pinchDelta * config.PinchZoomSpeed;
+
+                isPinching = true;
+                isDragging = false;
+                velocity = Vector3.zero;
+            }
+#endif
+
+            if (Mathf.Abs(zoomInput) > 0.01f)
+            {
+                targetZoomDistance = Mathf.Clamp(
+                    targetZoomDistance - zoomInput,
+                    config.MinZoom,
+                    _runtimeMaxZoom
+                );
+            }
+        }
+        
+        private void UpdateZoom()
+        {
+            var localPos = trPivot.localPosition;
+
             localPos.y = Mathf.SmoothDamp(
                 localPos.y,
                 targetZoomDistance,
@@ -526,13 +599,15 @@ namespace Galactic1.Code.Cameras
         {
             _cachedZoomDistance = targetZoomDistance;
 
-            targetZoomDistance = Mathf.Clamp(zoomDistance, config.MinZoom, config.MaxZoom);
+            targetZoomDistance = Mathf.Clamp(
+                zoomDistance,
+                config.MinZoom,
+                config.MaxZoom
+            );
+
             targetTilt = config.ConstructionTilt;
-            
-            // 🔹 увеличиваем максимальный зум
             _runtimeMaxZoom = config.ConstructionMaxZoom;
-            
-            // 🔹 Включаем автономный зум
+
             _constructionModeZoom = true;
         }
 
@@ -541,8 +616,8 @@ namespace Galactic1.Code.Cameras
             targetZoomDistance = _cachedZoomDistance;
             targetTilt = config.DefaultTilt;
             _runtimeMaxZoom = config.MaxZoom;
-            
-            // 🔹 Отключаем автономный зум
+
+            zoomVelocity = 0f;
             _constructionModeZoom = false;
         }
         

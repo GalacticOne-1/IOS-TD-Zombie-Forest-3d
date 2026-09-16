@@ -26,6 +26,9 @@ namespace Galactic1.Code.UI.Construction
         private readonly List<ConstructionFacilityCardView> _cards = new();
         private readonly List<FacilityModule> _facilities = new();
 
+        public IReadOnlyList<ConstructionFacilityCardView> Cards => _cards;
+        public event Action OnRebuilt;
+
 
         public void Build(
             DIContainer container,
@@ -72,7 +75,7 @@ namespace Galactic1.Code.UI.Construction
                 _cards.Add(card);
             }
 
-
+            OnRebuilt?.Invoke();
         }
 
         public void Filter(ConstructionCategory category)

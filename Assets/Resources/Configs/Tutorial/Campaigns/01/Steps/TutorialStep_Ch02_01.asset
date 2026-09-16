@@ -17,7 +17,8 @@ MonoBehaviour:
   analyticsStepIndex: 0
   objectives:
     mode: 0
-    objectives: []
+    objectives:
+    - {fileID: 11400000, guid: 0b7e4ecb24dbb462c8714b6904cf32b0, type: 2}
   presentation:
     instructionTitleKey: Contruction
     instructionDesKey: construct the ammunition station
@@ -29,11 +30,46 @@ MonoBehaviour:
       requireFree: 1
       filterByLevel: 0
       requiredLevel: 1
+    highlightFacilityItemId: {fileID: 0}
     arrowTargetId: {fileID: 0}
     dialogueId: 
     cameraFocusTargetId: {fileID: 0}
     inputPolicy: 0
-  guidance: []
+  guidance:
+  - condition: {fileID: 11400000, guid: 6e1288eda30524af8a2e29612fa7d228, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightMode: 1
+      highlightTargetId: {fileID: 11400000, guid: 324bc5d5b92db4914a3a9af992ff54dd, type: 2}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 0
+        filterByLevel: 0
+        requiredLevel: 0
+      highlightFacilityItemId: {fileID: 0}
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 0}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightMode: 5
+      highlightTargetId: {fileID: 0}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 0
+        filterByLevel: 0
+        requiredLevel: 0
+      highlightFacilityItemId: {fileID: 11400000, guid: d05e468fa6c494f4eaa0df4c13d39e44, type: 2}
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
   reward:
     items: []
   transitions: []

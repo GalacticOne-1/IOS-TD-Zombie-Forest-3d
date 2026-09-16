@@ -280,7 +280,10 @@ namespace Galactic1
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
-                tutorialGameStateQuery);
+                tutorialGameStateQuery,
+                tutorialGameStateQuery); // ITutorialConstructionQuery — тот же query-инстанс,
+                                          // что и остальные семь параметров (см. её докстринг
+                                          // про единственную реализацию нескольких узких интерфейсов)
 
             var tutorialCheckpointService = new TutorialCheckpointService();
             var tutorialInputPolicyService = new TutorialInputPolicyService(interactionPolicy);
@@ -292,12 +295,16 @@ namespace Galactic1
             var inventorySlotTargetProvider = new TaskInventorySlotTargetProvider(inventoryViewRegistry);
             var inboxSlotTargetProvider = new TaskInboxSlotTargetProvider(inboxViewRegistry);
             var tutorialUnitSlotProvider = new TutorialUnitSlotTargetProvider(gameSession.GameLoopContext);
+            var tutorialFacilitySlotProvider = new ConstructionFacilitySlotTargetProvider();
+            var tutorialConstructionTabSlotProvider = new ConstructionTabSlotTargetProvider();
 
             var tutorialPresentationService = new TutorialPresentationService(
                 tutorialTargetRegistry,
                 inventorySlotTargetProvider,
                 inboxSlotTargetProvider,
-                tutorialUnitSlotProvider);
+                tutorialUnitSlotProvider,
+                tutorialFacilitySlotProvider,
+                tutorialConstructionTabSlotProvider);
             rootContainer.RegisterInstance(tutorialPresentationService);
             ServiceLocator.Current.Register(tutorialPresentationService);
 

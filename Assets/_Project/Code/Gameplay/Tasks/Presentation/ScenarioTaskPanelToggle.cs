@@ -5,24 +5,17 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
     /// <summary>
     /// Управляет ручным открытием/закрытием ScenarioTaskPanel.
     ///
-    /// Не содержит никакой логики самих задач и не вмешивается
+    /// Не содержит логики самих задач и не вмешивается
     /// в lifecycle ScenarioTaskPanel.
     ///
-    /// Для корректной работы panelRoot должен быть отдельным
-    /// контейнером с CanvasGroup, внутри которого находится ScenarioTaskPanel.
+    /// PanelRoot — отдельный контейнер с CanvasGroup.
     ///
     /// OpenButton  — показывается, когда панель скрыта.
     /// CloseButton — показывается, когда панель открыта.
     ///
-    /// Обе кнопки используют один Toggle().
-    ///
-    /// Важно: если в момент нажатия OpenButton открыт обычный UIScreen,
-    /// ScenarioTaskPanel сама держит свой внутренний CanvasGroup на alpha=0
-    /// (см. ScenarioTaskPanel.OnScreenOpened -> HideImmediate()).
-    /// В этом случае контейнер станет видимым (alpha=1), но итоговая
-    /// видимость на экране всё равно будет 0, т.к. она — произведение
-    /// alpha контейнера и alpha самой панели. Это ожидаемое поведение:
-    /// ручной toggle работает только тогда, когда нет открытых экранов.
+    /// Внешняя ScenarioTaskPanel управляет только собственной
+    /// visibility-логикой и может принудительно свернуть/развернуть
+    /// эту панель через ForceHidePanel / ForceShowPanel.
     /// </summary>
     public sealed class ScenarioTaskPanelToggle : MonoBehaviour
     {
@@ -31,10 +24,23 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
 
         [Header("Buttons")] 
         [SerializeField] private GameObject buttonsRoot;
+
         [SerializeField] private GameObject openButton;
+
         [SerializeField] private GameObject closeButton;
 
+
         private bool _isOpen = true;
+
+
+        /// <summary>
+        /// Текущее ручное состояние панели.
+        ///
+        /// true  — панель развёрнута.
+        /// false — панель свёрнута.
+        /// </summary>
+        public bool IsOpen => _isOpen;
+
 
         private void Awake()
         {
@@ -48,12 +54,21 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
         }
 
 
-        public void RootButtons(bool show) 
-            => buttonsRoot.SetActive(show);
+        /// <summary>
+        /// Управляет видимостью контейнера кнопок.
+        ///
+        /// ScenarioTaskPanel вызывает этот метод, когда
+        /// обычные экраны открываются/закрываются.
+        /// </summary>
+        public void RootButtons(bool show)
+        {
+            if (buttonsRoot != null)
+                buttonsRoot.SetActive(show);
+        }
 
 
         /// <summary>
-        /// Переключает состояние панели.
+        /// Переключает ручное состояние панели.
         ///
         /// Open  -> Closed
         /// Closed -> Open
@@ -65,30 +80,71 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
             ApplyState();
         }
 
+
+        /// <summary>
+        /// Принудительно разворачивает панель.
+        ///
+        /// Используется ScenarioTaskPanel при activity задачи.
+        ///
+        /// Не зависит от текущего состояния _isOpen.
+        /// </summary>
+        public void ForceShowPanel()
+        {
+            _isOpen = true;
+
+            ApplyState();
+
+            /*
+             * Во время автоматического показа задач
+             * кнопки ручного управления не нужны.
+             */
+            RootButtons(false);
+        }
+
+
+        /// <summary>
+        /// Принудительно сворачивает панель.
+        ///
+        /// Используется когда список задач пуст.
+        ///
+        /// OpenButton остаётся активным.
+        /// CloseButton скрывается.
+        /// </summary>
+        public void ForceHidePanel()
+        {
+            _isOpen = false;
+
+            ApplyState();
+
+            /*
+             * Кнопка открытия должна быть доступна,
+             * даже когда задач нет.
+             */
+            RootButtons(true);
+        }
+
+
         private void ApplyState()
         {
             if (panelRoot != null)
             {
-                panelRoot.alpha = _isOpen ? 1 : 0;
+                panelRoot.alpha = _isOpen ? 1f : 0f;
+
                 panelRoot.interactable = _isOpen;
+
                 panelRoot.blocksRaycasts = _isOpen;
             }
 
+
             if (openButton != null)
-                openButton.gameObject.SetActive(!_isOpen);
+                openButton.SetActive(!_isOpen);
+
 
             if (closeButton != null)
-                closeButton.gameObject.SetActive(_isOpen);
+                closeButton.SetActive(_isOpen);
+
 
             RootButtons(true);
-        }
-
-        public void ForceShowPanel()
-        {
-            if (!_isOpen)
-                Toggle();
-
-            RootButtons(false);
         }
     }
 }

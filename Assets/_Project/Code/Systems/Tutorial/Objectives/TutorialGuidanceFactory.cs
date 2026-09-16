@@ -24,7 +24,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             IGameLoopStateQuery gameLoop,
             ITutorialSquadQuery squad,
             ITutorialInventoryInteractionQuery interaction,
-            ITutorialFacilityPanelQuery facilityPanel)
+            ITutorialFacilityPanelQuery facilityPanel,
+            ITutorialConstructionQuery construction)
         {
             
             Register<UIScreenOpenGuidanceConditionDefinition>(
@@ -56,6 +57,10 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             // facility
             Register<FacilityPanelOpenGuidanceConditionDefinition>(
                 d => new FacilityPanelOpenGuidanceCondition(facilityPanel, d.facilityType, d.expectedOpen));
+
+            // construction
+            Register<FacilityBuiltGuidanceConditionDefinition>(
+                d => new FacilityBuiltGuidanceCondition(construction, d.itemId, d.expectedBuilt));
         }
 
         private void Register<TDef>(Func<TDef, ITutorialGuidanceCondition> factory)

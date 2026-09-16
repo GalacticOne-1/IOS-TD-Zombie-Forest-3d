@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Code.UI.Construction;
 using Galactic1.Mobile.EventBus;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
@@ -13,6 +15,8 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         private readonly ITutorialItemSlotTargetProvider _inventorySlotProvider;
         private readonly ITutorialItemSlotTargetProvider _inboxSlotProvider;
         private readonly ITutorialUnitSlotTargetProvider _unitSlotProvider;
+        private readonly ITutorialFacilitySlotTargetProvider _facilitySlotProvider;
+        private readonly ITutorialConstructionTabTargetProvider _constructionTabSlotProvider;
 
         private ITutorialPresentationRenderer _renderer;
         private TutorialPresentationDefinition _activeDefinition;
@@ -23,12 +27,16 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             TutorialTargetRegistry targetRegistry,
             ITutorialItemSlotTargetProvider inventorySlotProvider, 
             ITutorialItemSlotTargetProvider inboxSlotProvider,
-            ITutorialUnitSlotTargetProvider unitSlotProvider)
+            ITutorialUnitSlotTargetProvider unitSlotProvider,
+            ITutorialFacilitySlotTargetProvider facilitySlotProvider,
+            ITutorialConstructionTabTargetProvider constructionTabSlotProvider)
         {
             _targetRegistry = targetRegistry;
             _inventorySlotProvider = inventorySlotProvider;
             _inboxSlotProvider = inboxSlotProvider;
             _unitSlotProvider = unitSlotProvider;
+            _facilitySlotProvider = facilitySlotProvider;
+            _constructionTabSlotProvider = constructionTabSlotProvider;
         }
 
         public void Show(TutorialPresentationDefinition presentation)
@@ -81,6 +89,23 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
                     ResolveItemTarget(_inventorySlotProvider, presentation.highlightItemId,
                         _renderer.RenderHighlight, _renderer.ClearHighlight);
                     SubscribeInventoryHighlightRetrigger(presentation.highlightItemId);
+                    break;
+                case HighlightMode.FacilityCard:
+                    ResolveFacilityTarget(presentation.highlightFacilityItemId,
+                        _renderer.RenderHighlight, _renderer.ClearHighlight);
+                    SubscribeFacilityHighlightRetrigger(presentation.highlightFacilityItemId);
+                    break;
+                case HighlightMode.ConstructionTab:
+                    if (presentation.highlightConstructionTabCategory.HasValue)
+                    {
+                        ResolveConstructionTabTarget(presentation.highlightConstructionTabCategory.Value,
+                            _renderer.RenderHighlight, _renderer.ClearHighlight);
+                        SubscribeConstructionTabHighlightRetrigger(presentation.highlightConstructionTabCategory.Value);
+                    }
+                    else
+                    {
+                        _renderer.ClearHighlight();
+                    }
                     break;
                 case HighlightMode.FixedTarget:
                     ResolveTarget(presentation.highlightTargetId, _renderer.RenderHighlight, _renderer.ClearHighlight);
@@ -136,6 +161,58 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             _pendingTargetUnsubs.Add(() => EventBus<FacilityPanelOpenedEvent>.Deregister(binding));
         }
 
+        /// <summary>
+        /// Карточки панели строительства пересоздаются целиком на каждый Rebind() (Clear()
+        /// + Build(), см. ConstructionPanelController.Rebind/FacilityListView.Build) — то
+        /// есть чаще, чем у инвентаря/инбокса, где сам слот стабилен и меняется только его
+        /// содержимое. Поэтому ретриггер подписан не на EventBus-событие, а напрямую на
+        /// FacilityListView.OnRebuilt того же инстанса, что резолвил нас изначально —
+        /// тот же generation-защищённый lifecycle, что у остальных Subscribe*-методов.
+        /// Панель ещё не открыта / не существует на сцене — валидный fallback "нечего
+        /// пересчитывать", подписки просто не будет (первый показ и так вызовет
+        /// ResolveFacilityTarget с тем же итогом "не найдено").
+        /// </summary>
+        private void SubscribeFacilityHighlightRetrigger(ItemId itemId)
+        {
+            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+            var listView = controller?.View?.ListView;
+            if (listView == null) return;
+
+            int capturedGeneration = _generation;
+            void Handler()
+            {
+                if (capturedGeneration != _generation) return;
+                if (_renderer == null) return;
+                ResolveFacilityTarget(itemId, _renderer.RenderHighlight, _renderer.ClearHighlight);
+            }
+            listView.OnRebuilt += Handler;
+            _pendingTargetUnsubs.Add(() => listView.OnRebuilt -= Handler);
+        }
+
+        /// <summary>
+        /// Кнопки вкладок пересоздаются целиком на каждый ConstructionPanelView.BuildTabs()
+        /// (вызывается из Bind(), то есть на каждый Rebind() панели) — тот же принцип, что
+        /// у SubscribeFacilityHighlightRetrigger, только источник события — ConstructionPanelView,
+        /// а не FacilityListView (вкладки и карточки пересоздаются раздельно, каждая своим
+        /// методом, см. ConstructionPanelView.Bind: BuildTabs() и listView.Build()).
+        /// </summary>
+        private void SubscribeConstructionTabHighlightRetrigger(ConstructionCategory category)
+        {
+            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+            var view = controller?.View;
+            if (view == null) return;
+
+            int capturedGeneration = _generation;
+            void Handler()
+            {
+                if (capturedGeneration != _generation) return;
+                if (_renderer == null) return;
+                ResolveConstructionTabTarget(category, _renderer.RenderHighlight, _renderer.ClearHighlight);
+            }
+            view.OnTabsRebuilt += Handler;
+            _pendingTargetUnsubs.Add(() => view.OnTabsRebuilt -= Handler);
+        }
+
         private void ResolveTarget(TutorialTargetId targetId, Action<ITutorialTarget> onFound, Action onEmpty)
         {
             if (targetId == null) { onEmpty(); return; }
@@ -187,6 +264,26 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             Action<ITutorialTarget> onFound, Action onEmpty)
         {
             if (provider != null && provider.TryGetSlotTarget(itemId, out var target))
+                onFound(target);
+            else
+                onEmpty();
+        }
+
+        /// <summary>Синхронный live-резолв "карточка здания X в панели строительства сейчас" —
+        /// тот же принцип, что ResolveItemTarget/ResolveUnitTarget.</summary>
+        private void ResolveFacilityTarget(ItemId itemId, Action<ITutorialTarget> onFound, Action onEmpty)
+        {
+            if (_facilitySlotProvider != null && _facilitySlotProvider.TryGetFacilityTarget(itemId, out var target))
+                onFound(target);
+            else
+                onEmpty();
+        }
+
+        /// <summary>Синхронный live-резолв "кнопка вкладки категории X сейчас на сцене" —
+        /// тот же принцип, что ResolveFacilityTarget/ResolveItemTarget.</summary>
+        private void ResolveConstructionTabTarget(ConstructionCategory category, Action<ITutorialTarget> onFound, Action onEmpty)
+        {
+            if (_constructionTabSlotProvider != null && _constructionTabSlotProvider.TryGetTabTarget(category, out var target))
                 onFound(target);
             else
                 onEmpty();

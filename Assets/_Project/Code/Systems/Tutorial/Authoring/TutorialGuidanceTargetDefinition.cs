@@ -1,5 +1,6 @@
 using System;
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Systems.Construction.Configs;
 using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
@@ -13,9 +14,10 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     /// случайно задать разную инструкцию/входную политику для разных guidance-вариантов
     /// одного и того же шага, что архитектурно не имеет смысла.
     ///
-    /// highlightTargetId / highlightItemId — две АЛЬТЕРНАТИВНЫЕ стратегии резолва highlight:
-    /// фиксированный UI-элемент (TutorialTargetRegistry) или "слот, где сейчас лежит предмет
-    /// X" (ITutorialItemSlotTargetProvider, живой resolve на каждый показ). Взаимоисключимы —
+    /// highlightTargetId / highlightItemId / highlightFacilityItemId — АЛЬТЕРНАТИВНЫЕ
+    /// стратегии резолва highlight: фиксированный UI-элемент (TutorialTargetRegistry) или
+    /// "слот/карточка, где сейчас лежит X" (живой resolve на каждый показ через
+    /// ITutorialItemSlotTargetProvider / ITutorialFacilitySlotTargetProvider). Взаимоисключимы —
     /// см. Validate.
     /// </summary>
     [Serializable]
@@ -43,6 +45,17 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
                  "TutorialUnitSearchCriteria.")]
         public TutorialUnitSearchCriteria highlightUnitSearch;
 
+        [Tooltip("Взаимоисключимо с остальными highlight*-полями. Highlight карточки здания " +
+                 "в панели строительства для этого facility item id — резолвится через " +
+                 "ITutorialFacilitySlotTargetProvider (см. её докстринг).")]
+        public ItemId highlightFacilityItemId;
+
+        [Tooltip("Взаимоисключимо с остальными highlight*-полями. Highlight кнопки вкладки " +
+                 "этой категории в панели строительства — резолвится через " +
+                 "ITutorialConstructionTabTargetProvider (см. её докстринг). Nullable по той " +
+                 "же причине, что и в TutorialPresentationDefinition — 0 (All) валидная категория.")]
+        public ConstructionCategory? highlightConstructionTabCategory;
+
         [Tooltip("Оставь пустым, если для этого guidance-варианта стрелка не нужна.")]
         public TutorialTargetId arrowTargetId;
 
@@ -56,6 +69,8 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
             || highlightItemId != null
             || highlightInboxItemId != null
             || highlightUnitSearch != null
+            || highlightFacilityItemId != null
+            || highlightConstructionTabCategory.HasValue
             || arrowTargetId != null
             || cameraFocusTargetId != null;
 
@@ -67,12 +82,15 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
                 (highlightItemId != null ? 1 : 0) +
                 (highlightInboxItemId != null ? 1 : 0) +
                 (highlightUnitSearch != null ? 1 : 0) +
+                (highlightFacilityItemId != null ? 1 : 0) +
+                (highlightConstructionTabCategory.HasValue ? 1 : 0) +
                 (cameraFocusTargetId != null ? 1 : 0);
 
             if (highlightModeCount > 1)
             {
                 error =
-                    "highlightTargetId, highlightItemId и highlightInboxItemId взаимоисключимы — задай только одно.";
+                    "highlightTargetId, highlightItemId, highlightInboxItemId, highlightFacilityItemId и " +
+                    "highlightConstructionTabCategory взаимоисключимы — задай только одно.";
                 return false;
             }
 

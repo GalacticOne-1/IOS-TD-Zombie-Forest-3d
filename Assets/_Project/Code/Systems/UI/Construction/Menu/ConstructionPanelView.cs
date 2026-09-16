@@ -23,6 +23,20 @@ namespace Galactic1.Code.UI.Construction
         
         public RectTransform TabRoot => tabRoot;
 
+        /// <summary>Читается Tutorial.Presentation.ConstructionFacilitySlotTargetProvider
+        /// для доступа к живому списку карточек (см. её докстринг).</summary>
+        public FacilityListView ListView => listView;
+
+        /// <summary>Текущие кнопки вкладок — читается Tutorial.Presentation.
+        /// ConstructionTabSlotTargetProvider для живого поиска кнопки по
+        /// ConstructionTabButtonView.Category (см. её докстринг).</summary>
+        public IReadOnlyList<ConstructionTabButtonView> Tabs => _tabs;
+
+        /// <summary>Вкладки пересозданы целиком (ClearTabs + BuildTabs) — сигнал ретриггера
+        /// для TutorialPresentationService.SubscribeConstructionTabHighlightRetrigger: старые
+        /// ссылки на кнопки в её резолве больше не валидны, нужно резолвить заново.</summary>
+        public event Action OnTabsRebuilt;
+
         private List<ConstructionCategoryConfig> _categories;
         
 
@@ -73,6 +87,8 @@ namespace Galactic1.Code.UI.Construction
 
                 _tabs.Add(tab);
             }
+
+            OnTabsRebuilt?.Invoke();
         }
 
         private void OnTabSelected(ConstructionCategory category)

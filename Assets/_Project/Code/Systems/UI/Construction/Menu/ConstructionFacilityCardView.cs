@@ -36,6 +36,8 @@ namespace Galactic1.Code.UI.Construction
         private ConstructionRequirementService _requirementService;
         private FacilityModule _facility;
         private Action<FacilityModule> _onSelected;
+        
+        public FacilityModule Facility => _facility;
 
         /// <summary>
         /// Инициализация карточки

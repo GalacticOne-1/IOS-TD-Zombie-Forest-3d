@@ -382,7 +382,9 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                     g.presentation?.highlightInboxItemId,
                     g.presentation?.highlightUnitSearch,
                     g.presentation?.arrowTargetId,
-                    g.presentation?.cameraFocusTargetId);
+                    g.presentation?.cameraFocusTargetId,
+                    g.presentation?.highlightFacilityItemId,
+                    g.presentation?.highlightConstructionTabCategory);
                 list.Add((condition, target));
             }
             return list;
@@ -434,6 +436,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 highlightItemId = hasGuidance ? guidanceTarget?.HighlightItemId : authored.highlightItemId,
                 highlightInboxItemId = hasGuidance ? guidanceTarget?.HighlightInboxItemId : authored.highlightInboxItemId,
                 highlightUnitSearch = hasGuidance ? guidanceTarget?.HighlightUnitSearch : authored.highlightUnitSearch,
+                highlightFacilityItemId = hasGuidance ? guidanceTarget?.HighlightFacilityItemId : authored.highlightFacilityItemId,
+                highlightConstructionTabCategory = hasGuidance ? guidanceTarget?.HighlightConstructionTabCategory : authored.highlightConstructionTabCategory,
                 arrowTargetId = hasGuidance ? guidanceTarget?.ArrowTargetId : authored.arrowTargetId,
                 cameraFocusTargetId = hasGuidance ? guidanceTarget?.CameraFocusTargetId : authored.cameraFocusTargetId,
             };

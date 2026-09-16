@@ -6,21 +6,20 @@ using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.UI.Inventory;
-using Galactic1.Configs;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
 using Galactic1.UI.Core;
-using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Objectives
 {
     /// <summary>
-    /// Единственная реализация четырёх узких интерфейсов (IGameLoopStateQuery,
-    /// ITutorialInventoryQuery, ITutorialSquadQuery, ITutorialUIStateQuery) — один класс
-    /// резолвит GameLoopContext/GameLoopStateMachine/UIScreenManager через конструктор
-    /// и ленивый ServiceLocator lookup, но каждый объектив/guidance condition принимает
-    /// только тот интерфейс, который ему реально нужен (не God-интерфейс).
+    /// Единственная реализация пяти узких интерфейсов (IGameLoopStateQuery,
+    /// ITutorialInventoryQuery, ITutorialSquadQuery, ITutorialUIStateQuery,
+    /// ITutorialConstructionQuery) — один класс резолвит GameLoopContext/
+    /// GameLoopStateMachine/UIScreenManager через конструктор и ленивый ServiceLocator
+    /// lookup, но каждый объектив/guidance condition принимает только тот интерфейс,
+    /// который ему реально нужен (не God-интерфейс).
     /// </summary>
     public sealed class TutorialGameStateQuery :
         IGameLoopStateQuery, 
@@ -29,7 +28,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         ITutorialSquadQuery, 
         ITutorialUIStateQuery,
         ITutorialFacilityPanelQuery,
-        ITutorialInventoryInteractionQuery
+        ITutorialInventoryInteractionQuery,
+        ITutorialConstructionQuery
     {
         private readonly GameLoopContext _context;
         private readonly GameLoopStateMachine _stateMachine;
@@ -65,6 +65,12 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                 if (e.ScreenId == UIScreenId.FacilityPanel)
                     _openFacilityType = null;
             }));
+
+            // === ITutorialConstructionQuery: OnBuildingCreated — плоский C#-event
+            // GameLoopContext, тот же приём, что уже используется для OnUnitCreated в
+            // RecruitCompletedObjective. Оборачиваем в Action<ItemId>, чтобы guidance
+            // condition не знал про BaseCampFacilityRuntime.
+            _context.OnBuildingCreated += runtime => OnFacilityBuilt?.Invoke((ItemId)runtime.Config.Item.Id);
 
             // === активация по одноразовому событию старта игры ===
             EventBus<StartGameEvent>.Register(new EventBinding<StartGameEvent>(() =>
@@ -197,6 +203,17 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             var window = ServiceLocator.Current.Get<InventoryManagementWindow>();
             var dragged = window?.Drag?.DraggedItemId;
             return dragged != null && (itemId == null || dragged == itemId);
+        }
+
+        // ── ITutorialConstructionQuery ────────────────────────────────────
+        public event Action<ItemId> OnFacilityBuilt;
+
+        public bool HasFacilityBuilt(ItemId itemId)
+        {
+            foreach (var facility in _context.Facilities)
+                if (itemId == null || facility.Config.Item.Id == itemId)
+                    return true;
+            return false;
         }
     }
 }

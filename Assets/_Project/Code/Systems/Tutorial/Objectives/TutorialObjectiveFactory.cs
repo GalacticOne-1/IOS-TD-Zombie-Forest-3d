@@ -43,6 +43,7 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             Register<TargetSelectedObjectiveDefinition>(_ => new TargetSelectedObjective());
             Register<WeaponFiredObjectiveDefinition>(_ => new WeaponFiredObjective());
             Register<RecruitCompletedObjectiveDefinition>(_ => new RecruitCompletedObjective(gameLoopContext));
+            Register<FacilityBuiltObjectiveDefinition>(d => new FacilityBuiltObjective(gameLoopContext, d.itemId));
         }
 
         private void Register<TDef>(Func<TDef, ITutorialObjective> factory) where TDef : TutorialObjectiveDefinition

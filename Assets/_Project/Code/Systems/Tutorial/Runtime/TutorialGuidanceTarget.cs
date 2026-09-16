@@ -1,4 +1,5 @@
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 
 namespace Galactic1.Code.Systems.Tutorial.Runtime
@@ -10,10 +11,10 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     /// голые поля, чтобы TutorialGuidanceRuntimeState могла сравнивать "старый/новый
     /// resolved target" одной ссылкой (см. её докстринг про dedupe).
     ///
-    /// HighlightTargetId / HighlightItemId — взаимоисключимые альтернативные способы
-    /// резолва highlight (см. TutorialGuidanceTargetDefinition докстринг): фиксированный
-    /// таргет из реестра или "слот, где сейчас лежит предмет X", резолвится заново на
-    /// каждый показ в TutorialPresentationService.
+    /// HighlightTargetId / HighlightItemId / HighlightFacilityItemId — взаимоисключимые
+    /// альтернативные способы резолва highlight (см. TutorialGuidanceTargetDefinition
+    /// докстринг): фиксированный таргет из реестра или "слот/карточка, где сейчас лежит X",
+    /// резолвится заново на каждый показ в TutorialPresentationService.
     /// </summary>
     public sealed class TutorialGuidanceTarget
     {
@@ -22,6 +23,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         public readonly ItemId HighlightItemId;
         public readonly ItemId HighlightInboxItemId;
         public readonly TutorialUnitSearchCriteria HighlightUnitSearch;
+        public readonly ItemId HighlightFacilityItemId;
+        public readonly ConstructionCategory? HighlightConstructionTabCategory;
         public readonly TutorialTargetId ArrowTargetId;
         public readonly TutorialTargetId CameraFocusTargetId;
 
@@ -32,13 +35,17 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             ItemId highlightInboxItemId, 
             TutorialUnitSearchCriteria highlightUnitSearch,
             TutorialTargetId arrowTargetId,
-            TutorialTargetId cameraFocusTargetId)
+            TutorialTargetId cameraFocusTargetId,
+            ItemId highlightFacilityItemId = null,
+            ConstructionCategory? highlightConstructionTabCategory = null)
         {
             HighlightMode = highlightMode;
             HighlightTargetId = highlightTargetId;
             HighlightItemId = highlightItemId;
             HighlightInboxItemId = highlightInboxItemId;
             HighlightUnitSearch = highlightUnitSearch;
+            HighlightFacilityItemId = highlightFacilityItemId;
+            HighlightConstructionTabCategory = highlightConstructionTabCategory;
             ArrowTargetId = arrowTargetId;
             CameraFocusTargetId = cameraFocusTargetId;
         }

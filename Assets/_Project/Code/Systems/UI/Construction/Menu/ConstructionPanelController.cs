@@ -22,6 +22,8 @@ namespace Galactic1.Code.UI.Construction
         [SerializeField] private GameObject bClose;
         [SerializeField] private ConstructionPanelView view;
 
+        
+        public ConstructionPanelView View => view;
 
         private ConstructionModeController _constructionController;
         private ConstructionRequirementService _requirementService;
