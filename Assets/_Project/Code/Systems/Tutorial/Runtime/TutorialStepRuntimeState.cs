@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Code.Systems.Tutorial.Presentation;
 
 namespace Galactic1.Code.Systems.Tutorial.Runtime
 {

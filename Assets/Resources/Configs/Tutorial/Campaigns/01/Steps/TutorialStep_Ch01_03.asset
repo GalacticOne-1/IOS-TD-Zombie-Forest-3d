@@ -22,20 +22,14 @@ MonoBehaviour:
   presentation:
     instructionTitleKey: Recruit a Survivor
     instructionDesKey: Open the Tavern and recruit any available survivor.
-    highlightMode: 0
-    highlightTargetId: {fileID: 0}
-    highlightItemId: {fileID: 0}
-    highlightInboxItemId: {fileID: 0}
-    highlightUnitSearch:
-      requireFree: 1
-      filterByLevel: 0
-      requiredLevel: 1
-    arrowTargetId: {fileID: 0}
     dialogueId: 
-    cameraFocusTargetId: {fileID: 0}
     inputPolicy: 0
   guidance:
   - condition: {fileID: 11400000, guid: 0b09e2f0c9fdb49b0b4d97aabb3d02e6, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 1
     presentation:
       highlightMode: 1
       highlightTargetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
@@ -45,6 +39,9 @@ MonoBehaviour:
         requireFree: 1
         filterByLevel: 0
         requiredLevel: 1
+      highlightFacilityItemId: {fileID: 0}
+      highlightTarget:
+        rid: 2031039145713860608
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:
@@ -60,3 +57,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 2031039145713860608
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}

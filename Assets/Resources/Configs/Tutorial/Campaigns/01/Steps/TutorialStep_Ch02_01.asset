@@ -22,18 +22,7 @@ MonoBehaviour:
   presentation:
     instructionTitleKey: Contruction
     instructionDesKey: construct the ammunition station
-    highlightMode: 0
-    highlightTargetId: {fileID: 0}
-    highlightItemId: {fileID: 0}
-    highlightInboxItemId: {fileID: 0}
-    highlightUnitSearch:
-      requireFree: 1
-      filterByLevel: 0
-      requiredLevel: 1
-    highlightFacilityItemId: {fileID: 0}
-    arrowTargetId: {fileID: 0}
     dialogueId: 
-    cameraFocusTargetId: {fileID: 0}
     inputPolicy: 0
   guidance:
   - condition: {fileID: 11400000, guid: 6e1288eda30524af8a2e29612fa7d228, type: 2}
@@ -51,9 +40,30 @@ MonoBehaviour:
         filterByLevel: 0
         requiredLevel: 0
       highlightFacilityItemId: {fileID: 0}
+      highlightTarget:
+        rid: 2031039145738764288
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
-  - condition: {fileID: 0}
+  - condition: {fileID: 11400000, guid: f53a911a8b61644fda252735f16f84f5, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightMode: 6
+      highlightTargetId: {fileID: 0}
+      highlightItemId: {fileID: 0}
+      highlightInboxItemId: {fileID: 0}
+      highlightUnitSearch:
+        requireFree: 0
+        filterByLevel: 0
+        requiredLevel: 0
+      highlightFacilityItemId: {fileID: 0}
+      highlightTarget:
+        rid: 2031039145738764289
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: f53a911a8b61644fda252735f16f84f5, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
@@ -68,6 +78,8 @@ MonoBehaviour:
         filterByLevel: 0
         requiredLevel: 0
       highlightFacilityItemId: {fileID: 11400000, guid: d05e468fa6c494f4eaa0df4c13d39e44, type: 2}
+      highlightTarget:
+        rid: 2031039145738764290
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:
@@ -77,4 +89,16 @@ MonoBehaviour:
   requiredDomain: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 2031039145738764288
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 324bc5d5b92db4914a3a9af992ff54dd, type: 2}
+    - rid: 2031039145738764289
+      type: {class: TutorialConstructionTabQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        category: 4
+    - rid: 2031039145738764290
+      type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        facilityItemId: {fileID: 11400000, guid: d05e468fa6c494f4eaa0df4c13d39e44, type: 2}

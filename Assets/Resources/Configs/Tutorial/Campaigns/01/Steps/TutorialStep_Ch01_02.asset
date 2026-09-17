@@ -23,17 +23,7 @@ MonoBehaviour:
     instructionTitleKey: Collect Provision
     instructionDesKey: Open the Container Inbox and collect the food delivered to
       your camp.
-    highlightMode: 0
-    highlightTargetId: {fileID: 0}
-    highlightItemId: {fileID: 0}
-    highlightInboxItemId: {fileID: 0}
-    highlightUnitSearch:
-      requireFree: 1
-      filterByLevel: 0
-      requiredLevel: 1
-    arrowTargetId: {fileID: 0}
     dialogueId: 
-    cameraFocusTargetId: {fileID: 0}
     inputPolicy: 0
   guidance:
   - condition: {fileID: 11400000, guid: e34ecbc8b71eb4ba68735223bee36e1e, type: 2}
@@ -50,6 +40,9 @@ MonoBehaviour:
         requireFree: 1
         filterByLevel: 0
         requiredLevel: 1
+      highlightFacilityItemId: {fileID: 0}
+      highlightTarget:
+        rid: 2031039145763667969
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 7cb3de62f888f409594f0259ac3ecaee, type: 2}
@@ -67,6 +60,9 @@ MonoBehaviour:
         requireFree: 1
         filterByLevel: 0
         requiredLevel: 1
+      highlightFacilityItemId: {fileID: 0}
+      highlightTarget:
+        rid: 2031039145763667968
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 8d704d47054d74ca1b850259a7f4d2a4, type: 2}
@@ -83,6 +79,9 @@ MonoBehaviour:
         requireFree: 1
         filterByLevel: 0
         requiredLevel: 1
+      highlightFacilityItemId: {fileID: 0}
+      highlightTarget:
+        rid: 2031039145763667970
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:
@@ -98,3 +97,15 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 2031039145763667968
+      type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 875ea44ba699441e694fa86a2924aa26, type: 2}
+    - rid: 2031039145763667969
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: afa4a609935604f93b51dda9350b776e, type: 2}
+    - rid: 2031039145763667970
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 63b46b0c95ff448698235412db7476d9, type: 2}

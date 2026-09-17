@@ -1,51 +1,24 @@
-using Galactic1.Code.GameDatabase.Registries;
-using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 
-namespace Galactic1.Code.Systems.Tutorial.Runtime
+namespace Galactic1.Code.Systems.Tutorial.Presentation
 {
-    /// <summary>
-    /// Рантайм-снэпшот "что сейчас показать" для одного guidance-варианта — Unity-free
-    /// подмножество presentation-данных, отражающее на рантайм-стороне авторскую
-    /// TutorialGuidanceTargetDefinition. Обёрнут в отдельный тип, а не передаётся как
-    /// голые поля, чтобы TutorialGuidanceRuntimeState могла сравнивать "старый/новый
-    /// resolved target" одной ссылкой (см. её докстринг про dedupe).
-    ///
-    /// HighlightTargetId / HighlightItemId / HighlightFacilityItemId — взаимоисключимые
-    /// альтернативные способы резолва highlight (см. TutorialGuidanceTargetDefinition
-    /// докстринг): фиксированный таргет из реестра или "слот/карточка, где сейчас лежит X",
-    /// резолвится заново на каждый показ в TutorialPresentationService.
-    /// </summary>
+    /// <summary>Runtime-снэпшот "что показать" для одного guidance-варианта. Ровно три
+    /// поля — HighlightRequest уже сконвертирован через TutorialTargetRequestFactory
+    /// (см. TutorialService.BuildGuidanceEntries), Arrow/Camera остаются TutorialTargetId,
+    /// резолвятся через тот же TutorialTargetRegistry, что и раньше (не мигрируют на
+    /// query-систему — см. ТЗ п.12).</summary>
     public sealed class TutorialGuidanceTarget
     {
-        public readonly HighlightMode HighlightMode;
-        public readonly TutorialTargetId HighlightTargetId;
-        public readonly ItemId HighlightItemId;
-        public readonly ItemId HighlightInboxItemId;
-        public readonly TutorialUnitSearchCriteria HighlightUnitSearch;
-        public readonly ItemId HighlightFacilityItemId;
-        public readonly ConstructionCategory? HighlightConstructionTabCategory;
+        public readonly TutorialTargetRequest HighlightRequest;
         public readonly TutorialTargetId ArrowTargetId;
         public readonly TutorialTargetId CameraFocusTargetId;
 
         public TutorialGuidanceTarget(
-            HighlightMode highlightMode,
-            TutorialTargetId highlightTargetId, 
-            ItemId highlightItemId, 
-            ItemId highlightInboxItemId, 
-            TutorialUnitSearchCriteria highlightUnitSearch,
+            TutorialTargetRequest highlightRequest,
             TutorialTargetId arrowTargetId,
-            TutorialTargetId cameraFocusTargetId,
-            ItemId highlightFacilityItemId = null,
-            ConstructionCategory? highlightConstructionTabCategory = null)
+            TutorialTargetId cameraFocusTargetId)
         {
-            HighlightMode = highlightMode;
-            HighlightTargetId = highlightTargetId;
-            HighlightItemId = highlightItemId;
-            HighlightInboxItemId = highlightInboxItemId;
-            HighlightUnitSearch = highlightUnitSearch;
-            HighlightFacilityItemId = highlightFacilityItemId;
-            HighlightConstructionTabCategory = highlightConstructionTabCategory;
+            HighlightRequest = highlightRequest;
             ArrowTargetId = arrowTargetId;
             CameraFocusTargetId = cameraFocusTargetId;
         }

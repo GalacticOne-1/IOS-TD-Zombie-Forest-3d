@@ -456,46 +456,27 @@ namespace Galactic1.Tools
                 var p = stepSO.FindProperty("presentation");
 
                 EditorGUILayout.LabelField("Instruction", EditorStyles.miniBoldLabel);
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("instructionTitleKey"), 
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("instructionTitleKey"),
                     new GUIContent("Title Key"));
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("instructionDesKey"), 
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("instructionDesKey"),
                     new GUIContent("Description Key"));
-
-                EditorGUILayout.Space(4);
-                EditorGUILayout.LabelField("Highlight / Arrow (legacy fallback — used only when Guidance is empty)",
-                    EditorStyles.miniBoldLabel);
-                
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("highlightMode"), 
-                    new GUIContent("Highlight Mode"));
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("highlightTargetId"), 
-                    new GUIContent("Highlight Target"));
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("highlightItemId"), 
-                    new GUIContent("Highlight Item (inventory slot)"));
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("highlightInboxItemId"), 
-                    new GUIContent("Highlight Item (inbox slot)"));
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("highlightInboxItemId"), 
-                    new GUIContent("Highlight Item (inbox slot)"));
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("highlightUnitSearch"), 
-                    new GUIContent("Highlight Unit Search"));
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("arrowTargetId"), 
-                    new GUIContent("Arrow Target"));
 
                 EditorGUILayout.Space(4);
                 EditorGUILayout.LabelField("Dialogue", EditorStyles.miniBoldLabel);
                 EditorGUILayout.HelpBox("Не обрабатывается — диалоговая система в проекте не найдена. Поле декларативно.",
                     MessageType.None);
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("dialogueId"), 
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("dialogueId"),
                     new GUIContent("Dialogue Id"));
 
                 EditorGUILayout.Space(4);
-                EditorGUILayout.LabelField("Camera", EditorStyles.miniBoldLabel);
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("cameraFocusTargetId"), 
-                    new GUIContent("Camera Focus Target"));
-
-                EditorGUILayout.Space(4);
                 EditorGUILayout.LabelField("Input", EditorStyles.miniBoldLabel);
-                EditorGUILayout.PropertyField(p.FindPropertyRelative("inputPolicy"), 
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("inputPolicy"),
                     new GUIContent("Input Policy"));
+
+                EditorGUILayout.HelpBox(
+                    "Highlight / Arrow / Camera больше не задаются здесь — только через Guidance ниже. " +
+                    "Шаг без Guidance-entries не имеет никакого таргетинга вообще.",
+                    MessageType.Info);
 
                 EditorGUILayout.EndVertical();
             }
@@ -515,7 +496,8 @@ namespace Galactic1.Tools
 
                 if (guidanceProp.arraySize == 0)
                     EditorGUILayout.HelpBox(
-                        "Empty — falls back to presentation.highlight/arrow/camera directly (legacy behaviour).",
+                        "Empty — step has NO highlight/arrow/camera at all. Presentation no longer carries " +
+                        "targeting data; this is the only place it lives now.",
                         MessageType.Info);
 
                 for (int i = 0; i < guidanceProp.arraySize; i++)
@@ -581,30 +563,23 @@ namespace Galactic1.Tools
                         RefreshCampaignErrors(selectedCampaign);
                     });
             }
-            EditorGUILayout.EndHorizontal();
 
-            // if (condition != null)
-            // {
-            //     EditorGUI.indentLevel++;
-            //     DrawGenericInlineEditor(condition, condition.Validate);
-            //     EditorGUI.indentLevel--;
-            // }
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Target (highlight / arrow / camera)", EditorStyles.miniBoldLabel);
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("highlightMode"), 
-                new GUIContent("Highlight Mode"));
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("highlightTargetId"), 
+
+            // highlightTarget — [SerializeReference] TutorialTargetQuery. Рисуется через
+            // TutorialTargetQueryDrawer (кастомный CustomPropertyDrawer с useForChildren: true) —
+            // сам показывает popup выбора конкретного подтипа (Fixed/Inventory/Inbox/UnitSearch/
+            // Facility/ConstructionTab) и соответствующие поля. Никакого switch по HighlightMode
+            // здесь больше нет и не должно появляться.
+            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("highlightTarget"),
                 new GUIContent("Highlight Target"));
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("highlightItemId"), 
-                new GUIContent("Highlight Item (inventory slot)"));
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("highlightInboxItemId"), 
-                new GUIContent("Highlight Item (inbox slot)"));
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("highlightUnitSearch"), 
-                new GUIContent("Highlight Unit Search"));
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("arrowTargetId"), 
+
+            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("arrowTargetId"),
                 new GUIContent("Arrow Target"));
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("cameraFocusTargetId"), 
+            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("cameraFocusTargetId"),
                 new GUIContent("Camera Focus Target"));
 
             DrawGuidanceDescriptionPanel(entryProp);

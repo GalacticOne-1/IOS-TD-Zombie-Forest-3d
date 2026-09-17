@@ -88,7 +88,7 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
         ///
         /// Не зависит от текущего состояния _isOpen.
         /// </summary>
-        public void ForceShowPanel()
+        public void ForceShowPanel(bool showButtons)
         {
             _isOpen = true;
 
@@ -98,7 +98,7 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
              * Во время автоматического показа задач
              * кнопки ручного управления не нужны.
              */
-            RootButtons(false);
+            RootButtons(showButtons);
         }
 
 
@@ -110,7 +110,7 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
         /// OpenButton остаётся активным.
         /// CloseButton скрывается.
         /// </summary>
-        public void ForceHidePanel()
+        public void ForceHidePanel(bool showButtons)
         {
             _isOpen = false;
 
@@ -120,7 +120,7 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
              * Кнопка открытия должна быть доступна,
              * даже когда задач нет.
              */
-            RootButtons(true);
+            RootButtons(showButtons);
         }
 
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.Game.Rewards;
 using Galactic1.Code.GameDatabase;
@@ -297,19 +298,28 @@ namespace Galactic1
             var tutorialUnitSlotProvider = new TutorialUnitSlotTargetProvider(gameSession.GameLoopContext);
             var tutorialFacilitySlotProvider = new ConstructionFacilitySlotTargetProvider();
             var tutorialConstructionTabSlotProvider = new ConstructionTabSlotTargetProvider();
+            
+            var tutorialTargetResolverRegistry = 
+                new TutorialTargetResolverRegistry(new List<ITutorialTargetResolver>
+            {
+                new TutorialFixedTargetResolver(tutorialTargetRegistry),
+                new TutorialInventoryItemResolver(inventorySlotTargetProvider),
+                new TutorialInboxItemResolver(inboxSlotTargetProvider),
+                new TutorialUnitSearchResolver(tutorialUnitSlotProvider),
+                new TutorialFacilityCardResolver(tutorialFacilitySlotProvider),
+                new TutorialConstructionTabResolver(tutorialConstructionTabSlotProvider),
+            });
+            rootContainer.RegisterInstance(tutorialTargetResolverRegistry);
 
             var tutorialPresentationService = new TutorialPresentationService(
                 tutorialTargetRegistry,
-                inventorySlotTargetProvider,
-                inboxSlotTargetProvider,
-                tutorialUnitSlotProvider,
-                tutorialFacilitySlotProvider,
-                tutorialConstructionTabSlotProvider);
+                tutorialTargetResolverRegistry);
             rootContainer.RegisterInstance(tutorialPresentationService);
             ServiceLocator.Current.Register(tutorialPresentationService);
 
             var tutorialRewardService = new TutorialRewardService(gameStateProvider.GameStateProxy.Tutorial);
             var tutorialTaskPresenter = new TutorialTaskPresenter(scenarioTaskService, tutorialRewardService);
+            var tutorialTargetRequestFactory = new TutorialTargetRequestFactory();
 
             var tutorialService = new TutorialService(
                 configProvider.Get<TutorialCampaignRegistry>(),
@@ -324,6 +334,7 @@ namespace Galactic1
                 new NullTutorialAnalytics(),
                 gameStateProvider,
                 gameStateProvider.GameStateProxy.Tutorial,
+                tutorialTargetRequestFactory,
                 ServiceLocator.Current.Get<UIManager>());
 
             rootContainer.RegisterInstance<ITutorialService>(tutorialService);

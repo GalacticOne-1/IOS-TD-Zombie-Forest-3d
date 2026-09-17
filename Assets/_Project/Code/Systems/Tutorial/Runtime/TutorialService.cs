@@ -5,6 +5,7 @@ using Galactic1.Code.Systems.Tutorial.Analytics;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Objectives;
 using Galactic1.Code.Systems.Tutorial.Presentation;
+using Galactic1.Code.Systems.Tutorial.Presentation.Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Core;
 using Galactic1.UI.Core;
@@ -81,6 +82,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         private readonly ITutorialAnalytics _analytics;
         private readonly IGameStateProvider _gameStateProvider;
         private readonly ReactiveProperty<CGameStateTutorial> _tutorialState;
+        private readonly TutorialTargetRequestFactory _targetRequestFactory;
 
         private TutorialRuntime _runtime;
         private TutorialStepRuntimeState _activeStep;
@@ -101,6 +103,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             ITutorialAnalytics analytics,
             IGameStateProvider gameStateProvider,
             ReactiveProperty<CGameStateTutorial> tutorialState,
+            TutorialTargetRequestFactory targetRequestFactory,
             UIManager uiManager)
         {
             _registry = registry;
@@ -115,6 +118,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _analytics = analytics;
             _gameStateProvider = gameStateProvider;
             _tutorialState = tutorialState;
+            _targetRequestFactory = targetRequestFactory;
             _uiManager = uiManager;
         }
 
@@ -376,15 +380,9 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             {
                 var condition = _guidanceFactory.Create(g.condition);
                 var target = new TutorialGuidanceTarget(
-                    g.presentation?.highlightMode ?? HighlightMode.None,
-                    g.presentation?.highlightTargetId,
-                    g.presentation?.highlightItemId,
-                    g.presentation?.highlightInboxItemId,
-                    g.presentation?.highlightUnitSearch,
+                    _targetRequestFactory.Create(g.presentation?.highlightTarget),
                     g.presentation?.arrowTargetId,
-                    g.presentation?.cameraFocusTargetId,
-                    g.presentation?.highlightFacilityItemId,
-                    g.presentation?.highlightConstructionTabCategory);
+                    g.presentation?.cameraFocusTargetId);
                 list.Add((condition, target));
             }
             return list;
@@ -419,27 +417,23 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// каждый вызов строит новый лёгкий POCO-снэпшот (TutorialPresentationDefinition —
         /// обычный [Serializable] класс, не сериализованное поле ассета).
         /// </summary>
-        private TutorialPresentationDefinition BuildEffectivePresentation(TutorialStepRuntimeState stepState)
+        private TutorialEffectivePresentation BuildEffectivePresentation(TutorialStepRuntimeState stepState)
         {
             var authored = stepState.Definition.presentation;
             bool hasGuidance = stepState.Definition.guidance != null && stepState.Definition.guidance.Count > 0;
             var guidanceTarget = stepState.CurrentGuidanceTarget;
 
-            return new TutorialPresentationDefinition
+            return new TutorialEffectivePresentation
             {
-                instructionTitleKey = authored.instructionTitleKey,
-                instructionDesKey = authored.instructionDesKey,
-                dialogueId = authored.dialogueId,
-                inputPolicy = authored.inputPolicy,
-                highlightMode = hasGuidance ? guidanceTarget?.HighlightMode ?? HighlightMode.None : authored.highlightMode,
-                highlightTargetId = hasGuidance ? guidanceTarget?.HighlightTargetId : authored.highlightTargetId,
-                highlightItemId = hasGuidance ? guidanceTarget?.HighlightItemId : authored.highlightItemId,
-                highlightInboxItemId = hasGuidance ? guidanceTarget?.HighlightInboxItemId : authored.highlightInboxItemId,
-                highlightUnitSearch = hasGuidance ? guidanceTarget?.HighlightUnitSearch : authored.highlightUnitSearch,
-                highlightFacilityItemId = hasGuidance ? guidanceTarget?.HighlightFacilityItemId : authored.highlightFacilityItemId,
-                highlightConstructionTabCategory = hasGuidance ? guidanceTarget?.HighlightConstructionTabCategory : authored.highlightConstructionTabCategory,
-                arrowTargetId = hasGuidance ? guidanceTarget?.ArrowTargetId : authored.arrowTargetId,
-                cameraFocusTargetId = hasGuidance ? guidanceTarget?.CameraFocusTargetId : authored.cameraFocusTargetId,
+                InstructionTitleKey = authored.instructionTitleKey,
+                InstructionDesKey = authored.instructionDesKey,
+                DialogueId = authored.dialogueId,
+                InputPolicy = authored.inputPolicy,
+                HighlightRequest = hasGuidance
+                    ? guidanceTarget?.HighlightRequest
+                    : null,
+                ArrowTargetId = hasGuidance ? guidanceTarget?.ArrowTargetId : null,
+                CameraFocusTargetId = hasGuidance ? guidanceTarget?.CameraFocusTargetId : null,
             };
         }
 

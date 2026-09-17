@@ -1,49 +1,43 @@
 using System;
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
-using Galactic1.Code.GameDatabase.Registries;
-using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.Tutorial.Authoring;
-using Galactic1.Code.UI.Construction;
-using Galactic1.Mobile.EventBus;
+using Galactic1.Code.Systems.Tutorial.Presentation.Galactic1.Code.Systems.Tutorial.Presentation;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
 {
+    /// <summary>
+    /// Больше не знает про Inventory/Inbox/UnitSearch/FacilityCard/ConstructionTab —
+    /// весь highlight-резолв делегирован TutorialTargetResolverRegistry (см. её
+    /// докстринг). Новый target-тип добавляется регистрацией нового резолвера в DI,
+    /// этот класс не меняется ни строкой (ключевое требование ТЗ п.10/19).
+    ///
+    /// Arrow/Camera НЕ мигрированы на query-систему (осознанно, см. ТЗ п.12) — по-прежнему
+    /// TutorialTargetId через тот же TutorialTargetRegistry, тот же lifecycle, что и раньше.
+    /// </summary>
     public sealed class TutorialPresentationService : ITutorialPresentationService, IGameService
     {
         private readonly TutorialTargetRegistry _targetRegistry;
-        private readonly ITutorialItemSlotTargetProvider _inventorySlotProvider;
-        private readonly ITutorialItemSlotTargetProvider _inboxSlotProvider;
-        private readonly ITutorialUnitSlotTargetProvider _unitSlotProvider;
-        private readonly ITutorialFacilitySlotTargetProvider _facilitySlotProvider;
-        private readonly ITutorialConstructionTabTargetProvider _constructionTabSlotProvider;
+        private readonly TutorialTargetResolverRegistry _resolverRegistry;
 
         private ITutorialPresentationRenderer _renderer;
-        private TutorialPresentationDefinition _activeDefinition;
+        private TutorialEffectivePresentation _activePresentation;
         private readonly List<Action> _pendingTargetUnsubs = new();
         private int _generation;
 
         public TutorialPresentationService(
             TutorialTargetRegistry targetRegistry,
-            ITutorialItemSlotTargetProvider inventorySlotProvider, 
-            ITutorialItemSlotTargetProvider inboxSlotProvider,
-            ITutorialUnitSlotTargetProvider unitSlotProvider,
-            ITutorialFacilitySlotTargetProvider facilitySlotProvider,
-            ITutorialConstructionTabTargetProvider constructionTabSlotProvider)
+            TutorialTargetResolverRegistry resolverRegistry)
         {
             _targetRegistry = targetRegistry;
-            _inventorySlotProvider = inventorySlotProvider;
-            _inboxSlotProvider = inboxSlotProvider;
-            _unitSlotProvider = unitSlotProvider;
-            _facilitySlotProvider = facilitySlotProvider;
-            _constructionTabSlotProvider = constructionTabSlotProvider;
+            _resolverRegistry = resolverRegistry;
         }
 
-        public void Show(TutorialPresentationDefinition presentation)
+        public void Show(TutorialEffectivePresentation presentation)
         {
             _generation++;
             ClearPendingSubscriptions();
-            _activeDefinition = presentation;
+            _activePresentation = presentation;
             Render(presentation);
         }
 
@@ -51,7 +45,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         {
             _generation++;
             ClearPendingSubscriptions();
-            _activeDefinition = null;
+            _activePresentation = null;
             _renderer?.ClearAll();
         }
 
@@ -60,8 +54,8 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public void AttachRenderer(ITutorialPresentationRenderer renderer)
         {
             _renderer = renderer;
-            if (_activeDefinition != null)
-                Render(_activeDefinition);
+            if (_activePresentation != null)
+                Render(_activePresentation);
         }
 
         public void DetachRenderer(ITutorialPresentationRenderer renderer)
@@ -70,149 +64,49 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
                 _renderer = null;
         }
 
-        private void Render(TutorialPresentationDefinition presentation)
+        private void Render(TutorialEffectivePresentation presentation)
         {
             if (_renderer == null) return;
 
-            switch (presentation.highlightMode)
+            RenderHighlight(presentation.HighlightRequest);
+            ResolveTarget(presentation.ArrowTargetId, _renderer.RenderArrow, _renderer.ClearArrow);
+            ResolveTarget(presentation.CameraFocusTargetId, FocusCameraOn, () => { });
+        }
+
+        private void RenderHighlight(TutorialTargetRequest request)
+        {
+            if (request == null)
             {
-                case HighlightMode.UnitSearch:
-                    ResolveUnitTarget(presentation.highlightUnitSearch, _renderer.RenderHighlight, _renderer.ClearHighlight);
-                    SubscribeUnitHighlightRetrigger(presentation.highlightUnitSearch);
-                    break;
-                case HighlightMode.InboxItem:
-                    ResolveItemTarget(_inboxSlotProvider, presentation.highlightInboxItemId,
-                        _renderer.RenderHighlight, _renderer.ClearHighlight);
-                    SubscribeInboxHighlightRetrigger(presentation.highlightInboxItemId);
-                    break;
-                case HighlightMode.InventoryItem:
-                    ResolveItemTarget(_inventorySlotProvider, presentation.highlightItemId,
-                        _renderer.RenderHighlight, _renderer.ClearHighlight);
-                    SubscribeInventoryHighlightRetrigger(presentation.highlightItemId);
-                    break;
-                case HighlightMode.FacilityCard:
-                    ResolveFacilityTarget(presentation.highlightFacilityItemId,
-                        _renderer.RenderHighlight, _renderer.ClearHighlight);
-                    SubscribeFacilityHighlightRetrigger(presentation.highlightFacilityItemId);
-                    break;
-                case HighlightMode.ConstructionTab:
-                    if (presentation.highlightConstructionTabCategory.HasValue)
-                    {
-                        ResolveConstructionTabTarget(presentation.highlightConstructionTabCategory.Value,
-                            _renderer.RenderHighlight, _renderer.ClearHighlight);
-                        SubscribeConstructionTabHighlightRetrigger(presentation.highlightConstructionTabCategory.Value);
-                    }
-                    else
-                    {
-                        _renderer.ClearHighlight();
-                    }
-                    break;
-                case HighlightMode.FixedTarget:
-                    ResolveTarget(presentation.highlightTargetId, _renderer.RenderHighlight, _renderer.ClearHighlight);
-                    break;
-                default: // None
+                _renderer.ClearHighlight();
+                return;
+            }
+
+            if (_resolverRegistry.TryResolve(request, out var target))
+                _renderer.RenderHighlight(target);
+            else
+                _renderer.ClearHighlight();
+
+            var resolver = _resolverRegistry.FindResolver(request);
+            if (resolver == null) return;
+
+            int capturedGeneration = _generation;
+
+            void Callback()
+            {
+                if (capturedGeneration != _generation) return; // устаревший callback — Show()/Hide() уже сменили состояние
+                if (_renderer == null) return;
+                if (_resolverRegistry.TryResolve(request, out var reresolved))
+                    _renderer.RenderHighlight(reresolved);
+                else
                     _renderer.ClearHighlight();
-                    break;
             }
 
-            ResolveTarget(presentation.arrowTargetId, _renderer.RenderArrow, _renderer.ClearArrow);
-            ResolveTarget(presentation.cameraFocusTargetId, FocusCameraOn, () => { });
+            resolver.SubscribeInvalidation(request, Callback);
+            _pendingTargetUnsubs.Add(() => resolver.UnsubscribeInvalidation(request, Callback));
         }
 
-        /// <summary>
-        /// highlightItemId резолвится живым поиском по слотам (ResolveItemTarget) —
-        /// у него, в отличие от TutorialTargetRegistry, нет "таргет появился" события,
-        /// зато есть обратная проблема: предмет может СМЕНИТЬ слот без единого события,
-        /// на которое уже подписано какое-либо guidance-условие (обычный drag внутри уже
-        /// открытого инвентаря не эквипит и не открывает экран). InventoryContentsChangedEvent —
-        /// узкоспециальный EventBus-канал именно под этот случай (см. его докстринг).
-        ///
-        /// Подписка живёт в _pendingTargetUnsubs — тот же generation-защищённый lifecycle,
-        /// что у ResolveTarget: следующий Show()/Hide() инкрементит _generation и вызовет
-        /// ClearPendingSubscriptions(), эта подписка снимется вместе со всеми остальными.
-        /// Намеренно НЕ идёт через ITutorialGuidanceCondition/TutorialGuidanceRuntimeState —
-        /// это вопрос "куда физически резолвится уже выбранный highlight", а не "какое
-        /// guidance сейчас активно" (см. TutorialPresentationDefinition.highlightItemId
-        /// докстринг про разделение Guidance/Presentation).
-        /// </summary>
-        private void SubscribeInventoryHighlightRetrigger(ItemId itemId)
-        {
-            int capturedGeneration = _generation;
-            var binding = new EventBinding<InventoryContentsChangedEvent>(_ =>
-            {
-                if (capturedGeneration != _generation) return;
-                if (_renderer == null) return;
-                ResolveItemTarget(_inventorySlotProvider, itemId, _renderer.RenderHighlight, _renderer.ClearHighlight);
-            });
-            EventBus<InventoryContentsChangedEvent>.Register(binding);
-            _pendingTargetUnsubs.Add(() => EventBus<InventoryContentsChangedEvent>.Deregister(binding));
-        }
-        
-        private void SubscribeInboxHighlightRetrigger(ItemId itemId)
-        {
-            int capturedGeneration = _generation;
-            var binding = new EventBinding<FacilityPanelOpenedEvent>(_ =>
-            {
-                if (capturedGeneration != _generation) return;
-                if (_renderer == null) return;
-                ResolveItemTarget(_inboxSlotProvider, itemId, _renderer.RenderHighlight, _renderer.ClearHighlight);
-            });
-            EventBus<FacilityPanelOpenedEvent>.Register(binding);
-            _pendingTargetUnsubs.Add(() => EventBus<FacilityPanelOpenedEvent>.Deregister(binding));
-        }
-
-        /// <summary>
-        /// Карточки панели строительства пересоздаются целиком на каждый Rebind() (Clear()
-        /// + Build(), см. ConstructionPanelController.Rebind/FacilityListView.Build) — то
-        /// есть чаще, чем у инвентаря/инбокса, где сам слот стабилен и меняется только его
-        /// содержимое. Поэтому ретриггер подписан не на EventBus-событие, а напрямую на
-        /// FacilityListView.OnRebuilt того же инстанса, что резолвил нас изначально —
-        /// тот же generation-защищённый lifecycle, что у остальных Subscribe*-методов.
-        /// Панель ещё не открыта / не существует на сцене — валидный fallback "нечего
-        /// пересчитывать", подписки просто не будет (первый показ и так вызовет
-        /// ResolveFacilityTarget с тем же итогом "не найдено").
-        /// </summary>
-        private void SubscribeFacilityHighlightRetrigger(ItemId itemId)
-        {
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
-            var listView = controller?.View?.ListView;
-            if (listView == null) return;
-
-            int capturedGeneration = _generation;
-            void Handler()
-            {
-                if (capturedGeneration != _generation) return;
-                if (_renderer == null) return;
-                ResolveFacilityTarget(itemId, _renderer.RenderHighlight, _renderer.ClearHighlight);
-            }
-            listView.OnRebuilt += Handler;
-            _pendingTargetUnsubs.Add(() => listView.OnRebuilt -= Handler);
-        }
-
-        /// <summary>
-        /// Кнопки вкладок пересоздаются целиком на каждый ConstructionPanelView.BuildTabs()
-        /// (вызывается из Bind(), то есть на каждый Rebind() панели) — тот же принцип, что
-        /// у SubscribeFacilityHighlightRetrigger, только источник события — ConstructionPanelView,
-        /// а не FacilityListView (вкладки и карточки пересоздаются раздельно, каждая своим
-        /// методом, см. ConstructionPanelView.Bind: BuildTabs() и listView.Build()).
-        /// </summary>
-        private void SubscribeConstructionTabHighlightRetrigger(ConstructionCategory category)
-        {
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
-            var view = controller?.View;
-            if (view == null) return;
-
-            int capturedGeneration = _generation;
-            void Handler()
-            {
-                if (capturedGeneration != _generation) return;
-                if (_renderer == null) return;
-                ResolveConstructionTabTarget(category, _renderer.RenderHighlight, _renderer.ClearHighlight);
-            }
-            view.OnTabsRebuilt += Handler;
-            _pendingTargetUnsubs.Add(() => view.OnTabsRebuilt -= Handler);
-        }
-
+        /// <summary>Fixed-таргет lookup для arrow/camera — дословно перенесено из старой
+        /// реализации, поведение не менялось.</summary>
         private void ResolveTarget(TutorialTargetId targetId, Action<ITutorialTarget> onFound, Action onEmpty)
         {
             if (targetId == null) { onEmpty(); return; }
@@ -223,70 +117,11 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             {
                 if (registered.TargetId != targetId) return;
                 _targetRegistry.OnTargetRegistered -= Handler;
-                if (capturedGeneration != _generation) return; // устаревший колбэк — игнор
+                if (capturedGeneration != _generation) return;
                 if (_renderer != null) onFound(registered);
             }
             _targetRegistry.OnTargetRegistered += Handler;
             _pendingTargetUnsubs.Add(() => _targetRegistry.OnTargetRegistered -= Handler);
-        }
-        
-        
-        private void ResolveUnitTarget(
-            TutorialUnitSearchCriteria criteria, Action<ITutorialTarget> onFound, Action onEmpty)
-        {
-            if (_unitSlotProvider != null && _unitSlotProvider.TryGetUnitTarget(criteria, out var target))
-                onFound(target);
-            else
-                onEmpty();
-        }
-        
-        
-        private void SubscribeUnitHighlightRetrigger(TutorialUnitSearchCriteria criteria)
-        {
-            int capturedGeneration = _generation;
-            var binding = new EventBinding<StrategicSquadChangedEvent>(_ =>
-            {
-                if (capturedGeneration != _generation) return;
-                if (_renderer == null) return;
-                ResolveUnitTarget(criteria, _renderer.RenderHighlight, _renderer.ClearHighlight);
-            });
-            EventBus<StrategicSquadChangedEvent>.Register(binding);
-            _pendingTargetUnsubs.Add(() => EventBus<StrategicSquadChangedEvent>.Deregister(binding));
-        }
-
-        /// <summary>Синхронный live-резолв "слот, где сейчас предмет X" — см. class docstring
-        /// про отсутствие ожидания (в отличие от ResolveTarget). Провайдер опционален
-        /// (может быть не подключён, например в изолированных тестах презентации) —
-        /// в этом случае ведём себя как "предмет не найден", а не падаем.</summary>
-        private void ResolveItemTarget(
-            ITutorialItemSlotTargetProvider provider,
-            ItemId itemId, 
-            Action<ITutorialTarget> onFound, Action onEmpty)
-        {
-            if (provider != null && provider.TryGetSlotTarget(itemId, out var target))
-                onFound(target);
-            else
-                onEmpty();
-        }
-
-        /// <summary>Синхронный live-резолв "карточка здания X в панели строительства сейчас" —
-        /// тот же принцип, что ResolveItemTarget/ResolveUnitTarget.</summary>
-        private void ResolveFacilityTarget(ItemId itemId, Action<ITutorialTarget> onFound, Action onEmpty)
-        {
-            if (_facilitySlotProvider != null && _facilitySlotProvider.TryGetFacilityTarget(itemId, out var target))
-                onFound(target);
-            else
-                onEmpty();
-        }
-
-        /// <summary>Синхронный live-резолв "кнопка вкладки категории X сейчас на сцене" —
-        /// тот же принцип, что ResolveFacilityTarget/ResolveItemTarget.</summary>
-        private void ResolveConstructionTabTarget(ConstructionCategory category, Action<ITutorialTarget> onFound, Action onEmpty)
-        {
-            if (_constructionTabSlotProvider != null && _constructionTabSlotProvider.TryGetTabTarget(category, out var target))
-                onFound(target);
-            else
-                onEmpty();
         }
 
         private void FocusCameraOn(ITutorialTarget target)
