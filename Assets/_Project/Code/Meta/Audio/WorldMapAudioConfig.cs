@@ -6,9 +6,9 @@ using UnityEngine;
 namespace Galactic1.UI.Audio
 {
     [CreateAssetMenu(
-        fileName = "CampTraderPanelAudioConfig",
-        menuName = "Game Configs/Audio/UI/Camp Trader Panel Audio")]
-    public sealed class CampTraderPanelAudioConfig :
+        fileName = "WorldMapAudioConfig",
+        menuName = "Game Configs/Audio/UI/World Map Audio")]
+    public sealed class WorldMapAudioConfig :
         ScriptableObject,
         IUIStyleConfig,
         IUIAudioConfig
@@ -22,8 +22,10 @@ namespace Galactic1.UI.Audio
         }
 
         [Header("Panel")]
-        public AudioCue open;
-        public AudioCue buy;
+        public AudioCue showOverview;
+        public AudioCue closeOverview;
+        public AudioCue driveStart;
+        public AudioCue driveFinish;
+        
     }
-    
 }

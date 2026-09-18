@@ -49,9 +49,7 @@ namespace Galactic1.Code.Systems.Runtime.Building
             _traderConfig = traderConfig;
             _economy = economy;
 
-            audioConfig = ServiceLocator.Current.Get<ConfigProvider>()
-                .Get<UIAudioDatabase>()
-                .Get<CampTraderPanelAudioConfig>("camp_trader_panel_audio");
+            audioConfig = ServiceLocator.Current.Get<ConfigProvider>().Get<CampTraderPanelAudioConfig>();
         }
 
         public override void Dispose() {}

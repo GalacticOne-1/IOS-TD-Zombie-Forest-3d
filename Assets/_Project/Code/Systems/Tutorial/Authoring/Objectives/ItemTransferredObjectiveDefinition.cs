@@ -21,15 +21,21 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring.Objectives
 
         [Tooltip("Пусто = засчитывается перемещение ЛЮБОГО предмета.")]
         public ItemId itemId;
-
-        [Tooltip("Null = засчитывается перемещение ИЗ любого источника. Задай значение, " +
-                 "чтобы требовать конкретный тип-источник (например BaseStorage).")]
-        public InventorySourceType? fromSourceType;
-
-        [Tooltip("Null = засчитывается перемещение В любой источник. Задай значение, " +
-                 "чтобы требовать конкретный тип-источник (например TransportCargo).")]
-        public InventorySourceType? toSourceType;
-
         [Min(1)] public int requiredAmount = 1;
+
+        [Header("From Source")]
+        [Tooltip("Включить фильтр источника, из которого перемещается предмет.")]
+        public bool filterFromSource;
+
+        [Tooltip("Тип источника, из которого перемещается предмет.")]
+        public InventorySourceType fromSourceType;
+
+        [Header("To Source")]
+        [Tooltip("Включить фильтр источника, в который перемещается предмет.")]
+        public bool filterToSource;
+
+        [Tooltip("Тип источника, в который перемещается предмет.")]
+        public InventorySourceType toSourceType;
+
     }
 }

@@ -25,7 +25,11 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         {
             Register<EnemyKilledObjectiveDefinition>(d => new EnemyKilledObjective(d.requiredCount));
             Register<ItemTransferredObjectiveDefinition>(d =>
-                new ItemTransferredObjective(d.itemId, d.fromSourceType, d.toSourceType, d.requiredAmount));
+                new ItemTransferredObjective(
+                    d.itemId,
+                    d.filterFromSource ? d.fromSourceType : null,
+                    d.filterToSource ? d.toSourceType : null,
+                    d.requiredAmount));
             Register<ItemEquippedObjectiveDefinition>(d => new ItemEquippedObjective(inventory, d.slot, d.itemId));
             Register<ResourceAmountObjectiveDefinition>(d => new ResourceAmountObjective(inventory, d.itemId, d.requiredAmount));
             Register<SquadSizeObjectiveDefinition>(d => new SquadSizeObjective(squad, d.requiredSize));

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11acc36c365446509364274c011246ec, type: 3}
+  m_Name: WorldMapAudioConfig
+  m_EditorClassIdentifier: 
+  <ConfigId>k__BackingField: world_map_audio_config
+  showOverview:
+    clips:
+    - {fileID: 8300000, guid: 84033985528c24410a5b8172100e1645, type: 3}
+    volume: 0.25
+    pitchMin: 1
+    pitchMax: 1
+  closeOverview:
+    clips: []
+    volume: 1
+    pitchMin: 0.95
+    pitchMax: 1.05
+  driveStart:
+    clips:
+    - {fileID: 8300000, guid: 48791f8f1c3274f27b7f89c2696735d4, type: 3}
+    volume: 0.25
+    pitchMin: 0.95
+    pitchMax: 1.05
+  driveFinish:
+    clips:
+    - {fileID: 8300000, guid: e0cdb0abb3c3546b39605035d7b537e8, type: 3}
+    volume: 0.2
+    pitchMin: 0.95
+    pitchMax: 1.05

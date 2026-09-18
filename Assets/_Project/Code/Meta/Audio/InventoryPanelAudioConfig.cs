@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Galactic1.UI.Audio
 {
     [CreateAssetMenu(
-        fileName = "InventoryPanelAudio_",
+        fileName = "InventoryPanelAudioConfig",
         menuName = "Game Configs/Audio/UI/Inventory Panel Audio")]
     public sealed class InventoryPanelAudioConfig :
         ScriptableObject,
@@ -25,10 +25,11 @@ namespace Galactic1.UI.Audio
         public AudioCue open;
 
         [Header("Items")]
-        public AudioCue itemSelect;
+        public AudioCue itemDrag;
         public AudioCue itemDrop;
         public AudioCue itemUse;
         public AudioCue itemSplit;
+        public AudioCue itemSort;
         public AudioCue itemRemove;
         
         [Header("Unit")]
@@ -36,7 +37,7 @@ namespace Galactic1.UI.Audio
         public AudioCue fromSquad;
         public AudioCue equipmentAdd;
         public AudioCue equipmentRemove;
-        
+        public AudioCue unitBanish;
         
     }
 }

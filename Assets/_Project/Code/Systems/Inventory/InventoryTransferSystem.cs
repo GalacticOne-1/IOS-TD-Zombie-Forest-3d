@@ -1,11 +1,12 @@
 
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Inventory.Services;
 using Galactic1.Code.Systems.Inventory;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
-using Galactic1.Items;
 using Galactic1.Mobile.EventBus;
+using Galactic1.UI.Audio;
 using UnityEngine;
 
 namespace Galactic1.Code.UI.Inventory
@@ -15,6 +16,7 @@ namespace Galactic1.Code.UI.Inventory
     {
         public InventoryManagementWindow invWindow;
         private readonly InventoryAccessService _access;
+        private InventoryPanelAudioConfig audioConfig;
         
         public IInventorySource LeftSource { get; private set; }
         public IInventorySource RightSource { get; private set; }
@@ -26,6 +28,7 @@ namespace Galactic1.Code.UI.Inventory
         {
             this.invWindow = invWindow;
             _access = access;
+            audioConfig = invWindow.AudioConfig;
         }
 
 
@@ -267,11 +270,18 @@ namespace Galactic1.Code.UI.Inventory
             {
                 // Простое перемещение
                 toSource.SetSlot(
-                    toIndex, 
-                    new InventorySlotRuntime(fromSlot.Item,  fromSlot.Amount, fromSlot.Durability, fromSlot.AmmoInMagazine));
+                    toIndex,
+                    new InventorySlotRuntime(
+                        fromSlot.Item,  
+                        fromSlot.Amount, 
+                        fromSlot.Durability,
+                        fromSlot.AmmoInMagazine));
 
                 //fromSlot.Clear();
                 fromSource.ClearSlot(fromIndex);
+
+                if (!fromIsEquip)
+                    EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.itemDrop.ToData()));
             }
             else if (fromSlot.Item == toSlot.Item && fromSlot.Item.Classification.maxStack > 1)
             {
@@ -302,6 +312,9 @@ namespace Galactic1.Code.UI.Inventory
 
                 fromSource.SetSlot(fromIndex, b);
                 toSource.SetSlot(toIndex, a);
+                
+                if (!fromIsEquip)
+                    EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.itemDrop.ToData()));
             }
 
             // ---------------------------------------------------------
@@ -311,6 +324,8 @@ namespace Galactic1.Code.UI.Inventory
             {
                 //equipmentContainer.Unequip(fromIndex);
                 fromSource.EquipmentListener.Unequip(fromIndex);
+                
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.equipmentRemove.ToData()));
             }
 
             // ---------------------------------------------------------
@@ -337,6 +352,8 @@ namespace Galactic1.Code.UI.Inventory
                     {
                         //equipmentContainer.Equip(toIndex);
                         toSource.EquipmentListener.Equip(toIndex);
+                        
+                        EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.equipmentAdd.ToData()));
                     }
                 }
             }

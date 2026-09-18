@@ -1,8 +1,10 @@
 
 using System.Collections.Generic;
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Mobile.EventBus;
+using Galactic1.UI.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,6 +17,7 @@ namespace Galactic1.Code.UI.Inventory
         private readonly DragIcon dragIconPrefab;
         private readonly InventoryManagementWindow window;
         private readonly TooltipInventoryUI tooltip;
+        private InventoryPanelAudioConfig _audioConfig;
 
         // Drag
         private DragIcon dragIcon;
@@ -47,12 +50,15 @@ namespace Galactic1.Code.UI.Inventory
             Canvas canvas, 
             DragIcon iconPrefab,
             InventoryManagementWindow window, 
-            TooltipInventoryUI tooltip)
+            TooltipInventoryUI tooltip,
+            InventoryPanelAudioConfig audioConfig)
         {
             this.canvas = canvas;
             this.dragIconPrefab = iconPrefab;
             this.window = window;
             this.tooltip = tooltip;
+
+            _audioConfig = audioConfig;
         }
 
         // ---- API, вызываемая из InventorySlotUI ----
@@ -196,6 +202,8 @@ namespace Galactic1.Code.UI.Inventory
                 draggedSource,
                 draggedItemId,
                 draggedSlotIndex));
+            
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.itemDrag.ToData()));
 
             dragIcon = GameObject.Instantiate(dragIconPrefab, canvas.transform);
             dragIcon.transform.position = fromSlot.transform.position;
@@ -253,6 +261,7 @@ namespace Galactic1.Code.UI.Inventory
                 target.ParentUI._source,
                 target.SlotIndex
             );
+            
         }
 
 

@@ -15,6 +15,7 @@ using Galactic1.Core;
 using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.Items;
 using Galactic1.Meta.Configs.Recruitment;
+using Galactic1.UI.Audio;
 using Galactic1.UI.Core;
 using Galactic1.UI.Core.TabPanel;
 using Galactic1.UI.CharacterPreview;
@@ -87,6 +88,7 @@ namespace Galactic1.Code.UI.Inventory
 
         public InventoryView leftSide { get; private set; }
         public InventoryView rightSide { get; private set; }
+        public  InventoryPanelAudioConfig AudioConfig { get; private set; }
         
         public enum InventoryViewContext
         {
@@ -105,6 +107,8 @@ namespace Galactic1.Code.UI.Inventory
             base.Initialize(container, id);
             ServiceLocator.Current.Register(this);
             canvas = container.Resolve<UIRootView>().canvas;
+
+            AudioConfig = container.Resolve<IConfigProvider>().Get<InventoryPanelAudioConfig>();
             
             ServiceLocator.Current.Get<TabPanelController>()
                 .RegisterTab(new TabPanelController.RegistryEntry()
@@ -130,13 +134,14 @@ namespace Galactic1.Code.UI.Inventory
                 accessService, 
                 gameplayContextService,
                 _gameSession.GameLoopContext);
-            
-            
+
+
             dragManager = new DragManager(
-                canvas, 
-                dragIconPrefab, 
-                this, 
-                tooltip);
+                canvas,
+                dragIconPrefab,
+                this,
+                tooltip,
+                AudioConfig);
             
             // смена источников инвентаря base/logistic/squad
             modeController = new InventoryManagementController(
@@ -158,7 +163,7 @@ namespace Galactic1.Code.UI.Inventory
             
             // просто кнопки для контроллера источников
             managementPanelState = GetComponent<InventoryManagementPanelState>();
-            managementPanelState.Initialize(modeController);
+            managementPanelState.Initialize(modeController, AudioConfig);
 
             // список юнитов
             unitListPresenter = GetComponent<UnitScrollListPresenter>();

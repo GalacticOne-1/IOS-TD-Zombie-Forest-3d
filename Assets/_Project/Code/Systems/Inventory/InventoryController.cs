@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Galactic1.Code.GameDatabase;
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Gameplay.Weapons.Services;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Inventory.Context;
 using Galactic1.Code.Inventory.Services;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Core.Enums;
+using Galactic1.UI.Audio;
 using UnityEngine;
 
 namespace Galactic1.Code.UI.Inventory
@@ -25,7 +27,7 @@ namespace Galactic1.Code.UI.Inventory
         public readonly GameLoopContext GameLoopContext;
         public readonly InventoryAccessService AccessService;
         public readonly WeaponReloadService WeaponReloadService;
-
+        private InventoryPanelAudioConfig _audioConfig;
 
         public IInventorySource LeftSource => transferSystem.LeftSource;
         public IInventorySource RightSource => transferSystem.RightSource;
@@ -43,6 +45,8 @@ namespace Galactic1.Code.UI.Inventory
             ContextService = contextService;
             GameLoopContext = gameLoopContext;
             AccessService = accessService;
+
+            _audioConfig = this.invWindow.AudioConfig;
             
             WeaponReloadService = new WeaponReloadService(this, GameContent.Ammo);
         }
@@ -100,6 +104,7 @@ namespace Galactic1.Code.UI.Inventory
                     // Удаляем полностью предмет из ячейки
                     source.ClearSlot(view.selectedSlot.SlotIndex);
                     source.EquipmentListener.Unequip(view.selectedSlot.SlotIndex);
+                    EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.itemRemove.ToData()));
                 //}
             }
             
@@ -109,6 +114,7 @@ namespace Galactic1.Code.UI.Inventory
                 // Удаляем полностью предмет из ячейки
                 //slot.Clear();
                 source.ClearSlot(view.selectedSlot.SlotIndex);
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.itemRemove.ToData()));
             }
 
 
@@ -198,6 +204,8 @@ namespace Galactic1.Code.UI.Inventory
             // if (targetInventory != inventory)
             //     targetInventory.OnChanged?.Invoke();
             AccessService.NotifyChanged(targetSource);
+            
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.itemSplit.ToData()));
 
             // Сбрасываем выделение
             //ui.ClearSelection();
@@ -298,6 +306,8 @@ namespace Galactic1.Code.UI.Inventory
                 AccessService.SetSlot(view._source, i, compacted[i]);
 
             AccessService.NotifyChanged(view._source);
+            
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.itemSort.ToData()));
         }
 
 

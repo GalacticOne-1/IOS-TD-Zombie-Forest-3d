@@ -16,7 +16,10 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         private int _transferred;
 
         public ItemTransferredObjective(
-            ItemId itemId, InventorySourceType? fromSourceType, InventorySourceType? toSourceType, int requiredAmount)
+            ItemId itemId, 
+            InventorySourceType? fromSourceType,
+            InventorySourceType? toSourceType, 
+            int requiredAmount)
         {
             _itemId = itemId;
             _fromSourceType = fromSourceType;

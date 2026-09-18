@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de21523fa06b4762810d46cd561f0cce, type: 3}
-  m_Name: ItemTransferred_ammo_to_cargo
+  m_Script: {fileID: 11500000, guid: 147a3c67a310479a8698728120089253, type: 3}
+  m_Name: AudioCue_unit_select
   m_EditorClassIdentifier: 
-  debugDescription: ammo_acmp_to_cargo
-  itemId: {fileID: 11400000, guid: 044c6e483e87041db98cd16f3a4f4da6, type: 2}
-  requiredAmount: 200
+  <ConfigId>k__BackingField: audio_cue_unit_select
+  clip: {fileID: 8300000, guid: 1bd6f09385e3743c3b77f5473f940266, type: 3}
+  volume: 0.4
+  pitchMin: 1
+  pitchMax: 1
+  priority: 50

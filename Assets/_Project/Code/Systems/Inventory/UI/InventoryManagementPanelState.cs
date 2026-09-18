@@ -1,13 +1,14 @@
 
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Inventory.Context;
 using Galactic1.Code.Systems.Squad;
 using Galactic1.Configs;
 using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.Mobile.EventBus;
+using Galactic1.UI.Audio;
 using Galactic1.UI.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Galactic1.Code.UI.Inventory
@@ -52,13 +53,21 @@ namespace Galactic1.Code.UI.Inventory
 
         private InventoryManagementController _controller;
         private StrategicSquadSystem _strategicSquadSystem;
+        private InventoryPanelAudioConfig _audioConfig;
+        
+        
+        
         
 
-        public void Initialize(InventoryManagementController controller)
+        public void Initialize(
+            InventoryManagementController controller,
+            InventoryPanelAudioConfig audioConfig)
         {
             _controller = controller;
             var gameSession = ServiceLocator.Current.Get<GameSession>();
             var gameLoopContext = gameSession.GameLoopContext;
+
+            _audioConfig = audioConfig;
             
             // === main buttons
             campButton.RegisterButtonClick(() => SetMode(InventoryGameplayMode.Camp_AllUnits));
@@ -87,9 +96,15 @@ namespace Galactic1.Code.UI.Inventory
                     var unitRuntime = gameLoopContext.GetUnit(unitId);
 
                     if (_strategicSquadSystem.IsInSquad(unitId))
+                    {
                         _strategicSquadSystem.RemoveUnit(unitRuntime);
+                        EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.fromSquad.ToData()));
+                    }
                     else
+                    {
                         _strategicSquadSystem.AddUnit(unitRuntime);
+                        EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.toSquad.ToData()));
+                    }
                 }
             });
             
@@ -105,7 +120,7 @@ namespace Galactic1.Code.UI.Inventory
                         var unitId = _controller.SelectedUnit.unitId;
                         if (!string.IsNullOrEmpty(unitId))
                         {
-                            // sound ...
+                            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.unitBanish.ToData()));
                             gameLoopContext.DeleteUnitByPlayer(unitId);
                         }
                     },

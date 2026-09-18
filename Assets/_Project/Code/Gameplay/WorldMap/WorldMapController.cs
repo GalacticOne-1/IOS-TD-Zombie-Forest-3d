@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Systems.GameTime;
 using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.World.Threats;
 using Galactic1.Configs;
 using Galactic1.Core;
+using Galactic1.UI.Audio;
 using Galactic1.UI.Core;
 using UnityEngine;
 
@@ -24,6 +26,7 @@ namespace Galactic1.Code.WorldMap
         [Header("Map Elements")]
         [SerializeField] private Transform labelsRoot;
 
+        private WorldMapAudioConfig audioConfig;
         private GameTimeService timeService;
         private WorldMapService mapService;
         public LocationOverview locationOverview { get; set; }
@@ -48,7 +51,8 @@ namespace Galactic1.Code.WorldMap
             
             // === сервис глобального времени
             timeService = ServiceLocator.Current.Get<GameTimeService>();
-            
+
+            audioConfig = ServiceLocator.Current.Get<ConfigProvider>().Get<WorldMapAudioConfig>();
             
             //
             routeRenderer = GetComponent<MapRouteRenderer>();
@@ -181,6 +185,8 @@ namespace Galactic1.Code.WorldMap
                 _ =>
             {
                 
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.showOverview.ToData()));
+                
                 EventBus<WorldMapLocationSelectedEvent>.Raise(new WorldMapLocationSelectedEvent()
                 {
                     LocationId = targetNode.Id,
@@ -214,6 +220,8 @@ namespace Galactic1.Code.WorldMap
         
         private void OnPlayerMoveStarted()
         {
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.driveStart.ToData()));
+            
             // Игрок начал движение — скрываем метку текущей локации
             currentLocationLabel.transform.parent.gameObject.SetActive(false);
         }
@@ -223,6 +231,8 @@ namespace Galactic1.Code.WorldMap
         /// </summary>
         private void OnPlayerMoveFinished()
         {
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.driveFinish.ToData()));
+            
             // Списываем время пути до локации
             timeService.SpendHours(_pendingPathCost, TimeAdvanceReason.MapMovement);
             _pendingPathCost = 0;
