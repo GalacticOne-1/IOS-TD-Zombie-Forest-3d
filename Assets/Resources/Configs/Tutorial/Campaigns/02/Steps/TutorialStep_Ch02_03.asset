@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch02_03
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 1e007fb2b4d5641039d865a1f0019031, type: 2}
+  chapterId: {fileID: 11400000, guid: 03d154c73b50a44cc8c606c79f9dc3d1, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: 720bc392f07ac4b73937d07e47280b5c, type: 2}
+  presentation:
+    instructionTitleKey: Check transport
+    instructionDesKey: Add ammo to transport inventory
+    dialogueId: 
+    inputPolicy: 0
+  guidance:
+  - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightTarget:
+        rid: 2031039168509902933
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 5d04f1230f90f4c3cb006261e8a95fbe, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightTarget:
+        rid: 2031039188548976724
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: e5d9560b7f1ae42bbba55cc26193dab1, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightTarget:
+        rid: 2031039168509902936
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  reward:
+    items: []
+  transitions: []
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2031039168509902933
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
+    - rid: 2031039168509902936
+      type: {class: TutorialInventoryItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 044c6e483e87041db98cd16f3a4f4da6, type: 2}
+    - rid: 2031039188548976724
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 39dfbdc1293834c48b9826443b6e5384, type: 2}

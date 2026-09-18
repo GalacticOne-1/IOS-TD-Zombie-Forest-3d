@@ -43,7 +43,7 @@ namespace Galactic1
 
         public bool NeedRequest()
         {
-            var d = ServiceLocator.Current.Get<ConfigProvider>().Get<ApplicationConfig>().requiresReviewService;
+            var d = ServiceLocator.Current.Get<ConfigProvider>().Get<GameConfig>().General.review;
             var y = ServiceLocator.Current.Get<IGameStateProvider>().GameStateProxy.Review.Value.reviewRequest;
             return d && !y;
         }

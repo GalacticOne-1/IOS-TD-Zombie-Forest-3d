@@ -1,10 +1,32 @@
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Inventory.Abstractions;
-using Galactic1.Code.UI.Inventory;
+using Galactic1.Code.Inventory.Context;
 using Galactic1.Core.Enums;
 
 namespace Galactic1.Mobile.EventBus
 {
+    
+    
+    /// <summary>Клик по одной из главных вкладок панели инвентаря (campButton/squadButton/
+    /// logisticsButton) — см. InventoryManagementPanelState.SelectMainTab. Отдельный канал
+    /// от InventorySquadExtraTabSelectedEvent: squadButton и squadExtraTransport могут
+    /// устанавливать одно и то же значение InventoryGameplayMode.Transport_SquadOnly, но это
+    /// два разных UI-элемента — guidance обязан различать, по какому именно кликнули, а не
+    /// только по итоговому значению enum.</summary>
+    public readonly struct InventoryMainTabSelectedEvent : IEvent
+    {
+        public readonly InventoryGameplayMode Mode;
+        public InventoryMainTabSelectedEvent(InventoryGameplayMode mode) => Mode = mode;
+    }
+    
+    /// <summary>Клик по одной из доп. вкладок squad-режима (squadExtraBase/
+    /// squadExtraTransport) — см. InventoryMainTabSelectedEvent докстринг про раздельные
+    /// каналы при общем enum.</summary>
+    public readonly struct InventorySquadExtraTabSelectedEvent : IEvent
+    {
+        public readonly InventoryGameplayMode Mode;
+        public InventorySquadExtraTabSelectedEvent(InventoryGameplayMode mode) => Mode = mode;
+    }
 
     
     
@@ -101,6 +123,29 @@ namespace Galactic1.Mobile.EventBus
         }
     }
 
+    
+    /// <summary>Предмет успешно перемещён между двумя ИНВЕНТАРНЫМИ ИСТОЧНИКАМИ (не между
+    /// слотами одного источника — тот случай ItemTransferredEvent не поднимает, см. её
+    /// докстринг в ITutorialInventoryTransferQuery). FromSourceType/ToSourceType — стабильные
+    /// значения InventorySourceType, а не ссылки на IInventorySource: сами инстансы
+    /// транзиентны (пересоздаются на каждый InventoryManagementController.BuildSources),
+    /// поэтому identity здесь ровно как у ItemEquippedEvent.Slot — тип, не ссылка.</summary>
+    public readonly struct ItemTransferredEvent : IEvent
+    {
+        public readonly InventorySourceType FromSourceType;
+        public readonly InventorySourceType ToSourceType;
+        public readonly InventorySlotRuntime Slot;
+
+        public ItemTransferredEvent(
+            InventorySourceType fromSourceType,
+            InventorySourceType toSourceType, 
+            InventorySlotRuntime slot)
+        {
+            FromSourceType = fromSourceType;
+            ToSourceType = toSourceType;
+            Slot = slot;
+        }
+    }
    
 
     

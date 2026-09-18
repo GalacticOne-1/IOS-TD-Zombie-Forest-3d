@@ -525,7 +525,7 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
                 _taskPanelToggle.ForceHidePanel(!_hasOpenScreen);
 
             if (!isEmpty && _wasEmpty)
-                _taskPanelToggle.ForceShowPanel(true);
+                _taskPanelToggle.ForceShowPanel(!_hasOpenScreen);
 
             _wasEmpty = isEmpty;
 

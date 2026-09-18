@@ -75,7 +75,7 @@ namespace Galactic1.Code.UI.Buildings
             }
 
             // === Amount
-            amountText.text = $"{offer.Amount}";
+            amountText.text = $"x{offer.Amount}";
 
             // === Premium buy
             premiumBuyButton.GetChild(0).CMP_Text().text = offer.Cost.ToString();

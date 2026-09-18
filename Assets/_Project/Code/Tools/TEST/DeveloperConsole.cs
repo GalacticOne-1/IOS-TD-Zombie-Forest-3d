@@ -37,7 +37,7 @@ namespace Galactic1
             {
                 core.showDevPanel = false;
                 core.camera_dev = false;
-                core.launch_tutorial = false;
+                core.use_tutorial_starter = false;
                 core.test_battle = false;
                 core.dev_polygon = false;
                 
@@ -96,7 +96,7 @@ namespace Galactic1
     {
         public bool showDevPanel;
         public bool camera_dev;
-        public bool launch_tutorial;
+        public bool use_tutorial_starter;
         public bool test_battle, dev_polygon;
     }
     

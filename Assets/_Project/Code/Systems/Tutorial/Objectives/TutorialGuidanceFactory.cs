@@ -25,7 +25,10 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             ITutorialSquadQuery squad,
             ITutorialInventoryInteractionQuery interaction,
             ITutorialFacilityPanelQuery facilityPanel,
-            ITutorialConstructionQuery construction)
+            ITutorialConstructionQuery construction,
+            ITutorialConstructionTabQuery constructionTab,
+            ITutorialInventoryMainTabQuery inventoryMainTab,        
+            ITutorialInventorySquadExtraTabQuery inventorySquadExtraTab)
         {
             
             Register<UIScreenOpenGuidanceConditionDefinition>(
@@ -44,6 +47,12 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                 d => new UnitSelectGuidanceCondition(squad, d.expectedFree));
             
             // inventory
+            Register<InventoryMainTabSelectedGuidanceConditionDefinition>(
+                d => new InventoryMainTabSelectedGuidanceCondition(inventoryMainTab, d.mode, d.expectedSelected));
+
+            Register<InventorySquadExtraTabSelectedGuidanceConditionDefinition>(
+                d => new InventorySquadExtraTabSelectedGuidanceCondition(inventorySquadExtraTab, d.mode, d.expectedSelected));
+        
             Register<ItemSelectedGuidanceConditionDefinition>(
                 d => new ItemSelectedGuidanceCondition(interaction, d.itemId, d.expectedSelected));
             Register<ItemDraggedGuidanceConditionDefinition>(
@@ -61,6 +70,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             // construction
             Register<FacilityBuiltGuidanceConditionDefinition>(
                 d => new FacilityBuiltGuidanceCondition(construction, d.itemId, d.expectedBuilt));
+            Register<ConstructionTabSelectedGuidanceConditionDefinition>(
+                d => new ConstructionTabSelectedGuidanceCondition(constructionTab, d.category, d.expectedSelected));
         }
 
         private void Register<TDef>(Func<TDef, ITutorialGuidanceCondition> factory)

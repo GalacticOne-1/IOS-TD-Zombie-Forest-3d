@@ -5,6 +5,7 @@ using Galactic1.Code.Systems.Inventory;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
 using Galactic1.Items;
+using Galactic1.Mobile.EventBus;
 using UnityEngine;
 
 namespace Galactic1.Code.UI.Inventory
@@ -347,6 +348,16 @@ namespace Galactic1.Code.UI.Inventory
             //toSource.OnChanged?.Invoke();
             _access.NotifyChanged(fromSource);
             _access.NotifyChanged(toSource);
+            
+            // *событие перемещения предмета между разными источниками
+            if(fromSource != toSource)
+            {
+                EventBus<ItemTransferredEvent>.Raise(new ItemTransferredEvent(
+                    fromSource.Type,
+                    toSource.Type,
+                    fromSlot
+                ));
+            }
         }
 
 

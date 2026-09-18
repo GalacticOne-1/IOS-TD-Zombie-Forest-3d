@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch01_02
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 8aa08d2382a004b60ab4e8e4ec8e47d8, type: 2}
+  chapterId: {fileID: 11400000, guid: a29af8e35615648f8b9b8296331f200c, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: 0b7e4ecb24dbb462c8714b6904cf32b0, type: 2}
+  presentation:
+    instructionTitleKey: Contruction
+    instructionDesKey: construct the ammunition station
+    dialogueId: 
+    inputPolicy: 0
+  guidance:
+  - condition: {fileID: 11400000, guid: 6e1288eda30524af8a2e29612fa7d228, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightTarget:
+        rid: 2031039145763667969
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 053a104cb3a92490f86e7723da02ced0, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightTarget:
+        rid: 2031039171767828566
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: f53a911a8b61644fda252735f16f84f5, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentation:
+      highlightTarget:
+        rid: 2031039171767828567
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  reward:
+    items: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: 114e9fa1738724655848e8eabd755606, type: 2}
+    condition:
+      rid: -2
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2031039145763667969
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 324bc5d5b92db4914a3a9af992ff54dd, type: 2}
+    - rid: 2031039171767828566
+      type: {class: TutorialConstructionTabQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        category: 4
+    - rid: 2031039171767828567
+      type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        facilityItemId: {fileID: 11400000, guid: d05e468fa6c494f4eaa0df4c13d39e44, type: 2}

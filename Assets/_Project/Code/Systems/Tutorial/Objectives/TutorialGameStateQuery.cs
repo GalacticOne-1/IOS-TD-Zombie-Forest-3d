@@ -1,15 +1,20 @@
 using System;
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Inventory.Context;
+using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.UI.Inventory;
+using Galactic1.Configs;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
 using Galactic1.Core.Enums;
 using Galactic1.Game.Meta.Items;
+using Galactic1.Mobile.EventBus;
 using Galactic1.UI.Core;
+using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Objectives
 {
@@ -29,7 +34,10 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         ITutorialUIStateQuery,
         ITutorialFacilityPanelQuery,
         ITutorialInventoryInteractionQuery,
-        ITutorialConstructionQuery
+        ITutorialConstructionQuery,
+        ITutorialConstructionTabQuery,
+        ITutorialInventoryMainTabQuery,
+        ITutorialInventorySquadExtraTabQuery
     {
         private readonly GameLoopContext _context;
         private readonly GameLoopStateMachine _stateMachine;
@@ -41,6 +49,22 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
 
         private TutorialStepDomain _lastDomain;
         private FacilityType? _openFacilityType;
+        private ConstructionCategory? _currentTabCategory;
+        private InventoryGameplayMode? _currentMainTab;
+        private InventoryGameplayMode? _currentSquadExtraTab;
+        
+        
+        public event Action<ConstructionCategory> OnConstructionTabSelected;
+        public ConstructionCategory? CurrentTabCategory => _currentTabCategory;
+        
+        
+        // ── ITutorialInventoryMainTabQuery ──────────────────────────────────
+        public InventoryGameplayMode? CurrentMainTab => _currentMainTab;
+        public event Action<InventoryGameplayMode> OnMainTabSelected;
+
+        // ── ITutorialInventorySquadExtraTabQuery ────────────────────────────
+        public InventoryGameplayMode? CurrentSquadExtraTab => _currentSquadExtraTab;
+        public event Action<InventoryGameplayMode> OnSquadExtraTabSelected;
         
         
 
@@ -65,6 +89,35 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                 if (e.ScreenId == UIScreenId.FacilityPanel)
                     _openFacilityType = null;
             }));
+            
+            EventBus<ConstructionTabSelectedEvent>.Register(new EventBinding<ConstructionTabSelectedEvent>(e =>
+            {
+                _currentTabCategory = e.Category;
+                OnConstructionTabSelected?.Invoke(e.Category);
+            }));
+            EventBus<UIScreenClosedEvent>.Register(new EventBinding<UIScreenClosedEvent>(e =>
+            {
+                if (e.ScreenId == UIScreenId.FacilityPanel)
+                {
+                    _openFacilityType = null;
+                    _currentTabCategory = null;
+                }
+            }));
+            
+            
+            EventBus<InventoryMainTabSelectedEvent>.Register(new EventBinding<InventoryMainTabSelectedEvent>(e =>
+            {
+                _currentMainTab = e.Mode;
+                OnMainTabSelected?.Invoke(e.Mode);
+            }));
+
+            EventBus<InventorySquadExtraTabSelectedEvent>.Register(new EventBinding<InventorySquadExtraTabSelectedEvent>(e =>
+            {
+                _currentSquadExtraTab = e.Mode;
+                OnSquadExtraTabSelected?.Invoke(e.Mode);
+            }));
+            
+            
 
             // === ITutorialConstructionQuery: OnBuildingCreated — плоский C#-event
             // GameLoopContext, тот же приём, что уже используется для OnUnitCreated в
@@ -75,6 +128,13 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             // === активация по одноразовому событию старта игры ===
             EventBus<StartGameEvent>.Register(new EventBinding<StartGameEvent>(() =>
             {
+                var configProvider = ServiceLocator.Current.Get<ConfigProvider>();
+                if (!configProvider.Get<GameConfig>().General.tutorial)
+                {
+                    Debug.LogError("Tutorial is disabled!");
+                    return;
+                }
+                
                 _lastDomain = ComputeDomain();
                 _stateMachine.OnStateChanged += _ =>
                 {
@@ -93,7 +153,20 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                  * как gameSession.GameLoopContext уже полностью восстановлен из сейва
                  * (юниты/здания/CampRuntime загружены)
                  */
-                ServiceLocator.Current.Get<ITutorialService>().StartOrRestore(GameIdProvider.TutorialStart);
+                
+                // ! старт для отладки !
+                if (DeveloperConsole.I.core.use_tutorial_starter)
+                {
+                    var starterConfig = configProvider.Get<TutorialDevStarterConfig>();
+                    ServiceLocator.Current.Get<ITutorialService>()
+                        .StartOrRestore(starterConfig.CampaignId, starterConfig.ChapterId);
+                }
+                
+                // старт для релиза
+                else
+                {
+                    ServiceLocator.Current.Get<ITutorialService>().StartOrRestore(GameIdProvider.TutorialStart);
+                }
             }));
         }
 

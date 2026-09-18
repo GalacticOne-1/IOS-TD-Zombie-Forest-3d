@@ -24,6 +24,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             GameLoopContext gameLoopContext)
         {
             Register<EnemyKilledObjectiveDefinition>(d => new EnemyKilledObjective(d.requiredCount));
+            Register<ItemTransferredObjectiveDefinition>(d =>
+                new ItemTransferredObjective(d.itemId, d.fromSourceType, d.toSourceType, d.requiredAmount));
             Register<ItemEquippedObjectiveDefinition>(d => new ItemEquippedObjective(inventory, d.slot, d.itemId));
             Register<ResourceAmountObjectiveDefinition>(d => new ResourceAmountObjective(inventory, d.itemId, d.requiredAmount));
             Register<SquadSizeObjectiveDefinition>(d => new SquadSizeObjective(squad, d.requiredSize));

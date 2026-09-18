@@ -30,8 +30,7 @@ namespace Galactic1.Tools
                 return;
             }
 
-            string campaignsRootFolder =
-                _manager.assetCreationSettings.CampaignFolder;
+            string campaignsRootFolder = _manager.assetCreationSettings.CampaignFolder;
 
             if (!EnsureFolderExists(campaignsRootFolder))
             {
@@ -126,22 +125,20 @@ namespace Galactic1.Tools
                 return;
             }
 
-            string campaignFolder =
-                GetSelectedCampaignFolder();
+            string campaignFolder = GetSelectedCampaignFolder();
 
             if (string.IsNullOrEmpty(campaignFolder))
                 return;
 
-            int chapterNumber =
-                FindFirstFreeNumber(
-                    campaignFolder,
-                    _manager.assetCreationSettings.ChapterNamePrefix);
+            int campaignNumber = GetSelectedCampaignNumber();
+            int chapterNumber = FindFirstFreeChapterNumber(
+                campaignFolder,
+                campaignNumber);
 
-            string defaultName =
-                $"{_manager.assetCreationSettings.ChapterNamePrefix}{chapterNumber:00}";
+            string defaultName = $"{_manager.assetCreationSettings.ChapterNamePrefix}" +
+                                 $"{campaignNumber}_{chapterNumber:00}";
 
-            string path =
-                EditorUtility.SaveFilePanelInProject(
+            string path = EditorUtility.SaveFilePanelInProject(
                     "Create Tutorial Chapter",
                     defaultName,
                     "asset",
@@ -173,14 +170,14 @@ namespace Galactic1.Tools
                 return;
             }
 
-            int chapterIdNumber =
-                FindFirstFreeNumber(
-                    idsFolder,
-                    _manager.assetCreationSettings.ChapterIdNamePrefix);
+            int chapterIdNumber = FindFirstFreeChapterIdNumber(
+                idsFolder,
+                campaignNumber);
 
             TutorialChapterId chapterId =
                 CreateChapterId(
                     idsFolder,
+                    campaignNumber,
                     chapterIdNumber);
 
             chapter.chapterId = chapterId;
@@ -220,8 +217,7 @@ namespace Galactic1.Tools
                 return;
             }
 
-            int chapterNumber =
-                GetSelectedChapterNumber();
+            int chapterNumber = GetSelectedChapterNumber();
 
             if (chapterNumber <= 0)
             {
@@ -351,19 +347,19 @@ namespace Galactic1.Tools
 
         private TutorialChapterId CreateChapterId(
             string idsFolder,
+            int campaignNumber,
             int number)
         {
-            string fileName = $"{_manager.assetCreationSettings.ChapterIdNamePrefix}{number:00}.asset";
+            string fileName = $"{_manager.assetCreationSettings.ChapterIdNamePrefix}" +
+                              $"{campaignNumber:00}_{number:00}.asset";
 
             string path = CombineAssetPath(idsFolder, fileName);
 
             path = AssetDatabase.GenerateUniqueAssetPath(path);
 
-            var chapterId =
-                ScriptableObject.CreateInstance<TutorialChapterId>();
+            var chapterId = ScriptableObject.CreateInstance<TutorialChapterId>();
 
-            chapterId.name =
-                Path.GetFileNameWithoutExtension(path);
+            chapterId.name = Path.GetFileNameWithoutExtension(path);
 
             AssetDatabase.CreateAsset(chapterId, path);
 
@@ -473,6 +469,32 @@ namespace Galactic1.Tools
                 number++;
             }
         }
+        
+        /// <summary>
+        /// Находит первый свободный номер Chapter внутри выбранной Campaign.
+        /// Проверяет реальные имена Chapter-ассетов с учетом номера Campaign.
+        /// </summary>
+        private int FindFirstFreeChapterNumber(
+            string campaignFolder,
+            int campaignNumber)
+        {
+            int chapterNumber = 1;
+
+            while (true)
+            {
+                string fileName =
+                    $"{_manager.assetCreationSettings.ChapterNamePrefix}" +
+                    $"{campaignNumber}_{chapterNumber:00}.asset";
+
+                string path =
+                    CombineAssetPath(campaignFolder, fileName);
+
+                if (!AssetDatabase.LoadAssetAtPath<Object>(path))
+                    return chapterNumber;
+
+                chapterNumber++;
+            }
+        }
 
         private int FindFirstFreeStepNumber(
             string stepsFolder,
@@ -494,28 +516,34 @@ namespace Galactic1.Tools
                 stepNumber++;
             }
         }
-
-        private int FindFirstFreeStepIdNumber(
+        
+        
+        /// <summary>
+        /// Находит первый свободный номер Chapter ID
+        /// внутри выбранной Campaign.
+        /// </summary>
+        private int FindFirstFreeChapterIdNumber(
             string idsFolder,
-            int chapterNumber)
+            int campaignNumber)
         {
-            int stepNumber = 1;
+            int chapterNumber = 1;
 
             while (true)
             {
                 string fileName =
-                    $"{_manager.assetCreationSettings.StepIdNamePrefix}" +
-                    $"{chapterNumber:00}_{stepNumber:00}.asset";
+                    $"{_manager.assetCreationSettings.ChapterIdNamePrefix}" +
+                    $"{campaignNumber:00}_{chapterNumber:00}.asset";
 
                 string path =
                     CombineAssetPath(idsFolder, fileName);
 
                 if (!AssetDatabase.LoadAssetAtPath<Object>(path))
-                    return stepNumber;
+                    return chapterNumber;
 
-                stepNumber++;
+                chapterNumber++;
             }
         }
+
 
         public string CombineAssetPath(
             string folder,
@@ -530,14 +558,12 @@ namespace Galactic1.Tools
             if (_manager.selectedCampaign == null)
                 return null;
 
-            string campaignAssetPath =
-                AssetDatabase.GetAssetPath(_manager.selectedCampaign);
+            string campaignAssetPath = AssetDatabase.GetAssetPath(_manager.selectedCampaign);
 
             if (string.IsNullOrEmpty(campaignAssetPath))
                 return null;
 
-            return Path.GetDirectoryName(campaignAssetPath)
-                ?.Replace("\\", "/");
+            return Path.GetDirectoryName(campaignAssetPath) ?.Replace("\\", "/");
         }
 
 
@@ -546,15 +572,12 @@ namespace Galactic1.Tools
             if (_manager.assetCreationSettings == null)
                 return null;
 
-            string campaignFolder =
-                GetSelectedCampaignFolder();
+            string campaignFolder = GetSelectedCampaignFolder();
 
             if (string.IsNullOrEmpty(campaignFolder))
                 return null;
 
-            return CombineAssetPath(
-                campaignFolder,
-                _manager.assetCreationSettings.StepFolderName);
+            return CombineAssetPath(campaignFolder, _manager.assetCreationSettings.StepFolderName);
         }
 
 
@@ -563,15 +586,25 @@ namespace Galactic1.Tools
             if (_manager.assetCreationSettings == null)
                 return null;
 
-            string campaignFolder =
-                GetSelectedCampaignFolder();
+            string campaignFolder = GetSelectedCampaignFolder();
 
             if (string.IsNullOrEmpty(campaignFolder))
                 return null;
 
-            return CombineAssetPath(
-                campaignFolder,
-                _manager.assetCreationSettings.IdsFolderName);
+            return CombineAssetPath( campaignFolder, _manager.assetCreationSettings.IdsFolderName);
+        }
+        
+        
+        private int GetSelectedCampaignNumber()
+        {
+            if (_manager.selectedCampaign == null)
+            {
+                return 0;
+            }
+
+            int index = _manager.registry.campaigns.IndexOf(_manager.selectedCampaign);
+
+            return index + 1;
         }
 
         private int GetSelectedChapterNumber()
@@ -582,9 +615,7 @@ namespace Galactic1.Tools
                 return 0;
             }
 
-            int index =
-                _manager.selectedCampaign.chapters
-                    .IndexOf(_manager.selectedChapter);
+            int index = _manager.selectedCampaign.chapters.IndexOf(_manager.selectedChapter);
 
             return index + 1;
         }

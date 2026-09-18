@@ -77,6 +77,7 @@ namespace Galactic1.Code.UI.Construction
             gameObject.SetActive(true);
 
             _currentCategory = _constructionConfig.Categories[0].Category;
+            EventBus<ConstructionTabSelectedEvent>.Raise(new ConstructionTabSelectedEvent(_currentCategory));
             Rebind();
         }
 
@@ -112,6 +113,7 @@ namespace Galactic1.Code.UI.Construction
             {
                 _currentCategory = category;
                 _constructionController.ResetState();
+                EventBus<ConstructionTabSelectedEvent>.Raise(new ConstructionTabSelectedEvent(_currentCategory));
             }
         }
 

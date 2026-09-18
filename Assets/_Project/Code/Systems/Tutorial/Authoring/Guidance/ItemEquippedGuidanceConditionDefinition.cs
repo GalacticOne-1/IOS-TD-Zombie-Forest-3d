@@ -1,6 +1,5 @@
 using UnityEngine;
 using Galactic1.Code.GameDatabase.Registries;
-using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Core.Enums;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring.Guidance

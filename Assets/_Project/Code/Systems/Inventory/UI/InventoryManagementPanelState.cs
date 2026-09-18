@@ -3,6 +3,7 @@ using Galactic1.Code.Inventory.Context;
 using Galactic1.Code.Systems.Squad;
 using Galactic1.Configs;
 using Galactic1.Core.Systems.GameLoopSession;
+using Galactic1.Mobile.EventBus;
 using Galactic1.UI.Core;
 using TMPro;
 using UnityEngine;
@@ -161,6 +162,17 @@ namespace Galactic1.Code.UI.Inventory
             squadExtraRoot.SetActive(squadMode);
             HighlightButton(squadExtraTransport.GetChild(0).CMP_Image(), mode == InventoryGameplayMode.Transport_SquadOnly);
             HighlightButton(squadExtraBase.GetChild(0).CMP_Image(), mode == InventoryGameplayMode.Camp_SquadOnly);
+            
+            PublishTabState(mode, squadMode);
+        }
+        
+        private void PublishTabState(InventoryGameplayMode mode, bool squadMode)
+        {
+            var mainTabMode = squadMode ? InventoryGameplayMode.Transport_SquadOnly : mode;
+            EventBus<InventoryMainTabSelectedEvent>.Raise(new InventoryMainTabSelectedEvent(mainTabMode));
+
+            if (squadMode)
+                EventBus<InventorySquadExtraTabSelectedEvent>.Raise(new InventorySquadExtraTabSelectedEvent(mode));
         }
         
         void RefreshSquadButtons(string changedUnitId, bool isInSquad)

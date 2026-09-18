@@ -2,6 +2,7 @@
 using Galactic1;
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Units;
+using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.Raid.Enemies;
 using Galactic1.Code.Systems.Raid.Mission;
 using Galactic1.Code.Systems.Runtime.Building;
@@ -309,6 +310,15 @@ public readonly struct FacilityPanelOpenedEvent : IEvent
 {
     public readonly FacilityType Type;
     public FacilityPanelOpenedEvent(FacilityType type) => Type = type;
+}
+
+public readonly struct ConstructionTabSelectedEvent : IEvent
+{
+    public readonly ConstructionCategory Category;
+    public ConstructionTabSelectedEvent(ConstructionCategory category)
+    {
+        Category = category;
+    }
 }
 
 

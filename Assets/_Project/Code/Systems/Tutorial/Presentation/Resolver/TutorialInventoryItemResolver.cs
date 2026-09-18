@@ -1,4 +1,4 @@
-// TutorialInventoryItemResolver.cs
+
 using System;
 using System.Collections.Generic;
 using Galactic1.Mobile.EventBus;

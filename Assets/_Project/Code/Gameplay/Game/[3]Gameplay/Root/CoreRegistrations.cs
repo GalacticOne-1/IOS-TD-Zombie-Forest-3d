@@ -282,9 +282,10 @@ namespace Galactic1
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
-                tutorialGameStateQuery); // ITutorialConstructionQuery — тот же query-инстанс,
-                                          // что и остальные семь параметров (см. её докстринг
-                                          // про единственную реализацию нескольких узких интерфейсов)
+                tutorialGameStateQuery,
+                tutorialGameStateQuery,
+                tutorialGameStateQuery,
+                tutorialGameStateQuery); 
 
             var tutorialCheckpointService = new TutorialCheckpointService();
             var tutorialInputPolicyService = new TutorialInputPolicyService(interactionPolicy);

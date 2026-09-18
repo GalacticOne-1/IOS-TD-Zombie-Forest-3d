@@ -19,8 +19,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     public interface ITutorialService : IGameService
     {
         bool IsActive { get; }
-        void StartOrRestore(TutorialCampaignId campaignId);
-        void StartTutorial(TutorialCampaignId campaignId);
+        void StartOrRestore(TutorialCampaignId campaignId, TutorialChapterId startChapterId = null);
+        void StartTutorial(TutorialCampaignId campaignId, TutorialChapterId startChapterId = null);
         void Restore();
         void StopTutorial();
         TutorialProgress GetProgress();
@@ -126,7 +126,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         // PRODUCTION API
         // =========================================================
         
-        public void StartOrRestore(TutorialCampaignId initialCampaignId)
+        public void StartOrRestore(TutorialCampaignId initialCampaignId, TutorialChapterId startChapterId = null)
         {
             var snapshot = _tutorialState.Value;
 
@@ -135,11 +135,14 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             if (!string.IsNullOrEmpty(snapshot.campaignId))
             {
+                // Прогресс уже есть — резюмим существующую позицию, startChapterId здесь не
+                // применим (это точка входа ТОЛЬКО для свежего старта, не для resume — см.
+                // ResolveEntryStepId докстринг).
                 Restore();
                 return;
             }
 
-            StartTutorial(initialCampaignId);
+            StartTutorial(initialCampaignId, startChapterId);
         }
 
         public void Restore()
@@ -196,7 +199,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             }
         }
 
-        public void StartTutorial(TutorialCampaignId campaignId)
+        public void StartTutorial(TutorialCampaignId campaignId, TutorialChapterId startChapterId = null)
         {
             if (IsActive)
             {
@@ -211,6 +214,14 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 return;
             }
 
+            // Резолвим точку входа ДО мутации состояния — если startChapterId невалиден,
+            // ничего не должно поменяться (раньше ResetProgression шёл раньше и всегда
+            // успевал отработать, потому что entryStepId кампании гарантированно валиден
+            // через ValidateGraph на этапе авторинга; startChapterId такой гарантии не имеет).
+            var entryStepId = ResolveEntryStepId(definition, startChapterId);
+            if (entryStepId == null)
+                return; // причина уже залогирована в ResolveEntryStepId
+
             ResetProgression(campaignId, resetStartedTimestamp: true);
 
             _runtime = new TutorialRuntime(definition, _tutorialState);
@@ -218,7 +229,47 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             // ActivateStep сам персистит, когда реально приземлится на активный шаг
             // (или через CompleteCampaign, если вся кампания состоит из мгновенных завершений).
-            ActivateStep(definition.entryStepId);
+            ActivateStep(entryStepId);
+        }
+        
+        /// <summary>Точка входа кампании при СВЕЖЕМ старте: по умолчанию definition.entryStepId,
+        /// но вызывающий (конфиг запуска приложения / QA-инструмент) может явно указать главу —
+        /// тогда точка входа это первый шаг ЭТОЙ главы (chapter.steps[0]). Дальше обычная
+        /// graph-навигация (transitions) идёт как всегда, от этого шага вперёд — override
+        /// касается только СТАРТОВОЙ позиции, не логики прогрессии.
+        ///
+        /// НЕ путать с TutorialCheckpointService/ResolveResume — тот резолвит точку RESUME
+        /// для уже существующего прогресса, эта точка входа применяется только когда
+        /// прогресса ещё нет вообще (см. StartOrRestore).</summary>
+        private TutorialStepId ResolveEntryStepId(TutorialDefinition definition, TutorialChapterId startChapterId)
+        {
+            if (startChapterId == null)
+                return definition.entryStepId;
+
+            var chapter = definition.GetChapter(startChapterId);
+            if (chapter == null)
+            {
+                Debug.LogError($"[TutorialService] StartTutorial: chapter '{startChapterId.DebugKey}' " +
+                               $"не найдена в кампании '{definition.campaignId?.DebugKey ?? "?"}' — старт отменён.");
+                return null;
+            }
+
+            if (chapter.steps == null || chapter.steps.Count == 0)
+            {
+                Debug.LogError($"[TutorialService] StartTutorial: chapter '{startChapterId.DebugKey}' " +
+                               "не содержит шагов — старт отменён.");
+                return null;
+            }
+
+            var firstStep = chapter.steps[0];
+            if (firstStep == null || firstStep.stepId == null)
+            {
+                Debug.LogError($"[TutorialService] StartTutorial: chapter '{startChapterId.DebugKey}' " +
+                               "первый шаг пуст или не имеет stepId — старт отменён.");
+                return null;
+            }
+
+            return firstStep.stepId;
         }
 
         /// <summary>Единая точка сброса прогресса кампании — используется и StartTutorial

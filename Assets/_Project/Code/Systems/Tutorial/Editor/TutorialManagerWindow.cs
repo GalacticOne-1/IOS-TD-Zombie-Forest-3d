@@ -193,6 +193,12 @@ namespace Galactic1.Tools
                 EditorGUILayout.HelpBox(shown, MessageType.Error);
             }
 
+            // Разворачиваем список глав прямо под кнопкой выбранной кампании —
+            // раньше это был отдельный dropdown в нижнем тулбаре, теперь это часть
+            // левой колонки, чтобы кампания/глава/шаг выбирались в одном месте.
+            if (isSelected)
+                DrawChapterList(campaign);
+
             GUILayout.Space(2);
         }
 
@@ -203,30 +209,103 @@ namespace Galactic1.Tools
             SelectStep(selectedChapter != null && selectedChapter.steps.Count > 0 ? selectedChapter.steps[0] : null);
         }
 
-        
+        // ---------------- Chapters (inline, under selected campaign) ----------------
+
+        /// <summary>Вертикальный список глав выбранной кампании, кнопки шириной ~100px
+        /// с лейблом "CH_01"/"CH_02"/... по порядковому номеру главы в списке.</summary>
+        private void DrawChapterList(TutorialDefinition campaign)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.BeginVertical();
+
+            if (campaign.chapters != null)
+            {
+                for (int i = 0; i < campaign.chapters.Count; i++)
+                {
+                    var chapter = campaign.chapters[i];
+                    if (chapter == null) continue;
+                    DrawChapterRow(chapter, i);
+                }
+            }
+
+            if (GUILayout.Button("+ New Chapter", GUILayout.Width(100)))
+                MenuHelper.CreateNewChapter();
+
+            EditorGUILayout.EndVertical();
+            EditorGUI.indentLevel--;
+        }
+
+        /// <summary>Одна строка главы: кнопка главы, и если глава выбрана — сразу справа
+        /// от неё (горизонтально) разворачивается список шагов этой главы.</summary>
+        private void DrawChapterRow(TutorialChapterDefinition chapter, int chapterIndex)
+        {
+            bool isChapterSelected = chapter == selectedChapter;
+
+            EditorGUILayout.BeginHorizontal();
+
+            if (isChapterSelected) GUI.backgroundColor = Color.cyan;
+            string chapterLabel = $"CH_{(chapterIndex + 1):00}";
+            if (GUILayout.Button(chapterLabel, GUILayout.Width(60), GUILayout.Height(24)))
+            {
+                selectedChapter = chapter;
+                SelectStep(chapter.steps != null && chapter.steps.Count > 0 ? chapter.steps[0] : null);
+            }
+            GUI.backgroundColor = originalBg;
+
+            if (isChapterSelected)
+                DrawStepButtons(chapter);
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        /// <summary>Квадратные 30x30 кнопки шагов главы, лейбл — просто порядковый индекс
+        /// шага (1, 2, 3, ...). Невалидный шаг подсвечивается красным фоном.</summary>
+        private void DrawStepButtons(TutorialChapterDefinition chapter)
+        {
+            if (chapter.steps == null) return;
+
+            var size = 24;
+
+            for (int i = 0; i < chapter.steps.Count; i++)
+            {
+                var step = chapter.steps[i];
+                if (step == null) continue;
+
+                bool isStepSelected = step == selectedStep;
+                bool stepValid = step.Validate(out _);
+
+                if (isStepSelected) GUI.backgroundColor = Color.cyan;
+                else if (!stepValid) GUI.backgroundColor = ErrorColor;
+
+                if (GUILayout.Button((i + 1).ToString(), GUILayout.Width(size), GUILayout.Height(size)))
+                    SelectStep(step);
+
+                GUI.backgroundColor = originalBg;
+            }
+
+            if (GUILayout.Button("+", GUILayout.Width(size), GUILayout.Height(size)))
+                MenuHelper.CreateNewStep();
+        }
 
         // ================================================================
-        // BOTTOM NAV BAR — CHAPTER / STEP DROPDOWNS
+        // BOTTOM NAV BAR — BREADCRUMB
         // ================================================================
         private void DrawBottomNavBar()
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-            GUI.enabled = selectedCampaign != null;
+            string campaignLabel = selectedCampaign != null
+                ? (selectedCampaign.campaignId != null ? selectedCampaign.campaignId.DebugKey : selectedCampaign.name)
+                : "— No Campaign —";
             string chapterLabel = selectedChapter != null
                 ? (selectedChapter.chapterId != null ? selectedChapter.chapterId.DebugKey : selectedChapter.name)
-                : "— Select Chapter —";
-            if (GUILayout.Button(chapterLabel, EditorStyles.toolbarDropDown, GUILayout.Width(220)))
-                ShowChapterMenu(GUILayoutUtility.GetLastRect());
-
-            GUI.enabled = selectedChapter != null;
+                : "— No Chapter —";
             string stepLabel = selectedStep != null
                 ? (selectedStep.stepId != null ? selectedStep.stepId.DebugKey : selectedStep.name)
-                : "— Select Step —";
-            if (GUILayout.Button(stepLabel, EditorStyles.toolbarDropDown, GUILayout.Width(220)))
-                ShowStepMenu(GUILayoutUtility.GetLastRect());
+                : "— No Step —";
 
-            GUI.enabled = true;
+            EditorGUILayout.LabelField($"{campaignLabel}  /  {chapterLabel}  /  {stepLabel}", EditorStyles.miniLabel);
+
             GUILayout.FlexibleSpace();
 
             if (selectedStep != null && GUILayout.Button("Ping Asset", EditorStyles.toolbarButton, GUILayout.Width(90)))
@@ -235,66 +314,11 @@ namespace Galactic1.Tools
             EditorGUILayout.EndHorizontal();
         }
 
-        private void ShowChapterMenu(Rect activatorRect)
-        {
-            var menu = new GenericMenu();
-
-            if (selectedCampaign?.chapters != null)
-            {
-                foreach (var chapter in selectedCampaign.chapters)
-                {
-                    if (chapter == null) continue;
-                    string label = chapter.chapterId != null ? chapter.chapterId.DebugKey : chapter.name;
-                    var captured = chapter;
-                    menu.AddItem(new GUIContent(label), chapter == selectedChapter, () =>
-                    {
-                        selectedChapter = captured;
-                        SelectStep(captured.steps != null && captured.steps.Count > 0 ? captured.steps[0] : null);
-                    });
-                }
-            }
-
-            if (menu.GetItemCount() == 0) menu.AddDisabledItem(new GUIContent("No chapters"));
-            menu.AddSeparator("");
-            menu.AddItem(new GUIContent("+ New Chapter"), false, MenuHelper.CreateNewChapter);
-
-            menu.DropDown(activatorRect);
-        }
-
-        private void ShowStepMenu(Rect activatorRect)
-        {
-            var menu = new GenericMenu();
-
-            if (selectedChapter?.steps != null)
-            {
-                foreach (var step in selectedChapter.steps)
-                {
-                    if (step == null) continue;
-                    string label = step.stepId != null ? step.stepId.DebugKey : step.name;
-                    if (!step.Validate(out _)) label = "⚠ " + label;
-                    var captured = step;
-                    menu.AddItem(new GUIContent(label), step == selectedStep, () => SelectStep(captured));
-                }
-            }
-
-            if (menu.GetItemCount() == 0) menu.AddDisabledItem(new GUIContent("No steps"));
-            menu.AddSeparator("");
-            menu.AddItem(new GUIContent("+ New Step"), false, MenuHelper.CreateNewStep);
-
-            menu.DropDown(activatorRect);
-        }
-
         public void SelectStep(TutorialStepDefinition step)
         {
             selectedStep = step;
             stepSO = step != null ? new SerializedObject(step) : null;
         }
-
-        
-
-        
-
-        
 
         // ================================================================
         // CENTER PANEL — STEP DETAILS

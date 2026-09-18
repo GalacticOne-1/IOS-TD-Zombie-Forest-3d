@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Galactic1
 {
@@ -27,12 +26,10 @@ namespace Galactic1
         [Space]
         public bool requiresSavingService;
         public bool requiresServerConnection;
-        public bool requiresReviewService;
         public bool requiresIntroService;
         public bool requiresIapService;
         public bool requiresAnalyticsService;
         public bool requiresAdService;
-        public bool requiresTutorial;
         
         [Space]
         public bool isAppstore;
