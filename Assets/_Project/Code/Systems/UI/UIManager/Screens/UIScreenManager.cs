@@ -175,15 +175,17 @@ namespace Galactic1.UI.Core
                 UIScreenId.Settings or
                     UIScreenId.PurchaseRewardScreen or
                     UIScreenId.PlayerDamageFrame or
-                    UIScreenId.DeathScreen or 
-                    UIScreenId.ScenarioTaskHUD
+                    UIScreenId.DeathScreen
                     => _layerRoot.overlayRoot,
+
+                UIScreenId.ScenarioTaskHUD
+                    => _layerRoot.scenarioRoot,
 
                 UIScreenId.HUDInput or
                     UIScreenId.HUDCamp or
                     UIScreenId.HUDLocation or
                     UIScreenId.HUDMap or
-                    UIScreenId.TutorialHUD 
+                    UIScreenId.TutorialHUD
                     => _layerRoot.hudRoot,
 
                 UIScreenId.BaseConstructionMenu

@@ -17,6 +17,7 @@ namespace Galactic1.UI.Core
         {
             public Transform screensRoot;
             public Transform overlayRoot;
+            public Transform scenarioRoot;
             public Transform hudRoot;
             public Transform hudWorldRoot;    // элементы геймплея живущие всю сцену
             public Transform constructionRoot;

@@ -36,6 +36,31 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring.Objectives
 
         [Tooltip("Тип источника, в который перемещается предмет.")]
         public InventorySourceType toSourceType;
+        
+        
+#if UNITY_EDITOR
+        public override bool Validate(out string error)
+        {
+            if (itemId == null)
+            {
+                error = "ItemTransferredObjectiveDefinition: itemId is empty.";
+                return false;
+            }
+
+            bool supported = toSourceType is InventorySourceType.BaseStorage
+                or InventorySourceType.TransportCargo;
+            if (!supported)
+            {
+                error = $"ItemTransferredObjectiveDefinition: toSourceType={toSourceType} не " +
+                        "поддержан — нет единственного canonical instance для суммирования " +
+                        "(per-owner или transient-only источник).";
+                return false;
+            }
+
+            error = null;
+            return true;
+        }
+#endif
 
     }
 }

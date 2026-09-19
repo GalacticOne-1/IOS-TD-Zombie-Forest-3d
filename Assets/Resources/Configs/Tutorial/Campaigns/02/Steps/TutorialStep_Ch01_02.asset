@@ -57,17 +57,12 @@ MonoBehaviour:
       cameraFocusTargetId: {fileID: 0}
   reward:
     items: []
-  transitions:
-  - nextStepId: {fileID: 11400000, guid: 114e9fa1738724655848e8eabd755606, type: 2}
-    condition:
-      rid: -2
+  transitions: []
   isCheckpoint: 1
   requiredDomain: 0
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 2031039145763667969
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:

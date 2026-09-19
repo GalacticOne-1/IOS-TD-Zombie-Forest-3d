@@ -8,6 +8,7 @@ using Galactic1.Code.Inventory.Context;
 using Galactic1.Code.Inventory.Services;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Core.Enums;
+using Galactic1.Mobile.EventBus;
 using Galactic1.UI.Audio;
 using UnityEngine;
 
@@ -379,14 +380,16 @@ namespace Galactic1.Code.UI.Inventory
             invWindow.ClearAllSelections();
         
             // 1️⃣ Пробегаем все слоты исходного инвентаря
-            for (int i = 0; i < fromSource.GetSlots().Count; i++)
+            var l = fromSource.GetSlots().Count;
+            for (int i = 0; i < l; i++)
             {
                 var slot = fromSource.GetSlot(i);
                 if (slot.IsEmpty) continue;
         
                 // 2️⃣ Сначала пытаемся добавить предмет в существующие стеки
                 int remaining = slot.Amount;
-                for (int j = 0; j < toSource.GetSlots().Count; j++)
+                var ll = toSource.GetSlots().Count;
+                for (int j = 0; j < ll; j++)
                 {
                     var targetSlot = toSource.GetSlot(j);
                     if (targetSlot.IsEmpty) continue;
@@ -399,8 +402,15 @@ namespace Galactic1.Code.UI.Inventory
                     int toTransfer = Mathf.Min(remaining, canAdd);
                     targetSlot.Amount += toTransfer;
                     remaining -= toTransfer;
+
+                    toSource.SetSlot(j, new InventorySlotRuntime(
+                        slot.Item,
+                        targetSlot.Amount,
+                        slot.Durability,
+                        slot.AmmoInMagazine));
         
-                    if (remaining <= 0) break;
+                    if (remaining <= 0) 
+                        break;
                 }
         
                 // 3️⃣ Если что-то осталось — ищем пустой слот
@@ -413,15 +423,23 @@ namespace Galactic1.Code.UI.Inventory
                     if (emptyIndex == -1) break; // больше нет места
         
                     int toTransfer = Mathf.Min(remaining, slot.Item.Classification.maxStack);
-                    toSource.SetSlot(emptyIndex,
-                        new InventorySlotRuntime(slot.Item,  toTransfer, slot.Durability, slot.AmmoInMagazine));
+                    toSource.SetSlot(emptyIndex, new InventorySlotRuntime(
+                        slot.Item,
+                        toTransfer,
+                        slot.Durability,
+                        slot.AmmoInMagazine));
                     remaining -= toTransfer;
                 }
         
                 // 4️⃣ Очищаем исходный слот
                 if (remaining <= 0)
-                    //slot.Clear();
-                fromSource.ClearSlot(i);
+                    fromSource.ClearSlot(i);
+                
+                EventBus<ItemTransferredEvent>.Raise(new ItemTransferredEvent(
+                    fromSource.Type,
+                    toSource.Type,
+                    slot
+                ));
             }
         
             // 5️⃣ Обновляем UI

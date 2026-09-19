@@ -272,7 +272,8 @@ namespace Galactic1
                 tutorialGameStateQuery,  
                 tutorialGameStateQuery,  
                 tutorialGameStateQuery,
-                gameSession.GameLoopContext); 
+                gameSession.GameLoopContext,
+                tutorialGameStateQuery); 
 
             var tutorialGuidanceFactory = new TutorialGuidanceFactory(
                 tutorialGameStateQuery,

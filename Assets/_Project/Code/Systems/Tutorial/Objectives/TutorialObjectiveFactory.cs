@@ -21,14 +21,15 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             ITutorialInventoryQuery inventory,
             ITutorialSquadQuery squad,
             IGameLoopStateQuery gameLoop,
-            GameLoopContext gameLoopContext)
+            GameLoopContext gameLoopContext,
+            ITutorialInventorySourceAmountQuery inventorySourceAmount)
         {
             Register<EnemyKilledObjectiveDefinition>(d => new EnemyKilledObjective(d.requiredCount));
             Register<ItemTransferredObjectiveDefinition>(d =>
                 new ItemTransferredObjective(
+                    inventorySourceAmount,
                     d.itemId,
-                    d.filterFromSource ? d.fromSourceType : null,
-                    d.filterToSource ? d.toSourceType : null,
+                    d.toSourceType,
                     d.requiredAmount));
             Register<ItemEquippedObjectiveDefinition>(d => new ItemEquippedObjective(inventory, d.slot, d.itemId));
             Register<ResourceAmountObjectiveDefinition>(d => new ResourceAmountObjective(inventory, d.itemId, d.requiredAmount));

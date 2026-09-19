@@ -1,5 +1,6 @@
 using System;
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Inventory.Context;
 using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.GameLoop;
@@ -37,7 +38,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         ITutorialConstructionQuery,
         ITutorialConstructionTabQuery,
         ITutorialInventoryMainTabQuery,
-        ITutorialInventorySquadExtraTabQuery
+        ITutorialInventorySquadExtraTabQuery,
+        ITutorialInventorySourceAmountQuery
     {
         private readonly GameLoopContext _context;
         private readonly GameLoopStateMachine _stateMachine;
@@ -276,6 +278,50 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             var window = ServiceLocator.Current.Get<InventoryManagementWindow>();
             var dragged = window?.Drag?.DraggedItemId;
             return dragged != null && (itemId == null || dragged == itemId);
+        }
+        
+        
+        
+        // ── ITutorialInventorySourceAmountQuery ─────────────────────────────
+        public int GetAmount(InventorySourceType sourceType, ItemId itemId)
+        {
+            switch (sourceType)
+            {
+                case InventorySourceType.BaseStorage:
+                    return GetCampStorageAmount(itemId);
+
+                case InventorySourceType.TransportCargo:
+                {
+                    // Тот же выбор источника, что InventoryGameplayContextService.BuildTransportSquad
+                    // делает для left-стороны в raid/meta режимах — скопировано один в один, а не
+                    // выведено самостоятельно (CurrentRaid.PlayerTransport — поле RaidRuntime, не
+                    // GameLoopContext; GameLoopContext.PlayerTransport — отдельный meta-режимный
+                    // транспорт, оба пути видны в BuildTransportSquad как two distinct sources).
+                    var source = _context.IsRaidState
+                        ? _context.CurrentRaid?.PlayerTransport?.Sources.Cargo
+                        : _context.PlayerTransport?.GetInventory;
+
+                    return source?.GetTotalAmount(itemId) ?? 0;
+                }
+
+                case InventorySourceType.UnitEquipment:
+                case InventorySourceType.TransportEquipment:
+                    Debug.LogWarning($"[TutorialGameStateQuery] GetAmount: '{sourceType}' — per-owner " +
+                                     "источник без единственного canonical instance, ретроактивная " +
+                                     "проверка ItemTransferred для него не поддержана.");
+                    return 0;
+
+                case InventorySourceType.LootContainer:
+                case InventorySourceType.WorldMapDrone:
+                    Debug.LogWarning($"[TutorialGameStateQuery] GetAmount: '{sourceType}' существует " +
+                                     "только в рамках активного raid-report буфера — вне этого потока " +
+                                     "невозможна в принципе.");
+                    return 0;
+
+                default:
+                    Debug.LogWarning($"[TutorialGameStateQuery] GetAmount: неизвестный тип '{sourceType}'.");
+                    return 0;
+            }
         }
 
         // ── ITutorialConstructionQuery ────────────────────────────────────

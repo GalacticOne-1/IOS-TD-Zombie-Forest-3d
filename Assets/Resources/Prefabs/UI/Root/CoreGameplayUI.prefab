@@ -356,6 +356,7 @@ RectTransform:
   - {fileID: 4376953301465072287}
   - {fileID: 2601362646280097958}
   - {fileID: 6763570691944770934}
+  - {fileID: 2447132798245244506}
   - {fileID: 2634525357354483886}
   - {fileID: 7963678031418900900}
   - {fileID: 3349107201569665642}
@@ -411,6 +412,7 @@ MonoBehaviour:
   <TransformRoot>k__BackingField:
     screensRoot: {fileID: 2601362646280097958}
     overlayRoot: {fileID: 2634525357354483886}
+    scenarioRoot: {fileID: 2447132798245244506}
     hudRoot: {fileID: 4376953301465072287}
     hudWorldRoot: {fileID: 8893692596393469451}
     constructionRoot: {fileID: 6763570691944770934}
@@ -544,6 +546,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5366eab5bd204d60a5cb9ba9432f4f39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1914734114390919685
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2447132798245244506}
+  m_Layer: 5
+  m_Name: ScenarioRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2447132798245244506
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914734114390919685}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3076239924432755639}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2068473842200435540
 GameObject:
   m_ObjectHideFlags: 0

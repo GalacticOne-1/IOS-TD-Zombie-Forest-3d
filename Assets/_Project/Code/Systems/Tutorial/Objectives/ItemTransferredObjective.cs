@@ -4,42 +4,37 @@ using Galactic1.Mobile.EventBus;
 
 namespace Galactic1.Code.Systems.Tutorial.Objectives
 {
-    /// <summary>Event-семантика, тот же паттерн, что ItemCollectedObjective — счётчик
-    /// накапливается от событий, пришедших ЗА ВРЕМЯ активного шага, ретроактивности нет
-    /// (перемещение, случившееся до активации шага, не засчитывается).</summary>
-    public sealed class ItemTransferredObjective : TutorialEventObjectiveBase<ItemTransferredEvent>
+    /// <summary>State-семантика — см. TutorialStateRecheckObjectiveBase докстринг:
+    /// ItemTransferredEvent здесь ТОЛЬКО триггер "перепроверь", источник истины всегда
+    /// _amountQuery.GetAmount(). Не фильтруем событие по itemId/направлению перед
+    /// перепроверкой — тот же приём, что SquadSizeObjective игнорирует payload
+    /// StrategicSquadChangedEvent целиком: лишний recompute от несвязанного переноса
+    /// безвреден, а GetAmount() сам по себе полностью самодостаточен и корректен.</summary>
+    public sealed class ItemTransferredObjective : TutorialStateRecheckObjectiveBase<ItemTransferredEvent>
     {
-        private readonly ItemId _itemId; // null = любой предмет
-        private readonly InventorySourceType? _fromSourceType; // null = любой источник
-        private readonly InventorySourceType? _toSourceType;   // null = любой источник
+        private readonly ITutorialInventorySourceAmountQuery _amountQuery;
+        private readonly ItemId _itemId;
+        private readonly InventorySourceType _toSourceType;
         private readonly int _requiredAmount;
-        private int _transferred;
 
         public ItemTransferredObjective(
-            ItemId itemId, 
-            InventorySourceType? fromSourceType,
-            InventorySourceType? toSourceType, 
+            ITutorialInventorySourceAmountQuery amountQuery,
+            ItemId itemId,
+            InventorySourceType toSourceType,
             int requiredAmount)
         {
+            _amountQuery = amountQuery;
             _itemId = itemId;
-            _fromSourceType = fromSourceType;
             _toSourceType = toSourceType;
             _requiredAmount = requiredAmount;
         }
 
-        protected override bool EvaluateEvent(ItemTransferredEvent e)
-        {
-            if (_itemId != null && e.Slot.Item.Id != _itemId) return false;
-            if (_fromSourceType.HasValue && e.FromSourceType != _fromSourceType.Value) return false;
-            if (_toSourceType.HasValue && e.ToSourceType != _toSourceType.Value) return false;
-
-            _transferred += e.Slot.Amount;
-            return _transferred >= _requiredAmount;
-        }
+        public override bool EvaluateCurrentState()
+            => _amountQuery.GetAmount(_toSourceType, _itemId) >= _requiredAmount;
 
         public override bool TryGetProgress(out int current, out int required)
         {
-            current = _transferred;
+            current = _amountQuery.GetAmount(_toSourceType, _itemId);
             required = _requiredAmount;
             return true;
         }
