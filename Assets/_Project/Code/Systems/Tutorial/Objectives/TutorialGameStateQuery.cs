@@ -39,7 +39,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         ITutorialConstructionTabQuery,
         ITutorialInventoryMainTabQuery,
         ITutorialInventorySquadExtraTabQuery,
-        ITutorialInventorySourceAmountQuery
+        ITutorialInventorySourceAmountQuery,
+        ITutorialConstructionGhostQuery
     {
         private readonly GameLoopContext _context;
         private readonly GameLoopStateMachine _stateMachine;
@@ -52,6 +53,11 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         private TutorialStepDomain _lastDomain;
         private FacilityType? _openFacilityType;
         private ConstructionCategory? _currentTabCategory;
+        private ItemId _currentGhostFacilityItemId;
+        public event Action<ItemId> OnGhostChanged;
+        public ItemId CurrentGhostFacilityItemId => _currentGhostFacilityItemId;
+        
+        
         private InventoryGameplayMode? _currentMainTab;
         private InventoryGameplayMode? _currentSquadExtraTab;
         
@@ -104,6 +110,11 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                     _openFacilityType = null;
                     _currentTabCategory = null;
                 }
+            }));
+            EventBus<ConstructionGhostChangedEvent>.Register(new EventBinding<ConstructionGhostChangedEvent>(e =>
+            {
+                _currentGhostFacilityItemId = e.FacilityItemId;
+                OnGhostChanged?.Invoke(e.FacilityItemId);
             }));
             
             

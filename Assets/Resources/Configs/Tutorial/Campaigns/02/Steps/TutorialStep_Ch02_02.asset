@@ -36,6 +36,11 @@ MonoBehaviour:
         rid: 2031039168448823296
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236735762516
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 053bfe65ed3b64a1aab2c62b6a124538, type: 2}
     descriptionPanel:
       enabled: 0
@@ -44,6 +49,11 @@ MonoBehaviour:
     presentation:
       highlightTarget:
         rid: 2031039168448823297
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236735762517
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 950e671bb106b4cc4979922e8437d37c, type: 2}
@@ -56,6 +66,11 @@ MonoBehaviour:
         rid: 2031039189501083729
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236735762518
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: caa07b20c6c344ba088284d6650c2b70, type: 2}
     descriptionPanel:
       enabled: 0
@@ -64,6 +79,11 @@ MonoBehaviour:
     presentation:
       highlightTarget:
         rid: 2031039168448823298
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236735762519
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:
@@ -98,3 +118,22 @@ MonoBehaviour:
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 11400000, guid: 818daf968e7b048f797af8994e95d79b, type: 2}
+    - rid: 2031039236735762516
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
+    - rid: 2031039236735762517
+      type: {class: TutorialUnitSearchQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        criteria:
+          requireFree: 1
+          filterByLevel: 0
+          requiredLevel: 1
+    - rid: 2031039236735762518
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 818daf968e7b048f797af8994e95d79b, type: 2}
+    - rid: 2031039236735762519
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 3e4f4062ea6184db4a8fc37b19a5554e, type: 2}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,6 +33,8 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         public TutorialGuidancePanelDefinition descriptionPanel = new();
 
         public TutorialGuidanceTargetDefinition presentation = new();
+        [Tooltip("Targets, которые будут показаны одновременно, если condition выполнен.")]
+        public List<TutorialGuidanceTargetDefinition> presentations = new();
         
 
 #if UNITY_EDITOR
@@ -39,28 +42,52 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         {
             var stepLabel = stepId?.DebugKey ?? "?";
 
-            if (presentation == null)
+            if (presentations == null || presentations.Count == 0)
             {
-                error = $"Step '{stepLabel}': guidance entry {index} has no presentation.";
+                error =
+                    $"Step '{stepLabel}': guidance entry {index} has no presentation targets.";
+
                 return false;
             }
 
-            if (!presentation.HasAnyTarget)
+            for (int i = 0; i < presentations.Count; i++)
             {
-                error = $"Step '{stepLabel}': guidance entry {index} presentation has no target " +
-                        "(highlight/arrow/camera all empty) — entry would resolve to nothing.";
-                return false;
-            }
+                var presentation = presentations[i];
 
-            if (!presentation.Validate(out error))
-            {
-                error = $"Step '{stepLabel}': guidance entry {index}: {error}";
-                return false;
+                if (presentation == null)
+                {
+                    error =
+                        $"Step '{stepLabel}': guidance entry {index} " +
+                        $"presentation {i} is null.";
+
+                    return false;
+                }
+
+                if (!presentation.HasAnyTarget)
+                {
+                    error =
+                        $"Step '{stepLabel}': guidance entry {index} " +
+                        $"presentation {i} has no target " +
+                        "(highlight/arrow/camera all empty).";
+
+                    return false;
+                }
+
+                if (!presentation.Validate(out error))
+                {
+                    error =
+                        $"Step '{stepLabel}': guidance entry {index}, " +
+                        $"presentation {i}: {error}";
+
+                    return false;
+                }
             }
 
             if (condition != null && !condition.Validate(out error))
             {
-                error = $"Step '{stepLabel}': guidance entry {index}: {error}";
+                error =
+                    $"Step '{stepLabel}': guidance entry {index}: {error}";
+
                 return false;
             }
 

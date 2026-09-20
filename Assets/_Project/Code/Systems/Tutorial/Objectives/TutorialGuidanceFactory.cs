@@ -28,7 +28,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             ITutorialConstructionQuery construction,
             ITutorialConstructionTabQuery constructionTab,
             ITutorialInventoryMainTabQuery inventoryMainTab,        
-            ITutorialInventorySquadExtraTabQuery inventorySquadExtraTab)
+            ITutorialInventorySquadExtraTabQuery inventorySquadExtraTab,
+            ITutorialConstructionGhostQuery constructionGhost)
         {
             
             Register<UIScreenOpenGuidanceConditionDefinition>(
@@ -72,6 +73,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                 d => new FacilityBuiltGuidanceCondition(construction, d.itemId, d.expectedBuilt));
             Register<ConstructionTabSelectedGuidanceConditionDefinition>(
                 d => new ConstructionTabSelectedGuidanceCondition(constructionTab, d.category, d.expectedSelected));
+            Register<ConstructionGhostActiveGuidanceConditionDefinition>(
+                d => new ConstructionGhostActiveGuidanceCondition(constructionGhost, d.facilityItemId, d.expectedActive));
         }
 
         private void Register<TDef>(Func<TDef, ITutorialGuidanceCondition> factory)

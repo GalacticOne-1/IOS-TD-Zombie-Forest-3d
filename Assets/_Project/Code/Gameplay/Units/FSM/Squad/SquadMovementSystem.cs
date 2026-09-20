@@ -258,6 +258,7 @@ namespace Galactic1.Code.Systems.Squad
 
             _centerDriver.ClearTrail();
             _trailRenderer.HidePath();
+            //OnMovementFinished?.Invoke();
         }
 
         private bool AreAgentsAtFinalSlots(SquadSlot[] slots)

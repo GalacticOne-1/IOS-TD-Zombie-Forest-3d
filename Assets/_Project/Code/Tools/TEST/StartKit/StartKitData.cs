@@ -5,8 +5,8 @@ namespace Galactic1.Code.Dev
     public enum EStartKit
     {
         StartGame_01 = 10,
-        StartGame_02 = 11,
-        StartGame_03 = 12,
+        StartGameCargo = 11,
+        StartGameInbox_01 = 12,
             
             
         PurchaseReward = 50,

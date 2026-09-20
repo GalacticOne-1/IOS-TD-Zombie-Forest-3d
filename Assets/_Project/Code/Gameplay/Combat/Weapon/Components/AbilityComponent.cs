@@ -38,6 +38,11 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
             pending.Behaviour.Execute(
                 pending.Context,
                 pending.Slot);
+            
+            // EventBus<AbilityUsedEvent>.Raise(new AbilityUsedEvent(
+            //     pending.Context.User.Id,
+            //     pending.Slot.Item.Id,
+            //     pending.Behaviour.Type));
         }
 
         public void OnAbilityFinished() => OnFinished?.Invoke();

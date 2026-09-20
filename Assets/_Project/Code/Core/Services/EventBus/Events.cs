@@ -321,6 +321,12 @@ public readonly struct ConstructionTabSelectedEvent : IEvent
     }
 }
 
+public readonly struct ConstructionGhostChangedEvent : IEvent
+{
+    public readonly ItemId FacilityItemId; // null = ghost исчез
+    public ConstructionGhostChangedEvent(ItemId facilityItemId) => FacilityItemId = facilityItemId;
+}
+
 
 
 public readonly struct RecruitCompletedEvent : IEvent

@@ -53,6 +53,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         /// был вызван до того, как HUD этой сцены существовал — дорисовываем сейчас.</summary>
         public void AttachRenderer(ITutorialPresentationRenderer renderer)
         {
+            ClearPendingSubscriptions();
             _renderer = renderer;
             if (_activePresentation != null)
                 Render(_activePresentation);
@@ -66,43 +67,85 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
 
         private void Render(TutorialEffectivePresentation presentation)
         {
-            if (_renderer == null) return;
+            if (_renderer == null)
+                return;
 
-            RenderHighlight(presentation.HighlightRequest);
-            ResolveTarget(presentation.ArrowTargetId, _renderer.RenderArrow, _renderer.ClearArrow);
-            ResolveTarget(presentation.CameraFocusTargetId, FocusCameraOn, () => { });
+            RenderHighlights(presentation.HighlightRequests);
+            SubscribeHighlightInvalidations(presentation.HighlightRequests);
+
+            ResolveTarget(
+                presentation.ArrowTargetId,
+                _renderer.RenderArrow,
+                _renderer.ClearArrow);
+
+            ResolveTarget(
+                presentation.CameraFocusTargetId,
+                FocusCameraOn,
+                () => { });
         }
 
-        private void RenderHighlight(TutorialTargetRequest request)
+        private void RenderHighlights(
+            IReadOnlyList<TutorialTargetRequest> requests)
         {
-            if (request == null)
+            if (requests == null || requests.Count == 0)
             {
                 _renderer.ClearHighlight();
                 return;
             }
 
-            if (_resolverRegistry.TryResolve(request, out var target))
-                _renderer.RenderHighlight(target);
-            else
-                _renderer.ClearHighlight();
+            var resolvedTargets = new List<ITutorialTarget>(requests.Count);
 
-            var resolver = _resolverRegistry.FindResolver(request);
-            if (resolver == null) return;
-
-            int capturedGeneration = _generation;
-
-            void Callback()
+            foreach (var request in requests)
             {
-                if (capturedGeneration != _generation) return; // устаревший callback — Show()/Hide() уже сменили состояние
-                if (_renderer == null) return;
-                if (_resolverRegistry.TryResolve(request, out var reresolved))
-                    _renderer.RenderHighlight(reresolved);
-                else
-                    _renderer.ClearHighlight();
+                if (request == null)
+                    continue;
+
+                if (_resolverRegistry.TryResolve(request, out var target))
+                    resolvedTargets.Add(target);
             }
 
-            resolver.SubscribeInvalidation(request, Callback);
-            _pendingTargetUnsubs.Add(() => resolver.UnsubscribeInvalidation(request, Callback));
+            if (resolvedTargets.Count == 0)
+            {
+                _renderer.ClearHighlight();
+                return;
+            }
+
+            _renderer.RenderHighlights(resolvedTargets);
+        }
+        
+        private void SubscribeHighlightInvalidations(
+            IReadOnlyList<TutorialTargetRequest> requests)
+        {
+            if (requests == null)
+                return;
+
+            foreach (var request in requests)
+            {
+                if (request == null)
+                    continue;
+
+                var resolver = _resolverRegistry.FindResolver(request);
+                if (resolver == null)
+                    continue;
+
+                int capturedGeneration = _generation;
+
+                void Callback()
+                {
+                    if (capturedGeneration != _generation)
+                        return;
+
+                    if (_renderer == null)
+                        return;
+
+                    RenderHighlights(_activePresentation.HighlightRequests);
+                }
+
+                resolver.SubscribeInvalidation(request, Callback);
+
+                _pendingTargetUnsubs.Add(
+                    () => resolver.UnsubscribeInvalidation(request, Callback));
+            }
         }
 
         /// <summary>Fixed-таргет lookup для arrow/camera — дословно перенесено из старой

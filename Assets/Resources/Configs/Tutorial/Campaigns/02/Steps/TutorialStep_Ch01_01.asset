@@ -18,7 +18,10 @@ MonoBehaviour:
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: 07692f44916ef49b089b93b1fad3d29f, type: 2}
+    - {fileID: 11400000, guid: 5555a2468f53f487694d4466ca11c2ab, type: 2}
+    - {fileID: 11400000, guid: fe051215fa7744113bec2adf0859c7e8, type: 2}
+    - {fileID: 11400000, guid: 24aac3f788d1b495890bbf8527a8c3b4, type: 2}
+    - {fileID: 11400000, guid: 8dbec2cf72a9e40c792ba8e8390b4b2b, type: 2}
   presentation:
     instructionTitleKey: Collect Provision
     instructionDesKey: Open the Container Inbox and collect the food delivered to
@@ -36,25 +39,36 @@ MonoBehaviour:
         rid: 2031039171767828562
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
-  - condition: {fileID: 11400000, guid: 7cb3de62f888f409594f0259ac3ecaee, type: 2}
-    descriptionPanel:
-      enabled: 1
-      text: In the Container Inbox, you can collect incoming rewards and supplies,
-        then move them to camp storage.
-      oneShot: 1
-    presentation:
-      highlightTarget:
-        rid: 2031039171767828563
+    presentations:
+    - highlightTarget:
+        rid: 2031039236394975322
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
-  - condition: {fileID: 11400000, guid: 8d704d47054d74ca1b850259a7f4d2a4, type: 2}
+  - condition: {fileID: 11400000, guid: 7cb3de62f888f409594f0259ac3ecaee, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
       oneShot: 1
     presentation:
       highlightTarget:
-        rid: 2031039171767828564
+        rid: 2031039233930297431
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236394975318
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+    - highlightTarget:
+        rid: 2031039236394975319
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+    - highlightTarget:
+        rid: 2031039236394975320
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+    - highlightTarget:
+        rid: 2031039236394975321
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:
@@ -74,11 +88,27 @@ MonoBehaviour:
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 11400000, guid: afa4a609935604f93b51dda9350b776e, type: 2}
-    - rid: 2031039171767828563
+    - rid: 2031039233930297431
       type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
-        itemId: {fileID: 11400000, guid: 875ea44ba699441e694fa86a2924aa26, type: 2}
-    - rid: 2031039171767828564
+        itemId: {fileID: 11400000, guid: 066e4bdb9131e4243887eb00c606e6ed, type: 2}
+    - rid: 2031039236394975318
+      type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 066e4bdb9131e4243887eb00c606e6ed, type: 2}
+    - rid: 2031039236394975319
+      type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 74aa7500886624cdf9177bb45670183f, type: 2}
+    - rid: 2031039236394975320
+      type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 8143290188e86464fbb7c8a8bdb55737, type: 2}
+    - rid: 2031039236394975321
+      type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 20d953f87c25649678ee64140911ebf0, type: 2}
+    - rid: 2031039236394975322
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
-        targetId: {fileID: 11400000, guid: 63b46b0c95ff448698235412db7476d9, type: 2}
+        targetId: {fileID: 11400000, guid: afa4a609935604f93b51dda9350b776e, type: 2}

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
+using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Grid;
 using Galactic1.Code.Inventory.Services;
 using Galactic1.Code.Systems.Runtime.Building;
@@ -85,6 +86,8 @@ namespace Galactic1.Code.Gameplay.Construction
             _controller.Context.Preview = _preview;
 
             ghostController.CreateGhost(config);
+            
+            EventBus<ConstructionGhostChangedEvent>.Raise(new ConstructionGhostChangedEvent((ItemId)config.Item.Id));
         }
 
         public void DestroyGhost()
@@ -106,6 +109,8 @@ namespace Galactic1.Code.Gameplay.Construction
                 _controller.Context.CurrentGhost = null;
 
                 _controller.FinishPlacement();
+                
+                EventBus<ConstructionGhostChangedEvent>.Raise(new ConstructionGhostChangedEvent(null));
             }
         }
         

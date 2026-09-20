@@ -1302,6 +1302,7 @@ GameObject:
   - component: {fileID: 3971308957563261837}
   - component: {fileID: 6531636700251924052}
   - component: {fileID: 5259216327954145722}
+  - component: {fileID: 4635807470954514673}
   m_Layer: 5
   m_Name: confirm_button
   m_TagString: Untagged
@@ -1432,6 +1433,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4635807470954514673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8060017397513025403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: d12e9a87320314dd099ac56baeaea63a, type: 2}
 --- !u!1 &8233650556616299246
 GameObject:
   m_ObjectHideFlags: 0

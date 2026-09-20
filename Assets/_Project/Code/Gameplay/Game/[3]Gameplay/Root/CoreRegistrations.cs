@@ -286,6 +286,7 @@ namespace Galactic1
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
+                tutorialGameStateQuery,
                 tutorialGameStateQuery); 
 
             var tutorialCheckpointService = new TutorialCheckpointService();

@@ -1,87 +1,115 @@
 using System;
 using System.Collections.Generic;
 using Galactic1.Code.Systems.Tutorial.Presentation;
-using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Runtime
 {
     /// <summary>
-    /// Владеет lifecycle guidance-условий одного активного шага и резолвит, какой
-    /// guidance-target сейчас применим. НЕ решает, завершён ли шаг — это исключительно
-    /// Objectives (см. TutorialStepRuntimeState докстринг); guidance и completion — два
-    /// независимых, никак не связанных друг с другом механизма над одним и тем же набором
-    /// game-state запросов.
+    /// Владеет lifecycle guidance-условий одного активного шага и резолвит,
+    /// какой набор guidance-targets сейчас применим.
     ///
-    /// Резолв — чистая функция текущего состояния (Resolve() перебирает entries в authoring-
-    /// порядке, первый IsSatisfied()==true побеждает), НЕ конечный автомат: нет понятия
-    /// "текущая стадия N" ни в памяти сверх Current, ни тем более в персисте — после
-    /// Restore/Restart Start() резолвит Current заново с нуля из live game state (см.
-    /// TutorialGuidanceDefinition докстринг).
+    /// Resolution остаётся first-satisfied-wins:
+    /// первый guidance-entry с выполненным condition побеждает.
     ///
-    /// _startInProgress подавляет OnChanged во время Start() по тому же паттерну, что
-    /// TutorialStepRuntimeState использует для объективов: инициализация не должна
-    /// синхронно всплывать как "изменение" колбэку, который ещё не успел подписаться —
-    /// вызывающий код читает Current напрямую сразу после Start() вместо этого.
+    /// Каждый entry может содержать несколько presentation targets.
     /// </summary>
     public sealed class TutorialGuidanceRuntimeState
     {
-        private readonly IReadOnlyList<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> _entries;
+        private readonly IReadOnlyList<GuidanceEntry> _entries;
+
         private Action _onChanged;
         private bool _startInProgress;
 
-        /// <summary>Текущий резолвнутый target. Null — валидное состояние "ни одно
-        /// condition не подошло" (fallback это "ничего не показывать", не "показать
-        /// что-то наугад").</summary>
-        public TutorialGuidanceTarget Current { get; private set; }
+        public IReadOnlyList<TutorialGuidanceTarget> Current { get; private set; }
+            = Array.Empty<TutorialGuidanceTarget>();
 
         public TutorialGuidanceRuntimeState(
-            IReadOnlyList<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> entries)
+            IReadOnlyList<GuidanceEntry> entries)
         {
-            _entries = entries ?? Array.Empty<(ITutorialGuidanceCondition, TutorialGuidanceTarget)>();
+            _entries = entries ?? Array.Empty<GuidanceEntry>();
         }
 
         public void Start(Action onChanged)
         {
             _onChanged = onChanged;
             _startInProgress = true;
-            foreach (var e in _entries)
-                e.Condition.Start(Reevaluate);
+
+            foreach (var entry in _entries)
+                entry.Condition.Start(Reevaluate);
+
             _startInProgress = false;
 
-            // Финальный резолв ВСЕГДА выполняется явно здесь, а не только в ответ на
-            // Reevaluate — условия, которые уже сейчас удовлетворены (например, шаг
-            // активировался, когда Inventory уже открыт), не обязаны сами "стрельнуть"
-            // событием при Start(), чтобы попасть в начальный Current.
             Current = Resolve();
         }
 
         public void Stop()
         {
-            foreach (var e in _entries)
-                e.Condition.Stop();
+            foreach (var entry in _entries)
+                entry.Condition.Stop();
+
             _onChanged = null;
-            Current = null;
+            Current = Array.Empty<TutorialGuidanceTarget>();
         }
 
         private void Reevaluate()
         {
-            if (_startInProgress) return; // финальный Resolve() в конце Start() и так покроет это
+            if (_startInProgress)
+                return;
 
             var resolved = Resolve();
-            if (ReferenceEquals(resolved, Current)) return; // без изменений — не дёргаем presentation зря
+
+            if (AreSame(Current, resolved))
+                return;
 
             Current = resolved;
             _onChanged?.Invoke();
         }
 
-        private TutorialGuidanceTarget Resolve()
+        private IReadOnlyList<TutorialGuidanceTarget> Resolve()
         {
-            foreach (var e in _entries)
+            foreach (var entry in _entries)
             {
-                if (e.Condition.IsSatisfied())
-                    return e.Target;
+                if (entry.Condition.IsSatisfied())
+                    return entry.Targets;
             }
-            return null;
+
+            return Array.Empty<TutorialGuidanceTarget>();
+        }
+
+        private static bool AreSame(
+            IReadOnlyList<TutorialGuidanceTarget> a,
+            IReadOnlyList<TutorialGuidanceTarget> b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a == null || b == null)
+                return false;
+
+            if (a.Count != b.Count)
+                return false;
+
+            for (int i = 0; i < a.Count; i++)
+            {
+                if (!ReferenceEquals(a[i], b[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public sealed class GuidanceEntry
+        {
+            public ITutorialGuidanceCondition Condition { get; }
+            public IReadOnlyList<TutorialGuidanceTarget> Targets { get; }
+
+            public GuidanceEntry(
+                ITutorialGuidanceCondition condition,
+                IReadOnlyList<TutorialGuidanceTarget> targets)
+            {
+                Condition = condition;
+                Targets = targets ?? Array.Empty<TutorialGuidanceTarget>();
+            }
         }
     }
 }

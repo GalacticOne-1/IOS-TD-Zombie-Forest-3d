@@ -332,6 +332,7 @@ namespace Galactic1.Code.Gameplay.Interaction
 
         private void IssueMoveCommand(Vector3 position, MoveMode mode)
         {
+            //if (_tutorialInputPolicy != null && !_tutorialInputPolicy.CanMove) return;
             OnMoveCommandIssued?.Invoke(position, mode);
         }
 

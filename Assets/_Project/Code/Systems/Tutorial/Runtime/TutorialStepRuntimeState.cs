@@ -39,7 +39,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         public TutorialStepRuntimeState(
             TutorialStepDefinition definition,
             IReadOnlyList<TutorialObjectiveRuntimeState> objectives,
-            IReadOnlyList<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> guidanceEntries,
+            IReadOnlyList<TutorialGuidanceRuntimeState.GuidanceEntry> guidanceEntries,
             IReadOnlyList<(ITutorialGuidanceCondition Condition, TutorialGuidancePanelDefinition Panel)> panelEntries)
         {
             Definition = definition;
@@ -58,7 +58,9 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// arrow/camera от guidance, см. TutorialGuidanceRuntimeState докстринг). Читается
         /// TutorialService сразу после Start() для начального presentation-снэпшота,
         /// дальше — из OnGuidanceChanged.</summary>
-        public TutorialGuidanceTarget CurrentGuidanceTarget => _guidance.Current;
+        //public TutorialGuidanceTarget CurrentGuidanceTarget => _guidance.Current;
+        public IReadOnlyList<TutorialGuidanceTarget> CurrentGuidanceTargets
+            => _guidance.Current;
         
         
         /// <summary>Текущий текст overlay-панели — null, если ничего показывать не нужно.

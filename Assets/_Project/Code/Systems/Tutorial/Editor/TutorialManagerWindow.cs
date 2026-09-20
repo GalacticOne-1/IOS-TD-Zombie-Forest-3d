@@ -512,6 +512,7 @@ namespace Galactic1.Tools
         {
             guidanceFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(
                 guidanceFoldout, "🧭 Guidance (dynamic highlight, first satisfied wins)");
+
             if (guidanceFoldout)
             {
                 EditorGUILayout.BeginVertical("box");
@@ -519,62 +520,147 @@ namespace Galactic1.Tools
                 var guidanceProp = stepSO.FindProperty("guidance");
 
                 if (guidanceProp.arraySize == 0)
+                {
                     EditorGUILayout.HelpBox(
-                        "Empty — step has NO highlight/arrow/camera at all. Presentation no longer carries " +
-                        "targeting data; this is the only place it lives now.",
+                        "Empty — step has NO highlight/arrow/camera at all. " +
+                        "Presentation no longer carries targeting data; this is the only place it lives now.",
                         MessageType.Info);
+                }
 
                 for (int i = 0; i < guidanceProp.arraySize; i++)
-                    DrawGuidanceEntry(guidanceProp, i);
+                {
+                    if (DrawGuidanceEntry(guidanceProp, i))
+                        break;
+                }
 
                 if (GUILayout.Button("+ Add Guidance Entry", GUILayout.Width(180)))
+                {
                     guidanceProp.InsertArrayElementAtIndex(guidanceProp.arraySize);
+
+                    // Явно очищаем condition у нового entry.
+                    // presentations при этом создаётся сериализованным default-значением.
+                    var newEntry = guidanceProp.GetArrayElementAtIndex(guidanceProp.arraySize - 1);
+                    var conditionProp = newEntry.FindPropertyRelative("condition");
+
+                    if (conditionProp != null)
+                        conditionProp.objectReferenceValue = null;
+                }
 
                 EditorGUILayout.EndVertical();
             }
+
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        private void DrawGuidanceEntry(SerializedProperty guidanceProp, int index)
+        /// <summary>
+        /// Returns true if the entry was removed this frame.
+        /// </summary>
+        private bool DrawGuidanceEntry(SerializedProperty guidanceProp, int index)
         {
             var entryProp = guidanceProp.GetArrayElementAtIndex(index);
-            var conditionProp = entryProp.FindPropertyRelative("condition");
-            var presentationProp = entryProp.FindPropertyRelative("presentation");
-            var condition = conditionProp.objectReferenceValue as TutorialGuidanceConditionDefinition;
 
-            EditorGUILayout.Space(20);
-            EditorGUILayout.BeginVertical("box");
+            var conditionProp = entryProp.FindPropertyRelative("condition");
+            var presentationsProp = entryProp.FindPropertyRelative("presentations");
+
+            var condition =
+                conditionProp != null
+                    ? conditionProp.objectReferenceValue as TutorialGuidanceConditionDefinition
+                    : null;
+
+            EditorGUILayout.Space(10);
+
+            // Получаем rect всего guidance entry.
+            Rect entryRect = EditorGUILayout.BeginVertical("box");
+
+            // Жёлтая рамка.
+            const float borderWidth = 2f;
+            Color borderColor = new Color(1f, 0.75f, 0.1f, 1f);
+
+            EditorGUI.DrawRect(
+                new Rect(
+                    entryRect.x,
+                    entryRect.y,
+                    entryRect.width,
+                    borderWidth),
+                borderColor);
+
+            EditorGUI.DrawRect(
+                new Rect(
+                    entryRect.x,
+                    entryRect.yMax - borderWidth,
+                    entryRect.width,
+                    borderWidth),
+                borderColor);
+
+            EditorGUI.DrawRect(
+                new Rect(
+                    entryRect.x,
+                    entryRect.y,
+                    borderWidth,
+                    entryRect.height),
+                borderColor);
+
+            EditorGUI.DrawRect(
+                new Rect(
+                    entryRect.xMax - borderWidth,
+                    entryRect.y,
+                    borderWidth,
+                    entryRect.height),
+                borderColor);
+
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"#{index}", GUILayout.Width(25));
+
             EditorGUILayout.LabelField(
-                condition != null ? condition.ConditionTypeId : "Unconditional (always true)",
-                EditorStyles.miniBoldLabel);
+                $"Guidance #{index}",
+                EditorStyles.boldLabel);
+
+            GUILayout.FlexibleSpace();
+
+            EditorGUILayout.LabelField(
+                condition != null
+                    ? condition.ConditionTypeId
+                    : "Unconditional (always true)",
+                EditorStyles.miniBoldLabel,
+                GUILayout.Width(180));
 
             GUI.backgroundColor = Color.red;
             bool removed = GUILayout.Button("x", GUILayout.Width(20));
             GUI.backgroundColor = originalBg;
+
             EditorGUILayout.EndHorizontal();
 
             if (removed)
             {
                 guidanceProp.DeleteArrayElementAtIndex(index);
                 EditorGUILayout.EndVertical();
-                return;
+                return true;
             }
+
+            // ------------------------------------------------------------
+            // Condition
+            // ------------------------------------------------------------
 
             EditorGUILayout.Space(2);
             EditorGUILayout.LabelField("Condition", EditorStyles.miniBoldLabel);
-            EditorGUILayout.PropertyField(conditionProp, new GUIContent("Condition (null = always true)"));
+
+            EditorGUILayout.PropertyField(
+                conditionProp,
+                new GUIContent("Condition (null = always true)"));
 
             EditorGUILayout.BeginHorizontal();
+
             if (GUILayout.Button("+ Add Existing", GUILayout.Width(120)))
+            {
                 ShowAddExistingMenu<TutorialGuidanceConditionDefinition>(picked =>
                 {
                     conditionProp.serializedObject.Update();
                     conditionProp.objectReferenceValue = picked;
                     conditionProp.serializedObject.ApplyModifiedProperties();
+
                     RefreshCampaignErrors(selectedCampaign);
                 });
+            }
+
             if (GUILayout.Button("+ Create New", GUILayout.Width(120)))
             {
                 ShowCreateAssetMenu<TutorialGuidanceConditionDefinition>(
@@ -590,25 +676,155 @@ namespace Galactic1.Tools
 
             EditorGUILayout.EndHorizontal();
 
+            // ------------------------------------------------------------
+            // Presentations
+            // ------------------------------------------------------------
+
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Target (highlight / arrow / camera)", EditorStyles.miniBoldLabel);
 
-            // highlightTarget — [SerializeReference] TutorialTargetQuery. Рисуется через
-            // TutorialTargetQueryDrawer (кастомный CustomPropertyDrawer с useForChildren: true) —
-            // сам показывает popup выбора конкретного подтипа (Fixed/Inventory/Inbox/UnitSearch/
-            // Facility/ConstructionTab) и соответствующие поля. Никакого switch по HighlightMode
-            // здесь больше нет и не должно появляться.
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("highlightTarget"),
-                new GUIContent("Highlight Target"));
+            EditorGUILayout.LabelField(
+                "Presentations (all shown simultaneously)",
+                EditorStyles.miniBoldLabel);
 
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("arrowTargetId"),
-                new GUIContent("Arrow Target"));
-            EditorGUILayout.PropertyField(presentationProp.FindPropertyRelative("cameraFocusTargetId"),
-                new GUIContent("Camera Focus Target"));
+            if (presentationsProp == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "Serialized field 'presentations' was not found.",
+                    MessageType.Error);
+
+                DrawGuidanceDescriptionPanel(entryProp);
+
+                EditorGUILayout.EndVertical();
+                return false;
+            }
+
+            if (presentationsProp.arraySize == 0)
+            {
+                EditorGUILayout.HelpBox(
+                    "No presentation targets. This guidance entry is invalid.",
+                    MessageType.Warning);
+            }
+
+            for (int i = 0; i < presentationsProp.arraySize; i++)
+            {
+                if (DrawGuidancePresentationEntry(presentationsProp, i))
+                    break;
+            }
+
+            if (GUILayout.Button("+ Add Presentation", GUILayout.Width(150)))
+            {
+                int newIndex = presentationsProp.arraySize;
+
+                presentationsProp.InsertArrayElementAtIndex(newIndex);
+
+                var newPresentation =
+                    presentationsProp.GetArrayElementAtIndex(newIndex);
+
+                // ВАЖНО:
+                // InsertArrayElementAtIndex копирует предыдущий element.
+                // Поэтому очищаем все значения нового TutorialGuidanceTargetDefinition.
+                var highlightTargetProp =
+                    newPresentation.FindPropertyRelative("highlightTarget");
+
+                var arrowTargetIdProp =
+                    newPresentation.FindPropertyRelative("arrowTargetId");
+
+                var cameraFocusTargetIdProp =
+                    newPresentation.FindPropertyRelative("cameraFocusTargetId");
+
+                if (highlightTargetProp != null)
+                    highlightTargetProp.managedReferenceValue = null;
+
+                if (arrowTargetIdProp != null)
+                    arrowTargetIdProp.objectReferenceValue = null;
+
+                if (cameraFocusTargetIdProp != null)
+                    cameraFocusTargetIdProp.objectReferenceValue = null;
+
+                presentationsProp.serializedObject.ApplyModifiedProperties();
+            }
+
+            // ------------------------------------------------------------
+            // Description Panel
+            // ------------------------------------------------------------
 
             DrawGuidanceDescriptionPanel(entryProp);
 
             EditorGUILayout.EndVertical();
+
+            return false;
+        }
+
+        /// <summary>
+        /// Draws one TutorialGuidanceTargetDefinition.
+        /// Returns true when the element was removed this frame.
+        /// </summary>
+        private bool DrawGuidancePresentationEntry(
+            SerializedProperty presentationsProp,
+            int index)
+        {
+            var presentationProp =
+                presentationsProp.GetArrayElementAtIndex(index);
+
+            var highlightTargetProp =
+                presentationProp.FindPropertyRelative("highlightTarget");
+
+            var arrowTargetIdProp =
+                presentationProp.FindPropertyRelative("arrowTargetId");
+
+            var cameraFocusTargetIdProp =
+                presentationProp.FindPropertyRelative("cameraFocusTargetId");
+
+            EditorGUILayout.BeginVertical("box");
+
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUILayout.LabelField(
+                $"Target #{index}",
+                EditorStyles.miniBoldLabel);
+
+            GUILayout.FlexibleSpace();
+
+            GUI.backgroundColor = Color.red;
+            bool removed = GUILayout.Button("x", GUILayout.Width(20));
+            GUI.backgroundColor = originalBg;
+
+            EditorGUILayout.EndHorizontal();
+
+            if (removed)
+            {
+                presentationsProp.DeleteArrayElementAtIndex(index);
+                EditorGUILayout.EndVertical();
+                return true;
+            }
+
+            // ------------------------------------------------------------
+            // Highlight
+            // ------------------------------------------------------------
+
+            EditorGUILayout.PropertyField(
+                highlightTargetProp,
+                new GUIContent("Highlight Target"));
+
+            // ------------------------------------------------------------
+            // Arrow
+            // ------------------------------------------------------------
+
+            EditorGUILayout.PropertyField(
+                arrowTargetIdProp,
+                new GUIContent("Arrow Target"));
+
+            // ------------------------------------------------------------
+            // Camera
+            // ------------------------------------------------------------
+
+            EditorGUILayout.PropertyField(
+                cameraFocusTargetIdProp,
+                new GUIContent("Camera Focus Target"));
+
+            EditorGUILayout.EndVertical();
+
+            return false;
         }
 
         /// <summary>Overlay-панель с текстом для этого guidance-entry — параллельный

@@ -221,6 +221,8 @@ namespace Galactic1.Code.Cameras
             if (Freeze.Value)
                 return false;
             
+            //if (_tutorialInputPolicy != null && !_tutorialInputPolicy.CanControlCamera) return false;
+            
             var f = false;
             if (OnFreeze != null)
                 f = OnFreeze.Invoke();

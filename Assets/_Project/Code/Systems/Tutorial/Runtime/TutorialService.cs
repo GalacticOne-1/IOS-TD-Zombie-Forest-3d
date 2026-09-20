@@ -421,21 +421,43 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 BuildPanelEntries(stepDef.guidance));
         }
 
-        private List<(ITutorialGuidanceCondition Condition, TutorialGuidanceTarget Target)> BuildGuidanceEntries(
+        private List<TutorialGuidanceRuntimeState.GuidanceEntry> BuildGuidanceEntries(
             List<TutorialGuidanceDefinition> guidanceDefs)
         {
-            var list = new List<(ITutorialGuidanceCondition, TutorialGuidanceTarget)>(guidanceDefs?.Count ?? 0);
-            if (guidanceDefs == null) return list;
+            var list = new List<TutorialGuidanceRuntimeState.GuidanceEntry>(
+                guidanceDefs?.Count ?? 0);
+
+            if (guidanceDefs == null)
+                return list;
 
             foreach (var g in guidanceDefs)
             {
                 var condition = _guidanceFactory.Create(g.condition);
-                var target = new TutorialGuidanceTarget(
-                    _targetRequestFactory.Create(g.presentation?.highlightTarget),
-                    g.presentation?.arrowTargetId,
-                    g.presentation?.cameraFocusTargetId);
-                list.Add((condition, target));
+
+                var targets = new List<TutorialGuidanceTarget>(
+                    g.presentations?.Count ?? 0);
+
+                if (g.presentations != null)
+                {
+                    foreach (var presentation in g.presentations)
+                    {
+                        if (presentation == null)
+                            continue;
+
+                        targets.Add(
+                            new TutorialGuidanceTarget(
+                                _targetRequestFactory.Create(presentation.highlightTarget),
+                                presentation.arrowTargetId,
+                                presentation.cameraFocusTargetId));
+                    }
+                }
+
+                list.Add(
+                    new TutorialGuidanceRuntimeState.GuidanceEntry(
+                        condition,
+                        targets));
             }
+
             return list;
         }
         
@@ -468,11 +490,57 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// каждый вызов строит новый лёгкий POCO-снэпшот (TutorialPresentationDefinition —
         /// обычный [Serializable] класс, не сериализованное поле ассета).
         /// </summary>
-        private TutorialEffectivePresentation BuildEffectivePresentation(TutorialStepRuntimeState stepState)
+        private TutorialEffectivePresentation BuildEffectivePresentation(
+            TutorialStepRuntimeState stepState)
         {
             var authored = stepState.Definition.presentation;
-            bool hasGuidance = stepState.Definition.guidance != null && stepState.Definition.guidance.Count > 0;
-            var guidanceTarget = stepState.CurrentGuidanceTarget;
+
+            bool hasGuidance =
+                stepState.Definition.guidance != null &&
+                stepState.Definition.guidance.Count > 0;
+
+            var guidanceTargets = stepState.CurrentGuidanceTargets;
+
+            var highlightRequests = new List<TutorialTargetRequest>();
+
+            if (hasGuidance && guidanceTargets != null)
+            {
+                foreach (var target in guidanceTargets)
+                {
+                    if (target?.HighlightRequest != null)
+                        highlightRequests.Add(target.HighlightRequest);
+                }
+            }
+
+            TutorialTargetId arrowTargetId = null;
+            TutorialTargetId cameraFocusTargetId = null;
+
+            if (hasGuidance && guidanceTargets != null)
+            {
+                // Arrow и camera пока остаются single-target.
+                // Берём первый guidance target, у которого они заданы.
+                foreach (var target in guidanceTargets)
+                {
+                    if (target == null)
+                        continue;
+
+                    if (arrowTargetId == null && target.ArrowTargetId)
+                    {
+                        arrowTargetId = target.ArrowTargetId;
+                    }
+
+                    if (cameraFocusTargetId == null && target.CameraFocusTargetId)
+                    {
+                        cameraFocusTargetId = target.CameraFocusTargetId;
+                    }
+
+                    if (arrowTargetId != null &&
+                        cameraFocusTargetId != null)
+                    {
+                        break;
+                    }
+                }
+            }
 
             return new TutorialEffectivePresentation
             {
@@ -480,11 +548,16 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 InstructionDesKey = authored.instructionDesKey,
                 DialogueId = authored.dialogueId,
                 InputPolicy = authored.inputPolicy,
-                HighlightRequest = hasGuidance
-                    ? guidanceTarget?.HighlightRequest
+
+                HighlightRequests = highlightRequests,
+
+                ArrowTargetId = hasGuidance
+                    ? arrowTargetId
                     : null,
-                ArrowTargetId = hasGuidance ? guidanceTarget?.ArrowTargetId : null,
-                CameraFocusTargetId = hasGuidance ? guidanceTarget?.CameraFocusTargetId : null,
+
+                CameraFocusTargetId = hasGuidance
+                    ? cameraFocusTargetId
+                    : null,
             };
         }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
@@ -12,7 +13,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public string InstructionDesKey;
         public string DialogueId;
         public TutorialInputMode InputPolicy;
-        public TutorialTargetRequest HighlightRequest;
+        public IReadOnlyList<TutorialTargetRequest> HighlightRequests { get; set; }
         public TutorialTargetId ArrowTargetId;
         public TutorialTargetId CameraFocusTargetId;
     }

@@ -35,6 +35,11 @@ MonoBehaviour:
         rid: 2031039168509902933
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236735762520
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 5d04f1230f90f4c3cb006261e8a95fbe, type: 2}
     descriptionPanel:
       enabled: 0
@@ -45,6 +50,11 @@ MonoBehaviour:
         rid: 2031039188548976724
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236735762521
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: e5d9560b7f1ae42bbba55cc26193dab1, type: 2}
     descriptionPanel:
       enabled: 0
@@ -53,6 +63,11 @@ MonoBehaviour:
     presentation:
       highlightTarget:
         rid: 2031039168509902936
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+    presentations:
+    - highlightTarget:
+        rid: 2031039236735762522
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
   reward:
@@ -75,3 +90,15 @@ MonoBehaviour:
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 11400000, guid: 39dfbdc1293834c48b9826443b6e5384, type: 2}
+    - rid: 2031039236735762520
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
+    - rid: 2031039236735762521
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 39dfbdc1293834c48b9826443b6e5384, type: 2}
+    - rid: 2031039236735762522
+      type: {class: TutorialInventoryItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 044c6e483e87041db98cd16f3a4f4da6, type: 2}
