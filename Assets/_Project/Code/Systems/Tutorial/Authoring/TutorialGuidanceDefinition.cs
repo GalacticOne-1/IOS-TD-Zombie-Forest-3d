@@ -32,7 +32,6 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
                  "highlight-таргет этого entry, но резолвится отдельным параллельным каналом.")]
         public TutorialGuidancePanelDefinition descriptionPanel = new();
 
-        public TutorialGuidanceTargetDefinition presentation = new();
         [Tooltip("Targets, которые будут показаны одновременно, если condition выполнен.")]
         public List<TutorialGuidanceTargetDefinition> presentations = new();
         

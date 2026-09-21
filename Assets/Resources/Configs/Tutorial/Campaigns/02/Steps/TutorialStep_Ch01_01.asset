@@ -23,9 +23,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 24aac3f788d1b495890bbf8527a8c3b4, type: 2}
     - {fileID: 11400000, guid: 8dbec2cf72a9e40c792ba8e8390b4b2b, type: 2}
   presentation:
-    instructionTitleKey: Collect Provision
-    instructionDesKey: Open the Container Inbox and collect the food delivered to
-      your camp.
+    instructionTitleKey: Collect Inbox Rewards
+    instructionDesKey: Open the Container Inbox and collect all available items to
+      your camp inventory.
     dialogueId: 
     inputPolicy: 0
   guidance:
@@ -34,11 +34,6 @@ MonoBehaviour:
       enabled: 0
       text: 
       oneShot: 1
-    presentation:
-      highlightTarget:
-        rid: 2031039171767828562
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
     presentations:
     - highlightTarget:
         rid: 2031039236394975322
@@ -49,11 +44,6 @@ MonoBehaviour:
       enabled: 0
       text: 
       oneShot: 1
-    presentation:
-      highlightTarget:
-        rid: 2031039233930297431
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
     presentations:
     - highlightTarget:
         rid: 2031039236394975318
@@ -84,14 +74,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2031039171767828562
-      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        targetId: {fileID: 11400000, guid: afa4a609935604f93b51dda9350b776e, type: 2}
-    - rid: 2031039233930297431
-      type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        itemId: {fileID: 11400000, guid: 066e4bdb9131e4243887eb00c606e6ed, type: 2}
     - rid: 2031039236394975318
       type: {class: TutorialInboxItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:

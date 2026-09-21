@@ -20,8 +20,9 @@ MonoBehaviour:
     objectives:
     - {fileID: 11400000, guid: 0b7e4ecb24dbb462c8714b6904cf32b0, type: 2}
   presentation:
-    instructionTitleKey: Contruction
-    instructionDesKey: construct the ammunition station
+    instructionTitleKey: Build an Ammunition Press
+    instructionDesKey: Open the build menu and construct a workbench for producing
+      ammunition.
     dialogueId: 
     inputPolicy: 0
   guidance:
@@ -30,11 +31,6 @@ MonoBehaviour:
       enabled: 0
       text: 
       oneShot: 0
-    presentation:
-      highlightTarget:
-        rid: 2031039145763667969
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
     presentations:
     - highlightTarget:
         rid: 2031039236394975323
@@ -45,11 +41,6 @@ MonoBehaviour:
       enabled: 0
       text: 
       oneShot: 0
-    presentation:
-      highlightTarget:
-        rid: 2031039171767828566
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
     presentations:
     - highlightTarget:
         rid: 2031039236394975324
@@ -60,11 +51,6 @@ MonoBehaviour:
       enabled: 0
       text: 
       oneShot: 0
-    presentation:
-      highlightTarget:
-        rid: 2031039171767828567
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
     presentations:
     - highlightTarget:
         rid: 2031039236394975325
@@ -75,11 +61,6 @@ MonoBehaviour:
       enabled: 0
       text: 
       oneShot: 0
-    presentation:
-      highlightTarget:
-        rid: 2031039215975530581
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
     presentations:
     - highlightTarget:
         rid: 2031039236394975327
@@ -98,22 +79,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2031039145763667969
-      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        targetId: {fileID: 11400000, guid: 324bc5d5b92db4914a3a9af992ff54dd, type: 2}
-    - rid: 2031039171767828566
-      type: {class: TutorialConstructionTabQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        category: 4
-    - rid: 2031039171767828567
-      type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        facilityItemId: {fileID: 11400000, guid: d05e468fa6c494f4eaa0df4c13d39e44, type: 2}
-    - rid: 2031039215975530581
-      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        targetId: {fileID: 11400000, guid: d12e9a87320314dd099ac56baeaea63a, type: 2}
     - rid: 2031039236394975323
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
