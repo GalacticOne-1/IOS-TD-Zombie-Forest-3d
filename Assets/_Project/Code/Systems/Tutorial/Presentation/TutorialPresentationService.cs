@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Galactic1.Code.Cameras;
 using Galactic1.Code.Systems.Tutorial.Authoring;
-using Galactic1.Code.Systems.Tutorial.Presentation.Galactic1.Code.Systems.Tutorial.Presentation;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
 {

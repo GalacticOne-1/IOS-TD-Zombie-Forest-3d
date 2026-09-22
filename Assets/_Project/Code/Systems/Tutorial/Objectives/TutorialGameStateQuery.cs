@@ -175,7 +175,7 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                         .StartOrRestore(starterConfig.CampaignId, starterConfig.ChapterId);
                 }
                 
-                // старт для релиза
+                // === старт для релиза (ничего не менять) ===
                 else
                 {
                     ServiceLocator.Current.Get<ITutorialService>().StartOrRestore(GameIdProvider.TutorialStart);

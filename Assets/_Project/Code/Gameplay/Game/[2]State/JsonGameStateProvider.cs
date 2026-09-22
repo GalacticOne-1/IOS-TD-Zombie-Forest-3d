@@ -7,6 +7,7 @@ using Galactic1.Utility;
 using Galactic1.Configs;
 using Galactic1.UI.Shop;
 using Galactic1.Code.Gameplay.Units.Stats;
+using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
 using Galactic1.Game.World.StartLocation;
 using Galactic1.Structs;
@@ -39,7 +40,8 @@ namespace Galactic1.Core
                 PlayerPrefs.SetString(GAME_STATE_KEY, "y");
                 GameStateProxy = CreateGameStateFromConfig();
                 InitializeFirstSave();
-                DLog.Alert("Game State created from default basicSettings ", EDlogColor.YELLOW, AppConstants.show_log_core);
+                DLog.Alert("Game State created from default basicSettings ", 
+                    EDlogColor.YELLOW, AppConstants.show_log_core);
 
                 SaveGameState();        // сохраняем состояние при первом старте аппки
             }
@@ -117,8 +119,26 @@ namespace Galactic1.Core
             gameLoopContext.LastRaidResult = new();
             gameLoopContext.LastRaidResult.LootReceived = new();
             gameLoopContext.LastRaidResult.ResourcesLost = new();
-
             
+            // === устанавливаем локацию для обучения
+            if (_configsProvider.Get<GameConfig>().General.tutorial)
+            {
+                gameLoopContext.CurrentLocationStateId = 1;
+                gameLoopContext.CurrentLocationNode = "tutorial_suburb";
+
+                // for developer
+                if (DeveloperConsole.I.core.use_tutorial_starter)
+                {
+                    var starterConfig = _configsProvider.Get<TutorialDevStarterConfig>();
+                    if (starterConfig.CampLocation)
+                    {
+                        gameLoopContext.CurrentLocationStateId = 0;
+                        gameLoopContext.CurrentLocationNode = "home";
+                    }
+                }
+            }
+
+
             // === PROGRESSION ===
             var progressionData = new ProgressionData();
 
@@ -126,11 +146,12 @@ namespace Galactic1.Core
             // === player
             gameLoopContext.PlayerUnitData = new ();
             var playerStatsBase = _configsProvider.Get<PlayerStatsBase>();
-            
+
+            var firstSurvivor = "first_survivor";
             gameLoopContext.PlayerUnitData.Add(new PlayerData()
             {
-                Id = "first_survivor",
-                Name = "Jack Ranger",                                                                // FIX: name
+                Id = firstSurvivor,
+                Name = "Jack Ranger",                                                         
                 ArchetypeId = "survivor.1",
                 Stats = DictionaryUtility.ToList(playerStatsBase.GetBaseStats()),
                 
@@ -147,8 +168,8 @@ namespace Galactic1.Core
                 Inventory = new(),
                 Equipment = new()
             };
-            
-            gameLoopContext.SquadUnitId = new();
+
+            gameLoopContext.SquadUnitId = new() { firstSurvivor }; // первый юнит сразу в отряде
             gameLoopContext.BaseData = new();
             
             // === facility

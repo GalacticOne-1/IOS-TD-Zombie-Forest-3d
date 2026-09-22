@@ -104,7 +104,8 @@ public struct SceneServicesResetReusableEvent : IEvent {}
 public struct WorldMapSceneRequestEvent : IEvent {}
 public struct HomeSceneRequestEvent : IEvent { public bool ResetRootPlayerScene; }
 public struct LocationSceneRequestEvent : IEvent { public int LocationId; }
-public struct CampDefenseRequestEvent : IEvent { }
+public struct CampDefenseSceneRequestEvent : IEvent { }
+public struct TutorialSceneRequestEvent : IEvent { }
 
 // ===================================
 
@@ -253,19 +254,6 @@ public struct MissionCompletedEvent : IEvent
     public MissionResult Result;
 }
 
-// === События смерти юнитов игрока
-public struct UnitKilledEvent : IEvent
-{
-    public readonly SurvivorInstance Unit;
-    public UnitKilledEvent(SurvivorInstance unit) => Unit = unit;
-}
-
-public struct UnitReadyForDespawnEvent : IEvent
-{
-    public readonly SurvivorInstance Unit;
-    public UnitReadyForDespawnEvent(SurvivorInstance unit) => Unit = unit;
-}
-//
 
 
 
@@ -329,13 +317,6 @@ public readonly struct ConstructionGhostChangedEvent : IEvent
 
 
 
-public readonly struct RecruitCompletedEvent : IEvent
-{
-    public readonly RecruitCategory Category;
-    public RecruitCompletedEvent(RecruitCategory category) => Category = category;
-}
-
-public sealed class UnitMovedEvent : IEvent {}
 public sealed class WeaponFiredEvent : IEvent {}
 
 public sealed class WorldMapLocationSelectedEvent : IEvent
@@ -345,36 +326,6 @@ public sealed class WorldMapLocationSelectedEvent : IEvent
 
     
 
-/// <summary>
-/// Поднимается при смерти ЛЮБОГО врага (ambient/wave/director —
-/// источник различается через Runtime.SpawnSource). Единая точка входа
-/// для всех подписчиков (WaveSystem, будущий killed-counter для
-/// RaidResultProxy, аналитика), вместо приватного EnemyRuntime.OnDeath
-/// на каждого подписчика по отдельности.
-/// </summary>
-public sealed class EnemyKilledEvent : IEvent
-{
-    public readonly EnemyRuntime Runtime;
-
-    public EnemyKilledEvent(EnemyRuntime runtime)
-    {
-        Runtime = runtime;
-    }
-}
-
-public struct SurvivorStatusChangedEvent : IEvent
-{
-    public readonly string UnitId;
-    public readonly bool IsHungry;
-    public readonly bool IsThirsty;
-
-    public SurvivorStatusChangedEvent(string unitId, bool isHungry, bool isThirsty)
-    {
-        UnitId = unitId;
-        IsHungry = isHungry;
-        IsThirsty = isThirsty;
-    }
-}
 
 /// <summary>
 /// Поднимается WaveSystem один раз, когда завершена последняя волна.

@@ -3,6 +3,7 @@ using System.Collections;
 using Galactic1.Code.Cameras.Configs;
 using Galactic1.Code.Systems;
 using Galactic1.Code.Systems.Squad;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 using UniRx;
 using UnityEngine;
 
@@ -12,6 +13,9 @@ namespace Galactic1.Code.Cameras
     {
         [SerializeField] private CameraConfig config;
         [SerializeField] private AnimationCurve moveCurve = AnimationCurve.EaseInOut(0,0,1,1);
+        private TutorialCapabilityPolicy _tutorialCapabilities;
+        private TutorialCapabilityPolicy TutorialCapabilities
+            => _tutorialCapabilities ??= ServiceLocator.Current.Get<TutorialCapabilityPolicy>();
 
         [Space] [SerializeField] 
         private Transform trPivot;
@@ -220,19 +224,19 @@ namespace Galactic1.Code.Cameras
         {
             if (Freeze.Value)
                 return false;
-            
-            //if (_tutorialInputPolicy != null && !_tutorialInputPolicy.CanControlCamera) return false;
-            
+
+            if (TutorialCapabilities != null && !TutorialCapabilities.CanControlCamera) // ADDED
+                return false;
+
             var f = false;
             if (OnFreeze != null)
                 f = OnFreeze.Invoke();
             if (velocity == Vector3.zero && f)
                 return false;
-            
-            if (!Input.GetMouseButtonDown(0) && (isDragging || velocity.sqrMagnitude > 0.001f)) 
+
+            if (!Input.GetMouseButtonDown(0) && (isDragging || velocity.sqrMagnitude > 0.001f))
                 return true;
-            
-            // Проверяем, есть ли UI под курсором
+
             return !_uiDetector.IsPointerOverUI && !_uiDetector.HasUIUnderCursor();
         }
 

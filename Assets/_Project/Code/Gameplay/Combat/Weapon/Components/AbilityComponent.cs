@@ -1,4 +1,5 @@
 using System;
+using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Abilities;
 using Galactic1.Code.Gameplay.Animation;
 using Galactic1.Code.Gameplay.Effect;
@@ -39,10 +40,10 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
                 pending.Context,
                 pending.Slot);
             
-            // EventBus<AbilityUsedEvent>.Raise(new AbilityUsedEvent(
-            //     pending.Context.User.Id,
-            //     pending.Slot.Item.Id,
-            //     pending.Behaviour.Type));
+            EventBus<AbilityUsedEvent>.Raise(new AbilityUsedEvent(
+                pending.Context.User.Id,
+                (ItemId)pending.Slot.Item.Id,
+                pending.Behaviour.Type));
         }
 
         public void OnAbilityFinished() => OnFinished?.Invoke();

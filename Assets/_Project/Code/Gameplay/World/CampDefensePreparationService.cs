@@ -54,7 +54,7 @@ namespace Galactic1.Code.Systems.CampDefense.Preparation
             switch (_squadValidation.ValidateForCampDefense())
             {
                 case SquadValidationResult.Success:
-                    EventBus<CampDefenseRequestEvent>.Raise(new CampDefenseRequestEvent());
+                    EventBus<CampDefenseSceneRequestEvent>.Raise(new CampDefenseSceneRequestEvent());
                     break;
 
                 case SquadValidationResult.EmptySquad:

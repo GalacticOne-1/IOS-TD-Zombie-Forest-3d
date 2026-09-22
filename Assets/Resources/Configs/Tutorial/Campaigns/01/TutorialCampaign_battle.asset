@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: TutorialCampaign_battle
   m_EditorClassIdentifier: 
   campaignId: {fileID: 11400000, guid: 62d95d6b8922348abb80ed0952f7eab9, type: 2}
-  entryStepId: {fileID: 0}
-  chapters: []
+  nextCampaignId: {fileID: 11400000, guid: c20b6f816b1c74644b14a91403285168, type: 2}
+  entryStepId: {fileID: 11400000, guid: 7986ff3d6a1c7487ab53072cb442849a, type: 2}
+  chapters:
+  - {fileID: 11400000, guid: 3327dedb2a3884616af6ec234cb0fae6, type: 2}
+  loadCampOnCompletion: 1

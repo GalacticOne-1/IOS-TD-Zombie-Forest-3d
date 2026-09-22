@@ -153,11 +153,19 @@ namespace Galactic1
                     })));
 
             // для входа в лагерь в режиме орды
-            EventBus<CampDefenseRequestEvent>.Register(new EventBinding<CampDefenseRequestEvent>(_ =>
+            EventBus<CampDefenseSceneRequestEvent>.Register(new EventBinding<CampDefenseSceneRequestEvent>(_ =>
                 ServiceLocator.Current.Get<LocationTransitionService>()
                     .GoToLocation(0, new()
                     {
                         CampDefense = true,
+                    })));
+            
+            // === сцена обучения бою ===
+            EventBus<TutorialSceneRequestEvent>.Register(new EventBinding<TutorialSceneRequestEvent>(_ =>
+                ServiceLocator.Current.Get<LocationTransitionService>()
+                    .GoToLocation(1, new()
+                    {
+                        
                     })));
             
             
@@ -263,6 +271,9 @@ namespace Galactic1
             var inboxViewRegistry = new TutorialInboxViewRegistry();
             ServiceLocator.Current.Register(inboxViewRegistry);
             
+            var tutorialCapabilityPolicy = new TutorialCapabilityPolicy();
+            ServiceLocator.Current.Register(tutorialCapabilityPolicy);
+            
             var tutorialGameStateQuery = new TutorialGameStateQuery(
                 gameSession.GameLoopContext,
                 rootContainer.Resolve<GameLoopStateMachine>(),
@@ -288,9 +299,12 @@ namespace Galactic1
                 tutorialGameStateQuery,
                 tutorialGameStateQuery,
                 tutorialGameStateQuery); 
+            
 
             var tutorialCheckpointService = new TutorialCheckpointService();
-            var tutorialInputPolicyService = new TutorialInputPolicyService(interactionPolicy);
+            var tutorialInputPolicyService = new TutorialInputPolicyService(
+                interactionPolicy,
+                tutorialCapabilityPolicy);
 
             var tutorialTargetRegistry = new TutorialTargetRegistry();
             rootContainer.RegisterInstance(tutorialTargetRegistry);

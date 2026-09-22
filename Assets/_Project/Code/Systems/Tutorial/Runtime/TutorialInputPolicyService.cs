@@ -12,16 +12,22 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     public sealed class TutorialInputPolicyService : IGameService
     {
         private readonly TutorialInputPolicy _policy = new();
+        private readonly TutorialCapabilityPolicy _capabilityPolicy;
         private readonly InteractionPolicyService _interactionPolicyService;
 
         public TutorialInputPolicy Policy => _policy;
+        public TutorialCapabilityPolicy Capabilities => _capabilityPolicy;
         public TutorialInputMode Mode => _policy.Mode;
 
-        public TutorialInputPolicyService(InteractionPolicyService interactionPolicyService)
+        public TutorialInputPolicyService(
+            InteractionPolicyService interactionPolicyService,
+            TutorialCapabilityPolicy capabilityPolicy)
         {
             _interactionPolicyService = interactionPolicyService;
+            _capabilityPolicy = capabilityPolicy;
         }
 
+        
         public void Apply(TutorialInputMode mode, TutorialTargetId requiredTargetId = null)
         {
             _policy.Mode = mode;
@@ -31,11 +37,6 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             {
                 case TutorialInputMode.Free:
                 case TutorialInputMode.Restricted:
-                    // Fix: Restricted раньше не делал ничего, из-за чего DisableAll от
-                    // предыдущего Blocked-шага оставался активным (soft guidance ≠ "не трогать
-                    // предыдущее состояние"). Restricted тоже обязан явно установить свой
-                    // baseline — взаимодействия доступны, ограничение выражается презентацией
-                    // (хинты), а не блокировкой ввода.
                     _interactionPolicyService.Reset();
                     break;
                 case TutorialInputMode.RequiredAction:
@@ -45,15 +46,21 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             }
         }
 
+        /// <summary>ADDED — единая точка применения composable capabilities для шага
+        /// (см. TutorialCapabilityPolicy докстринг). Вызывается из
+        /// TutorialService.ActivateStep рядом с существующим Apply(inputPolicy).</summary>
+        public void ApplyCapabilities(bool canMove, bool canControlCamera, bool canInteract, bool canUseAbilities)
+            => _capabilityPolicy.Set(canMove, canControlCamera, canInteract, canUseAbilities);
+
+        
         public void Reset()
         {
             _policy.Reset();
+            _capabilityPolicy.Reset();
             _interactionPolicyService.Reset();
         }
 
-        /// <summary>Вызывающая сторона (interaction-система) оперирует сырым string targetId,
-        /// как и остальные gameplay-события/точки интеграции (см. ButtonPressedObjective) —
-        /// сравниваем через RequiredTargetId.Guid, а не сам RuntimeId-ассет.</summary>
+        // UNCHANGED
         public bool IsActionRequiredFor(string targetId)
             => _policy.Mode == TutorialInputMode.RequiredAction
                && _policy.RequiredTargetId != null

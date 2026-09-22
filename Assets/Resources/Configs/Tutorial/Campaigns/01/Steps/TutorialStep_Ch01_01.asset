@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch01_01
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 7986ff3d6a1c7487ab53072cb442849a, type: 2}
+  chapterId: {fileID: 11400000, guid: ac546f744686e4d0e9ca13e3fcd9b5c6, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: 0362486a6a4744e49a56a5bc432fb866, type: 2}
+  presentation:
+    instructionTitleKey: Test
+    instructionDesKey: lalal
+    dialogueId: 
+    inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+  guidance:
+  - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039278201438302
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+  reward:
+    items: []
+  transitions: []
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2031039278201438302
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}

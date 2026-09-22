@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Galactic1.Code.Gameplay.Targeting;
 using Galactic1.Code.Systems.Interaction;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Code.Utility;
 using UnityEngine;
 
@@ -24,6 +25,10 @@ namespace Galactic1.Code.Gameplay.Interaction
         private Camera _camera;
         public UIInputExceptionRegistry UIInputExceptionRegistry { get; private set; }
         private SceneInteractionBlocker _interactionBlocker;
+        
+        private TutorialCapabilityPolicy _tutorialCapabilities;
+        private TutorialCapabilityPolicy TutorialCapabilities
+            => _tutorialCapabilities ??= ServiceLocator.Current.Get<TutorialCapabilityPolicy>();
 
         private bool _overUI;
 
@@ -53,7 +58,13 @@ namespace Galactic1.Code.Gameplay.Interaction
         public event Action<WorldPointerHit, WorldPointerHit> OnPointerDrag;
         public event Action<WorldPointerHit, WorldPointerHit> OnPointerUp;
         public event Action OnCancel;
+        
+        
 
+        
+        
+        
+        
         // =========================
         // Init
         // =========================
@@ -283,6 +294,9 @@ namespace Galactic1.Code.Gameplay.Interaction
             // 1. interactable приоритет
             if (Physics.Raycast(ray, out var hit, 100f, interactableLayer))
             {
+                if (TutorialCapabilities != null && !TutorialCapabilities.CanInteract)
+                    return;
+                
                 if (hit.collider.GetComponentInParent<IInteractable>() is IInteractable i)
                 {
                     i.OnInteract();
@@ -332,7 +346,8 @@ namespace Galactic1.Code.Gameplay.Interaction
 
         private void IssueMoveCommand(Vector3 position, MoveMode mode)
         {
-            //if (_tutorialInputPolicy != null && !_tutorialInputPolicy.CanMove) return;
+            if (TutorialCapabilities != null && !TutorialCapabilities.CanMove)
+                return;
             OnMoveCommandIssued?.Invoke(position, mode);
         }
 

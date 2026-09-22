@@ -25,11 +25,25 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     {
         [Tooltip("Стабильный уникальный идентификатор кампании (RuntimeId-ассет, например FIRST_TIME_PLAYER).")]
         public TutorialCampaignId campaignId;
+        
+        [SerializeField]
+        private TutorialCampaignId nextCampaignId;
 
         [Tooltip("stepId точки входа графа.")]
         public TutorialStepId entryStepId;
 
         public List<TutorialChapterDefinition> chapters = new();
+        
+        [Tooltip("Если true — по завершении ЭТОЙ кампании (Terminal-переход графа) сразу " +
+                 "загружается сцена лагеря (HomeSceneRequestEvent), минуя выход на карту мира. " +
+                 "Нужно для combat-tutorial кампаний, которые физически стартуют не из лагеря " +
+                 "(см. Chapter 2 / TutorialCombatScenario) — тот же принцип, что уже использует " +
+                 "CampDefenseScenario.ExitFromLocation() для возврата в лагерь без карты.")]
+        public bool loadCampOnCompletion = false;
+
+
+        public TutorialCampaignId NextCampaignId => nextCampaignId;
+
 
         private sealed class StepRegistry : RegistryBase<TutorialStepId, TutorialStepDefinition>
         {

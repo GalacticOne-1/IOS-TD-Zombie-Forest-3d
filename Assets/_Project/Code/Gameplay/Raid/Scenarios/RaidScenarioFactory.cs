@@ -15,6 +15,7 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
             return locationType switch
             {
                 LocationType.Home => new CampDefenseScenario(container),
+                LocationType.TutorialCombat => new TutorialCombatScenario(container),
                 _ => new ExplorationRaidScenario(container) // безопасный default для обычных локаций
             };
         }

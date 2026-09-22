@@ -22,6 +22,18 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
 
         [Header("Input")]
         public TutorialInputMode inputPolicy = TutorialInputMode.Free;
+        
+        [Header("Capabilities")]
+        [Tooltip("Composable capability policy — раздел 10.1 ТЗ Chapter 2. Параллельно " +
+                 "inputPolicy, для тонкой блокировки движения/камеры/interact/abilities " +
+                 "независимо друг от друга (нужно для Molotov-шага: CanMove=false, " +
+                 "CanControlCamera=false, CanInteract=false, CanUseAbilities=true — " +
+                 "единый TutorialInputMode такую комбинацию не выражает). Не пересекается " +
+                 "с InteractionPolicyService — тот остаётся политикой world-interactions.")]
+        public bool canMove = true;
+        public bool canControlCamera = true;
+        public bool canInteract = true;
+        public bool canUseAbilities = true;
 
 
         public bool HasVisuals =>

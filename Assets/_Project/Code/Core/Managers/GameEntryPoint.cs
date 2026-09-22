@@ -493,17 +493,30 @@ namespace Galactic1
                 // **** в релизной версии должны загружать сцену из сохраненного состояния игры
                 case ApplicationConfig.EStartApp.RELEASE:
                 {
+                    var isWorldMap = _rootContainer.Resolve<IGameStateProvider>()
+                        .GameStateProxy.GameLoopContext.PlayerOnMap.CurrentValue;
                     
-                    if (_rootContainer.Resolve<IGameStateProvider>().GameStateProxy.GameLoopContext.PlayerOnMap.CurrentValue ||
-                        gameStateProvider.GameStateProxy.GameLoopContext.CurrentLocationStateId.Value > 0)
+                    // #1 tutorial battle scene
+                    if (!isWorldMap &&
+                        gameStateProvider.GameStateProxy.GameLoopContext.CurrentLocationStateId.Value == 1)
+                    {
+                        yield return _coroutines
+                            .StartCoroutine(LoadAndStartLocation(new LocationEnterParams(0)));
+                    }
+                    // #2 world map
+                    else if (isWorldMap ||
+                             gameStateProvider.GameStateProxy.GameLoopContext.CurrentLocationStateId.Value > 0)
                     {
                         // если игрок был на карте или в локации всегда загружаем карту
                         // (локация никогда не загружается)
-                        yield return _coroutines.StartCoroutine(LoadAndStartWorldMap(new WorldMapEnterParams(0)));
+                        yield return _coroutines
+                            .StartCoroutine(LoadAndStartWorldMap(new WorldMapEnterParams(0)));
                     }
+                    // #3 home
                     else // if location == 0
                     {
-                        yield return _coroutines.StartCoroutine(LoadAndStartHome(new CampEnterParams(0)));
+                        yield return _coroutines
+                            .StartCoroutine(LoadAndStartHome(new CampEnterParams(0)));
                     }
                 } break;
                 // ***********************************************************************************************
@@ -513,14 +526,16 @@ namespace Galactic1
                 case ApplicationConfig.EStartApp.Home:
                 {
                     gameStateProvider.GameStateProxy.GameLoopContext.CurrentLocationStateId.Value = 0;
-                    yield return _coroutines.StartCoroutine(LoadAndStartHome(new CampEnterParams(0)));
+                    yield return _coroutines
+                        .StartCoroutine(LoadAndStartHome(new CampEnterParams(0)));
 
                 } break;
                 
                 case ApplicationConfig.EStartApp.Map:
                 {
                     gameStateProvider.GameStateProxy.GameLoopContext.CurrentLocationStateId.Value = -1;
-                    yield return _coroutines.StartCoroutine(LoadAndStartWorldMap(new WorldMapEnterParams(0)));
+                    yield return _coroutines
+                        .StartCoroutine(LoadAndStartWorldMap(new WorldMapEnterParams(0)));
 
                 } break;
                 
@@ -528,14 +543,16 @@ namespace Galactic1
                 {
                     gameStateProvider.GameStateProxy.GameLoopContext.CurrentLocationStateId.Value =
                         _rootContainer.Resolve<IConfigProvider>().Get<ApplicationConfig>().startingLocationId;
-                    yield return _coroutines.StartCoroutine(LoadAndStartLocation(new LocationEnterParams(0)));
+                    yield return _coroutines
+                        .StartCoroutine(LoadAndStartLocation(new LocationEnterParams(0)));
 
                 } break;
                 
                 case ApplicationConfig.EStartApp.DevScene:
                 {
                     gameStateProvider.GameStateProxy.GameLoopContext.CurrentLocationStateId.Value = 1;
-                    yield return _coroutines.StartCoroutine(LoadAndStartDevScene(new DevSceneEnterParams(0)));
+                    yield return _coroutines
+                        .StartCoroutine(LoadAndStartDevScene(new DevSceneEnterParams(0)));
 
                 } break;
             }

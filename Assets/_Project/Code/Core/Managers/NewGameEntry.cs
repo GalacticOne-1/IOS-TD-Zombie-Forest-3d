@@ -15,7 +15,9 @@ namespace Galactic1.EntryPoint
         private const string NEW_GAME_KEY = nameof(NEW_GAME_KEY);
 
         
-        
+        /// <summary>
+        /// Одноразовая загрузка при первом старте игры
+        /// </summary>
         public NewGameEntry()
         {
             if (PlayerPrefs.HasKey(NEW_GAME_KEY))
@@ -30,7 +32,8 @@ namespace Galactic1.EntryPoint
             startKitData.GetKit(EStartKit.StartGame_01).Apply();
             
             // cargo
-            var cargo = ServiceLocator.Current.Get<GameSession>().GameLoopContext.PlayerTransport.GetInventory;
+            var cargo = ServiceLocator.Current.Get<GameSession>()
+                .GameLoopContext.PlayerTransport.GetInventory;
             var resourcesPort = (IInventoryResourcesPort)cargo;
             var cargoKit = startKitData.GetKit(EStartKit.StartGameCargo);
 

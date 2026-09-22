@@ -63,6 +63,8 @@ namespace Galactic1.Code.Systems.Squad
         private WorldInputDispatcher.MoveMode _currentMode;
         private MoveState _state = MoveState.Idle;
 
+        public event Action OnMovementFinished;
+
         public Vector3 Center => _runtime.Center;
         // В SquadMovementSystem, вместо TrailGeometry Geometry:
         public TrailRenderSnapshot RenderSnapshot =>
@@ -258,7 +260,7 @@ namespace Galactic1.Code.Systems.Squad
 
             _centerDriver.ClearTrail();
             _trailRenderer.HidePath();
-            //OnMovementFinished?.Invoke();
+            OnMovementFinished?.Invoke();
         }
 
         private bool AreAgentsAtFinalSlots(SquadSlot[] slots)

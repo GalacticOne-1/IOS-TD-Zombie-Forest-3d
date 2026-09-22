@@ -12,6 +12,8 @@ namespace Galactic1.Code.WorldMap
         Laboratory = 7,
         
         Bunker = 10,
-        RaidBase = 20
+        RaidBase = 20,
+        
+        TutorialCombat = 30,
     }
 }

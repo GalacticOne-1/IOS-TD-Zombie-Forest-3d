@@ -5,11 +5,10 @@ using Galactic1.Code.Systems.Tutorial.Analytics;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Objectives;
 using Galactic1.Code.Systems.Tutorial.Presentation;
-using Galactic1.Code.Systems.Tutorial.Presentation.Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Core;
+using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.UI.Core;
-using Galactic1.UI.Shop.Rewards;
 using R3;
 using UnityEngine;
 
@@ -395,6 +394,12 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 _runtime.SetActiveStep(stepState);
 
                 _inputPolicyService.Apply(stepDef.presentation.inputPolicy);
+                _inputPolicyService.ApplyCapabilities(
+                    stepDef.presentation.canMove,
+                    stepDef.presentation.canControlCamera,
+                    stepDef.presentation.canInteract,
+                    stepDef.presentation.canUseAbilities);
+                
                 _presentation.Show(BuildEffectivePresentation(stepState));
                 RefreshPanel(stepState);
                 _taskPresenter.ShowStep(stepState);
@@ -684,10 +689,30 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
         private void CompleteCampaign()
         {
+            var finishedDefinition = _runtime.Definition;
+
             _activeStep = null;
             _runtime.MarkCampaignCompleted();
             _inputPolicyService.Reset();
             _analytics.TutorialCompleted(_runtime.CampaignId);
+
+            var nextCampaignId = finishedDefinition.NextCampaignId;
+            if (nextCampaignId != null)
+            {
+                StartTutorial(nextCampaignId);
+            }
+
+            // === по окончании боевой компании выходим в лагерь
+            if (finishedDefinition.loadCampOnCompletion)
+            {
+                ServiceLocator.Current.Get<CoroutineController>().Coroutine_wait(1,
+                    () =>
+                    {
+                        ServiceLocator.Current.Get<GameSession>()
+                            .GameLoopContext.CurrentRaid.Scenario.ExitFromLocation();
+                    });
+            }
+
             Persist();
         }
 
