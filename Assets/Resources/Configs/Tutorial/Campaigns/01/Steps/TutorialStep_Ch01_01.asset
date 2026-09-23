@@ -20,34 +20,25 @@ MonoBehaviour:
     objectives:
     - {fileID: 11400000, guid: 0362486a6a4744e49a56a5bc432fb866, type: 2}
   presentation:
-    instructionTitleKey: Test
-    instructionDesKey: lalal
+    instructionTitleKey: Open a Container
+    instructionDesKey: Find a container and open it to collect its contents.
     dialogueId: 
     inputPolicy: 0
     canMove: 1
     canControlCamera: 1
     canInteract: 1
     canUseAbilities: 1
-  guidance:
-  - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
-    descriptionPanel:
-      enabled: 0
-      text: 
-      oneShot: 0
-    presentations:
-    - highlightTarget:
-        rid: 2031039278201438302
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
+  guidance: []
   reward:
     items: []
-  transitions: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: d0815565b82a5441a9cae65292b6c078, type: 2}
+    condition:
+      rid: -2
   isCheckpoint: 1
   requiredDomain: 0
   references:
     version: 2
     RefIds:
-    - rid: 2031039278201438302
-      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
+    - rid: -2
+      type: {class: , ns: , asm: }

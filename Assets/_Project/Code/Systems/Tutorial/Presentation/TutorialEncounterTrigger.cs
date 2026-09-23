@@ -20,20 +20,20 @@ namespace Galactic1.Code.Gameplay.Tutorial
     /// RaidInProgressState.Enter() (см. её правку, добавляющую ServiceLocator.Current.
     /// Register(spawnSystem) рядом с существующим _container.RegisterInstance(spawnSystem)).
     /// </summary>
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(BoxCollider))]
     public sealed class TutorialEncounterTrigger : MonoBehaviour
     {
         [SerializeField] private TutorialEncounterDefinition encounter;
-        [SerializeField] private LayerMask playerLayer;
 
-        private bool _activated;
+        private const string PlayerTag = "Player";
+        private bool _triggered;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (_activated) return;
-            if (((1 << other.gameObject.layer) & playerLayer.value) == 0) return;
+            if (_triggered || !other.CompareTag(PlayerTag)) 
+                return;
 
-            _activated = true;
+            _triggered = true;
             Activate();
         }
 
@@ -44,6 +44,8 @@ namespace Galactic1.Code.Gameplay.Tutorial
                 Debug.LogError($"[TutorialEncounterTrigger] '{name}': encounter/group не задан.");
                 return;
             }
+
+            Debug.LogError("Zombie trigger!");
 
             // var spawnSystem = ServiceLocator.Current.Get<EnemySpawnSystem>();
             // if (spawnSystem == null)

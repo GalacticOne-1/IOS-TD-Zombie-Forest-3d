@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch01_03
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 38b8b8c18015e43f29bae47c6f0c98a8, type: 2}
+  chapterId: {fileID: 11400000, guid: ac546f744686e4d0e9ca13e3fcd9b5c6, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: e20152835819348aabe9062f3e1f5bfe, type: 2}
+  presentation:
+    instructionTitleKey: Use a Bandage
+    instructionDesKey: Open the Inventory and use a bandage to restore some of the
+      survivor's health.
+    dialogueId: 
+    inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+  guidance:
+  - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039302563266647
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: b1f8693c3863146eab80216b7fb4eaeb, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039302563266648
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 4d07dc68b10674a929ab3dbad1867f7d, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039302563266649
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  reward:
+    items: []
+  transitions: []
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2031039302563266647
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
+    - rid: 2031039302563266648
+      type: {class: TutorialInventoryItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 20348407d85cc4332b66bb53f2ef04cc, type: 2}
+    - rid: 2031039302563266649
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 37e0fe69ff6e544c49df209c2dedec6d, type: 2}

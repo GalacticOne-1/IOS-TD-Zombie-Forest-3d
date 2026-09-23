@@ -35,7 +35,7 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
             UseDefenseFacilities = false,
             UseWaveSpawner = false,
             UseAmbientPopulation = false,
-            UseLoot = false,
+            UseLoot = true,
             UseExitZones = false,
             UseTransport = false,
         };

@@ -8,6 +8,7 @@ using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Core;
 using Galactic1.Core.Systems.GameLoopSession;
+using Galactic1.EntryPoint;
 using Galactic1.UI.Core;
 using R3;
 using UnityEngine;
@@ -705,6 +706,9 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             // === по окончании боевой компании выходим в лагерь
             if (finishedDefinition.loadCampOnCompletion)
             {
+                // загружаем предметы для второй компании
+                new NewGameEntry().StartCamp();
+                
                 ServiceLocator.Current.Get<CoroutineController>().Coroutine_wait(1,
                     () =>
                     {

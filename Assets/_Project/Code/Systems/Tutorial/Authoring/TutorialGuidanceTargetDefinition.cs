@@ -22,6 +22,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
 
         [Tooltip("Оставь пустым, если для этого guidance-варианта фокус камеры не нужен.")]
         public TutorialTargetId cameraFocusTargetId;
+        public TutorialTargetId cameraBoundsTargetId;
 
         public bool HasAnyTarget =>
             highlightTarget != null || arrowTargetId != null || cameraFocusTargetId != null;
