@@ -50,7 +50,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfRect: {fileID: 44483548072949957}
-  offsetFromTarget: {x: 0, y: 60}
+  offsetFromTarget: {x: 0, y: 0}
+  edgePadding: -400
+  targetOffset: 200
+  spriteForwardAngle: 0
 --- !u!1 &9043442310733350636
 GameObject:
   m_ObjectHideFlags: 0

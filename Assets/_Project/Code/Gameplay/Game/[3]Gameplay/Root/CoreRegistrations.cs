@@ -274,6 +274,10 @@ namespace Galactic1
             var tutorialCapabilityPolicy = new TutorialCapabilityPolicy();
             ServiceLocator.Current.Register(tutorialCapabilityPolicy);
             
+            var tutorialCameraBoundsRegistry = new TutorialCameraBoundsRegistry();
+            rootContainer.RegisterInstance(tutorialCameraBoundsRegistry);
+            ServiceLocator.Current.Register(tutorialCameraBoundsRegistry);
+            
             var tutorialGameStateQuery = new TutorialGameStateQuery(
                 gameSession.GameLoopContext,
                 rootContainer.Resolve<GameLoopStateMachine>(),
@@ -330,7 +334,8 @@ namespace Galactic1
 
             var tutorialPresentationService = new TutorialPresentationService(
                 tutorialTargetRegistry,
-                tutorialTargetResolverRegistry);
+                tutorialTargetResolverRegistry,
+                tutorialCameraBoundsRegistry);
             rootContainer.RegisterInstance(tutorialPresentationService);
             ServiceLocator.Current.Register(tutorialPresentationService);
 

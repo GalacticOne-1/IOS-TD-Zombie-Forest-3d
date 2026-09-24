@@ -148,12 +148,15 @@ namespace Galactic1.Core
             var playerStatsBase = _configsProvider.Get<PlayerStatsBase>();
 
             var firstSurvivor = "first_survivor";
+            var statsList = playerStatsBase.GetBaseStats();
+            statsList[StatId.Health] = 80;
+            
             gameLoopContext.PlayerUnitData.Add(new PlayerData()
             {
                 Id = firstSurvivor,
                 Name = "Jack Ranger",                                                         
                 ArchetypeId = "survivor.1",
-                Stats = DictionaryUtility.ToList(playerStatsBase.GetBaseStats()),
+                Stats = DictionaryUtility.ToList(statsList),
                 
                 Inventory = new (),
                 Equipment = new ()

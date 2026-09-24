@@ -32,6 +32,7 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                     d.toSourceType,
                     d.requiredAmount));
             Register<ItemEquippedObjectiveDefinition>(d => new ItemEquippedObjective(inventory, d.slot, d.itemId));
+            Register<ItemUsedObjectiveDefinition>(d => new ItemUsedObjective(d.itemId, d.requiredCount));
             Register<ResourceAmountObjectiveDefinition>(d => new ResourceAmountObjective(inventory, d.itemId, d.requiredAmount));
             Register<SquadSizeObjectiveDefinition>(d => new SquadSizeObjective(squad, d.requiredSize));
             Register<GameLoopDomainReachedObjectiveDefinition>(d => new GameLoopDomainReachedObjective(gameLoop, d.targetDomain));

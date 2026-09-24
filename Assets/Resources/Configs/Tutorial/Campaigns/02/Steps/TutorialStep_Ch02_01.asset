@@ -24,22 +24,25 @@ MonoBehaviour:
     instructionDesKey: Open the Tavern and recruit any available survivor.
     dialogueId: 
     inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 0
+      boundsTargetId: {fileID: 0}
   guidance:
   - condition: {fileID: 11400000, guid: 0b09e2f0c9fdb49b0b4d97aabb3d02e6, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
       oneShot: 1
-    presentation:
-      highlightTarget:
-        rid: 2031039168448823299
-      arrowTargetId: {fileID: 0}
-      cameraFocusTargetId: {fileID: 0}
     presentations:
     - highlightTarget:
         rid: 2031039236735762515
-      arrowTargetId: {fileID: 0}
+      arrowTargetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions:
@@ -53,10 +56,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2031039168448823299
-      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        targetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
     - rid: 2031039236735762515
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:

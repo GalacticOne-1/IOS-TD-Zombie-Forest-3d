@@ -523,28 +523,18 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             if (hasGuidance && guidanceTargets != null)
             {
-                // Arrow и camera пока остаются single-target.
-                // Берём первый guidance target, у которого они заданы.
                 foreach (var target in guidanceTargets)
                 {
-                    if (target == null)
-                        continue;
+                    if (target == null) continue;
 
                     if (arrowTargetId == null && target.ArrowTargetId)
-                    {
                         arrowTargetId = target.ArrowTargetId;
-                    }
 
                     if (cameraFocusTargetId == null && target.CameraFocusTargetId)
-                    {
                         cameraFocusTargetId = target.CameraFocusTargetId;
-                    }
 
-                    if (arrowTargetId != null &&
-                        cameraFocusTargetId != null)
-                    {
+                    if (arrowTargetId != null && cameraFocusTargetId != null)
                         break;
-                    }
                 }
             }
 
@@ -557,13 +547,15 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
                 HighlightRequests = highlightRequests,
 
-                ArrowTargetId = hasGuidance
-                    ? arrowTargetId
-                    : null,
+                ArrowTargetId = hasGuidance ? arrowTargetId : null,
+                CameraFocusTargetId = hasGuidance ? cameraFocusTargetId : null,
 
-                CameraFocusTargetId = hasGuidance
-                    ? cameraFocusTargetId
-                    : null,
+                // ADDED — camera bounds НЕ guidance-условны (раздел 26 ТЗ: Camera constraint
+                // висит прямо под Presentation, не под Guidance) — берутся напрямую из authored,
+                // всегда, независимо от hasGuidance.
+                CameraConstraint = new TutorialCameraConstraint(
+                    authored.cameraConstraint.mode,
+                    authored.cameraConstraint.boundsTargetId),
             };
         }
 

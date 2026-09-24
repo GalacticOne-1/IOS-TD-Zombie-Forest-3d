@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch03_01
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 3f233978e910b4581aa43630f76d211c, type: 2}
+  chapterId: {fileID: 11400000, guid: 25cadfc0c07fe4a37acb887b338d3420, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: fa3eca4b7fd614836b5e3f1b8951fe23, type: 2}
+  presentation:
+    instructionTitleKey: Open a Container
+    instructionDesKey: Find a container and open it to collect its contents.
+    dialogueId: 
+    inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 0
+      boundsTargetId: {fileID: 0}
+  guidance:
+  - condition: {fileID: 0}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039323182727250
+      arrowTargetId: {fileID: 11400000, guid: dcde892302813489da7d3fc8a4b01a72, type: 2}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  reward:
+    items: []
+  transitions: []
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2031039323182727250
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 0}

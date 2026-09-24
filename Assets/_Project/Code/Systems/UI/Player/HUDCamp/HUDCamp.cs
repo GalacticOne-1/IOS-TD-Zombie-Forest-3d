@@ -93,26 +93,14 @@ namespace Galactic1.Core.UI.HUD
             gameShopButton.RegisterButtonClick(container.Resolve<GameStoreService>().ShowWindow);
             worldMapButton.RegisterButtonClick(() =>
             {
-                var target = worldMapButton.GetComponent<TutorialTargetBehaviour>();
-                var gateResult = ServiceLocator.Current.Get<ITutorialTargetGateService>()
-                    .Evaluate(target?.TargetId);
-
-                if (!gateResult.IsAllowed)
+                switch (_squadValidation.ValidateForWorldMap())
                 {
-                    ServiceLocator.Current.Get<INotificationService>()
-                        .Push(TutorialNotificationIds.TargetGateBlocked, gateResult.BlockedMessage);
-                }
-                else
-                {
-                    switch (_squadValidation.ValidateForWorldMap())
-                    {
-                        case SquadValidationResult.Success:
-                            EventBus<WorldMapSceneRequestEvent>.Raise(new WorldMapSceneRequestEvent());
-                            break;
-                        case SquadValidationResult.EmptySquad:
-                            ServiceLocator.Current.Get<INotificationService>().Push(NotificationFailReason.SquadIsEmpty);
-                            break;
-                    }
+                    case SquadValidationResult.Success:
+                        EventBus<WorldMapSceneRequestEvent>.Raise(new WorldMapSceneRequestEvent());
+                        break;
+                    case SquadValidationResult.EmptySquad:
+                        ServiceLocator.Current.Get<INotificationService>().Push(NotificationFailReason.SquadIsEmpty);
+                        break;
                 }
             });
 

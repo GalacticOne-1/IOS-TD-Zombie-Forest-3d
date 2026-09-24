@@ -29,17 +29,15 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public override void Initialize(DIContainer container, UIScreenId id)
         {
             base.Initialize(container, id);
+            
+            gameObject.SetActive(true);
 
-            ServiceLocator.Current
-                .Get<TutorialPresentationService>()
-                .AttachRenderer(this);
+            ServiceLocator.Current.Get<TutorialPresentationService>().AttachRenderer(this);
         }
 
         public override void Remove()
         {
-            ServiceLocator.Current
-                .Get<TutorialPresentationService>()
-                .DetachRenderer(this);
+            ServiceLocator.Current.Get<TutorialPresentationService>().DetachRenderer(this);
 
             ClearAll();
         }
@@ -100,18 +98,20 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             _activeWorldHighlights.Clear();
         }
 
+        /// <summary>Создаёт arrow и передаёт ему таргет. Тип таргета (UI/World) определяет
+        /// сам TutorialArrowWidget.</summary>
         public void RenderArrow(ITutorialTarget target)
         {
             ClearArrow();
 
-            if (target?.UIAnchor == null)
+            if (target == null)
                 return;
 
             _activeArrow = Instantiate(
                 arrowPrefab,
                 arrowLayer);
 
-            _activeArrow.PointTo(target.UIAnchor);
+            _activeArrow.PointTo(target);
         }
 
         public void ClearArrow()

@@ -1,7 +1,10 @@
 using System;
 using Galactic1.Code.Gameplay.Audio;
 using Galactic1.Code.Gameplay.Combat.Events;
+using Galactic1.Code.Notification;
+using Galactic1.Code.Systems.Tutorial.Notification;
 using Galactic1.Code.Systems.Tutorial.Presentation;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 using Galactic1.Configs;
 using Galactic1.Systems;
 using TMPro;
@@ -295,10 +298,23 @@ namespace Galactic1.UI.Core
 
         protected virtual bool ClickBlocked()
         {
-            new TUTORIAL_AvailButton(gameObject, out bool isTutorial);
             return CORT.BLOCK_BUTTTONS && !ignoreBlock // глобальная блокировка всех кнопок
-                   || !interactable // блокировка отдельной кнопки
-                   || isTutorial && !workInTutorial; // блокировка по обучению
+                   || !interactable; // блокировка отдельной кнопки
+        }
+
+        // блокировка клика по обучению
+        bool TutorialLock()
+        {
+            var gateResult = ServiceLocator.Current.Get<ITutorialTargetGateService>()
+                .Evaluate(_tutorialBehaviour?.TargetId);
+            if (!gateResult.IsAllowed && !workInTutorial)
+            {
+                ServiceLocator.Current.Get<INotificationService>()
+                    .Push(TutorialNotificationIds.TargetGateBlocked, gateResult.BlockedMessage);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>Programmatically triggers a click event.</summary>
@@ -307,7 +323,7 @@ namespace Galactic1.UI.Core
         /// <summary>Handles the click, including vibration, sound, and invoking events.</summary>
         protected virtual bool HandleClick()
         {
-            if (ClickBlocked()) 
+            if (ClickBlocked() || TutorialLock()) 
                 return false;
 
             // воспроизведение звука / вибрации

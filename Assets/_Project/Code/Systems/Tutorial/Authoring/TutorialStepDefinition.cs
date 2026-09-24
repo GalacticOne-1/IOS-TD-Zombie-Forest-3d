@@ -3,11 +3,6 @@ using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
 {
-    /// <summary>
-    /// Узел графа тутора. Идентичность узла — stepId (не индекс в списке).
-    /// Не содержит императивной логики: поведение шага полностью описывается
-    /// objectiveGroup + presentation + guidance + transitions + requiredDomain.
-    /// </summary>
     [CreateAssetMenu(
         fileName = "TutorialStep_",
         menuName = "Game Configs/Tutorial/Step")]
@@ -29,27 +24,19 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         public TutorialPresentationDefinition presentation = new();
 
         [Header("Guidance")]
-        [Tooltip("Опционально. Динамические подсказки (highlight/arrow/camera), выбираемые по " +
-                 "condition из текущего game state — независимо от Objectives (см. " +
-                 "TutorialGuidanceDefinition докстринг). Пусто = legacy-поведение: используются " +
-                 "presentation.highlightTargetId/arrowTargetId/cameraFocusTargetId напрямую, как раньше " +
-                 "(см. TutorialService.BuildEffectivePresentation).")]
         public List<TutorialGuidanceDefinition> guidance = new();
 
         [Header("Reward")]
-        [Tooltip("Опционально. Выдаётся через Inbox строго при завершении шага (не при Skip).")]
+        
         public TutorialRewardDefinition reward = new();
 
         [Header("Graph")]
-        [Tooltip("Переходы из этого шага. Пустой список = терминальный шаг тутора/главы.")]
         public List<TutorialTransitionDefinition> transitions = new();
 
         [Header("Persistence")]
-        [Tooltip("Если true — по завершении шага фиксируется чекпоинт.")]
         public bool isCheckpoint = true;
 
         [Header("Resume Safety")]
-        [Tooltip("Домен, в котором этот шаг безопасно резюмировать. Any = без ограничений.")]
         public TutorialStepDomain requiredDomain = TutorialStepDomain.Any;
 
 #if UNITY_EDITOR
@@ -64,6 +51,13 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
             if (!objectives.Validate(stepId, out error))
                 return false;
 
+            // ADDED — camera constraint validation (mode Bounds требует boundsTargetId).
+            if (!presentation.Validate(out error))
+            {
+                error = $"Step '{stepId.DebugKey}': presentation: {error}";
+                return false;
+            }
+
             if (!ValidateGuidance(out error))
                 return false;
 
@@ -74,8 +68,6 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
             {
                 var t = transitions[i];
 
-                // Fix: безусловный transition (condition == null) делает все следующие за ним
-                // transitions недостижимыми — "first satisfied wins" отдаёт им приоритет всегда.
                 bool isUnconditional = t.condition == null;
                 if (isUnconditional && i != transitions.Count - 1)
                 {
@@ -95,11 +87,6 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
             return true;
         }
 
-        /// <summary>Тот же "first satisfied wins" порядок, что у transitions — безусловный
-        /// guidance-вариант (condition == null) не в конце списка делает последующие варианты
-        /// недостижимыми, симметрично Fix в transitions-валидации выше. guidance == null/пусто
-        /// — валидное состояние (см. TutorialGuidanceDefinition докстринг про backward
-        /// compatibility), не ошибка.</summary>
         private bool ValidateGuidance(out string error)
         {
             if (guidance == null)

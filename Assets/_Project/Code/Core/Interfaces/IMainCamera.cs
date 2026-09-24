@@ -15,7 +15,6 @@ namespace Galactic1.Code.Cameras
             Vector3 newMaxBounds,
             float? startZoom = null);
 
-
         void FocusOnPosition(Vector3 target, float duration = .2f);
     }
 }

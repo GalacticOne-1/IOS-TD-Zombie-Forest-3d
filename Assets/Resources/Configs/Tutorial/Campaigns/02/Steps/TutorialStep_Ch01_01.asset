@@ -28,6 +28,13 @@ MonoBehaviour:
       your camp inventory.
     dialogueId: 
     inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 0
+      boundsTargetId: {fileID: 0}
   guidance:
   - condition: {fileID: 11400000, guid: e34ecbc8b71eb4ba68735223bee36e1e, type: 2}
     descriptionPanel:
@@ -37,8 +44,9 @@ MonoBehaviour:
     presentations:
     - highlightTarget:
         rid: 2031039236394975322
-      arrowTargetId: {fileID: 0}
+      arrowTargetId: {fileID: 11400000, guid: afa4a609935604f93b51dda9350b776e, type: 2}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 7cb3de62f888f409594f0259ac3ecaee, type: 2}
     descriptionPanel:
       enabled: 0
@@ -49,18 +57,22 @@ MonoBehaviour:
         rid: 2031039236394975318
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
     - highlightTarget:
         rid: 2031039236394975319
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
     - highlightTarget:
         rid: 2031039236394975320
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
     - highlightTarget:
         rid: 2031039236394975321
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions:

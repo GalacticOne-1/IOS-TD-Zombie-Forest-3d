@@ -18,6 +18,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     {
         private readonly TutorialTargetRegistry _targetRegistry;
         private readonly TutorialTargetResolverRegistry _resolverRegistry;
+        private readonly TutorialCameraBoundsRegistry _cameraBoundsRegistry;
 
         private ITutorialPresentationRenderer _renderer;
         private TutorialEffectivePresentation _activePresentation;
@@ -26,10 +27,12 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
 
         public TutorialPresentationService(
             TutorialTargetRegistry targetRegistry,
-            TutorialTargetResolverRegistry resolverRegistry)
+            TutorialTargetResolverRegistry resolverRegistry,
+            TutorialCameraBoundsRegistry cameraBoundsRegistry)
         {
             _targetRegistry = targetRegistry;
             _resolverRegistry = resolverRegistry;
+            _cameraBoundsRegistry = cameraBoundsRegistry;
         }
 
         public void Show(TutorialEffectivePresentation presentation)
@@ -46,6 +49,8 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             ClearPendingSubscriptions();
             _activePresentation = null;
             _renderer?.ClearAll();
+            
+            ServiceLocator.Current.Get<CameraController>()?.ClearTutorialBounds();
         }
 
         /// <summary>Вызывается TutorialHUDController при загрузке новой сцены. Если Show()
@@ -81,6 +86,8 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
                 presentation.CameraFocusTargetId,
                 FocusCameraOn,
                 () => { });
+            
+            ApplyCameraConstraint(presentation.CameraConstraint);
         }
 
         private void RenderHighlights(
@@ -147,6 +154,42 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             }
         }
 
+
+        private void ApplyCameraConstraint(TutorialCameraConstraint constraint)
+        {
+            var camera = ServiceLocator.Current.Get<CameraController>();
+            if (camera == null) return;
+
+            if (constraint == null || constraint.Mode == TutorialCameraConstraintMode.None)
+            {
+                camera.ClearTutorialBounds();
+                return;
+            }
+
+            if (_cameraBoundsRegistry.TryGetBounds(constraint.BoundsTargetId, out var boundsTarget))
+            {
+                camera.SetTutorialBounds(boundsTarget.WorldBounds);
+                return;
+            }
+
+            // Таргет ещё не на сцене — временно без ограничения, подпишемся на появление.
+            camera.ClearTutorialBounds();
+
+            int capturedGeneration = _generation;
+            var capturedTargetId = constraint.BoundsTargetId;
+
+            void Handler(ITutorialCameraBoundsTarget registered)
+            {
+                if (registered.TargetId != capturedTargetId) return;
+                _cameraBoundsRegistry.OnBoundsRegistered -= Handler;
+                if (capturedGeneration != _generation) return; // устаревший presentation
+                ServiceLocator.Current.Get<CameraController>()?.SetTutorialBounds(registered.WorldBounds);
+            }
+
+            _cameraBoundsRegistry.OnBoundsRegistered += Handler;
+            _pendingTargetUnsubs.Add(() => _cameraBoundsRegistry.OnBoundsRegistered -= Handler);
+        }
+
         /// <summary>Fixed-таргет lookup для arrow/camera — дословно перенесено из старой
         /// реализации, поведение не менялось.</summary>
         private void ResolveTarget(TutorialTargetId targetId, Action<ITutorialTarget> onFound, Action onEmpty)
@@ -169,7 +212,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         private void FocusCameraOn(ITutorialTarget target)
         {
             if (target.WorldAnchor == null) return;
-            ServiceLocator.Current.Get<IMainCamera>().FocusOnPosition(target.WorldAnchor.position);
+            ServiceLocator.Current.Get<CameraController>().FocusOnPosition(target.WorldAnchor.position);
         }
 
         private void ClearPendingSubscriptions()

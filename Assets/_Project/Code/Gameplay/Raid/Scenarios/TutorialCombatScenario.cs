@@ -4,6 +4,7 @@ using Galactic1.Code.Systems.Raid.Mission;
 using Galactic1.Core.GameSession;
 using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.Game.Meta.Enemy;
+using Galactic1.RaidLoot.Navigation;
 
 namespace Galactic1.Code.Systems.Raid.Scenarios
 {
@@ -27,6 +28,7 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
     {
         private readonly DIContainer _container;
         private readonly GameLoopContext _gameLoopContext;
+        private LootObstacleBuilder _obstacleBuilder;
 
         public EnemyAIProfile AIProfile => EnemyAIProfile.Raid;
 
@@ -56,9 +58,13 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
 
         public void OnSceneLoaded(SceneSessionDefinition scene)
         {
-            // Сценарий сам ничего доп. не создаёт — encounters/triggers/rewards целиком
-            // описаны Tutorial Definition graph (TutorialEncounterTrigger на сцене +
-            // EnemySpawnSystem.Enqueue напрямую из триггера).
+            var raid = _container.Resolve<GameSession>().GameLoopContext.CurrentRaid;
+
+            if (raid.CurrentRaidLootContainer != null)
+            {
+                _obstacleBuilder = new LootObstacleBuilder(raid.CurrentRaidLootContainer);
+                _obstacleBuilder.Build();
+            }
         }
 
         public void OnBattleStarted() { }

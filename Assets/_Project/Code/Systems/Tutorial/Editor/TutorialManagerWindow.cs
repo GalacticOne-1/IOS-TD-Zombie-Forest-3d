@@ -469,7 +469,7 @@ namespace Galactic1.Tools
             EditorGUILayout.EndVertical();
         }
 
-        // ---------------- Presentation (legacy fallback) ----------------
+        // ---------------- Presentation ----------------
         private void DrawPresentationBox()
         {
             presentationFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(presentationFoldout, "🎬 Presentation");
@@ -479,31 +479,54 @@ namespace Galactic1.Tools
 
                 var p = stepSO.FindProperty("presentation");
 
+                // ---- Instruction ----
                 EditorGUILayout.LabelField("Instruction", EditorStyles.miniBoldLabel);
                 EditorGUILayout.PropertyField(p.FindPropertyRelative("instructionTitleKey"),
                     new GUIContent("Title Key"));
                 EditorGUILayout.PropertyField(p.FindPropertyRelative("instructionDesKey"),
                     new GUIContent("Description Key"));
 
+                // ---- Dialogue ----
                 EditorGUILayout.Space(4);
                 EditorGUILayout.LabelField("Dialogue", EditorStyles.miniBoldLabel);
-                EditorGUILayout.HelpBox("Не обрабатывается — диалоговая система в проекте не найдена. Поле декларативно.",
+                EditorGUILayout.HelpBox(
+                    "Не обрабатывается — диалоговая система в проекте не найдена. Поле декларативно.",
                     MessageType.None);
                 EditorGUILayout.PropertyField(p.FindPropertyRelative("dialogueId"),
                     new GUIContent("Dialogue Id"));
 
+                // ---- Input ----
                 EditorGUILayout.Space(4);
                 EditorGUILayout.LabelField("Input", EditorStyles.miniBoldLabel);
                 EditorGUILayout.PropertyField(p.FindPropertyRelative("inputPolicy"),
                     new GUIContent("Input Policy"));
 
+                // ---- Capabilities ----
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("Capabilities", EditorStyles.miniBoldLabel);
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("canMove"),
+                    new GUIContent("Can Move"));
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("canControlCamera"),
+                    new GUIContent("Can Control Camera"));
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("canInteract"),
+                    new GUIContent("Can Interact"));
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("canUseAbilities"),
+                    new GUIContent("Can Use Abilities"));
+
+                // ---- Camera ----
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("Camera", EditorStyles.miniBoldLabel);
+                EditorGUILayout.PropertyField(p.FindPropertyRelative("cameraConstraint"),
+                    new GUIContent("Camera Constraint"), true);
+
                 EditorGUILayout.HelpBox(
-                    "Highlight / Arrow / Camera больше не задаются здесь — только через Guidance ниже. " +
-                    "Шаг без Guidance-entries не имеет никакого таргетинга вообще.",
+                    "Highlight / Arrow / Camera focus больше не задаются здесь — только через Guidance ниже. " +
+                    "Camera Constraint (область камеры) — статичен на уровне шага и не зависит от Guidance.",
                     MessageType.Info);
 
                 EditorGUILayout.EndVertical();
             }
+
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 

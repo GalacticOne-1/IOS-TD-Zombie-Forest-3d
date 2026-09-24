@@ -30,7 +30,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
 #if UNITY_EDITOR
         public bool Validate(out string error)
         {
-            if (highlightTarget != null && !highlightTarget.Validate(out error))
+            if (highlightTarget != null && !highlightTarget.Validate(out error) && !arrowTargetId)
                 return false;
 
             error = null;

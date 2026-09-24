@@ -45,7 +45,15 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             => string.IsNullOrEmpty(CurrentStepId) ? null : Definition.GetStepByGuid(CurrentStepId);
 
         public bool IsStepCompleted(TutorialStepId stepId)
-            => stepId != null && _state.Value.completedStepIds != null && _state.Value.completedStepIds.Contains(stepId.Guid);
+        {
+            if (stepId == null) return false;
+
+            var s = _state.Value;
+            var guid = stepId.Guid;
+
+            return (s.completedStepIds != null && s.completedStepIds.Contains(guid))
+                   || (s.allCompletedStepIds != null && s.allCompletedStepIds.Contains(guid));
+        }
 
         /// <summary>Только обновляет currentStepId в памяти. Не персистит — TutorialService
         /// контролирует, когда именно вызывается SaveGameState().</summary>
@@ -57,19 +65,34 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             StateWriter.Write(_state, (ref CGameStateTutorial t) => t.currentStepId = guid);
         }
 
-        /// <summary>Помечает шаг ГЕНУИННО завершённым (не Skipped — см. TutorialService,
-        /// Skip никогда не вызывает этот метод).</summary>
+        /// <summary>Помечает шаг ГЕНУИННО завершённым (не Skipped). Пишет и в прогресс текущей
+        /// кампании, и в накопительный список, который переживает смену кампании.</summary>
         public void MarkStepCompleted(TutorialStepId stepId)
         {
             if (stepId == null) return;
+
             var guid = stepId.Guid;
-            var current = _state.Value.completedStepIds ?? new System.Collections.Generic.List<string>();
-            if (!current.Contains(guid))
+            var s = _state.Value;
+
+            bool inCurrent = s.completedStepIds != null && s.completedStepIds.Contains(guid);
+            bool inAll = s.allCompletedStepIds != null && s.allCompletedStepIds.Contains(guid);
+            if (inCurrent && inAll) return;
+
+            var updatedCurrent = new List<string>(s.completedStepIds ?? new List<string>());
+            if (!inCurrent) updatedCurrent.Add(guid);
+
+            // Миграция старых сейвов: если накопительного списка ещё нет, засеваем его
+            // текущим прогрессом кампании.
+            var updatedAll = s.allCompletedStepIds != null
+                ? new List<string>(s.allCompletedStepIds)
+                : new List<string>(updatedCurrent);
+            if (!updatedAll.Contains(guid)) updatedAll.Add(guid);
+
+            StateWriter.Write(_state, (ref CGameStateTutorial t) =>
             {
-                var updated = current.ToList();
-                updated.Add(guid);
-                StateWriter.Write(_state, (ref CGameStateTutorial t) => t.completedStepIds = updated);
-            }
+                t.completedStepIds = updatedCurrent;
+                t.allCompletedStepIds = updatedAll;
+            });
         }
 
         public void MarkCampaignCompleted()

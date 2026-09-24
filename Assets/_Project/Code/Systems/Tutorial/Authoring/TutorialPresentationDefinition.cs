@@ -14,7 +14,7 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         public string instructionTitleKey;
         [TextArea]
         public string instructionDesKey;
-        
+
         [Header("Dialogue")]
         [Tooltip("Не обрабатывается — в проекте не найдена диалоговая система. Поле декларативно.")]
         public string dialogueId;
@@ -22,33 +22,48 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
 
         [Header("Input")]
         public TutorialInputMode inputPolicy = TutorialInputMode.Free;
-        
+
         [Header("Capabilities")]
         [Tooltip("Composable capability policy — раздел 10.1 ТЗ Chapter 2. Параллельно " +
                  "inputPolicy, для тонкой блокировки движения/камеры/interact/abilities " +
-                 "независимо друг от друга (нужно для Molotov-шага: CanMove=false, " +
-                 "CanControlCamera=false, CanInteract=false, CanUseAbilities=true — " +
-                 "единый TutorialInputMode такую комбинацию не выражает). Не пересекается " +
-                 "с InteractionPolicyService — тот остаётся политикой world-interactions.")]
+                 "независимо друг от друга.")]
         public bool canMove = true;
         public bool canControlCamera = true;
         public bool canInteract = true;
         public bool canUseAbilities = true;
 
+        [Header("Camera")]
+        [Tooltip("Опциональное пространственное ограничение ручного движения камеры на " +
+                 "этом шаге — независимо от canControlCamera (та означает полную блокировку, " +
+                 "это — область при разрешённом управлении). Не guidance-условное — статично " +
+                 "на уровне шага, см. TutorialService.BuildEffectivePresentation.")]
+        public TutorialCameraConstraintDefinition cameraConstraint = new();
+
 
         public bool HasVisuals =>
             !string.IsNullOrEmpty(instructionTitleKey) ||
             !string.IsNullOrEmpty(dialogueId);
+
+#if UNITY_EDITOR
+        public bool Validate(out string error)
+        {
+            if (!cameraConstraint.Validate(out error))
+                return false;
+
+            error = null;
+            return true;
+        }
+#endif
     }
-    
+
     public enum HighlightMode
     {
         None,
-        FixedTarget,        // highlightTargetId
-        InventoryItem,       // highlightItemId
-        InboxItem,           // highlightInboxItemId
-        UnitSearch,          // highlightUnitSearch
-        FacilityCard,        // highlightFacilityItemId
-        ConstructionTab      // highlightConstructionTabCategory
+        FixedTarget,
+        InventoryItem,
+        InboxItem,
+        UnitSearch,
+        FacilityCard,
+        ConstructionTab
     }
 }

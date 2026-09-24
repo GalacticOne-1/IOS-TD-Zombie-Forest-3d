@@ -29,6 +29,9 @@ MonoBehaviour:
     canControlCamera: 1
     canInteract: 1
     canUseAbilities: 1
+    cameraConstraint:
+      mode: 1
+      boundsTargetId: {fileID: 11400000, guid: e592faafa4c1b4f308c08c171410b64b, type: 2}
   guidance:
   - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
     descriptionPanel:

@@ -18,7 +18,7 @@ MonoBehaviour:
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: 0362486a6a4744e49a56a5bc432fb866, type: 2}
+    - {fileID: 11400000, guid: fa3eca4b7fd614836b5e3f1b8951fe23, type: 2}
   presentation:
     instructionTitleKey: Open a Container
     instructionDesKey: Find a container and open it to collect its contents.
@@ -28,7 +28,21 @@ MonoBehaviour:
     canControlCamera: 1
     canInteract: 1
     canUseAbilities: 1
-  guidance: []
+    cameraConstraint:
+      mode: 1
+      boundsTargetId: {fileID: 11400000, guid: e592faafa4c1b4f308c08c171410b64b, type: 2}
+  guidance:
+  - condition: {fileID: 0}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039320749506648
+      arrowTargetId: {fileID: 11400000, guid: 45cd8c6800a454b6c9b19aca84cdb62a, type: 2}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions:
@@ -42,3 +56,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 2031039320749506648
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 0}

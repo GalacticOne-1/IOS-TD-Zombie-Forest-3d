@@ -3,10 +3,6 @@ using Galactic1.Code.Systems.Tutorial.Authoring;
 
 namespace Galactic1.Code.Systems.Tutorial.Presentation
 {
-    /// <summary>Runtime POCO-снэпшот "что показать прямо сейчас", строится заново на
-    /// каждый вызов TutorialService.BuildEffectivePresentation. HighlightRequest уже
-    /// сконвертирован через TutorialTargetRequestFactory — TutorialPresentationService
-    /// никогда не видит TutorialTargetQuery/[SerializeReference]-граф.</summary>
     public sealed class TutorialEffectivePresentation
     {
         public string InstructionTitleKey;
@@ -16,5 +12,10 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public IReadOnlyList<TutorialTargetRequest> HighlightRequests { get; set; }
         public TutorialTargetId ArrowTargetId;
         public TutorialTargetId CameraFocusTargetId;
+
+        /// <summary>ADDED — раздел 10 ТЗ camera bounds. Null == нет constraint (тот же
+        /// смысл, что TutorialCameraConstraint.None) — TutorialPresentationService трактует
+        /// оба варианта одинаково.</summary>
+        public TutorialCameraConstraint CameraConstraint { get; set; }
     }
 }

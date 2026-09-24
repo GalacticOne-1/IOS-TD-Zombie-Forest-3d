@@ -18,7 +18,7 @@ MonoBehaviour:
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: e20152835819348aabe9062f3e1f5bfe, type: 2}
+    - {fileID: 11400000, guid: 3b9756d3bacac4218b34bc1eb117e2b8, type: 2}
   presentation:
     instructionTitleKey: Use a Bandage
     instructionDesKey: Open the Inventory and use a bandage to restore some of the
@@ -29,6 +29,9 @@ MonoBehaviour:
     canControlCamera: 1
     canInteract: 1
     canUseAbilities: 1
+    cameraConstraint:
+      mode: 1
+      boundsTargetId: {fileID: 11400000, guid: e592faafa4c1b4f308c08c171410b64b, type: 2}
   guidance:
   - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
     descriptionPanel:
@@ -65,12 +68,17 @@ MonoBehaviour:
       cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
-  transitions: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: 3f233978e910b4581aa43630f76d211c, type: 2}
+    condition:
+      rid: -2
   isCheckpoint: 1
   requiredDomain: 0
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 2031039302563266647
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
