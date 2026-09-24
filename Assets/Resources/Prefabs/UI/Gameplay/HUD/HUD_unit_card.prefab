@@ -3191,6 +3191,7 @@ GameObject:
   - component: {fileID: 2058166026383094088}
   - component: {fileID: 1473514908313457099}
   - component: {fileID: 3449147929666536647}
+  - component: {fileID: 4105000989288455013}
   m_Layer: 5
   m_Name: weapon_slot_empty_label
   m_TagString: Untagged
@@ -3309,6 +3310,19 @@ MonoBehaviour:
     autoRepeatRate: 0.5
     autoRepeatMinRate: 0.05
     autoRepeatAccel: 0.8
+--- !u!114 &4105000989288455013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6066858872591518163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: 8fca8a4076b054d93b61373f6f417417, type: 2}
 --- !u!1 &6720860299792370497
 GameObject:
   m_ObjectHideFlags: 0

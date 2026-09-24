@@ -324,6 +324,12 @@ public sealed class WorldMapLocationSelectedEvent : IEvent
     public LocationId LocationId;
 }
 
+
+public readonly struct TutorialZoneEnteredEvent : IEvent
+{
+    public readonly TutorialTargetId TargetId;
+    public TutorialZoneEnteredEvent(TutorialTargetId targetId) => TargetId = targetId;
+}
     
 
 

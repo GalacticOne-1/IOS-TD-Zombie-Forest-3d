@@ -53,6 +53,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             Register<RecruitCompletedObjectiveDefinition>(_ => new RecruitCompletedObjective(gameLoopContext));
             Register<FacilityBuiltObjectiveDefinition>(d => new FacilityBuiltObjective(gameLoopContext, d.itemId));
             
+            Register<ZoneEnteredObjectiveDefinition>(
+                d => new ZoneEnteredObjective(d.targetId, d.thenObjective, Create));
             Register<MoveToLocationObjectiveDefinition>(
                 d => new MoveToLocationObjective(d.targetPosition, d.radius));
             Register<AbilityUsedObjectiveDefinition>(

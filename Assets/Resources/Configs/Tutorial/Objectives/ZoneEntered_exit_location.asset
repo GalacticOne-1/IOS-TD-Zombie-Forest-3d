@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 143fdba783d144daaa5abad12bf10be8, type: 3}
-  m_Name: ID.tutorial.step_Ch03_01
+  m_Script: {fileID: 11500000, guid: 740a91b0d14f4cae8d589c6ac4767183, type: 3}
+  m_Name: ZoneEntered_exit_location
   m_EditorClassIdentifier: 
-  guid: e1bf26bbac254e78a4c4df36a154cba0
-  debugKey: ID.tutorial.step_Ch03_01
+  debugDescription: trigger_exit_location
+  targetId: {fileID: 11400000, guid: 8df229e49cf0f41299b8a667e84aafec, type: 2}
+  thenObjective: {fileID: 0}

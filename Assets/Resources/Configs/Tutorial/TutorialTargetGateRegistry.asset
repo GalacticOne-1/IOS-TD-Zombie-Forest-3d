@@ -13,12 +13,22 @@ MonoBehaviour:
   m_Name: TutorialTargetGateRegistry
   m_EditorClassIdentifier: 
   gates:
+  - targetId: {fileID: 11400000, guid: 8fca8a4076b054d93b61373f6f417417, type: 2}
+    requiredStepId: {fileID: 11400000, guid: 7986ff3d6a1c7487ab53072cb442849a, type: 2}
+    useStepTitle: 1
+    messageTemplate: Complete the "{0}" quest
+    blockedMessage: 
   - targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
     requiredStepId: {fileID: 11400000, guid: 7986ff3d6a1c7487ab53072cb442849a, type: 2}
     useStepTitle: 1
     messageTemplate: Complete the "{0}" quest
     blockedMessage: 
   - targetId: {fileID: 11400000, guid: d3b3125425f6c4a02857656d89e3aea2, type: 2}
+    requiredStepId: {fileID: 11400000, guid: 68958435ddb8c461e88f84ac9b67d345, type: 2}
+    useStepTitle: 0
+    messageTemplate: Complete the "{0}" quest
+    blockedMessage: Complete the tutorial campaign
+  - targetId: {fileID: 11400000, guid: 6f37fc6f4f8d44490bb8304e47a6db65, type: 2}
     requiredStepId: {fileID: 11400000, guid: 68958435ddb8c461e88f84ac9b67d345, type: 2}
     useStepTitle: 0
     messageTemplate: Complete the "{0}" quest
