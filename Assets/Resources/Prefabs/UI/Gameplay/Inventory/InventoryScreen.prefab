@@ -17160,6 +17160,7 @@ GameObject:
   - component: {fileID: 5369619228070642638}
   - component: {fileID: 1622905677574749189}
   - component: {fileID: 1181252146329590560}
+  - component: {fileID: 7823750964466316590}
   m_Layer: 5
   m_Name: pocket
   m_TagString: Inventory_Slot
@@ -17248,6 +17249,19 @@ MonoBehaviour:
   slotBar: {fileID: 7944116547443837434}
   highlight: {fileID: 6717987873088167817}
   canvasGroup: {fileID: 1195848092366001084}
+--- !u!114 &7823750964466316590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6749370051130862081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: 44ceeac8c0edc4824ad9a8293eea13ed, type: 2}
 --- !u!1 &6750855198042719065
 GameObject:
   m_ObjectHideFlags: 0

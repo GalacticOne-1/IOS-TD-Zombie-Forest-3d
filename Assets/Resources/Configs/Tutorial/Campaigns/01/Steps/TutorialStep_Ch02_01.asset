@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
-  m_Name: TutorialStep_Ch03_01
+  m_Name: TutorialStep_Ch02_01
   m_EditorClassIdentifier: 
-  stepId: {fileID: 11400000, guid: 3f233978e910b4581aa43630f76d211c, type: 2}
-  chapterId: {fileID: 11400000, guid: 25cadfc0c07fe4a37acb887b338d3420, type: 2}
+  stepId: {fileID: 11400000, guid: 844935188c5384e739ff7788a1f4e201, type: 2}
+  chapterId: {fileID: 11400000, guid: e6925c99258e24757bfa2faedfd76264, type: 2}
   analyticsStepIndex: 0
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: fa3eca4b7fd614836b5e3f1b8951fe23, type: 2}
+    - {fileID: 11400000, guid: 65089480027e9433aa41f2001c189b85, type: 2}
   presentation:
-    instructionTitleKey: Open a Container
-    instructionDesKey: Find a container and open it to collect its contents.
+    instructionTitleKey: Move to point
+    instructionDesKey: 
     dialogueId: 
     inputPolicy: 0
     canMove: 1
@@ -30,7 +30,7 @@ MonoBehaviour:
     canUseAbilities: 1
     cameraConstraint:
       mode: 1
-      boundsTargetId: {fileID: 11400000, guid: 6caeb4476355f48869f670c41a3cf686, type: 2}
+      boundsTargetId: {fileID: 11400000, guid: c67b48fba768d4bc1a47768c5b29fa80, type: 2}
   guidance:
   - condition: {fileID: 0}
     descriptionPanel:
@@ -39,14 +39,14 @@ MonoBehaviour:
       oneShot: 0
     presentations:
     - highlightTarget:
-        rid: 2031039323182727250
-      arrowTargetId: {fileID: 11400000, guid: dcde892302813489da7d3fc8a4b01a72, type: 2}
+        rid: 2031039343149449298
+      arrowTargetId: {fileID: 11400000, guid: 6d36884506d4a4034b54ca3e95b32dd9, type: 2}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions:
-  - nextStepId: {fileID: 11400000, guid: 4f8cb4d846b2b458db3739bd6a9eee57, type: 2}
+  - nextStepId: {fileID: 11400000, guid: f7dd7ce10136641a3a9bab66d228eeda, type: 2}
     condition:
       rid: -2
   isCheckpoint: 1
@@ -56,7 +56,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2031039323182727250
+    - rid: 2031039343149449298
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 0}

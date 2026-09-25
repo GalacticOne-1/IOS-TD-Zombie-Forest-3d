@@ -34,6 +34,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             
             Register<UIScreenOpenGuidanceConditionDefinition>(
                 d => new UIScreenOpenGuidanceCondition(uiState, d.screenId, d.expectedOpen));
+            Register<AbilitySlotsOpenGuidanceConditionDefinition>(
+                d => new AbilitySlotsOpenGuidanceCondition(d.expectedOpen));
             
             Register<GameLoopDomainGuidanceConditionDefinition>(
                 d => new GameLoopDomainGuidanceCondition(gameLoop, d.domain));

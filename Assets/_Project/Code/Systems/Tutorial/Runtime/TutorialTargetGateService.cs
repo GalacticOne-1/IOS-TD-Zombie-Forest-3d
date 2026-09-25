@@ -35,7 +35,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
         public TutorialTargetGateResult Evaluate(TutorialTargetId targetId)
         {
-            if (targetId == null)
+            if (targetId == null || DeveloperConsole.I.core.use_tutorial_starter)
                 return TutorialTargetGateResult.Allowed;
 
             if (!_registry.TryGetGate(targetId, out var gate))

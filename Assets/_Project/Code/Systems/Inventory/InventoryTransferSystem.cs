@@ -261,6 +261,16 @@ namespace Galactic1.Code.UI.Inventory
                 {
                     wasEquipped = true;
                 }
+                
+                // === для карманов
+                else if (IsQuickSlot(fromSlotType))
+                {
+                    EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.equipmentAdd.ToData()));
+                    
+                    EventBus<ItemEquippedEvent>.Raise(new ItemEquippedEvent(
+                        toSource.GetEquipmentSlotType(toIndex),
+                        fromSlot.Item.Id));
+                }
             }
 
             // ---------------------------------------------------------
@@ -355,6 +365,16 @@ namespace Galactic1.Code.UI.Inventory
                         
                         EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.equipmentAdd.ToData()));
                     }
+                }
+                
+                // === для карманов
+                else if (IsQuickSlot(toSlotType))
+                {
+                    EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.equipmentAdd.ToData()));
+                    
+                    EventBus<ItemEquippedEvent>.Raise(new ItemEquippedEvent(
+                        toSource.GetEquipmentSlotType(toIndex),
+                        fromSlot.Item.Id));
                 }
             }
 

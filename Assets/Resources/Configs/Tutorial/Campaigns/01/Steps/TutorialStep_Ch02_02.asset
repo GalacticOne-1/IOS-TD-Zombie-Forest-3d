@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
-  m_Name: TutorialStep_Ch01_03
+  m_Name: TutorialStep_Ch02_02
   m_EditorClassIdentifier: 
-  stepId: {fileID: 11400000, guid: 38b8b8c18015e43f29bae47c6f0c98a8, type: 2}
-  chapterId: {fileID: 11400000, guid: ac546f744686e4d0e9ca13e3fcd9b5c6, type: 2}
+  stepId: {fileID: 11400000, guid: f7dd7ce10136641a3a9bab66d228eeda, type: 2}
+  chapterId: {fileID: 11400000, guid: e6925c99258e24757bfa2faedfd76264, type: 2}
   analyticsStepIndex: 0
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: 3b9756d3bacac4218b34bc1eb117e2b8, type: 2}
+    - {fileID: 11400000, guid: d258bf101727f471999f21afd80b8bf0, type: 2}
   presentation:
-    instructionTitleKey: Use a Bandage
-    instructionDesKey: Open the Inventory and use a bandage to restore some of the
-      survivor's health.
+    instructionTitleKey: Equip grenade
+    instructionDesKey: 
     dialogueId: 
     inputPolicy: 0
     canMove: 1
@@ -31,7 +30,7 @@ MonoBehaviour:
     canUseAbilities: 1
     cameraConstraint:
       mode: 1
-      boundsTargetId: {fileID: 11400000, guid: e592faafa4c1b4f308c08c171410b64b, type: 2}
+      boundsTargetId: {fileID: 11400000, guid: c67b48fba768d4bc1a47768c5b29fa80, type: 2}
   guidance:
   - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
     descriptionPanel:
@@ -40,36 +39,47 @@ MonoBehaviour:
       oneShot: 0
     presentations:
     - highlightTarget:
-        rid: 2031039302563266647
+        rid: 2031039343053504512
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
-  - condition: {fileID: 11400000, guid: b1f8693c3863146eab80216b7fb4eaeb, type: 2}
+  - condition: {fileID: 11400000, guid: ce8d0557f3c3f4c43acaa846b24378d5, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
       oneShot: 0
     presentations:
     - highlightTarget:
-        rid: 2031039302563266648
+        rid: 2031039343053504513
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
-  - condition: {fileID: 11400000, guid: 4d07dc68b10674a929ab3dbad1867f7d, type: 2}
+  - condition: {fileID: 11400000, guid: bdb3bdfff473c4f9bb3423b9cdfa1b59, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
       oneShot: 0
     presentations:
     - highlightTarget:
-        rid: 2031039302563266649
+        rid: 2031039343053504514
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 4bb9c16cfdfbc40b0880999c4c47d05f, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039343053504515
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions:
-  - nextStepId: {fileID: 11400000, guid: 844935188c5384e739ff7788a1f4e201, type: 2}
+  - nextStepId: {fileID: 11400000, guid: ff4a3fc579c9e4712ac7902911394e90, type: 2}
     condition:
       rid: -2
   isCheckpoint: 1
@@ -79,15 +89,19 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2031039302563266647
+    - rid: 2031039343053504512
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
-        targetId: {fileID: 11400000, guid: d1bf6fd99c8f04e6996aa436d91fb1df, type: 2}
-    - rid: 2031039302563266648
-      type: {class: TutorialInventoryItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
-      data:
-        itemId: {fileID: 11400000, guid: 20348407d85cc4332b66bb53f2ef04cc, type: 2}
-    - rid: 2031039302563266649
+        targetId: {fileID: 11400000, guid: fe49c0ac2a7014be28241e0e083ca2c4, type: 2}
+    - rid: 2031039343053504513
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 11400000, guid: 37e0fe69ff6e544c49df209c2dedec6d, type: 2}
+    - rid: 2031039343053504514
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 44ceeac8c0edc4824ad9a8293eea13ed, type: 2}
+    - rid: 2031039343053504515
+      type: {class: TutorialInventoryItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        itemId: {fileID: 11400000, guid: 0eaf9acc2a3c642c48fb907a6fdf0e76, type: 2}

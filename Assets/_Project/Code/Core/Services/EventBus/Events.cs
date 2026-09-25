@@ -277,6 +277,9 @@ public sealed class SurvivorSelectedEvent : IEvent
 }
 public sealed class TargetSelectedEvent : IEvent {}
 
+public sealed class AbilitySlotsOpenedEvent : IEvent { }
+public sealed class AbilitySlotsClosedEvent : IEvent { }
+
 public sealed class UIScreenOpenedEvent : IEvent
 {
     public readonly UIScreenId ScreenId;

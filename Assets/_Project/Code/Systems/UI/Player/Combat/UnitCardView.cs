@@ -242,7 +242,9 @@ namespace Galactic1.Code.UI.UnitCard
         // =========================
         private void SwitchState(State state)
         {
+            bool wasOpen = IsAbilityGroupOpen(currentState);
             currentState = state;
+            bool isOpen = IsAbilityGroupOpen(currentState);
 
             switch (state)
             {
@@ -271,7 +273,7 @@ namespace Galactic1.Code.UI.UnitCard
                     quickSlotButton.gameObject.SetActive(true);
                     cLock.SetActive(false);
                     break;
-                
+
                 case State.Lock:
                     quickSlotPreviewRoot.SetActive(false);
                     quickSlotRoot.SetActive(false);
@@ -280,7 +282,18 @@ namespace Galactic1.Code.UI.UnitCard
                     cLock.SetActive(true);
                     break;
             }
+
+            if (isOpen != wasOpen)
+            {
+                if (isOpen)
+                    EventBus<AbilitySlotsOpenedEvent>.Raise(new AbilitySlotsOpenedEvent());
+                else
+                    EventBus<AbilitySlotsClosedEvent>.Raise(new AbilitySlotsClosedEvent());
+            }
         }
+
+        private static bool IsAbilityGroupOpen(State state)
+            => state == State.AbilitySelect || state == State.AbilityActive;
 
         private void ActivateAbility(int index)
         {
