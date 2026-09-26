@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Galactic1.Code.Systems.Tutorial.Authoring
 {
     
-    [CreateAssetMenu(fileName = "TutorialEnemyActivateActionDefinition",
-        menuName = "Game Configs/Tutorial/Actions/Enemy Activate")]
-    public  class TutorialEnemyActivateActionDefinition : TutorialActionDefinition
+    [CreateAssetMenu(fileName = "TutorialStepWallActionDefinition",
+        menuName = "Game Configs/Tutorial/Actions/StepWallAction_")]
+    public  class TutorialStepWallActionDefinition : TutorialActionDefinition
     {
         [SerializeField] private TutorialTargetId targetId;
         

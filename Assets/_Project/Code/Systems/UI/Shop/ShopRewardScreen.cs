@@ -55,7 +55,7 @@ namespace Galactic1.UI.Shop.Rewards
 
         public override void OnHide()
         {
-            base.OnHide();
+            RiseClosedEvent();
             HideCards();
             gameObject.SetActive(false);
             continueLabel.SetActive(false);

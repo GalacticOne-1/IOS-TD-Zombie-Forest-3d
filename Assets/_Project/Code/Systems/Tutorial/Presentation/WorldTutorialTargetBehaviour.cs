@@ -9,7 +9,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     /// lifecycle. Отдельный компонент, а не расширение FacilityInstance — вешается как
     /// sibling на GameObject конкретного здания, не требует правок в FacilityInstance
     /// кроме одной строки в OnInteract() (см. её докстринг).</summary>
-    public sealed class WorldTutorialTargetBehaviour : MonoBehaviour, ITutorialTarget
+    public class WorldTutorialTargetBehaviour : MonoBehaviour, ITutorialTarget
     {
         [Tooltip("Стабильный id (RuntimeId-ассет), на который ссылаются guidance/presentation " +
                  "*TargetId поля, и который используется как TargetId клика (см. FacilityInstance.OnInteract).")]

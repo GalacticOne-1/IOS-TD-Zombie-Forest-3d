@@ -20,8 +20,8 @@ MonoBehaviour:
     objectives:
     - {fileID: 11400000, guid: 1e7ee942d27ab428086484b70b09dbc6, type: 2}
   presentation:
-    instructionTitleKey: Throw greande to zombie
-    instructionDesKey: 
+    instructionTitleKey: Throw a Grenade
+    instructionDesKey: Select the grenade from your pocket and throw it at the zombies.
     dialogueId: 
     inputPolicy: 0
     canMove: 1
@@ -31,6 +31,7 @@ MonoBehaviour:
     cameraConstraint:
       mode: 1
       boundsTargetId: {fileID: 11400000, guid: c67b48fba768d4bc1a47768c5b29fa80, type: 2}
+    actions: []
   guidance:
   - condition: {fileID: 11400000, guid: dc53a76bd7b99468b894d5dd880b44c5, type: 2}
     descriptionPanel:

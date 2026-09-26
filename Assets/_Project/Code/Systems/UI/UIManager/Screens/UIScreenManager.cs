@@ -79,12 +79,16 @@ namespace Galactic1.UI.Core
         /// <summary>
         /// Открыть экран по id, передав данные через object data
         /// </summary>
-        public IEnumerator OpenScreen(UIScreenId id, object data = null, Action<GameObject> onShow = null)
+        public IEnumerator OpenScreen(UIScreenId newScreen, object data = null, Action<GameObject> onShow = null)
         {
             // Закрываем все активные экраны (можно изменить для multi-layer)
             var cash = activeScreens.Values.ToList();
             foreach (var s in cash)
             {
+                // без этого баг в сторе при выдаче награды
+                if (newScreen == UIScreenId.PurchaseRewardScreen && s.PanelId == UIScreenId.GameStore)
+                    continue;
+                
                 s.OnHide();
                 //Destroy(s.gameObject);
                 s.gameObject.SetActive(false);
@@ -103,13 +107,13 @@ namespace Galactic1.UI.Core
             // activeScreens[id] = panel;
             
             // NEW
-            var panel = screenCache[id];
+            var panel = screenCache[newScreen];
             if (panel == null) yield break;
-            activeScreens[id] = panel;
+            activeScreens[newScreen] = panel;
             // NEW
 
 
-            EventBus<UIScreenOpenedEvent>.Raise(new UIScreenOpenedEvent(id));
+            EventBus<UIScreenOpenedEvent>.Raise(new UIScreenOpenedEvent(newScreen));
 
             // Вызываем метод OnShow с данными
             onShow?.Invoke(panel.gameObject);

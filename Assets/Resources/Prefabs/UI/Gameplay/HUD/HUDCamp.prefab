@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 5926943845586531156}
   - component: {fileID: 4507625770695706036}
   - component: {fileID: 6755954045099730263}
+  - component: {fileID: 3486299101352654550}
   m_Layer: 5
   m_Name: 'next_day_button '
   m_TagString: Untagged
@@ -270,6 +271,19 @@ MonoBehaviour:
   currentDayLabel: {fileID: 6449509293533204518}
   remainingHourLabel: {fileID: 0}
   dayBar: {fileID: 9143853311965894792}
+--- !u!114 &3486299101352654550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642033725512959989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c29e4fe499d4234bd53d9e256fab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: f423008a83ebd4390bd719b1de69f08a, type: 2}
 --- !u!1 &679334914692639509
 GameObject:
   m_ObjectHideFlags: 0

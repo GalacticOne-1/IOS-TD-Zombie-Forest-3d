@@ -1,4 +1,4 @@
-// Path: /Code/Systems/Tutorial/Authoring/TutorialTargetGateRegistry.cs
+
 using System.Collections.Generic;
 using UnityEngine;
 

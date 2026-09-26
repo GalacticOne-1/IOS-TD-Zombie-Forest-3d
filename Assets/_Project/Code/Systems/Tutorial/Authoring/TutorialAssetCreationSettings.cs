@@ -72,6 +72,8 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         [SerializeField]
         private string objectiveFolder =
             "Assets/Resources/Configs/Tutorial/Objectives";
+        private string actionFolder =
+            "Assets/Resources/Configs/Tutorial/StepActions";
 
         [Tooltip("Префикс имени Objective-ассета.")]
         [SerializeField]
@@ -99,6 +101,9 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         public string GuidanceNamePrefix => guidanceNamePrefix;
 
         public string ObjectiveFolder => objectiveFolder;
+
+        public string ActionFolder => actionFolder;
+
         public string ObjectiveNamePrefix => objectiveNamePrefix;
     }
 }

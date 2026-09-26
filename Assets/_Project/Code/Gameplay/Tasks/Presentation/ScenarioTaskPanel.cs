@@ -140,7 +140,7 @@ namespace Galactic1.Code.Gameplay.Tasks.Presentation
 
             completeTaskAudio = ServiceLocator.Current.Get<ConfigProvider>()
                 .Get<UIAudioDatabase>()
-                .Get<SimpleAudioConfig>("audio_cue_complete")
+                .Get<SimpleAudioConfig>("audio_cue_task_complete")
                 .ToData();
 
             /*

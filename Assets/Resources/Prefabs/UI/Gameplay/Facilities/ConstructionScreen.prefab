@@ -247,7 +247,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00012207031, y: 0}
+  m_AnchoredPosition: {x: 0.00024414062, y: 0}
   m_SizeDelta: {x: 2532, y: 360}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &641234380717610162
@@ -938,7 +938,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6769608598211915546}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9999333
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1152,6 +1152,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: b_close
       objectReference: {fileID: 0}
+    - target: {fileID: 7540873499580985786, guid: 1d702932708254c4da97a8e3ca07bdb7, type: 3}
+      propertyPath: audio.config
+      value: 
+      objectReference: {fileID: 11400000, guid: 6e1e2b43544204971aa3cc2c44e87405, type: 2}
     - target: {fileID: 7540873499580985786, guid: 1d702932708254c4da97a8e3ca07bdb7, type: 3}
       propertyPath: audio.useSound
       value: 1

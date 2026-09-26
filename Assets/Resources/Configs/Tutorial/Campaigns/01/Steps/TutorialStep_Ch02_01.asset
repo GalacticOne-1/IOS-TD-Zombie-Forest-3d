@@ -20,8 +20,8 @@ MonoBehaviour:
     objectives:
     - {fileID: 11400000, guid: 65089480027e9433aa41f2001c189b85, type: 2}
   presentation:
-    instructionTitleKey: Move to point
-    instructionDesKey: 
+    instructionTitleKey: Reach the Objective
+    instructionDesKey: Move to the marked objective point.
     dialogueId: 
     inputPolicy: 0
     canMove: 1
@@ -31,6 +31,7 @@ MonoBehaviour:
     cameraConstraint:
       mode: 1
       boundsTargetId: {fileID: 11400000, guid: c67b48fba768d4bc1a47768c5b29fa80, type: 2}
+    actions: []
   guidance:
   - condition: {fileID: 0}
     descriptionPanel:

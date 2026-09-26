@@ -7,7 +7,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     /// указать стрелкой. Регистрация/снятие строго по OnEnable/OnDisable — никаких
     /// висящих подписок после ухода со сцены.</summary>
     [RequireComponent(typeof(RectTransform))]
-    public sealed class TutorialTargetBehaviour : MonoBehaviour, ITutorialTarget
+    public class TutorialTargetBehaviour : MonoBehaviour, ITutorialTarget
     {
         [Tooltip("Стабильный id (RuntimeId-ассет), на который ссылаются TutorialPresentationDefinition.*TargetId.")]
         [SerializeField] private TutorialTargetId targetId;

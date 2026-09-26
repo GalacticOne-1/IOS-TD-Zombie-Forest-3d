@@ -519,15 +519,75 @@ namespace Galactic1.Tools
                 EditorGUILayout.PropertyField(p.FindPropertyRelative("cameraConstraint"),
                     new GUIContent("Camera Constraint"), true);
 
-                EditorGUILayout.HelpBox(
-                    "Highlight / Arrow / Camera focus больше не задаются здесь — только через Guidance ниже. " +
-                    "Camera Constraint (область камеры) — статичен на уровне шага и не зависит от Guidance.",
-                    MessageType.Info);
+                EditorGUILayout.HelpBox("Camera Constraint (область камеры) — статичен на уровне шага и не зависит от Guidance.", MessageType.Info);
+                
+                
+                // ---- Actions ----
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("Actions", EditorStyles.miniBoldLabel);
+
+                var actionsProp = p.FindPropertyRelative("actions");
+
+                if (actionsProp.arraySize == 0)
+                    EditorGUILayout.HelpBox(
+                        "No actions — nothing executes when this step activates.",
+                        MessageType.Info);
+
+                for (int i = 0; i < actionsProp.arraySize; i++)
+                {
+                    if (DrawActionEntry(actionsProp, i))
+                        break;
+                }
+
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("+ Add Existing", GUILayout.Width(130)))
+                    ShowAddExistingMenu<TutorialActionDefinition>(picked => AddArrayElement(actionsProp, picked));
+                if (GUILayout.Button("+ Create New", GUILayout.Width(130)))
+                    ShowCreateAssetMenu<TutorialActionDefinition>(instance => AddArrayElement(actionsProp, instance));
+                EditorGUILayout.EndHorizontal();
+                
 
                 EditorGUILayout.EndVertical();
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
+        }
+        
+        /// <summary>Returns true if the entry was removed this frame.</summary>
+        private bool DrawActionEntry(SerializedProperty listProp, int index)
+        {
+            var elementProp = listProp.GetArrayElementAtIndex(index);
+            var action = elementProp.objectReferenceValue as TutorialActionDefinition;
+
+            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginHorizontal();
+
+            if (action == null)
+            {
+                GUI.backgroundColor = ErrorColor;
+                EditorGUILayout.LabelField("⚠ Empty action slot", GUILayout.Width(300));
+                GUI.backgroundColor = originalBg;
+            }
+            else
+            {
+                // Замени action.name на action.ActionTypeId, если у TutorialActionDefinition
+                // есть такое поле — по аналогии с ObjectiveTypeId/ConditionTypeId.
+                EditorGUILayout.LabelField(action.name, EditorStyles.label);
+
+                if (GUILayout.Button("Ping", GUILayout.Width(45)))
+                    EditorGUIUtility.PingObject(action);
+            }
+
+            GUI.backgroundColor = Color.red;
+            bool removed = GUILayout.Button("x", GUILayout.Width(20));
+            GUI.backgroundColor = originalBg;
+            EditorGUILayout.EndHorizontal();
+
+            if (removed)
+                listProp.DeleteArrayElementAtIndex(index);
+
+            EditorGUILayout.EndVertical();
+            return removed;
         }
 
         // ---------------- Guidance ----------------
@@ -1150,11 +1210,9 @@ namespace Galactic1.Tools
                 return null;
             }
 
-            bool isGuidance = typeof(TutorialGuidanceConditionDefinition)
-                .IsAssignableFrom(type);
-
-            bool isObjective = typeof(TutorialObjectiveDefinition)
-                .IsAssignableFrom(type);
+            bool isGuidance = typeof(TutorialGuidanceConditionDefinition).IsAssignableFrom(type);
+            bool isObjective = typeof(TutorialObjectiveDefinition).IsAssignableFrom(type);
+            bool isAction = typeof(TutorialActionDefinition).IsAssignableFrom(type);
 
             string folder;
             string prefix = "";
@@ -1162,18 +1220,18 @@ namespace Galactic1.Tools
             if (isGuidance)
             {
                 folder = assetCreationSettings.GuidanceFolder;
-                //prefix = assetCreationSettings.GuidanceNamePrefix;
             }
             else if (isObjective)
             {
                 folder = assetCreationSettings.ObjectiveFolder;
-                //prefix = assetCreationSettings.ObjectiveNamePrefix;
+            }
+            else if (isAction)
+            {
+                folder = assetCreationSettings.ActionFolder;
             }
             else
             {
-                Debug.LogError(
-                    $"Unsupported tutorial asset type: {type.Name}");
-
+                Debug.LogError($"Unsupported tutorial asset type: {type.Name}");
                 return null;
             }
 

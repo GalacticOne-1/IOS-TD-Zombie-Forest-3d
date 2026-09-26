@@ -15,10 +15,10 @@ namespace Galactic1.Code.Systems.Raid.Enemies
     /// </summary>
     public sealed class EnemyAIDefinition
     {
-        public float ThinkInterval  { get; }
-        public float RoamRadius     { get; }
+        public float ThinkInterval { get; }
+        public float RoamRadius { get; }
         public float WaypointRadius { get; }
-        public bool  UsePackBehaviour { get; }
+        public bool UsePackBehaviour { get; }
 
         private readonly Dictionary<AIActionType, AIActionDefinition> _actions;
 
@@ -26,14 +26,14 @@ namespace Galactic1.Code.Systems.Raid.Enemies
             float thinkInterval,
             float roamRadius,
             float waypointRadius,
-            bool  usePackBehaviour,
+            bool usePackBehaviour,
             Dictionary<AIActionType, AIActionDefinition> actions)
         {
-            ThinkInterval    = thinkInterval;
-            RoamRadius       = roamRadius;
-            WaypointRadius   = waypointRadius;
+            ThinkInterval = thinkInterval;
+            RoamRadius = roamRadius;
+            WaypointRadius = waypointRadius;
             UsePackBehaviour = usePackBehaviour;
-            _actions         = actions ?? new Dictionary<AIActionType, AIActionDefinition>();
+            _actions = actions ?? new Dictionary<AIActionType, AIActionDefinition>();
         }
 
         /// <summary>

@@ -185,7 +185,7 @@ namespace Galactic1.UI.Core
 
         #region Management Menu
 
-        // перехватывает открытие паенли если она часть вкладок
+        // перехватывает открытие панели если она часть вкладок
         bool IsManagementScreen(
             UIScreenId id, 
             object data = null, 
