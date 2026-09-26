@@ -405,6 +405,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 RefreshPanel(stepState);
                 _taskPresenter.ShowStep(stepState);
                 _analytics.StepStarted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
+                
+                ExecuteStepActions(stepDef);
 
                 Persist();
                 return;
@@ -558,6 +560,26 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                     authored.cameraConstraint.boundsTargetId),
             };
         }
+        
+        /// <summary>Выполняет авторские action-конфиги шага при его реальной активации.
+        /// Вызывается только для шагов, дошедших до видимого состояния (см. ActivateStep) —
+        /// для мгновенно завершающихся шагов (alreadyComplete-ветка цикла) не вызывается,
+        /// симметрично тому, как guidance для таких шагов никогда не рендерится.</summary>
+        private void ExecuteStepActions(TutorialStepDefinition stepDef)
+        {
+            var actions = stepDef.presentation?.actions;
+            if (actions == null) return;
+
+            foreach (var action in actions)
+            {
+                if (action == null) continue;
+                action.Evaluate();
+            }
+        }
+        
+        
+        
+        
 
         private void HandleActiveStepProgressChanged()
         {
@@ -701,12 +723,13 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 // загружаем предметы для второй компании
                 new NewGameEntry().StartCamp();
                 
-                ServiceLocator.Current.Get<CoroutineController>().Coroutine_wait(1,
-                    () =>
-                    {
-                        ServiceLocator.Current.Get<GameSession>()
-                            .GameLoopContext.CurrentRaid.Scenario.ExitFromLocation();
-                    });
+                // ServiceLocator.Current.Get<CoroutineController>().Coroutine_wait(1,
+                //     () =>
+                //     {
+                //         ServiceLocator.Current.Get<GameSession>()
+                //             .GameLoopContext.CurrentRaid.Scenario.ExitFromLocation();
+                //     });
+                EventBus<ExitReachedEvent>.Raise(new ExitReachedEvent());
             }
 
             Persist();

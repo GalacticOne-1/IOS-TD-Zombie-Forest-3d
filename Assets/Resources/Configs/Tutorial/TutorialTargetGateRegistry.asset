@@ -33,13 +33,23 @@ MonoBehaviour:
     useStepTitle: 0
     messageTemplate: Complete the "{0}" quest
     blockedMessage: Complete the tutorial campaign
+  - targetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
+    requiredStepId: {fileID: 11400000, guid: 8aa08d2382a004b60ab4e8e4ec8e47d8, type: 2}
+    useStepTitle: 1
+    messageTemplate: Complete the "{0}" quest
+    blockedMessage: 
   - targetId: {fileID: 11400000, guid: b7a72bd201354493691e06a3c3d454d0, type: 2}
     requiredStepId: {fileID: 11400000, guid: 1e007fb2b4d5641039d865a1f0019031, type: 2}
     useStepTitle: 1
     messageTemplate: Complete the "{0}" quest
     blockedMessage: 
-  - targetId: {fileID: 0}
-    requiredStepId: {fileID: 11400000, guid: d7a70e44a86ba4361a127ee28fa184b6, type: 2}
+  - targetId: {fileID: 11400000, guid: cc363fa8fa9134e6ea9ba1875b8e0fb4, type: 2}
+    requiredStepId: {fileID: 11400000, guid: 1e007fb2b4d5641039d865a1f0019031, type: 2}
+    useStepTitle: 1
+    messageTemplate: Complete the "{0}" quest
+    blockedMessage: 
+  - targetId: {fileID: 11400000, guid: 43537efb46fd64578bc53bc791d3ce25, type: 2}
+    requiredStepId: {fileID: 11400000, guid: 1e007fb2b4d5641039d865a1f0019031, type: 2}
     useStepTitle: 1
     messageTemplate: Complete the "{0}" quest
     blockedMessage: 

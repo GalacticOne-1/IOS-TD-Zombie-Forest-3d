@@ -36,6 +36,18 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public readonly TutorialUnitSearchCriteria Criteria;
         public TutorialUnitSearchRequest(TutorialUnitSearchCriteria criteria) => Criteria = criteria;
     }
+    
+    public sealed class TutorialEnemySearchRequest : TutorialTargetRequest
+    {
+        public readonly TutorialTargetId OriginTargetId;
+        public readonly int Count;
+
+        public TutorialEnemySearchRequest(TutorialTargetId originTargetId, int count)
+        {
+            OriginTargetId = originTargetId;
+            Count = count;
+        }
+    }
 
     public sealed class TutorialFacilityCardRequest : TutorialTargetRequest
     {

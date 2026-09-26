@@ -7,6 +7,7 @@ using Galactic1.Code.Gameplay.AoE;
 using Galactic1.Code.Gameplay.Audio;
 using Galactic1.Code.Gameplay.BaseBuilding;
 using Galactic1.Code.Gameplay.Enemies.Factories;
+using Galactic1.Code.Gameplay.Enemies.Repositories;
 using Galactic1.Code.Gameplay.Survivors.Repositories;
 using Galactic1.Code.Gameplay.Tasks;
 using Galactic1.Code.Inventory.Abstractions;
@@ -266,6 +267,11 @@ namespace Galactic1
             
             // === Tutorial =============================================================
             
+            
+            var tutorialTargetRegistry = new TutorialTargetRegistry();
+            rootContainer.RegisterInstance(tutorialTargetRegistry);
+            ServiceLocator.Current.Register(tutorialTargetRegistry);
+            
             var inventoryViewRegistry = new TutorialInventoryViewRegistry();
             ServiceLocator.Current.Register(inventoryViewRegistry);
             var inboxViewRegistry = new TutorialInboxViewRegistry();
@@ -277,6 +283,11 @@ namespace Galactic1
             var tutorialCameraBoundsRegistry = new TutorialCameraBoundsRegistry();
             rootContainer.RegisterInstance(tutorialCameraBoundsRegistry);
             ServiceLocator.Current.Register(tutorialCameraBoundsRegistry);
+
+            var enemyGroupSelectionService = new TutorialEnemyGroupSelectionService(
+                tutorialTargetRegistry,
+                ServiceLocator.Current.Get<EnemyRepository>());
+            ServiceLocator.Current.Register(enemyGroupSelectionService);
             
             var tutorialGameStateQuery = new TutorialGameStateQuery(
                 gameSession.GameLoopContext,
@@ -288,7 +299,8 @@ namespace Galactic1
                 tutorialGameStateQuery,  
                 tutorialGameStateQuery,
                 gameSession.GameLoopContext,
-                tutorialGameStateQuery); 
+                tutorialGameStateQuery,
+                enemyGroupSelectionService); 
 
             var tutorialGuidanceFactory = new TutorialGuidanceFactory(
                 tutorialGameStateQuery,
@@ -310,9 +322,6 @@ namespace Galactic1
                 interactionPolicy,
                 tutorialCapabilityPolicy);
 
-            var tutorialTargetRegistry = new TutorialTargetRegistry();
-            rootContainer.RegisterInstance(tutorialTargetRegistry);
-            ServiceLocator.Current.Register(tutorialTargetRegistry);
 
             var inventorySlotTargetProvider = new TaskInventorySlotTargetProvider(inventoryViewRegistry);
             var inboxSlotTargetProvider = new TaskInboxSlotTargetProvider(inboxViewRegistry);
@@ -329,6 +338,7 @@ namespace Galactic1
                 new TutorialUnitSearchResolver(tutorialUnitSlotProvider),
                 new TutorialFacilityCardResolver(tutorialFacilitySlotProvider),
                 new TutorialConstructionTabResolver(tutorialConstructionTabSlotProvider),
+                new TutorialEnemySearchResolver(enemyGroupSelectionService)
             });
             rootContainer.RegisterInstance(tutorialTargetResolverRegistry);
 

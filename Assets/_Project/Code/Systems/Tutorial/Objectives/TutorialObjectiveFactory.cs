@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Galactic1.Code.Systems.GameLoop;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Systems.Tutorial.Authoring.Objectives;
+using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Runtime;
 
 namespace Galactic1.Code.Systems.Tutorial.Objectives
@@ -22,8 +23,11 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             ITutorialSquadQuery squad,
             IGameLoopStateQuery gameLoop,
             GameLoopContext gameLoopContext,
-            ITutorialInventorySourceAmountQuery inventorySourceAmount)
+            ITutorialInventorySourceAmountQuery inventorySourceAmount,
+            TutorialEnemyGroupSelectionService enemyGroupSelection)
         {
+            Register<EnemyGroupKilledObjectiveDefinition>(d =>
+                new EnemyGroupKilledObjective(enemyGroupSelection, d.originTargetId, d.count));
             Register<EnemyKilledObjectiveDefinition>(d => new EnemyKilledObjective(d.requiredCount));
             Register<ItemTransferredObjectiveDefinition>(d =>
                 new ItemTransferredObjective(

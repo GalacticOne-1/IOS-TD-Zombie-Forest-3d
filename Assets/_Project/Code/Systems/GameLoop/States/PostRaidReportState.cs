@@ -17,11 +17,16 @@ namespace Galactic1.Code.Systems.GameLoop.States
         {
             base.Enter(context);
             
+            var raid = context.CurrentRaid;
+            
             // 1. Получаем результат рейда
             var raidResult = context.Proxy.LastRaidResult;
             
             // 2. Пишем в контекст
-            _context.Proxy.HasPendingRaidReport.Value = true;
+            if(!raid.Scenario.Options.TutorialMode)
+            {
+                _context.Proxy.HasPendingRaidReport.Value = true;
+            }
             //_context.Proxy.LastCompletedState = Id;
             
             

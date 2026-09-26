@@ -34,9 +34,10 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
 
         public ScenarioOptions Options { get; } = new ScenarioOptions
         {
+            TutorialMode = true,
             UseDefenseFacilities = false,
             UseWaveSpawner = false,
-            UseAmbientPopulation = false,
+            UseAmbientPopulation = true,
             UseLoot = true,
             UseExitZones = false,
             UseTransport = false,
@@ -79,7 +80,13 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
 
         public bool ArePlayerForcesDestroyed(MissionStateProvider state) => false;
 
-        public MissionResult EvaluateMission(MissionContext context) => MissionResult.Running;
+        public MissionResult EvaluateMission(MissionContext context)
+        {
+            if (context.ExitReached)
+                return MissionResult.Victory;
+
+            return MissionResult.Running;
+        }
 
         public RaidResultProxy BuildRaidResult(RaidRuntime raid, MissionResult mission)
             => new(new RaidResultData

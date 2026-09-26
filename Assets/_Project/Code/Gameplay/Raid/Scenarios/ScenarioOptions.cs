@@ -7,6 +7,7 @@ namespace Galactic1.Code.Systems.Raid.Scenarios
     /// </summary>
     public record ScenarioOptions
     {
+        public bool TutorialMode = false;
         public bool UseDefenseFacilities = false;
         public bool UseWaveSpawner = false;
         public bool UseAmbientPopulation = true;

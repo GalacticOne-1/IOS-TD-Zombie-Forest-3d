@@ -7,7 +7,8 @@ namespace Galactic1.Code.Dev
         StartGame_01 = 10,
         StartGameRaid = 11,
         StartGameInbox_01 = 12,
-        StartGameBattle = 13,
+        StartGameBattle_01 = 13,
+        StartGameBattle_02 = 14,
             
         PurchaseReward = 50,
             

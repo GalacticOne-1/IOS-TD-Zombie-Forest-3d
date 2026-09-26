@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch01_04
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 18b04b93c858840be9012f58c2ac2dce, type: 2}
+  chapterId: {fileID: 11400000, guid: ac546f744686e4d0e9ca13e3fcd9b5c6, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: 5b1fcf43a411e425a83bb611e696ee14, type: 2}
+  presentation:
+    instructionTitleKey: Kill zombie
+    instructionDesKey: 
+    dialogueId: 
+    inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 1
+      boundsTargetId: {fileID: 11400000, guid: f7596a9a2382a4be69cf7d397a5e6a5b, type: 2}
+    actions:
+    - {fileID: 11400000, guid: 4815d527f373f41d5a566028228be6ee, type: 2}
+  guidance:
+  - condition: {fileID: 0}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 2031039347042549847
+      arrowTargetId: {fileID: 11400000, guid: ed60089b8be28469190d068c6f209f24, type: 2}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  reward:
+    items: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: 844935188c5384e739ff7788a1f4e201, type: 2}
+    condition:
+      rid: -2
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2031039347042549847
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 0}

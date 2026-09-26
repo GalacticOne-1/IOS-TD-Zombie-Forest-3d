@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
@@ -38,6 +39,11 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
                  "это — область при разрешённом управлении). Не guidance-условное — статично " +
                  "на уровне шага, см. TutorialService.BuildEffectivePresentation.")]
         public TutorialCameraConstraintDefinition cameraConstraint = new();
+        
+        
+        [Header("Actions")]
+        [Tooltip("Разовые действия, выполняемые при активации шага (открыть дверь, заспавнить/удалить объект и т.п.).")]
+        public List<TutorialActionDefinition> actions = new();
 
 
         public bool HasVisuals =>
@@ -49,6 +55,18 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
         {
             if (!cameraConstraint.Validate(out error))
                 return false;
+            
+            if (actions != null)
+            {
+                for (int i = 0; i < actions.Count; i++)
+                {
+                    if (actions[i] == null)
+                    {
+                        error = $"actions: null entry at index {i}.";
+                        return false;
+                    }
+                }
+            }
 
             error = null;
             return true;
