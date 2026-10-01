@@ -1,4 +1,5 @@
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.Construction.Configs;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 
@@ -29,6 +30,12 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     {
         public readonly ItemId ItemId;
         public TutorialInboxItemRequest(ItemId itemId) => ItemId = itemId;
+    }
+    
+    public sealed class TutorialEmptySlotRequest : TutorialTargetRequest
+    {
+        public readonly InventorySourceType SourceType;
+        public TutorialEmptySlotRequest(InventorySourceType sourceType) => SourceType = sourceType;
     }
 
     public sealed class TutorialUnitSearchRequest : TutorialTargetRequest

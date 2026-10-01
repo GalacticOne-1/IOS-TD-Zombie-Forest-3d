@@ -67,7 +67,7 @@ namespace Galactic1.Code.Systems.Squad
 
         public void OnMoveCommand(Vector3 targetPoint, WorldInputDispatcher.MoveMode mode)
         {
-            _movementSystem.IssueMove(targetPoint, mode);
+            _movementSystem.IssueMove(targetPoint, WorldInputDispatcher.MoveMode.Run); // всегда бегут (было mode)
         }
     }
 }

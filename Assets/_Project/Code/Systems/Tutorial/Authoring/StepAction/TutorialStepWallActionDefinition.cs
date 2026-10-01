@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
 {
-    
+
     [CreateAssetMenu(fileName = "TutorialStepWallActionDefinition",
         menuName = "Game Configs/Tutorial/Actions/StepWallAction_")]
-    public  class TutorialStepWallActionDefinition : TutorialActionDefinition
+    public class TutorialStepWallActionDefinition : TutorialActionDefinition
     {
         [SerializeField] private TutorialTargetId targetId;
-        
-        
+
+
         /// <summary>
         /// Отключаем коллайдер который блокирует зомби
         /// </summary>

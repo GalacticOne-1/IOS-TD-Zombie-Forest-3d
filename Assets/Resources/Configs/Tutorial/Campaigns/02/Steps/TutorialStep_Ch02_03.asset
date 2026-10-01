@@ -25,6 +25,14 @@ MonoBehaviour:
       inventory.
     dialogueId: 
     inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 0
+      boundsTargetId: {fileID: 0}
+    actions: []
   guidance:
   - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
     descriptionPanel:
@@ -36,26 +44,44 @@ MonoBehaviour:
         rid: 2031039236735762520
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 5d04f1230f90f4c3cb006261e8a95fbe, type: 2}
     descriptionPanel:
       enabled: 0
-      text: 
-      oneShot: 0
+      text: "Transport cargo holds the supplies needed during expeditions. \nBefore
+        each raid, check your vehicle inventory and load enough ammo, medical supplies,
+        food, weapons, armor, and other consumables for the journey."
+      oneShot: 1
     presentations:
     - highlightTarget:
         rid: 2031039236735762521
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
-  - condition: {fileID: 11400000, guid: e5d9560b7f1ae42bbba55cc26193dab1, type: 2}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: a694d3fce5a994f40ac24570c91ea2e8, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
-      oneShot: 0
+      oneShot: 1
+    presentations:
+    - highlightTarget:
+        rid: 3243658293625487449
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: e5d9560b7f1ae42bbba55cc26193dab1, type: 2}
+    descriptionPanel:
+      enabled: 1
+      text: "Transport cargo holds the supplies needed during expeditions. \nBefore
+        each raid, check your vehicle inventory and load enough ammo, medical supplies,
+        food, weapons, armor, and other consumables for the journey."
+      oneShot: 1
     presentations:
     - highlightTarget:
         rid: 2031039236735762522
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions: []
@@ -76,3 +102,7 @@ MonoBehaviour:
       type: {class: TutorialInventoryItemQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         itemId: {fileID: 11400000, guid: 044c6e483e87041db98cd16f3a4f4da6, type: 2}
+    - rid: 3243658293625487449
+      type: {class: TutorialEmptySlotQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        sourceType: 1

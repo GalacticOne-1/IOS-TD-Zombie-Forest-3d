@@ -43,13 +43,34 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
             Render(presentation);
         }
 
+        /// <summary>Полный cleanup: HideVisuals() + снятие camera constraint. Использовать при
+        /// действительной остановке presentation lifecycle (StopTutorial), не в обычном
+        /// completion-transition — там нужен HideVisuals() отдельно (см. её докстринг).</summary>
         public void Hide()
+        {
+            HideVisuals();
+            ClearCameraConstraint();
+        }
+        
+        /// <summary>Скрывает tutorial visuals, НЕ трогая camera constraint. В окне между
+        /// завершением Step A и фактической активацией Step B (completion delay в
+        /// ScenarioTaskService) камера обязана оставаться в bounds шага A — иначе на время
+        /// delay она станет полностью свободной, игрок сможет её сдвинуть, а при активации
+        /// Step B произойдёт резкая коррекция позиции. Старый constraint снимается/заменяется
+        /// атомарно внутри Show() следующего шага (см. ApplyCameraConstraint), а не здесь.</summary>
+        public void HideVisuals()
         {
             _generation++;
             ClearPendingSubscriptions();
             _activePresentation = null;
             _renderer?.ClearAll();
-            
+        }
+
+        /// <summary>Снимает camera constraint независимо от визуалов — для случаев, когда
+        /// Show() следующего шага не последует вовсе (терминальное завершение кампании без
+        /// продолжения в NextCampaignId), поэтому старые bounds иначе остались бы навсегда.</summary>
+        public void ClearCameraConstraint()
+        {
             ServiceLocator.Current.Get<CameraController>()?.ClearTutorialBounds();
         }
 

@@ -74,8 +74,10 @@ namespace Galactic1.EntryPoint
             startKitData.GetKit(EStartKit.StartGame_01).Apply();
             
             // cargo
-            var cargo = ServiceLocator.Current.Get<GameSession>()
-                .GameLoopContext.PlayerTransport.GetInventory;
+            var cargo =
+                ServiceLocator.Current.Get<GameSession>().GameLoopContext.CurrentRaid?.PlayerTransport.Sources.Cargo ??
+                ServiceLocator.Current.Get<GameSession>().GameLoopContext.PlayerTransport.GetInventory;
+            
             var resourcesPort = (IInventoryResourcesPort)cargo;
             var cargoKit = startKitData.GetKit(EStartKit.StartGameRaid);
 

@@ -73,7 +73,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                                  $"'{gate.targetId?.DebugKey}', but step title is unavailable " +
                                  $"(step '{gate.requiredStepId.DebugKey}' not in active campaign " +
                                  "graph, or its presentation.instructionTitleKey is empty).");
-                return "Сначала выполните текущее задание обучения.";
+                return "This feature will be available after completing the tutorial.";
             }
 
             return string.Format(gate.messageTemplate, titleKey);

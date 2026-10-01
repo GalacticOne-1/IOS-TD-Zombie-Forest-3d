@@ -35,6 +35,8 @@ MonoBehaviour:
     cameraConstraint:
       mode: 0
       boundsTargetId: {fileID: 0}
+    actions:
+    - {fileID: 11400000, guid: eafda14bff3684e28b70e64b593e23e8, type: 2}
   guidance:
   - condition: {fileID: 11400000, guid: e34ecbc8b71eb4ba68735223bee36e1e, type: 2}
     descriptionPanel:
@@ -49,8 +51,9 @@ MonoBehaviour:
       cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 7cb3de62f888f409594f0259ac3ecaee, type: 2}
     descriptionPanel:
-      enabled: 0
-      text: 
+      enabled: 1
+      text: In the Inbox, you can collect items from quests, the global map, and
+        purchases.
       oneShot: 1
     presentations:
     - highlightTarget:

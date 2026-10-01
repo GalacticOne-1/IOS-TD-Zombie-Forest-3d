@@ -11,6 +11,7 @@ public sealed class TutorialTargetQueryDrawer : PropertyDrawer
         null, // None
         typeof(TutorialFixedTargetQuery),
         typeof(TutorialInventoryItemQuery),
+        typeof(TutorialEmptySlotQuery),
         typeof(TutorialInboxItemQuery),
         typeof(TutorialUnitSearchQuery),
         typeof(TutorialFacilityCardQuery),
@@ -18,7 +19,16 @@ public sealed class TutorialTargetQueryDrawer : PropertyDrawer
     };
 
     private static readonly string[] Labels =
-        { "None", "Fixed Target", "Inventory Item", "Inbox Item", "Unit Search", "Facility Card", "Construction Tab" };
+    {
+        "None", 
+        "Fixed Target",
+        "Inventory Item",
+        "Inventory Empty Slot",
+        "Inbox Item",
+        "Unit Search", 
+        "Facility Card", 
+        "Construction Tab"
+    };
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using R3;
@@ -75,6 +74,18 @@ namespace Galactic1.Code.Gameplay.Tasks
         /// удаление задачи само по себе не должно открывать или продлевать панель.
         /// </summary>
         public event Action OnTaskActivity;
+
+        /// <summary>
+        /// Момент истечения completion presentation delay для конкретной задачи.
+        ///
+        /// Эмитится ДО фактического удаления задачи (см. HandleCompletionDelayElapsed) —
+        /// это единственная точка, через которую generic-слой сообщает внешним
+        /// подписчикам (например TutorialTaskPresenter), что можно продолжать работу,
+        /// которая была намеренно отложена на время показа "Completed". Сам
+        /// ScenarioTaskService не знает, кто подписан и зачем — это просто generic
+        /// completion-сигнал, без какой-либо зависимости от Tutorial.
+        /// </summary>
+        public event Action<ScenarioTaskId> OnTaskCompletionDelayElapsed;
 
         public IReadOnlyList<ScenarioTaskViewData> GetTasks()
         {
@@ -154,14 +165,20 @@ namespace Galactic1.Code.Gameplay.Tasks
         ///
         /// Completed-состояние немедленно становится доступно presentation-слою.
         /// Фактическое удаление происходит после CompletionHighlightDelay.
+        ///
+        /// Возвращает false, если задача не найдена или уже была Completed — в этом
+        /// случае состояние сервиса не менялось и никакой delay-таймер не запущен.
+        /// Вызывающая сторона (например TutorialTaskPresenter) обязана проверять
+        /// результат: получить false и продолжить ждать OnTaskCompletionDelayElapsed
+        /// для этого id — означает зависнуть навсегда.
         /// </summary>
-        public void CompleteTask(ScenarioTaskId id)
+        public bool CompleteTask(ScenarioTaskId id)
         {
             if (!_tasks.TryGetValue(id, out var existing))
-                return;
+                return false;
 
             if (existing.State == ScenarioTaskState.Completed)
-                return;
+                return false;
 
             _tasks[id] = existing.WithState(
                 ScenarioTaskState.Completed);
@@ -174,21 +191,59 @@ namespace Galactic1.Code.Gameplay.Tasks
             OnTaskActivity?.Invoke();
 
             ScheduleRemoval(id);
+            return true;
         }
 
         private void ScheduleRemoval(ScenarioTaskId id)
         {
             var subscription = Observable.Timer(CompletionHighlightDelay)
-                .Subscribe(_ => RemoveTaskInternal(id));
+                .Subscribe(_ => HandleCompletionDelayElapsed(id));
 
             _pendingRemovals[id] = subscription;
+        }
+
+        /// <summary>
+        /// Таймер completion-delay для задачи истёк.
+        ///
+        /// Порядок принципиален: сначала эмитим OnTaskCompletionDelayElapsed и только
+        /// потом удаляем задачу. Пока запись в _pendingRemovals для этого id не снята,
+        /// любой AddOrUpdateTask, вызванный синхронно внутри обработчика события (см.
+        /// TutorialService → ActivateStep → TutorialTaskPresenter.ShowStep), уйдёт в
+        /// _pendingTasks и будет применён через FlushPendingTasks сразу после удаления —
+        /// без промежуточного "пустого" состояния списка задач.
+        ///
+        /// try/finally гарантирует, что фактическое удаление и согласованность
+        /// _pendingRemovals/_pendingTasks/_tasks произойдут даже если подписчик события
+        /// (внешний Tutorial-код) выбросит исключение. Само исключение при этом не
+        /// проглатывается — оно продолжит распространяться из R3 Subscribe-колбэка.
+        /// </summary>
+        private void HandleCompletionDelayElapsed(ScenarioTaskId id)
+        {
+            // Защитная проверка: R3 не вызывает Subscribe-колбэк после Dispose, поэтому
+            // в норме запись всегда на месте. Оставлено как защита по аналогии с
+            // проверкой в FlushPendingTasks — на случай непредвиденного повторного вызова.
+            if (!_pendingRemovals.ContainsKey(id))
+                return;
+
+            try
+            {
+                OnTaskCompletionDelayElapsed?.Invoke(id);
+            }
+            finally
+            {
+                RemoveTaskInternal(id);
+            }
         }
 
         /// <summary>
         /// Немедленно удаляет задачу.
         ///
         /// Публичный RemoveTask может использоваться внешним кодом,
-        /// например для принудительного удаления задачи.
+        /// например для принудительного удаления задачи. Если задача сейчас
+        /// ожидает completion delay (pending removal), этот вызов отменяет
+        /// соответствующий таймер (Dispose) — HandleCompletionDelayElapsed для
+        /// неё больше никогда не сработает, и OnTaskCompletionDelayElapsed для
+        /// этого id не будет эмитирован.
         /// </summary>
         public void RemoveTask(ScenarioTaskId id)
         {
@@ -288,4 +343,3 @@ namespace Galactic1.Code.Gameplay.Tasks
         }
     }
 }
-

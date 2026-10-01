@@ -21,6 +21,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
                 case TutorialFixedTargetQuery q: return new TutorialFixedTargetRequest(q.targetId);
                 case TutorialInventoryItemQuery q: return new TutorialInventoryItemRequest(q.itemId);
                 case TutorialInboxItemQuery q: return new TutorialInboxItemRequest(q.itemId);
+                case TutorialEmptySlotQuery q: return new TutorialEmptySlotRequest(q.sourceType);
                 case TutorialUnitSearchQuery q: return new TutorialUnitSearchRequest(q.criteria);
                 case TutorialEnemySearchQuery q: return new TutorialEnemySearchRequest(q.originTargetId, q.count);
                 case TutorialFacilityCardQuery q: return new TutorialFacilityCardRequest(q.facilityItemId);

@@ -31,6 +31,7 @@ MonoBehaviour:
     cameraConstraint:
       mode: 0
       boundsTargetId: {fileID: 0}
+    actions: []
   guidance:
   - condition: {fileID: 11400000, guid: 0b09e2f0c9fdb49b0b4d97aabb3d02e6, type: 2}
     descriptionPanel:
@@ -43,6 +44,13 @@ MonoBehaviour:
       arrowTargetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 374c151eab8de40bd80ffb256544d1d5, type: 2}
+    descriptionPanel:
+      enabled: 1
+      text: In the Tavern, you can recruit new survivors to replace those lost during
+        raids.
+      oneShot: 1
+    presentations: []
   reward:
     items: []
   transitions:

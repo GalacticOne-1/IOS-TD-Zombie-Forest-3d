@@ -2,6 +2,8 @@ using System.Collections;
 using Galactic1.Code.GameDatabase;
 using Galactic1.Code.Systems.Ads;
 using Galactic1.Code.Systems.Ads.AdMob;
+using Galactic1.Code.Systems.Analytics;
+using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.WorldMap;
 using Galactic1.Configs;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
@@ -331,6 +333,15 @@ namespace Galactic1
             // ***************************************************************************************************
             
             
+            // >>> Analytics: ДО CoreRegistrations (TutorialService берёт ITutorialAnalytics из root)
+            AnalyticsRuntime.Register(
+                _rootContainer,
+                _coroutines,
+                entryPointConfig.requiresAnalyticsService,
+                configProvider.Get<TutorialCampaignRegistry>(),
+                gameStateProvider.GameStateProxy.Tutorial);
+            
+            
             // >>>  регистрация глобальных сервисов  <<<
             LoadingManager.I.NewStepStarted(CServiceType.REGISTER_GLOBAL_SERVICES);
             CoreRegistrations.Register(_rootContainer, _coroutines);
@@ -347,10 +358,8 @@ namespace Galactic1
             {
                 LoadingManager.I.NewStepStarted(CServiceType.ANALYTICS);
                 DLog.Alert("Start: load analitics", EDlogColor.YELLOW, AppConstants.show_log_core);
-                // SetProcessText("Init");
-                // SetProgress(5);
                 FBA.Init();
-                yield return new WaitForSeconds(1);
+                //yield return new WaitForSeconds(1);
             }
             
             // === sdk IAP 
@@ -471,10 +480,6 @@ namespace Galactic1
             
             
             
-            
-            // запускаем аналитику
-            AnalyticsService.SetAnalyticsMode(entryPointConfig.requiresAnalyticsService);
-            AnalyticsService.Gameplay(AnalyticsService.ERequestGameplay.Start_App);
             
             
             // проверяем статус игрока

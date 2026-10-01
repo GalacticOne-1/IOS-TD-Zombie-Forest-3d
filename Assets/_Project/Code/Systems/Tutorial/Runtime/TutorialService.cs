@@ -62,10 +62,20 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     ///   2) CompleteCampaign — после того, как completed=true уже записан.
     /// Никакого отложенного/флагового персиста (_pendingCheckpointPersist убран).
     ///
+    /// Completion presentation delay: логическое завершение шага (ApplyCompletionBookkeeping —
+    /// MarkStepCompleted/reward/checkpoint/analytics) выполняется немедленно в момент
+    /// completion, но graph transition и активация следующего шага (ResolveGraphTransition +
+    /// ActivateStep) откладываются до сигнала TutorialTaskPresenter.OnCompletionDelayElapsed —
+    /// см. FinishActiveStepAndAdvance/HandleCompletionDelayElapsed. Это гарантирует, что
+    /// Task Panel успевает показать Completed-состояние текущего шага прежде, чем presentation
+    /// (target/highlight/arrow/panel) следующего шага появится на экране. Delay-таймер и его
+    /// единственный источник истины — ScenarioTaskService; TutorialService про сам таймер
+    /// ничего не знает, только реагирует на событие через adapter (TutorialTaskPresenter).
+    ///
     /// Guidance (highlight/arrow/camera-подсказки, зависящие от текущего game state) — НЕ
     /// отдельный механизм прогрессии, а чистый presentation-overlay поверх той же
     /// stepDef.presentation: см. BuildEffectivePresentation. Он не меняет completion-логику
-    /// (Objectives/ResolveTransition) ни на строчку.
+    /// (ApplyCompletionBookkeeping/ResolveGraphTransition) ни на строчку.
     /// </summary>
     public sealed class TutorialService : ITutorialService, ITutorialDebugService, IGameService
     {
@@ -87,6 +97,17 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         private TutorialRuntime _runtime;
         private TutorialStepRuntimeState _activeStep;
         private UIManager _uiManager;
+
+        /// <summary>
+        /// stepDef шага, который уже прошёл ApplyCompletionBookkeeping и ожидает
+        /// истечения completion presentation delay (см. TutorialTaskPresenter.
+        /// OnCompletionDelayElapsed) прежде чем резолвить graph transition и
+        /// активировать следующий шаг. Не null только между FinishActiveStepAndAdvance
+        /// (успешный Completed-исход) и HandleCompletionDelayElapsed. Явно сбрасывается
+        /// в StopTutorial/ForceStep, чтобы протухший delay-сигнал не мог случайно
+        /// продолжить transition для уже неактуального состояния тутора.
+        /// </summary>
+        private TutorialStepDefinition _pendingTransitionStepDef;
 
         public bool IsActive => _runtime != null && _runtime.IsActive;
 
@@ -120,6 +141,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _tutorialState = tutorialState;
             _targetRequestFactory = targetRequestFactory;
             _uiManager = uiManager;
+
+            _taskPresenter.OnCompletionDelayElapsed += HandleCompletionDelayElapsed;
         }
 
         // =========================================================
@@ -299,6 +322,10 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _activeStep?.Stop();
             _presentation.Hide();
             _taskPresenter.Clear();
+            // Отменяет "жду completion delay для завершённого шага" — если тутор остановлен
+            // во время окна ожидания, HandleCompletionDelayElapsed (даже если бы он всё же
+            // пришёл) не должен активировать следующий шаг уже остановленного тутора.
+            _pendingTransitionStepDef = null;
             _inputPolicyService.Reset();
             _activeStep = null;
             _runtime = null;
@@ -328,8 +355,12 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         {
             if (_runtime == null) return;
             _activeStep?.Stop();
-            _presentation.Hide();
+            _presentation.HideVisuals();
             _taskPresenter.Clear();
+            // Та же причина, что и в StopTutorial: ForceStep обязан гарантировать, что
+            // никакой отложенный completion-delay-сигнал не активирует "чужой" следующий
+            // шаг поверх того, на который только что принудительно перешли.
+            _pendingTransitionStepDef = null;
             _activeStep = null;
             ActivateStep(stepId);
         }
@@ -364,6 +395,11 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// никогда не рендерится — Start()/Stop() парны и для него). Только для реально
         /// активного шага применяются видимые эффекты и происходит единственный Persist()
         /// для этой ветки.
+        ///
+        /// Мгновенно завершающийся шаг (alreadyComplete) никогда не показывался
+        /// presentation-слою (ShowStep не вызывался — ни task, ни panel для него не
+        /// существует), поэтому completion presentation delay для него неприменим:
+        /// bookkeeping и graph transition выполняются здесь же, синхронно.
         /// </summary>
         private void ActivateStep(TutorialStepId stepId)
         {
@@ -383,7 +419,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 if (alreadyComplete)
                 {
                     stepState.Stop();
-                    stepId = ResolveTransition(stepDef, TutorialStepOutcome.Completed);
+                    ApplyCompletionBookkeeping(stepDef, TutorialStepOutcome.Completed);
+                    stepId = ResolveGraphTransition(stepDef);
                     continue;
                 }
 
@@ -576,10 +613,6 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 action.Evaluate();
             }
         }
-        
-        
-        
-        
 
         private void HandleActiveStepProgressChanged()
         {
@@ -601,6 +634,24 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// события, никогда не изнутри ActivateStep.</summary>
         private void HandleAsyncStepCompleted() => FinishActiveStepAndAdvance(TutorialStepOutcome.Completed);
 
+        /// <summary>
+        /// Завершает текущий активный шаг и продвигает граф — но НЕ одновременно.
+        ///
+        /// Logical completion bookkeeping (ApplyCompletionBookkeeping) выполняется здесь
+        /// немедленно и синхронно, независимо от outcome — это чистый учёт факта
+        /// завершения/пропуска шага и не влияет на то, что видно на экране.
+        ///
+        /// Для Completed: graph transition откладывается. Task Panel должна успеть
+        /// показать Completed-состояние задачи; следующий шаг активируется только по
+        /// сигналу TutorialTaskPresenter.OnCompletionDelayElapsed (см.
+        /// HandleCompletionDelayElapsed). Если CompleteStep не смог перевести task в
+        /// Completed (lifecycle-инвариант нарушен — в штатном потоке недостижимо),
+        /// деградируем к немедленному transition, как при Skip, чтобы тутор не завис
+        /// навсегда в ожидании сигнала, которого не будет.
+        ///
+        /// Для Skipped: задача убирается немедленно (без completion delay — RemoveTask
+        /// не планирует таймер), и graph transition резолвится сразу же, как и раньше.
+        /// </summary>
         private void FinishActiveStepAndAdvance(TutorialStepOutcome outcome)
         {
             if (_activeStep == null) return;
@@ -612,26 +663,81 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             finishedState.OnProgressChanged -= HandleActiveStepProgressChanged;
             finishedState.OnGuidanceChanged -= HandleActiveStepGuidanceChanged;
             finishedState.OnPanelChanged -= HandleActivePanelChanged;
-            _presentation.Hide();
+            _presentation.HideVisuals();
             _uiManager.ClosePopup(UIScreenId.TaskPopup);
             finishedState.Stop();
             _activeStep = null;
 
-            if (outcome == TutorialStepOutcome.Completed)
-                _taskPresenter.CompleteStep(stepDef);
-            else
-                _taskPresenter.RemoveStepImmediately(stepDef);
+            ApplyCompletionBookkeeping(stepDef, outcome);
 
-            var nextStepId = ResolveTransition(stepDef, outcome);
+            if (outcome == TutorialStepOutcome.Completed)
+            {
+                if (!_taskPresenter.CompleteStep(stepDef))
+                {
+                    // Инвариант "у активного шага всегда есть соответствующая Active-задача
+                    // в TutorialTaskPresenter" нарушен. В штатном потоке недостижимо — но
+                    // если это всё же случилось, ждать OnCompletionDelayElapsed, которого
+                    // не будет, означает намертво остановить прогрессию тутора. Поэтому
+                    // деградируем к немедленному transition, как при Skip: bookkeeping уже
+                    // применён выше, delay для несуществующей задачи не нужен.
+                    Debug.LogError(
+                        $"[TutorialService] CompleteStep для '{stepDef.stepId.DebugKey}' не смог " +
+                        "перевести scenario task в Completed (нет активной задачи или уже Completed) — " +
+                        "completion delay пропущен, transition выполняется немедленно.");
+
+                    _pendingTransitionStepDef = null;
+
+                    var fallbackNextStepId = ResolveGraphTransition(stepDef);
+                    if (fallbackNextStepId != null)
+                        ActivateStep(fallbackNextStepId);
+                    return;
+                }
+
+                // Выставляется ТОЛЬКО после подтверждённого успеха CompleteStep — то есть
+                // ровно тогда, когда таймер completion delay реально запущен и когда-нибудь
+                // вызовет HandleCompletionDelayElapsed.
+                _pendingTransitionStepDef = stepDef;
+                return;
+            }
+
+            _taskPresenter.RemoveStepImmediately(stepDef);
+
+            var nextStepId = ResolveGraphTransition(stepDef);
             if (nextStepId != null)
                 ActivateStep(nextStepId);
         }
 
         /// <summary>
-        /// Чистое разрешение перехода: completed/skipped-учёт + чекпоинт + граф-навигация.
-        /// НИКОГДА не персистит сама (кроме терминального случая через CompleteCampaign).
+        /// Completion presentation delay для только что завершённого шага истёк
+        /// (TutorialTaskPresenter.OnCompletionDelayElapsed). Резолвит graph transition,
+        /// который был отложен в FinishActiveStepAndAdvance, и активирует следующий шаг.
+        ///
+        /// Если тутор был остановлен/форснут/перезапущен во время ожидания —
+        /// _pendingTransitionStepDef уже сброшен в null (см. StopTutorial/ForceStep), и
+        /// вызов этого метода — no-op: старый completion-сигнал не может активировать
+        /// шаг уже неактуального состояния тутора.
         /// </summary>
-        private TutorialStepId ResolveTransition(TutorialStepDefinition stepDef, TutorialStepOutcome outcome)
+        private void HandleCompletionDelayElapsed()
+        {
+            if (_pendingTransitionStepDef == null) return;
+
+            var stepDef = _pendingTransitionStepDef;
+            _pendingTransitionStepDef = null;
+
+            var nextStepId = ResolveGraphTransition(stepDef);
+            if (nextStepId != null)
+                ActivateStep(nextStepId);
+        }
+
+        /// <summary>
+        /// Logical completion bookkeeping завершённого/пропущенного шага: учёт
+        /// completed/skipped, выдача награды, чекпоинт, аналитика. Выполняется
+        /// синхронно в момент завершения шага, независимо от completion presentation
+        /// delay — раньше это была первая половина ResolveTransition. Намеренно не
+        /// трогает граф (см. ResolveGraphTransition), поэтому остаётся корректным
+        /// зафиксированным фактом даже если процесс прервётся до активации следующего шага.
+        /// </summary>
+        private void ApplyCompletionBookkeeping(TutorialStepDefinition stepDef, TutorialStepOutcome outcome)
         {
             if (outcome == TutorialStepOutcome.Completed)
             {
@@ -653,7 +759,18 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 _checkpointService.MarkCheckpoint(_tutorialState, stepDef.stepId);
                 _analytics.CheckpointReached(_runtime.CampaignId, stepDef.stepId.Guid);
             }
+        }
 
+        /// <summary>
+        /// Чистая graph-навигация: разрешает transition для stepDef и возвращает id
+        /// следующего шага, либо обрабатывает Terminal (CompleteCampaign)/
+        /// NoTransitionMatched (ошибка авторинга) и возвращает null. Вынесено из
+        /// старого ResolveTransition, чтобы можно было откладывать до истечения
+        /// completion presentation delay, не трогая при этом bookkeeping выше.
+        /// НИКОГДА не персистит сама (кроме терминального случая через CompleteCampaign).
+        /// </summary>
+        private TutorialStepId ResolveGraphTransition(TutorialStepDefinition stepDef)
+        {
             // Fix: Terminal и NoTransitionMatched раньше были неразличимы (оба — null),
             // из-за чего NoTransitionMatched ошибочно завершал кампанию.
             var result = _navigator.Resolve(stepDef);
@@ -716,19 +833,19 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             {
                 StartTutorial(nextCampaignId);
             }
+            else
+            {
+                // Кампания завершена терминально — Show() следующего шага не последует
+                // вообще, значит camera bounds последнего шага иначе остались бы висеть
+                // навсегда (см. edge case C).
+                _presentation.ClearCameraConstraint();
+            }
 
             // === по окончании боевой компании выходим в лагерь
             if (finishedDefinition.loadCampOnCompletion)
             {
                 // загружаем предметы для второй компании
-                new NewGameEntry().StartCamp();
-                
-                // ServiceLocator.Current.Get<CoroutineController>().Coroutine_wait(1,
-                //     () =>
-                //     {
-                //         ServiceLocator.Current.Get<GameSession>()
-                //             .GameLoopContext.CurrentRaid.Scenario.ExitFromLocation();
-                //     });
+                //new NewGameEntry().StartCamp();
                 EventBus<ExitReachedEvent>.Raise(new ExitReachedEvent());
             }
 

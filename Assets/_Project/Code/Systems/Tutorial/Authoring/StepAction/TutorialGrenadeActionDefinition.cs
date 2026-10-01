@@ -7,15 +7,15 @@ using UnityEngine;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring
 {
-    
+
     [CreateAssetMenu(fileName = "TutorialGrenadeActionDefinition",
         menuName = "Game Configs/Tutorial/Actions/Grenade Inventory")]
-    public  class TutorialGrenadeActionDefinition : TutorialActionDefinition
+    public class TutorialGrenadeActionDefinitio : TutorialActionDefinition
     {
         public override void Evaluate()
         {
             var startKitData = ServiceLocator.Current.Get<ConfigProvider>().Get<StartKitData>();
-            
+
             var cargo = ServiceLocator.Current.Get<GameSession>()
                 .GameLoopContext.CurrentRaid.PlayerTransport.Sources.Cargo;
             var resourcesPort = (IInventoryResourcesPort)cargo;

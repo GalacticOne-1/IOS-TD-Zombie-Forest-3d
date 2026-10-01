@@ -11,6 +11,8 @@ using Galactic1.Code.Gameplay.Enemies.Repositories;
 using Galactic1.Code.Gameplay.Survivors.Repositories;
 using Galactic1.Code.Gameplay.Tasks;
 using Galactic1.Code.Inventory.Abstractions;
+using Galactic1.Code.Systems.Analytics;
+using Galactic1.Code.Systems.Analytics.Integration;
 using Galactic1.Code.Systems.CampDefense.Penalty;
 using Galactic1.Code.Systems.CampDefense.Preparation;
 using Galactic1.Code.Systems.Daily;
@@ -325,6 +327,7 @@ namespace Galactic1
 
             var inventorySlotTargetProvider = new TaskInventorySlotTargetProvider(inventoryViewRegistry);
             var inboxSlotTargetProvider = new TaskInboxSlotTargetProvider(inboxViewRegistry);
+            var emptySlotTargetProvider = new TutorialEmptySlotTargetProvider(inventoryViewRegistry);
             var tutorialUnitSlotProvider = new TutorialUnitSlotTargetProvider(gameSession.GameLoopContext);
             var tutorialFacilitySlotProvider = new ConstructionFacilitySlotTargetProvider();
             var tutorialConstructionTabSlotProvider = new ConstructionTabSlotTargetProvider();
@@ -338,7 +341,8 @@ namespace Galactic1
                 new TutorialUnitSearchResolver(tutorialUnitSlotProvider),
                 new TutorialFacilityCardResolver(tutorialFacilitySlotProvider),
                 new TutorialConstructionTabResolver(tutorialConstructionTabSlotProvider),
-                new TutorialEnemySearchResolver(enemyGroupSelectionService)
+                new TutorialEnemySearchResolver(enemyGroupSelectionService),
+                new TutorialEmptySlotResolver(emptySlotTargetProvider)
             });
             rootContainer.RegisterInstance(tutorialTargetResolverRegistry);
 
@@ -363,17 +367,21 @@ namespace Galactic1
                 tutorialPresentationService,
                 tutorialRewardService,
                 tutorialTaskPresenter,
-                new NullTutorialAnalytics(),
+                rootContainer.Resolve<ITutorialAnalytics>(),
                 gameStateProvider,
                 gameStateProvider.GameStateProxy.Tutorial,
                 tutorialTargetRequestFactory,
                 ServiceLocator.Current.Get<UIManager>());
 
+            // debug-операции туториала оборачиваются в Suppress(): не попадают в аналитику
+            var tutorialDebug = new TutorialDebugAnalyticsGuard(
+                tutorialService, rootContainer.Resolve<IAnalyticsService>());
+
             rootContainer.RegisterInstance<ITutorialService>(tutorialService);
-            rootContainer.RegisterInstance<ITutorialDebugService>(tutorialService);
+            rootContainer.RegisterInstance<ITutorialDebugService>(tutorialDebug);
             ServiceLocator.Current.Register<ITutorialService>(tutorialService);
 #if UNITY_EDITOR
-            ServiceLocator.Current.Register<ITutorialDebugService>(tutorialService);
+            ServiceLocator.Current.Register<ITutorialDebugService>(tutorialDebug);
 #endif
             
             // === Tutorial Target Gate (click-blocking until required step completed) ===
