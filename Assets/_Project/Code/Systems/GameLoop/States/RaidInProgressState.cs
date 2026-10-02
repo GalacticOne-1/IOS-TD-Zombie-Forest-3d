@@ -28,6 +28,7 @@ using Galactic1.Code.Systems.Enemies;
 using Galactic1.Code.Systems.GameLoop.Tactical;
 using Galactic1.Code.Systems.GameTime;
 using Galactic1.Code.Systems.Lifecycle;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.Raid;
 using Galactic1.Code.Systems.Raid.Mission;
 using Galactic1.Code.Systems.Raid.Scenarios;
@@ -43,6 +44,7 @@ using Galactic1.Configs;
 using Galactic1.Core.Systems.Factories;
 using Galactic1.Core.Systems.GameSession;
 using Galactic1.Core.UI;
+using Galactic1.Game.Meta.Enemy.Modifiers;
 using Galactic1.Gameplay.Locations;
 using Galactic1.Meta.Configs.Recruitment;
 using Galactic1.PoolObject;
@@ -299,10 +301,19 @@ namespace Galactic1.Code.Systems.GameLoop.States
                 new EnemyArchetypeDefinitionBuilder(),
                 configProvider);
 
+            // Глобальный шаг масштабирования силы врагов по уровню игрока.
+            var progressionScaling = new ProgressionPowerScalingModifier(
+                ServiceLocator.Current.Get<ProgressionService>(),
+                configProvider.Get<EnemyPowerScalingConfig>());
+            
+            progressionScaling.LogCurrent($"Старт рейда '{raid.Id}'"); 
+
             var pipeline = new EnemySpawnPipeline(
                 new EnemyVariantResolver(),
                 new EnemyPresentationFactory(),
-                new EnemyModifierPipeline(new EnemyModifierDatabase(configProvider)),
+                new EnemyModifierPipeline(
+                    new EnemyModifierDatabase(configProvider),
+                    progressionScaling),
                 new EnemyRuntimeDefinitionBuilder(),
                 new EnemyRuntimeFactory(),
                 new EnemySpawnPointResolver(),

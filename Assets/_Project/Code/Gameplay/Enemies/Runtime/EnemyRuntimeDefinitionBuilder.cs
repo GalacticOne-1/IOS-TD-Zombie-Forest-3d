@@ -1,9 +1,9 @@
-
 using Galactic1.Code.Gameplay.Enemies.Modifiers;
 using Galactic1.Code.Gameplay.Enemies.Stats;
 using Galactic1.Code.Gameplay.Units.Definitions;
 using Galactic1.Code.Systems.Raid;
 using Galactic1.Code.Systems.Raid.Enemies;
+using UnityEngine;
 
 namespace Galactic1.Code.Gameplay.Enemies.Definitions
 {
@@ -16,6 +16,7 @@ namespace Galactic1.Code.Gameplay.Enemies.Definitions
         {
             var snapshot = new EnemyStatsSnapshot(mutationContext.Stats);
             var movement = ApplyMovementOverride(archetype.Movement, mutationContext.Movement);
+            var melee = ApplyDamage(archetype.Melee, mutationContext);
 
             return new EnemyRuntimeDefinition(
                 archetype.EnemyId,
@@ -26,7 +27,7 @@ namespace Galactic1.Code.Gameplay.Enemies.Definitions
                 archetype.Perception,
                 archetype.Targeting,
                 archetype.Combat,
-                archetype.Melee,
+                melee,
                 archetype.Pack,
                 snapshot,
                 raidRuntime.Scenario.AIProfile,
@@ -35,6 +36,29 @@ namespace Galactic1.Code.Gameplay.Enemies.Definitions
                 string.Empty,
                 mutationContext.IsElite,
                 mutationContext.Presentation?.GameplayPrefabId ?? string.Empty);
+        }
+
+        /// <summary>
+        /// Урон мутируется в EnemyStatMutationContext.Stats, а MeleeAttackComponent
+        /// читает MeleeCombatDefinition.Damage. Синхронизируем их здесь — единственный
+        /// раз, до создания иммутабельной definition.
+        /// Если урон не менялся — возвращается исходный объект (поведение прежнее).
+        /// </summary>
+        private static MeleeCombatDefinition ApplyDamage(
+            MeleeCombatDefinition baseMelee,
+            EnemyStatMutationContext mutation)
+        {
+            if (!mutation.Stats.TryGetValue(StatId.Damage, out var damage)
+                || Mathf.Approximately(damage, baseMelee.Damage))
+                return baseMelee;
+
+            return new MeleeCombatDefinition(
+                baseMelee.AttackRange,
+                baseMelee.HitRange,
+                baseMelee.HitOriginOffset,
+                damage,
+                baseMelee.Cooldown,
+                baseMelee.ReadyToAttackAngle);
         }
 
         private static MovementDefinition ApplyMovementOverride(

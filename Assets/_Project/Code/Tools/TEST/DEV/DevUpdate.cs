@@ -6,6 +6,7 @@ using Galactic1.Repository;
 using UnityEngine;
 using Galactic1.Core;
 using Galactic1.Code.Systems.GameLoop.Tactical;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Code.Systems.Raid.Mission;
 using Galactic1.Systems;
 using Galactic1.UI.Core;
@@ -209,6 +210,11 @@ namespace DEV
             if (Button(520, 210, "Starter Kit"))
             {
                 DevTestResolver.LoadStarterKit();
+            }
+            
+            if (Button(220, 310, "Add XP"))
+            {
+                ServiceLocator.Current.Get<ProgressionService>().AddExperience(100);
             }
         }
 
