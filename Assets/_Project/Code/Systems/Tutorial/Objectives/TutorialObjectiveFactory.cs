@@ -43,8 +43,15 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             Register<DomainTransitionObjectiveDefinition>(d => new DomainTransitionObjective(gameLoop, d.fromDomain, d.toDomain));
             Register<RaidCompletedObjectiveDefinition>(d => new RaidCompletedObjective(d.requireVictory));
             Register<ExitReachedObjectiveDefinition>(_ => new ExitReachedObjective());
+            
+            Register<ContainersOpenedCountObjectiveDefinition>(d => new ContainersOpenedCountObjective(
+                d.requiredCount, d.filterByLocation ? d.locationId : null, () => gameLoopContext.CurrentRaid?.Id));
+            Register<ContainersLootedCountObjectiveDefinition>(d => new ContainersLootedCountObjective(
+                d.requiredCount, d.filterByLocation ? d.locationId : null, () => gameLoopContext.CurrentRaid?.Id));
             Register<ContainerOpenedObjectiveDefinition>(_ => new ContainerOpenedObjective());
             Register<LootCollectedObjectiveDefinition>(_ => new LootCollectedObjective());
+            
+            
             Register<ItemCollectedObjectiveDefinition>(d => new ItemCollectedObjective(d.itemId, d.requiredAmount));
             Register<InboxItemCollectedObjectiveDefinition>(d => new InboxItemCollectedObjective(d.itemId));
             

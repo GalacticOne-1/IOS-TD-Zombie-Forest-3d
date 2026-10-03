@@ -31,7 +31,7 @@ namespace Galactic1
         /// <summary>
         /// Initalizes the service locator with a new instance.
         /// </summary>
-        public static void Initiailze()
+        public static void Initialize()
         {
             Current = new ServiceLocator();
         }
@@ -44,13 +44,34 @@ namespace Galactic1
         public T Get<T>() where T : IGameService
         {
             string key = typeof(T).Name;
-            if (!services.ContainsKey(key))
+
+            if (!services.TryGetValue(key, out IGameService service))
             {
                 Debug.LogError($"{key} not registered with {GetType().Name}");
                 throw new InvalidOperationException();
             }
 
-            return (T)services[key];
+            return (T)service;
+        }
+        
+        /// <summary>
+        /// Tries to get the service instance of the given type.
+        /// </summary>
+        /// <typeparam name="T">The type of the service to lookup.</typeparam>
+        /// <param name="service">The registered service instance, if found.</param>
+        /// <returns>True if the service is registered; otherwise, false.</returns>
+        public bool TryGet<T>(out T service) where T : IGameService
+        {
+            string key = typeof(T).Name;
+
+            if (services.TryGetValue(key, out IGameService registeredService))
+            {
+                service = (T)registeredService;
+                return true;
+            }
+
+            service = default;
+            return false;
         }
 
         /// <summary>

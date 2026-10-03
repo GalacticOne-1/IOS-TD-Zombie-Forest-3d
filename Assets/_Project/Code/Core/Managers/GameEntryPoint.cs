@@ -305,7 +305,7 @@ namespace Galactic1
             
             
             // инициализируем сервис локатор
-            ServiceLocator.Initiailze();
+            ServiceLocator.Initialize();
             Object.FindFirstObjectByType<CoreServiceLocatorAssembler>().Initialize(_rootContainer);
             
             // внешний доступ для смены сцен

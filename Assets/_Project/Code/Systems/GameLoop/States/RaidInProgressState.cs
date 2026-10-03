@@ -55,6 +55,7 @@ using Galactic1.RaidLoot.Runtime;
 using Galactic1.RaidLoot.Scene.Lifecycle;
 using Galactic1.RaidLoot.Services;
 using Galactic1.RaidLoot.Systems;
+using UnityEngine;
 
 namespace Galactic1.Code.Systems.GameLoop.States
 {
@@ -406,12 +407,13 @@ namespace Galactic1.Code.Systems.GameLoop.States
             ServiceLocator.Current.Get<ContainerProgressWorldSystem>().Initialize(lootContainers);
 
             // ── EventBus ─────────────────────────────────────────────────────
-            EventBus<ContainerOpenedEvent>.Register(
-                new EventBinding<ContainerOpenedEvent>(generationService.OnContainerOpened));
-            EventBus<LootGeneratedEvent>.Register(
-                new EventBinding<LootGeneratedEvent>(autoPickup.OnLootGenerated));
-            EventBus<ContainerLootCollectedEvent>.Register(
-                new EventBinding<ContainerLootCollectedEvent>(lootRewardsPanel.OnLootCollected));
+            var openedBinding    = new EventBinding<ContainerOpenedEvent>(generationService.OnContainerOpened);
+            var generatedBinding = new EventBinding<LootGeneratedEvent>(autoPickup.OnLootGenerated);
+            var collectedBinding = new EventBinding<ContainerLootCollectedEvent>(lootRewardsPanel.OnLootCollected);
+
+            EventBus<ContainerOpenedEvent>.Register(openedBinding);
+            EventBus<LootGeneratedEvent>.Register(generatedBinding);
+            EventBus<ContainerLootCollectedEvent>.Register(collectedBinding);
 
             // ── Сохраняем для Cleanup ─────────────────────────────────────────
             raid.LootBuffer = lootBuffer;
@@ -423,11 +425,13 @@ namespace Galactic1.Code.Systems.GameLoop.States
             _container.RegisterInstance(raid.CurrentRaidLootContainer);
 
             // ── Очистка событий ──────────────────────────────────────────────
+            // Только свои привязки: Clear() снёс бы и подписки тутора (объективы живут между рейдами).
+            // SceneServicesClearEvent сам чистится в GameEntryPoint.ClearSubscriptions, его не трогаем.
             EventBus<SceneServicesClearEvent>.Register(new EventBinding<SceneServicesClearEvent>(() =>
             {
-                EventBus<ContainerOpenedEvent>.Clear();
-                EventBus<LootGeneratedEvent>.Clear();
-                EventBus<ContainerLootCollectedEvent>.Clear();
+                EventBus<ContainerOpenedEvent>.Deregister(openedBinding);
+                EventBus<LootGeneratedEvent>.Deregister(generatedBinding);
+                EventBus<ContainerLootCollectedEvent>.Deregister(collectedBinding);
             }));
         }
 

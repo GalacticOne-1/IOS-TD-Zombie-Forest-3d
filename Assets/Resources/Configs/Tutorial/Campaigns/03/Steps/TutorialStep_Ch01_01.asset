@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch01_01
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 1637464eb3cbe4515b209eb50d12fe0a, type: 2}
+  chapterId: {fileID: 11400000, guid: 4928bc09080a44ff78e12ba2dd8b9715, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: e4ad2462ed3d74c6a85807e8fa9b6f60, type: 2}
+  presentation:
+    instructionTitleKey: Open containers in forest
+    instructionDesKey: ....
+    dialogueId: 
+    inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 0
+      boundsTargetId: {fileID: 0}
+    actions: []
+  guidance: []
+  reward:
+    items: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: f6ddd280c89a54745ba9f9fef6bee97b, type: 2}
+    condition:
+      rid: -2
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

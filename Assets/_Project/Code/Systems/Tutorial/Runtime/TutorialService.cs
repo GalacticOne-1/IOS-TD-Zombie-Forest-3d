@@ -26,7 +26,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         TutorialProgress GetProgress();
         bool IsStepActive(TutorialStepId stepId);
         bool IsStepCompleted(TutorialStepId stepId);
-        
+
         string GetStepTitleKey(TutorialStepId stepId);
     }
 
@@ -56,11 +56,20 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     /// В ITutorialAnalytics (внешний репортинг-контракт, остался string-based) campaignId/
     /// stepId/chapterId передаются как .Guid — стабильный id для аналитики.
     ///
-    /// Единственные две точки Persist() во всём классе:
+    /// Точки Persist() во всём классе:
     ///   1) ActivateStep — сразу после того, как currentStepId в снапшоте стал
     ///      действительно указывать на реально активный шаг (presentation уже показана).
     ///   2) CompleteCampaign — после того, как completed=true уже записан.
+    ///   3) HandleActiveStepProgressChanged — ТОЛЬКО при изменении счётчика
+    ///      persistent-объектива (IPersistentTutorialObjective), иначе закрытие игры
+    ///      посреди шага теряет прогресс вида "открыто 3 из 10 контейнеров".
+    ///   4) ClearProgress — явный сброс.
     /// Никакого отложенного/флагового персиста (_pendingCheckpointPersist убран).
+    ///
+    /// Прогресс объективов: счётчики persistent-объективов хранятся в
+    /// CGameStateTutorial.objectiveProgress (ключ stepGuid + индекс объектива), восстанавливаются
+    /// в BuildStepState ДО Start() и очищаются в ApplyCompletionBookkeeping/ResetProgression.
+    /// Вся логика чтения/записи — в TutorialObjectiveProgressStore.
     ///
     /// Completion presentation delay: логическое завершение шага (ApplyCompletionBookkeeping —
     /// MarkStepCompleted/reward/checkpoint/analytics) выполняется немедленно в момент
@@ -148,7 +157,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         // =========================================================
         // PRODUCTION API
         // =========================================================
-        
+
         public void StartOrRestore(TutorialCampaignId initialCampaignId, TutorialChapterId startChapterId = null)
         {
             var snapshot = _tutorialState.Value;
@@ -197,7 +206,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 case TutorialResumeMode.ResumeFromCheckpoint:
                 case TutorialResumeMode.ContinueFromResolvedProgress:
                     Debug.LogWarning($"[TutorialService] Резюм '{snapshot.campaignId}' через " +
-                                      $"{decision.Mode} → '{decision.StepId?.DebugKey}'.");
+                                     $"{decision.Mode} → '{decision.StepId?.DebugKey}'.");
                     _analytics.TutorialResumed(snapshot.campaignId);
                     ActivateStep(decision.StepId);
                     break;
@@ -254,7 +263,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             // (или через CompleteCampaign, если вся кампания состоит из мгновенных завершений).
             ActivateStep(entryStepId);
         }
-        
+
         /// <summary>Точка входа кампании при СВЕЖЕМ старте: по умолчанию definition.entryStepId,
         /// но вызывающий (конфиг запуска приложения / QA-инструмент) может явно указать главу —
         /// тогда точка входа это первый шаг ЭТОЙ главы (chapter.steps[0]). Дальше обычная
@@ -299,7 +308,8 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// (свежий старт), и Restore() при вынужденном Restart (см. Fix 4: раньше Restart-ветка
         /// сбрасывала только currentStepId, оставляя checkpointStepId/completedStepIds от
         /// предыдущего прогона). campaignId — typed-ссылка; в персистентный снапшот пишется
-        /// её .Guid (та же граница, что у currentStepId/checkpointStepId).</summary>
+        /// её .Guid (та же граница, что у currentStepId/checkpointStepId).
+        /// Также обнуляет objectiveProgress — счётчики объективов принадлежат прогону.</summary>
         private void ResetProgression(TutorialCampaignId campaignId, bool resetStartedTimestamp)
         {
             var guid = campaignId?.Guid;
@@ -309,6 +319,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 t.currentStepId = null;
                 t.checkpointStepId = null;
                 t.completedStepIds = new List<string>();
+                t.objectiveProgress = new List<TutorialObjectiveProgressEntry>();
                 t.completed = false;
                 if (resetStartedTimestamp)
                     t.startedAtUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -334,7 +345,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         public TutorialProgress GetProgress() => _runtime?.ToProgress(_activeStep?.Definition.chapterId);
         public bool IsStepActive(TutorialStepId stepId) => stepId != null && _activeStep?.Definition.stepId == stepId;
         public bool IsStepCompleted(TutorialStepId stepId) => _runtime?.IsStepCompleted(stepId) ?? false;
-        
+
         public string GetStepTitleKey(TutorialStepId stepId)
         {
             if (stepId == null || _runtime == null)
@@ -437,12 +448,13 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                     stepDef.presentation.canControlCamera,
                     stepDef.presentation.canInteract,
                     stepDef.presentation.canUseAbilities);
-                
+
                 _presentation.Show(BuildEffectivePresentation(stepState));
                 RefreshPanel(stepState);
                 _taskPresenter.ShowStep(stepState);
-                _analytics.StepStarted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
-                
+                _analytics.StepStarted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid,
+                    stepDef.analyticsStepIndex);
+
                 ExecuteStepActions(stepDef);
 
                 Persist();
@@ -450,18 +462,32 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             }
         }
 
+        /// <summary>
+        /// Строит runtime-состояние шага. Для persistent-объективов (IPersistentTutorialObjective)
+        /// счётчик восстанавливается из снапшота ДО Start() — иначе после перезапуска игры
+        /// прогресс вида "3 из 10" начинался бы с нуля.
+        /// </summary>
         private TutorialStepRuntimeState BuildStepState(TutorialStepDefinition stepDef)
         {
             var objectiveStates = new List<TutorialObjectiveRuntimeState>();
+            var stepGuid = stepDef.stepId.Guid;
+            int index = 0;
+
             foreach (var objDef in stepDef.objectives.objectives)
             {
                 var runtimeObjective = _objectiveFactory.Create(objDef);
+
+                if (runtimeObjective is IPersistentTutorialObjective persistent &&
+                    TutorialObjectiveProgressStore.TryGet(_tutorialState, stepGuid, index, out var saved))
+                    persistent.RestoreProgress(saved);
+
                 objectiveStates.Add(new TutorialObjectiveRuntimeState(runtimeObjective, objDef.ObjectiveTypeId));
+                index++;
             }
 
             return new TutorialStepRuntimeState(
-                stepDef, 
-                objectiveStates, 
+                stepDef,
+                objectiveStates,
                 BuildGuidanceEntries(stepDef.guidance),
                 BuildPanelEntries(stepDef.guidance));
         }
@@ -505,7 +531,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             return list;
         }
-        
+
         private List<(ITutorialGuidanceCondition Condition, TutorialGuidancePanelDefinition Panel)> BuildPanelEntries(
             List<TutorialGuidanceDefinition> guidanceDefs)
         {
@@ -518,6 +544,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 var condition = _guidanceFactory.Create(g.condition);
                 list.Add((condition, g.descriptionPanel));
             }
+
             return list;
         }
 
@@ -597,7 +624,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                     authored.cameraConstraint.boundsTargetId),
             };
         }
-        
+
         /// <summary>Выполняет авторские action-конфиги шага при его реальной активации.
         /// Вызывается только для шагов, дошедших до видимого состояния (см. ActivateStep) —
         /// для мгновенно завершающихся шагов (alreadyComplete-ветка цикла) не вызывается,
@@ -614,10 +641,20 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             }
         }
 
+        /// <summary>
+        /// Прогресс объектива изменился: обновляем Task Panel и, если у шага есть
+        /// persistent-объективы, пишем их счётчики в снапшот. Завершающее изменение
+        /// (IsCompleted) не сохраняем здесь — оно сохранится штатным путём
+        /// (ApplyCompletionBookkeeping + последующий Persist).
+        /// </summary>
         private void HandleActiveStepProgressChanged()
         {
             if (_activeStep == null) return;
             _taskPresenter.UpdateProgress(_activeStep);
+
+            if (!_activeStep.IsCompleted &&
+                TutorialObjectiveProgressStore.Save(_tutorialState, _activeStep))
+                Persist();
         }
 
         /// <summary>Guidance резолвнула новый target (или "ничего") — перерисовываем
@@ -736,9 +773,14 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         /// delay — раньше это была первая половина ResolveTransition. Намеренно не
         /// трогает граф (см. ResolveGraphTransition), поэтому остаётся корректным
         /// зафиксированным фактом даже если процесс прервётся до активации следующего шага.
+        ///
+        /// Первой строкой очищает персистентные счётчики объективов шага (и для Completed,
+        /// и для Skipped) — они нужны только пока шаг активен.
         /// </summary>
         private void ApplyCompletionBookkeeping(TutorialStepDefinition stepDef, TutorialStepOutcome outcome)
         {
+            TutorialObjectiveProgressStore.Clear(_tutorialState, stepDef.stepId.Guid);
+
             if (outcome == TutorialStepOutcome.Completed)
             {
                 _runtime.MarkStepCompleted(stepDef.stepId);
@@ -746,12 +788,14 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                 // намеренно в той же точке, что и MarkStepCompleted (см. TutorialRewardService
                 // class docstring про совместное crash-окно). Skip сюда не попадает.
                 _rewardService.GrantIfNeeded(stepDef);
-                _analytics.StepCompleted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
+                _analytics.StepCompleted(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid,
+                    stepDef.analyticsStepIndex);
             }
             else
             {
                 // Skip НЕ пишется в completedStepIds — только аналитика.
-                _analytics.StepSkipped(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid, stepDef.analyticsStepIndex);
+                _analytics.StepSkipped(_runtime.CampaignId, stepDef.chapterId?.Guid, stepDef.stepId.Guid,
+                    stepDef.analyticsStepIndex);
             }
 
             if (stepDef.isCheckpoint)
@@ -794,7 +838,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
                     return result.NextStepId;
             }
         }
-        
+
         private void HandleActivePanelChanged()
         {
             if (_activeStep == null) return;
@@ -854,6 +898,10 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
         private void Persist() => _gameStateProvider.SaveGameState();
 
-        private enum TutorialStepOutcome { Completed, Skipped }
+        private enum TutorialStepOutcome
+        {
+            Completed,
+            Skipped
+        }
     }
 }

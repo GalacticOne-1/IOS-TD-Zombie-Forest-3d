@@ -178,7 +178,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
 
         private void ApplyCameraConstraint(TutorialCameraConstraint constraint)
         {
-            var camera = ServiceLocator.Current.Get<CameraController>();
+            ServiceLocator.Current.TryGet<CameraController>(out var camera);
             if (camera == null) return;
 
             if (constraint == null || constraint.Mode == TutorialCameraConstraintMode.None)

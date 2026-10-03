@@ -54,8 +54,8 @@ namespace Galactic1.Code.WorldMap
             
             // =======
             ServiceLocator.Current.Get<WorldMapController>().locationOverview = this;
-            closeButton.RegisterButtonClick(Hide);
-            closeButtin2.RegisterButtonClick(Hide);
+            closeButton.RegisterButtonClick(OnHide);
+            closeButtin2.RegisterButtonClick(OnHide);
             
             
             // === load category items
@@ -87,13 +87,12 @@ namespace Galactic1.Code.WorldMap
             float raidCost,
             float backToBaseCost,
             float daysUntilThreat,
-            System.Action action
-        )
+            System.Action action)
         {
             //gameObject.SetActive(true);
             startButton.RegisterButtonClick(() =>
             {
-                Hide();
+                OnHide();
                 action.Invoke();
             });
             
@@ -177,14 +176,17 @@ namespace Galactic1.Code.WorldMap
             UpdateIntelBlock(config);
             // алерт спец. требования локации
             equipmentAlert.SetActive(false);
+            
+            _uiManager.AddActiveScreen(PanelId);
         }
 
 
         /// <summary>
         /// Закрыть панель
         /// </summary>
-        public void Hide()
+        public override void OnHide()
         {
+            base.OnHide();
             gameObject.SetActive(false);
             HideResourcesCategory();
         }

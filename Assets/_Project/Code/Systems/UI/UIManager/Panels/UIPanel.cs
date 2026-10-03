@@ -9,7 +9,7 @@ namespace Galactic1.UI.Core
         public UIScreenId PanelId { get; private set; }
         protected DIContainer _container;
 
-        private UIScreenManager _uiManager;
+        protected UIScreenManager _uiManager;
         
         /// <summary>
         /// Вызов при закрытии окна и затем очищается

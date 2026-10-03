@@ -14,5 +14,15 @@ namespace Galactic1
         public List<string> claimedRewardStepIds;
         public bool completed;
         public long startedAtUnixSeconds;
+        
+        public List<TutorialObjectiveProgressEntry> objectiveProgress;
+    }
+    
+    [Serializable]
+    public struct TutorialObjectiveProgressEntry
+    {
+        public string stepId;
+        public int objectiveIndex;
+        public int value;
     }
 }

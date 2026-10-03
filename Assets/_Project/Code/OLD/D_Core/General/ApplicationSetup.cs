@@ -158,7 +158,7 @@ namespace Galactic1
             
             
             // *** 1
-            ServiceLocator.Initiailze();
+            ServiceLocator.Initialize();
             //coreServiceLocatorAssembler.Initialize();
             // ***
             
