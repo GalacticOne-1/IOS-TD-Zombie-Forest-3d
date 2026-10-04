@@ -7,12 +7,21 @@ using Galactic1.Code.Systems.Tutorial.Runtime;
 namespace Galactic1.Code.Systems.Tutorial.Objectives
 {
     /// <summary>
-    /// Подписывается напрямую на GameLoopContext.OnBuildingCreated — тот же приём, что
-    /// RecruitCompletedObjective использует для OnUnitCreated (плоский C#-event, не
-    /// EventBus&lt;T&gt;, поэтому не наследуется от TutorialEventObjectiveBase). Не
-    /// ретроактивен: EvaluateCurrentState() == false, здание, построенное до активации
-    /// шага, не засчитывается — тот же принцип, что у ItemCollectedObjective/
-    /// InboxItemCollectedObjective ("сделал за время шага", не "уже имеет").
+    /// "Построй здание". Подписывается напрямую на GameLoopContext.OnBuildingCreated — тот же
+    /// приём, что RecruitCompletedObjective использует для OnUnitCreated (плоский C#-event,
+    /// не EventBus&lt;T&gt;, поэтому не наследуется от TutorialEventObjectiveBase).
+    ///
+    /// Семантика зависит от itemId:
+    ///  • itemId задан — STATE-семантика: большинство зданий существуют в одном экземпляре,
+    ///    поэтому если такое здание УЖЕ построено к старту шага, объектив завершается сразу
+    ///    (ретроактивно, иначе шаг навсегда зависнет — второй раз его не построить).
+    ///    Если не построено — ждём OnBuildingCreated.
+    ///  • itemId пуст ("любое здание") — EVENT-семантика: ретроактивность бессмысленна
+    ///    (в лагере всегда есть хотя бы главное здание), засчитывается только постройка
+    ///    за время шага.
+    ///
+    /// Здания, восстановленные из сейва (FacilityRuntimeService.Initialize → AddFacility),
+    /// OnBuildingCreated не поднимают — для них работает только стартовая проверка.
     /// </summary>
     public sealed class FacilityBuiltObjective : ITutorialObjective
     {
@@ -31,10 +40,23 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
         public void Start(Action onProgressChanged)
         {
             _onProgressChanged = onProgressChanged;
+
+            // Как в TutorialEventObjectiveBase: уже выполнено на старте — не подписываемся.
+            if (EvaluateCurrentState())
+            {
+                IsCompleted = true;
+                _onProgressChanged?.Invoke();
+                return;
+            }
+
             _context.OnBuildingCreated += OnBuildingCreated;
         }
 
-        public void Stop() => _context.OnBuildingCreated -= OnBuildingCreated;
+        public void Stop()
+        {
+            _context.OnBuildingCreated -= OnBuildingCreated;
+            _onProgressChanged = null;
+        }
 
         private void OnBuildingCreated(BaseCampFacilityRuntime runtime)
         {
@@ -45,7 +67,10 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             _onProgressChanged?.Invoke();
         }
 
-        public bool EvaluateCurrentState() => false;
+        /// <summary>Ретроактивно только для конкретного itemId: такое здание уже есть в лагере.</summary>
+        public bool EvaluateCurrentState()
+            => _itemId != null && _context.GetFacilityByConfigId(_itemId) != null;
+
         public bool EvaluateEvent(object gameplayEvent) => false;
 
         public bool TryGetProgress(out int current, out int required)

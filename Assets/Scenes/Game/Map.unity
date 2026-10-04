@@ -47038,6 +47038,7 @@ GameObject:
   - component: {fileID: 1523871537}
   - component: {fileID: 1523871538}
   - component: {fileID: 1523871539}
+  - component: {fileID: 1523871540}
   m_Layer: 7
   m_Name: Quarry
   m_TagString: Untagged
@@ -47091,6 +47092,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c021280a605f4a5cbfbe9d0fe9bb4a1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1523871540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523871536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d0bbc0db63447c9392cbbbae6ac7d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: f3119f9fb2f654698a19944ca75f31d5, type: 2}
 --- !u!1001 &1528926526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61942,6 +61956,7 @@ GameObject:
   - component: {fileID: 2050034725}
   - component: {fileID: 2050034727}
   - component: {fileID: 2050034726}
+  - component: {fileID: 2050034728}
   m_Layer: 7
   m_Name: Forest
   m_TagString: Untagged
@@ -61995,6 +62010,19 @@ MonoBehaviour:
   <IsCleared>k__BackingField: 0
   <IsDiscovered>k__BackingField: 0
   <IsAvailable>k__BackingField: 0
+--- !u!114 &2050034728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050034724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d0bbc0db63447c9392cbbbae6ac7d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetId: {fileID: 11400000, guid: 73e720a817b90469c90ca9eceaa58de1, type: 2}
 --- !u!1001 &2053946522
 PrefabInstance:
   m_ObjectHideFlags: 0

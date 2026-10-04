@@ -11,7 +11,8 @@ namespace Galactic1.Code.Cameras
     public class CameraController : MonoBehaviour, IUpdate, IMainCamera
     {
         [SerializeField] private CameraConfig config;
-        [SerializeField] private AnimationCurve moveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private AnimationCurve moveCurve = 
+            AnimationCurve.EaseInOut(0, 0, 1, 1);
         private TutorialCapabilityPolicy _tutorialCapabilities;
 
         private TutorialCapabilityPolicy TutorialCapabilities

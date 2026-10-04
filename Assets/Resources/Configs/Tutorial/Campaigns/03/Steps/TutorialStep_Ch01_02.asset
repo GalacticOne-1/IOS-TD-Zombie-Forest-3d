@@ -18,10 +18,10 @@ MonoBehaviour:
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: e7f27b5e03bc847c5bc456d9352358e0, type: 2}
+    - {fileID: 11400000, guid: e4ad2462ed3d74c6a85807e8fa9b6f60, type: 2}
   presentation:
-    instructionTitleKey: Open containers in Quarry
-    instructionDesKey: ...
+    instructionTitleKey: Search the Location
+    instructionDesKey: Visit the Forest and open any containers you find.
     dialogueId: 
     inputPolicy: 0
     canMove: 1
@@ -32,12 +32,32 @@ MonoBehaviour:
       mode: 0
       boundsTargetId: {fileID: 0}
     actions: []
-  guidance: []
+  guidance:
+  - condition: {fileID: 0}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658361576620120
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
-  transitions: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: 98fa174a7e8ed4e3389bf4f0eb1ed32e, type: 2}
+    condition:
+      rid: -2
   isCheckpoint: 1
   requiredDomain: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3243658361576620120
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 73e720a817b90469c90ca9eceaa58de1, type: 2}

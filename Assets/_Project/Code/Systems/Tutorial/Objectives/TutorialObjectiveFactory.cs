@@ -55,6 +55,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             Register<ItemCollectedObjectiveDefinition>(d => new ItemCollectedObjective(d.itemId, d.requiredAmount));
             Register<InboxItemCollectedObjectiveDefinition>(d => new InboxItemCollectedObjective(d.itemId));
             
+            Register<ItemProducedObjectiveDefinition>(d => new ItemProducedObjective(d.itemId, d.requiredAmount));
+            
             Register<WorldMapLocationSelectedObjectiveDefinition>(d => new WorldMapLocationSelectedObjective(d.locationId));
             Register<ButtonPressedObjectiveDefinition>(d => new ButtonPressedObjective(d.targetId));
             Register<UIScreenOpenedObjectiveDefinition>(d => new UIScreenOpenedObjective(d.screenId));

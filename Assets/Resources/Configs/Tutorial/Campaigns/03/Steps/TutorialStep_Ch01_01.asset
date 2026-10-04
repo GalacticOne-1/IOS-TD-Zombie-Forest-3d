@@ -18,10 +18,10 @@ MonoBehaviour:
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: e4ad2462ed3d74c6a85807e8fa9b6f60, type: 2}
+    - {fileID: 11400000, guid: e7f27b5e03bc847c5bc456d9352358e0, type: 2}
   presentation:
-    instructionTitleKey: Open containers in forest
-    instructionDesKey: ....
+    instructionTitleKey: Search the Location
+    instructionDesKey: Visit the Quarry and open any containers you find.
     dialogueId: 
     inputPolicy: 0
     canMove: 1
@@ -32,9 +32,41 @@ MonoBehaviour:
       mode: 0
       boundsTargetId: {fileID: 0}
     actions: []
-  guidance: []
+  guidance:
+  - condition: {fileID: 0}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 1
+    presentations:
+    - highlightTarget:
+        rid: 3243658361576620119
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 92ac79b4888d14172a1a6bd1734206cd, type: 2}
+    descriptionPanel:
+      enabled: 1
+      text: "In the Camp, you can advance to the next day to progress time and complete
+        ongoing production and crafting. \nTime also passes automatically while your
+        squad travels on the Global Map."
+      oneShot: 1
+    presentations:
+    - highlightTarget:
+        rid: 3243658361576620116
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
-    items: []
+    items:
+    - itemId: {fileID: 11400000, guid: 1163668eeee6a4f45a05c1eb668a9dca, type: 2}
+      amount: 2
+      durability: 180
+      ammoInMagazine: 0
+    - itemId: {fileID: 11400000, guid: ba4269c1a066c465b9ac794e89dae4d3, type: 2}
+      amount: 400
+      durability: 0
+      ammoInMagazine: 0
   transitions:
   - nextStepId: {fileID: 11400000, guid: f6ddd280c89a54745ba9f9fef6bee97b, type: 2}
     condition:
@@ -46,3 +78,11 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 3243658361576620116
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: b7a72bd201354493691e06a3c3d454d0, type: 2}
+    - rid: 3243658361576620119
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: f3119f9fb2f654698a19944ca75f31d5, type: 2}

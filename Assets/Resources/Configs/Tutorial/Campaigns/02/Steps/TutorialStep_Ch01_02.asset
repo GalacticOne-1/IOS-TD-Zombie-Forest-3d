@@ -25,6 +25,14 @@ MonoBehaviour:
       ammunition.
     dialogueId: 
     inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 0
+      boundsTargetId: {fileID: 0}
+    actions: []
   guidance:
   - condition: {fileID: 11400000, guid: 6e1288eda30524af8a2e29612fa7d228, type: 2}
     descriptionPanel:
@@ -36,6 +44,7 @@ MonoBehaviour:
         rid: 2031039236394975323
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 053a104cb3a92490f86e7723da02ced0, type: 2}
     descriptionPanel:
       enabled: 0
@@ -46,6 +55,7 @@ MonoBehaviour:
         rid: 2031039236394975324
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: eb383c709dfa347d695bda9f884563ca, type: 2}
     descriptionPanel:
       enabled: 0
@@ -56,6 +66,7 @@ MonoBehaviour:
         rid: 2031039236394975325
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: d7ad21329e0d5434a97e46bac693812f, type: 2}
     descriptionPanel:
       enabled: 0
@@ -66,8 +77,13 @@ MonoBehaviour:
         rid: 2031039236394975327
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
-    items: []
+    items:
+    - itemId: {fileID: 11400000, guid: 044c6e483e87041db98cd16f3a4f4da6, type: 2}
+      amount: 200
+      durability: 0
+      ammoInMagazine: 0
   transitions:
   - nextStepId: {fileID: 11400000, guid: d7a70e44a86ba4361a127ee28fa184b6, type: 2}
     condition:

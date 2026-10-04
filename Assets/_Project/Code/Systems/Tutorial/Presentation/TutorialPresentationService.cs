@@ -71,7 +71,8 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         /// продолжения в NextCampaignId), поэтому старые bounds иначе остались бы навсегда.</summary>
         public void ClearCameraConstraint()
         {
-            ServiceLocator.Current.Get<CameraController>()?.ClearTutorialBounds();
+            if (ServiceLocator.Current.TryGet<CameraController>(out var camera))
+                camera.ClearTutorialBounds();
         }
 
         /// <summary>Вызывается TutorialHUDController при загрузке новой сцены. Если Show()
