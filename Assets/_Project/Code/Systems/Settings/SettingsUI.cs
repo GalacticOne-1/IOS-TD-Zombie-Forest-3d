@@ -59,7 +59,7 @@ namespace Galactic1.Systems
             
             DevUpdate.I.SettingsUI = this;
             
-            bClose.RegisterButtonClick(ClosePanel);
+            bClose.RegisterButtonClick(OnHide);
             version.text = SystemRepository.AppVersion;
             
             
@@ -89,8 +89,9 @@ namespace Galactic1.Systems
         }
 
 
-        public void ClosePanel()
+        public override void OnHide()
         {
+            base.OnHide();
             new GAME_Speed().Continue();
             gameObject.SetActive(false);
             PanelShowed = false;
