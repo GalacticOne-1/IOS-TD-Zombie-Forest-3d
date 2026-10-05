@@ -10,7 +10,9 @@ namespace Galactic1.UI.Core
         protected DIContainer _container;
 
         protected UIScreenManager _uiManager;
-        
+
+        public DIContainer DIContainer => _container;
+
         /// <summary>
         /// Вызов при закрытии окна и затем очищается
         /// </summary>

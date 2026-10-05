@@ -9,6 +9,7 @@ using Galactic1.UI.Shop;
 using Galactic1.Code.Gameplay.Units.Stats;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
+using Galactic1.EntryPoint;
 using Galactic1.Game.World.StartLocation;
 using Galactic1.Structs;
 using Galactic1.Window;
@@ -21,8 +22,11 @@ namespace Galactic1.Core
     {
         private readonly ConfigProvider _configsProvider;
         private const string GAME_STATE_KEY = nameof(GAME_STATE_KEY);
+        public const string NEW_GAME_KEY = nameof(NEW_GAME_KEY);
         private const string SAVE_PATH = "zombie_forest_3d_savedata";
-        
+
+        public string NewGameKey => NEW_GAME_KEY;
+
         public GameStateProxy GameStateProxy { get; private set; }
 
         private GameState _gameStateOrigin;
@@ -73,6 +77,29 @@ namespace Galactic1.Core
             SaveGameState();        
             
             return Observable.Return(true);
+        }
+        
+        /// <summary>
+        /// Полностью удаляет сохранённое состояние игры.
+        /// Следующий запуск создаст новое состояние как при первом запуске.
+        /// </summary>
+        public Observable<bool> DeleteGameState()
+        {
+            PlayerPrefs.DeleteKey(GAME_STATE_KEY);
+            PlayerPrefs.DeleteKey(NEW_GAME_KEY);
+            PlayerPrefs.Save();
+
+            bool saveDeleted = DataSaver.deleteData(SAVE_PATH);
+
+            GameStateProxy = null;
+            _gameStateOrigin = null;
+
+            DLog.Alert(
+                "===== Game State Deleted =====",
+                EDlogColor.YELLOW,
+                AppConstants.show_log_core);
+
+            return Observable.Return(saveDeleted);
         }
         
         

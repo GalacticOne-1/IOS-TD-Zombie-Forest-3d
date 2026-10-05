@@ -487,7 +487,7 @@ namespace Galactic1
             
             
             // === для первого старта игры ===
-            new NewGameEntry().StartBattle();
+            new NewGameEntry().StartBattle(gameStateProvider.NewGameKey);
             // =====================================================================================================
             
             

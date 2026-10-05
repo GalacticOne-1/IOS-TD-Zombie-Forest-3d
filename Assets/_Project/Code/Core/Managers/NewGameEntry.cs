@@ -12,18 +12,18 @@ namespace Galactic1.EntryPoint
     public class NewGameEntry
     {
         
-        private const string NEW_GAME_KEY = nameof(NEW_GAME_KEY);
+        
 
         
         /// <summary>
         /// Одноразовая загрузка при первом старте игры
         /// </summary>
-        public void StartBattle()
+        public void StartBattle(string key)
         {
-            if (PlayerPrefs.HasKey(NEW_GAME_KEY))
+            if (PlayerPrefs.HasKey(key))
                 return;
 
-            PlayerPrefs.SetString(NEW_GAME_KEY, "y");
+            PlayerPrefs.SetString(key, "y");
 
             // === спавн стартовых предметов на базе игрока
             

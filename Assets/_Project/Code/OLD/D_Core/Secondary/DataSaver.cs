@@ -145,24 +145,13 @@ namespace Galactic1
             return (T) Convert.ChangeType(resultValue, typeof(T));
         }
 
-        public static bool deleteData(string dataFileName)
+        public static bool deleteData(string fileName)
         {
-            bool success = false;
-
-            //Load Data
-            string tempPath = Path.Combine(Application.persistentDataPath, "Data");
-            tempPath = Path.Combine(tempPath, dataFileName + ".txt");
-
-            //Exit if Directory or File does not exist
-            if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
-            {
-                Debug.LogWarning("Directory does not exist");
-                return false;
-            }
+            string tempPath = Path.Combine(Application.persistentDataPath, fileName);
 
             if (!File.Exists(tempPath))
             {
-                Debug.Log("File does not exist");
+                Debug.Log("File does not exist: " + tempPath.Replace("/", "\\"));
                 return false;
             }
 
@@ -170,14 +159,17 @@ namespace Galactic1
             {
                 File.Delete(tempPath);
                 Debug.Log("Data deleted from: " + tempPath.Replace("/", "\\"));
-                success = true;
+                return true;
             }
             catch (Exception e)
             {
-                Debug.LogWarning("Failed To Delete Data: " + e.Message);
-            }
+                Debug.LogWarning(
+                    "Failed To Delete Data from: " +
+                    tempPath.Replace("/", "\\"));
 
-            return success;
+                Debug.LogWarning("Error: " + e.Message);
+                return false;
+            }
         }
         
         public T ConvertData<T>(byte[] data)

@@ -1,10 +1,8 @@
-using System;
+
 using Galactic1.Configs;
-using Galactic1.Mobile;
 using Galactic1.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Galactic1.Systems
 {
@@ -44,7 +42,7 @@ namespace Galactic1.Systems
         /// </summary>
         void ResetGameData()
         {
-            //SaveManagement.I.ClearSaveData();
+            GetComponent<SettingsUI>().DIContainer.Resolve<IGameStateProvider>().DeleteGameState();
             Application.Quit();
         }
         
