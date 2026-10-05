@@ -1,15 +1,8 @@
 using System;
-using Galactic1.Code.GameDatabase;
 using Galactic1.Code.GameDatabase.Registries;
-using Galactic1.Code.Inventory.Abstractions;
-using Galactic1.Code.Inventory.Sources;
-using Galactic1.Code.Systems.Economy;
-using Galactic1.Configs;
-using Galactic1.Core.Systems.GameLoopSession;
 using UnityEngine;
 using Galactic1.Game.Runtime.Production;
 using Galactic1.Game.UI.Production.DTO;
-using Galactic1.Items;
 using UnityEngine.UI;
 
 namespace Galactic1.Game.UI.Production

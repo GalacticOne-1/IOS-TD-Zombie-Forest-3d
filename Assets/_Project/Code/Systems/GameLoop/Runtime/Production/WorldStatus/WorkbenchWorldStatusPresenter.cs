@@ -1,18 +1,13 @@
-// Путь: Assets/Scripts/Runtime/UI/WorldStatus/WorkbenchWorldStatusPresenter.cs
-// Namespace: Galactic1.Runtime.UI.WorldStatus
 
 using System;
 using Galactic1.Code.GameDatabase;
-using Galactic1.Configs;
-using Galactic1.Game.Meta.Items;
 using Galactic1.Game.Runtime.Production;
-using Galactic1.Items;
 using Galactic1.UI.WorldStatus;
 using UnityEngine;
 
 namespace Galactic1.Runtime.UI.WorldStatus
 {
-    public sealed class WorkbenchWorldStatusPresenter : IDisposable
+    public sealed class WorkbenchWorldStatusPresenter
     {
         private readonly BaseProductionStationRuntime runtime;
         private readonly WorkbenchWorldStatusView view;
@@ -25,10 +20,13 @@ namespace Galactic1.Runtime.UI.WorldStatus
             view = statusView;
 
             runtime.OnStateChanged += OnStateChanged;
+
+            EventBus<SceneServicesClearEvent>.Register(new EventBinding<SceneServicesClearEvent>(Dispose));
         }
 
         public void Dispose()
         {
+            //Debug.LogError("runtime.OnStateChanged -= OnStateChanged");
             runtime.OnStateChanged -= OnStateChanged;
         }
 

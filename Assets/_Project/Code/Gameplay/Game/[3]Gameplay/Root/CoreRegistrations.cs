@@ -471,8 +471,8 @@ namespace Galactic1
             ));
             
             
-            // ************
-            facilityService.Initialize();
+            // ************ 
+            facilityService.Initialize(); // Runtime facility создается один раз при старте игры
             rootContainer.RegisterInstance(new AutoCollectPipeline(
                 storageRegistry,
                 (IInventoryResourcesPort)gameSession.GameLoopContext.CampRuntime.Sources[0],
