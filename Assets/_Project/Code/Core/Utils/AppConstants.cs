@@ -6,7 +6,7 @@ namespace Galactic1
     public class AppConstants
     {
         // true - для релиза
-        public const bool SERVER_ON = false;
+        public const bool SERVER_ON = true;
         
         public const float DELAY_HINT = .35f;
         public const float BTN_ALPHA = .3f;

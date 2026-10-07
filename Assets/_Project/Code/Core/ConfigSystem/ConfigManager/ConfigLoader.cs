@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
 using System.Security.Cryptography;
-using Galactic1;
 
 namespace Galactic1.Configs
 {
