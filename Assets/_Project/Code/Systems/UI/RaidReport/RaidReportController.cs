@@ -76,8 +76,9 @@ namespace Galactic1.Code.UI.RaidReport
             AdBox(data);
         }
 
-        public void Hide()
+        public override void OnHide()
         {
+            base.OnHide();
             gameObject.SetActive(false);
             survivorRoot.MakeEmpty();
             lootRoot.MakeEmpty();

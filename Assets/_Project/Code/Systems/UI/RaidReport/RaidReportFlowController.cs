@@ -146,7 +146,7 @@ namespace Galactic1.Code.UI.RaidReport
                 _data.AdBonusApplied = true;
             }
 
-            _summaryScreen.Hide();
+            _summaryScreen.OnHide();
 
             // === получаем готовые слоты для инвентаря
             var finalSlots = BuildInventorySlots(_data.Loot, adWatched);
