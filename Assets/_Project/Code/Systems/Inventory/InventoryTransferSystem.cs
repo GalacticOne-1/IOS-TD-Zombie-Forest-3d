@@ -425,7 +425,7 @@ namespace Galactic1.Code.UI.Inventory
                     // }
                     if (!_access._inventoryRules.IsEquipmentSource(RightSource))
                     {
-                        AutoFullMmove(fromSource, fromIndex, RightSource);
+                        AutoFullMove(fromSource, fromIndex, RightSource);
                         return;
                     }
                 }
@@ -440,7 +440,7 @@ namespace Galactic1.Code.UI.Inventory
                     // }
                     if (!_access._inventoryRules.IsEquipmentSource(fromSource))
                     {
-                        AutoFullMmove(fromSource, fromIndex, LeftSource);
+                        AutoFullMove(fromSource, fromIndex, LeftSource);
                         return;
                     }
                 }
@@ -498,7 +498,7 @@ namespace Galactic1.Code.UI.Inventory
 
                 // 🧤 Обычное снятие предмета
                 //AutoMoveToFirstFreeSlot(fromSource, fromIndex, left.Inventory as CharacterInventoryData);
-                AutoFullMmove(fromSource, fromIndex, LeftSource);
+                AutoFullMove(fromSource, fromIndex, LeftSource);
             }
         }
 
@@ -518,7 +518,7 @@ namespace Galactic1.Code.UI.Inventory
             //     item.ForVehicle && right.Inventory is DragonEquipmentInventoryData);
 
 
-        private void AutoFullMmove(
+        private void AutoFullMove(
             IInventorySource fromSource,
             int fromIndex,
             IInventorySource toSource)

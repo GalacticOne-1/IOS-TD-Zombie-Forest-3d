@@ -325,6 +325,7 @@ namespace Galactic1.Code.UI.Inventory
         public void HandleDoubleClick(IInventorySource source, int fromIndex)
         {
             transferSystem.HandleDoubleClick(source, fromIndex);
+            invWindow.ClearAllSelections();
             invWindow.UpdateButtons();
         }
         

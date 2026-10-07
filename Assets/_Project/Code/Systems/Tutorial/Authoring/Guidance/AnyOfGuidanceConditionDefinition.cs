@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Galactic1.Code.Systems.Tutorial.Authoring;
 
 namespace Galactic1.Code.Systems.Tutorial.Authoring.Guidance
 {
