@@ -62,6 +62,12 @@ namespace Galactic1.Core.UI.HUD
                     inputRouter
                 );
                 _presenters.Add(presenter);
+
+                // ! для обучения !
+                if (i == 0)
+                {
+                    views[i].GetComponent<TutorialUnitCardView>().Initialize();
+                }
             }
         }
         

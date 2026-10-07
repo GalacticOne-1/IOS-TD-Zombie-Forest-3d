@@ -10,13 +10,13 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     public class TutorialTargetBehaviour : MonoBehaviour, ITutorialTarget
     {
         [Tooltip("Стабильный id (RuntimeId-ассет), на который ссылаются TutorialPresentationDefinition.*TargetId.")]
-        [SerializeField] private TutorialTargetId targetId;
+        [SerializeField] protected TutorialTargetId targetId;
 
         public TutorialTargetId TargetId => targetId;
         public RectTransform UIAnchor => transform as RectTransform;
         public Transform WorldAnchor => transform;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             if (targetId == null)
             {
