@@ -7,40 +7,45 @@ namespace Galactic1.Code.Systems.Squad
 {
     /// <summary>
     /// Пассивный сервис построения пути.
-    /// 
-    /// Единственная обязанность: построить путь по запросу и уведомить.
-    /// Не знает ничего о движении, сегментах, центре, прогрессе.
-    /// 
-    /// Заменяет SquadPathAgent. Убраны: Tick(), NodeIndex, _nodeIndex,
-    /// RealignToPosition(), RequestPath(), BindCenterProvider().
+    ///
+    /// — Путь копируется: path.vectorPath принадлежит пулу A* и может быть
+    ///   переиспользован следующим запросом, пока драйвер по нему едет.
+    /// — Устаревшие ответы (если успели отправить новый запрос) игнорируются.
+    /// — Ошибка пути сообщается через OnPathFailed.
     /// </summary>
     public sealed class SquadPathService : MonoBehaviour
     {
         private Seeker _seeker;
+        private int _requestId;
 
-        /// <summary>
-        /// Только для SquadTrailRenderer — не использовать в логике движения.
-        /// </summary>
+        /// <summary>Только для SquadTrailRenderer.</summary>
         public IReadOnlyList<Vector3> LastPath { get; private set; }
 
-        /// <summary>
-        /// Срабатывает один раз при успешном получении пути.
-        /// MovementSystem подписывается и управляет дальше.
-        /// </summary>
         public event Action<IReadOnlyList<Vector3>> OnPathReady;
+        public event Action OnPathFailed;
 
         private void Awake() => _seeker = GetComponent<Seeker>();
 
         public void SetTarget(Vector3 from, Vector3 to)
         {
-            _seeker.StartPath(from, to, OnPath);
+            int id = ++_requestId;
+            _seeker.StartPath(from, to, p => OnPath(p, id));
         }
 
-        private void OnPath(Path path)
+        private void OnPath(Path path, int id)
         {
-            if (path == null || path.error) return;
-            LastPath = path.vectorPath;
-            OnPathReady?.Invoke(path.vectorPath);
+            if (id != _requestId)
+                return; // устаревший ответ
+
+            if (path == null || path.error || path.vectorPath == null || path.vectorPath.Count == 0)
+            {
+                OnPathFailed?.Invoke();
+                return;
+            }
+
+            var copy = new List<Vector3>(path.vectorPath);
+            LastPath = copy;
+            OnPathReady?.Invoke(copy);
         }
 
         public void Clear() => LastPath = null;

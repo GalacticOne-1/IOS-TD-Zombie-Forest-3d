@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Galactic1.Code.Gameplay.Units;
+
 using UnityEngine;
 
 namespace Galactic1.Code.Systems.Squad
@@ -7,17 +6,9 @@ namespace Galactic1.Code.Systems.Squad
     /// <summary>
     /// Создаёт слоты и вычисляет LocalOffset для каждого.
     ///
-    /// LocalOffset пересчитывается только при:
-    ///   - создании отряда
-    ///   - смене типа формации
-    ///   - смене параметров формации
-    ///   - изменении состава отряда
-    ///
-    /// Никогда не пересчитывается во время обычного движения.
-    ///
-    /// FormationFollower использует LocalOffset каждый тик,
-    /// применяя вращение через Quaternion.LookRotation —
-    /// без повторного вызова FormationSystem.GetOffset().
+    /// Оффсеты центрируются: среднее по всем слотам = 0.
+    /// Поэтому центроид отряда всегда совпадает с FormationCenter,
+    /// а у одиночного юнита оффсет равен нулю (он идёт ровно по линии пути).
     /// </summary>
     public sealed class SquadFormationSlots
     {
@@ -30,37 +21,43 @@ namespace Galactic1.Code.Systems.Squad
             FormationSystem.GridParams gridParams)
         {
             _runtime = runtime;
-            
+
             var l = _runtime.Agents.Count;
             Slots = new SquadSlot[l];
-            
+
             for (int i = 0; i < l; i++)
                 Slots[i] = new SquadSlot { Index = i, Occupant = _runtime.Agents[i] };
 
             RebuildOffsets(type, gridParams);
         }
 
-        /// <summary>
-        /// Пересчитывает LocalOffset для всех слотов.
-        /// Вызывается только при смене формации / параметров / состава.
-        /// </summary>
         public void RebuildOffsets(
             FormationSystem.FormationType type,
             FormationSystem.GridParams gridParams)
         {
             int total = Slots.Length;
+            Vector3 mean = Vector3.zero;
+
             for (int i = 0; i < total; i++)
             {
-                // Vector3.forward как нейтральный базис.
-                // FormationFollower применит реальный forward через Quaternion.LookRotation.
                 Slots[i].LocalOffset = FormationSystem.GetOffset(
                     i, total, type, Vector3.forward, gridParams);
+                mean += Slots[i].LocalOffset;
             }
 
-            // Инициализируем FinalWorldPosition чтобы ComputeSpeed()
-            // в первом тике не работал с Vector3.zero.
+            if (total > 0)
+                mean /= total;
+
             foreach (var slot in Slots)
-                slot.FinalWorldPosition = slot.LocalOffset;
+            {
+                slot.LocalOffset -= mean;
+
+                // Реальная позиция юнита, а не LocalOffset: иначе ComputeSpeed()
+                // в первом кадре видит огромную «ошибку» и тормозит центр.
+                slot.FinalWorldPosition = slot.Occupant != null
+                    ? slot.Occupant.transform.position
+                    : slot.LocalOffset;
+            }
         }
     }
 }
