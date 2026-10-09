@@ -36,9 +36,12 @@ namespace Galactic1.Code.UI.Units.Presentation
 
         private void HandleRuntimeStatChanged(StatChangedEvent e, bool pushStart)
         {
-            var unitId = ServiceLocator.Current.Get<InventoryManagementWindow>().modeController.SelectedUnit.unitId;
-            if (_runtime.Owner == unitId)
-                OnStatChanged?.Invoke(e, pushStart);
+            if (ServiceLocator.Current.TryGet<InventoryManagementWindow>(out var inventory))
+            {
+                var unitId = inventory.modeController.SelectedUnit.unitId;
+                if (_runtime.Owner == unitId)
+                    OnStatChanged?.Invoke(e, pushStart);
+            }
         }
 
         /// <summary>

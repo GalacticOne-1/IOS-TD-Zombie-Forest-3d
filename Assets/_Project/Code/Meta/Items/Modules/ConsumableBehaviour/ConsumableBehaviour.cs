@@ -59,11 +59,16 @@ namespace Galactic1.Game.Meta.Items
             int index = ctx.SlotIndex;
             
             if (slot.Amount <= 0)
+            {
                 source.ClearSlot(index);
+            }
             else
+            {
                 source.SetSlot(index, slot);
+            }
             
             source.NotifyChanged();
+            ctx.OnFinished?.Invoke(); // ! (чисто для визуала) вконце, иначе source.NotifyChanged() перезапишет !
             EventBus<ItemConsumabledEvent>.Raise(new ItemConsumabledEvent(slot.Item.Id, 1));
         }
     }

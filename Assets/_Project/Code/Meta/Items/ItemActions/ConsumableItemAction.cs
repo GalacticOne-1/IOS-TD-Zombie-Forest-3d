@@ -1,11 +1,5 @@
-
-using Galactic1.Code.Gameplay.Abilities;
 using Galactic1.Code.Gameplay.Effect;
-using Galactic1.Code.Gameplay.Survivors.Repositories;
-using Galactic1.Code.Inventory.Abstractions;
-using Galactic1.Code.Inventory.Context;
 using Galactic1.Code.Systems.Raid;
-using Galactic1.Code.UI.Inventory;
 using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.Game.Meta.Items;
 using Galactic1.UI.Core;
@@ -13,77 +7,11 @@ using UnityEngine;
 
 namespace Galactic1.Items
 {
-    [CreateAssetMenu(fileName = "ConsumableItemAction", menuName = "Game Configs/Inventory/Consumable Item Action")]
+    [CreateAssetMenu(
+        fileName = "ConsumableItemAction",
+        menuName = "Game Configs/Inventory/Consumable Item Action")]
     public class ConsumableItemAction : ItemActionConfig
     {
-
-        // public override void Execute(ItemContext ctx)
-        // {
-        //     if (!ctx.slot.Item.HasModule<UseModule>() ||
-        //         !ctx.slot.Item.Use.ConsumeOnUse)
-        //         return;
-        //     
-        //     IStatsController statsController =
-        //         ctx.inventory is PlayerInventoryData || ctx.inventory is PlayerEquipmentInventoryData
-        //             ? ServiceLocator.Current.Get<PlayerRepository>().GetController.StatsController
-        //             : ServiceLocator.Current.Get<DragonRepository>().GetController.StatsController;
-        //     
-        //     
-        //     var effects = ctx.slot.Item.Value.Config.ConsumableData.effects;
-        //     
-        //     
-        //     foreach (var e in effects)
-        //     {
-        //         switch (e.key)
-        //         {
-        //             case EffectType.Hunger:
-        //                 statsController.ModifyStat(StatType.Hunger, e.value);
-        //                 DLog.Alert($"Hunger {e.value:+0;-0}");
-        //                 break;
-        //     
-        //             case EffectType.Thirst:
-        //                 statsController.ModifyStat(StatType.Thirst, e.value);
-        //                 DLog.Alert($"Thirst {e.value:+0;-0}");
-        //                 break;
-        //     
-        //             case EffectType.Heal:
-        //                 statsController.ModifyStat(StatType.Health, e.value);
-        //                 DLog.Alert($"Heal {e.value:+0;-0}");
-        //                 break;
-        //             
-        //             case EffectType.Experience:
-        //                 statsController.ModifyStat(StatType.Experience, e.value);
-        //                 DLog.Alert($"Experience {e.value:+0;-0}");
-        //                 break;
-        //     
-        //             case EffectType.BuffSpeed:
-        //                 statsController.ModifyStat(StatType.MoveSpeed, e.value);
-        //                 DLog.Alert($"Buff Speed {e.value:+0;-0}");
-        //                 break;
-        //     
-        //             // новые кейсы добавляем здесь
-        //         }
-        //     }
-        //     
-        //     // floating text
-        //     Vector3? slotPosition = ctx.ui?.selectedSlot.gameObject.CMP_RectTr().position;
-        //     if (slotPosition.HasValue)
-        //         ServiceLocator.Current.Get<FloatingTextService>().ShowText(
-        //             slotPosition.Value, 
-        //             $"-1 {ctx.slot.Item.Value.Header.TitleLid}", 
-        //             Color.white);
-        //     
-        //     // ⚡ после применения можно уменьшить количество в стеке
-        //     ctx.slot.Amount.Value--;
-        //     if (ctx.slot.Amount.Value <= 0)
-        //         ctx.slot.Clear();
-        //     
-        //     ctx.inventory.OnChanged?.Invoke();
-        //     if (!ctx.slot.IsEmpty)
-        //         ctx.ui?.selectedSlot.SetHighlight(true);
-        //     else
-        //         ctx.ui?.ClearSelection();
-        // }
 
         public override void Execute(ItemContext ctx)
         {
@@ -115,7 +43,18 @@ namespace Galactic1.Items
                 QuickSlotIndex = -1,
                 UseSmartTarget = false,
                 SquadMembers = null,
-                UseModule = useModule
+                UseModule = useModule,
+                OnFinished = () =>
+                {
+                    if (ctx.slot.Amount > 0)
+                    {
+                        ctx.view?.selectedSlot?.SetHighlight(true);
+                    }
+                    else
+                    {
+                        ctx.view?.ClearSelection();
+                    }
+                }
             };
 
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.Raid;
+using Galactic1.Code.UI.Inventory;
 using Galactic1.Game.Meta.Items;
 using UnityEngine;
 
@@ -22,7 +23,10 @@ namespace Galactic1.Code.Gameplay.Effect
         
         /// выполняется сразу по активации способности (не ждет анимацию) 
         public Action OnConfirmed;
+        /// выполняется по окончании всех процессов Consume()
+        public Action OnFinished;
         public Action OnCancelled;
+        
         
         public AbilityAnimationType? AnimationType;
     }

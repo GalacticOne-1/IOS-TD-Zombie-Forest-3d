@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Galactic1.Code.Gameplay.AoE
 {

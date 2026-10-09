@@ -19,7 +19,7 @@ namespace Galactic1.Game.Meta.Items
         public override ConsumableType Type => ConsumableType.Grenade;
 
 
-        [FormerlySerializedAs("audioDefinition")] [SerializeField] private GrenadeAudioConfig audioConfig;
+        [SerializeField] private GrenadeAudioConfig audioConfig;
  
         // ─────────────────────────────────────────────
         // Throw (без изменений)

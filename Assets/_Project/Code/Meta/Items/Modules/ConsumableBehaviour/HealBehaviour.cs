@@ -12,7 +12,7 @@ namespace Galactic1.Game.Meta.Items
     [Serializable]
     public sealed class HealBehaviour : ConsumableBehaviour
     {
-        [FormerlySerializedAs("audioDefinition")] [SerializeField] private SimpleAudioConfig audioConfig;
+        [SerializeField] private SimpleAudioConfig audioConfig;
         
         [Header("Targeting")] 
         public bool supportsSmartTarget = true;
@@ -93,10 +93,11 @@ namespace Galactic1.Game.Meta.Items
             // sound fx
             if(ctx.SpawnOrigin)
             {
-                EventBus<AudioCueEvent>.Raise(
-                    new AudioCueEvent(
-                        ctx.SpawnOrigin.position,
-                        audioConfig?.ToData()));
+                EventBus<AudioCueEvent>.Raise(new AudioCueEvent(ctx.SpawnOrigin.position, audioConfig?.ToData()));
+            }
+            else
+            {
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.ToData()));
             }
 
 #if UNITY_EDITOR

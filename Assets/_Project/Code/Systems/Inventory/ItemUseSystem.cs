@@ -13,7 +13,7 @@ namespace Galactic1.Items
             var item = ctx.slot.Item;
             if (item == null)
             {
-                Debug.LogWarning("UseItem: item is null");
+                Debug.Log("UseItem: item is null");
                 return;
             }
 
