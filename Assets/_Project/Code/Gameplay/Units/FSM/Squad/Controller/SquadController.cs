@@ -1,4 +1,8 @@
+using Galactic1.Code.Gameplay.Audio;
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Gameplay.Interaction;
+using Galactic1.Configs;
+using Galactic1.UI.Core;
 using UnityEngine;
 
 namespace Galactic1.Code.Systems.Squad
@@ -13,6 +17,8 @@ namespace Galactic1.Code.Systems.Squad
         public SquadPathService PathService => pathService;
 
         public SquadSceneRuntime Squad { get; private set; }
+        
+        private SimpleAudioConfig config;
 
         private WorldInputDispatcher _worldInput;
         private SquadMovementSystem _movementSystem;
@@ -30,6 +36,10 @@ namespace Galactic1.Code.Systems.Squad
                 squad,
                 GetComponent<SquadTrailRenderer>(),
                 pathService);
+            
+            config = ServiceLocator.Current.Get<ConfigProvider>()
+                .Get<UIAudioDatabase>()
+                .Get<SimpleAudioConfig>("audio_cue_squad_move_command");
 
             // CenterProvider: MovementSystem.Center — путь запрашивается
             // через pathService.SetTarget(from, to), from берётся из Center.
@@ -67,6 +77,7 @@ namespace Galactic1.Code.Systems.Squad
 
         public void OnMoveCommand(Vector3 targetPoint, WorldInputDispatcher.MoveMode mode)
         {
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(config.ToData()));
             _movementSystem.IssueMove(targetPoint, WorldInputDispatcher.MoveMode.Run); // всегда бегут (было mode)
         }
     }
