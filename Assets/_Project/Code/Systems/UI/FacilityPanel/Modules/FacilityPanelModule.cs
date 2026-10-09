@@ -1,6 +1,8 @@
 
 using Galactic1.Code.Systems.Runtime.Building;
+using Galactic1.Configs;
 using Galactic1.Game.UI.Buildings.DTO;
+using Galactic1.UI.Audio;
 using UnityEngine;
 
 namespace Galactic1.Code.UI.Buildings
@@ -11,6 +13,9 @@ namespace Galactic1.Code.UI.Buildings
     /// </summary>
     public abstract class FacilityPanelModule : MonoBehaviour
     {
+
+        protected StationPanelAudioConfig audioConfig;
+        
         protected bool isBound;
         public bool IsBound => isBound;
 
@@ -30,6 +35,8 @@ namespace Galactic1.Code.UI.Buildings
         /// </summary>
         public virtual void Bind(FacilityDTO dto, object sceneAdapter, FacilityUpgradeSceneAdapter upgradeAdapter)
         {
+            audioConfig = ServiceLocator.Current.Get<ConfigProvider>().Get<StationPanelAudioConfig>();
+            
             isBound = true;
             if (IsAutoActivate)
                 gameObject.SetActive(true);

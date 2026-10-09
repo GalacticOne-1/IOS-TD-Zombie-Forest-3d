@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Galactic1.Code.GameDatabase;
 using Galactic1.Code.GameDatabase.Registries;
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Code.UI.Buildings;
 using Galactic1.Game.Runtime.Production;
@@ -126,12 +127,14 @@ namespace Galactic1.Game.UI.Production
             var recipeDto = _adapter.GetRecipeDetails(recipeId);
             _detailsPresenter.Show(recipeDto);
             
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.action.ToData()));
         }
         
         private void HandleAddOrder(RuntimeId recipeId, ProcessingMode mode)
         {
             if (_adapter.TryAddOrder(recipeId))
             {
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.action.ToData()));
                 // обновление UI произойдёт через OnStateChanged → Refresh
             }
         }
@@ -144,6 +147,8 @@ namespace Galactic1.Game.UI.Production
 
             if (job == null)
                 return;
+            
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.action.ToData()));
 
             // A. если есть готовые заказы — забираем по одному
             if (job.CompletedStack > 0)
@@ -156,9 +161,17 @@ namespace Galactic1.Game.UI.Production
             _adapter.CancelOrder(jobId);
         }
 
-        private void HandleTake() => _adapter.CollectCompleted();
+        private void HandleTake()
+        {
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.action.ToData()));
+            _adapter.CollectCompleted();
+        }
 
-        private void HandleSkip() => _adapter.TryPaidSkip();
+        private void HandleSkip()
+        {
+            EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.action.ToData()));
+            _adapter.TryPaidSkip();
+        }
 
         /// <summary>
         /// Оповещение игрока о нехватке места в инвентаре
