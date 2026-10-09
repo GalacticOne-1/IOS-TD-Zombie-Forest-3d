@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Galactic1.Code;
 using Galactic1.Code.Dev;
 using Galactic1.Code.GameDatabase;
+using Galactic1.Code.Gameplay.Combat.Events;
 using Galactic1.Configs;
 using Galactic1.UI.Core;
 using UnityEngine;
@@ -22,8 +23,8 @@ namespace Galactic1.UI.Shop.Rewards
 
         private UIRootView _uiRoot;
         private readonly List<ShopRewardCard> activeCards = new();
-        
-        
+
+        private IShopController shopController;
         
         
         public override void Initialize(DIContainer container, UIScreenId id)
@@ -32,6 +33,7 @@ namespace Galactic1.UI.Shop.Rewards
             ServiceLocator.Current.Register(this);
             
             _uiRoot = ServiceLocator.Current.Get<UIRootView>();
+            shopController = container.Resolve<IShopController>();
 
             bgCloseButton.RegisterButtonClick(OnHide);
 
@@ -66,6 +68,7 @@ namespace Galactic1.UI.Shop.Rewards
             base.OnShow(data);
             if(data is List<ShopRewardItemData> rewards)
             {
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(shopController.AudioConfig.purchaseComplete.ToData()));
                 gameObject.SetActive(true);
                 StartCoroutine(ShowRewards(rewards));
             }
@@ -74,6 +77,8 @@ namespace Galactic1.UI.Shop.Rewards
         public IEnumerator ShowRewards(List<ShopRewardItemData> rewards)
         {
             _uiRoot.EnableBlockScreen();
+            
+            yield return new WaitForSeconds(0.5f);
             
             // #1 передаем награду
             int count = Mathf.Min(rewards.Count, activeCards.Count);
@@ -87,6 +92,7 @@ namespace Galactic1.UI.Shop.Rewards
             {
                 bool finished = false;
                 activeCards[i].Show(() => finished = true);
+                EventBus<AudioUIEvent>.Raise(new AudioUIEvent(shopController.AudioConfig.rewardShowed.ToData()));
 
                 yield return new WaitUntil(() => finished);
                 //yield return new WaitForSeconds(revealDelay);

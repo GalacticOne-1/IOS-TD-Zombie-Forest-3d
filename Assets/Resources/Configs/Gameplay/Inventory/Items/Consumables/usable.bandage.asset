@@ -96,11 +96,11 @@ MonoBehaviour:
     - rid: 5930764076990333012
       type: {class: HealBehaviour, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
       data:
-        audioDefinition: {fileID: 11400000, guid: dc926b65ebb0f4b4ba700fabe93f239e, type: 2}
+        audioConfig: {fileID: 11400000, guid: dc926b65ebb0f4b4ba700fabe93f239e, type: 2}
         supportsSmartTarget: 1
         doubleTapWindow: 0.35
         requiresCast: 1
-        castTime: 1.5
+        castTime: 0.5
         healAmount: 40
         isInstant: 0
         isHoT: 1

@@ -88,7 +88,7 @@ namespace Galactic1.Code.UI.Inventory
 
         public InventoryView leftSide { get; private set; }
         public InventoryView rightSide { get; private set; }
-        public  InventoryPanelAudioConfig AudioConfig { get; private set; }
+        public InventoryPanelAudioConfig AudioConfig { get; private set; }
         
         public enum InventoryViewContext
         {

@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Galactic1.Code.Gameplay.Combat.Events;
+using Galactic1.Code.Systems.GameLoop;
+using Galactic1.Code.Systems.Runtime;
 using Galactic1.Code.UI.Buildings;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
+using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.UI.Core;
 using Galactic1.UI.Core.TabPanel;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,6 +43,9 @@ namespace Galactic1.UI.Shop
         [Header("Tabs")] 
         public List<TabButtonEntry> tabButtons;
         public GameObject inboxButton;
+        [SerializeField] private TMP_Text inboxCountText;
+        
+        private InboxRuntime _inboxRuntime;
         
 
         private readonly List<GameObject> spawnedCards = new();
@@ -52,8 +60,7 @@ namespace Galactic1.UI.Shop
 
 
 
-
-
+        private IShopController shopController;
         private GameStoreViewModel _viewModel;
         private readonly Dictionary<int, ShopCardUIBase> _createdCardBindersMap = new();
 
@@ -82,6 +89,10 @@ namespace Galactic1.UI.Shop
         public override void Initialize(DIContainer container, UIScreenId id)
         {
             base.Initialize(container, id);
+            
+            shopController = container.Resolve<IShopController>();
+            
+            SubscribeInbox();
 
             ServiceLocator.Current.Get<TabPanelController>()
                 .RegisterTab(new TabPanelController.RegistryEntry()
@@ -94,11 +105,12 @@ namespace Galactic1.UI.Shop
                 });
         }
 
-        // public override void Remove()
-        // {
-        //     base.Remove();
-        //     ServiceLocator.Current.Unregister<InventoryWindow>();
-        // }
+        public override void Remove()
+        {
+            base.Remove();
+            
+            _inboxRuntime.OnInboxChanged -= UpdateInboxCount;
+        }
 
         public override void OnShow(object data = null)
         {
@@ -128,7 +140,6 @@ namespace Galactic1.UI.Shop
             UpdateContentSize();
             SetupTabs();
             
-            inboxButton.GetChild(0,1).SetActive(false);
             inboxButton.RegisterButtonClick(() =>
             {
                 _container.Resolve<RuntimeFacilityPanelController>().Open(GameIdProvider.MainContainer);
@@ -157,6 +168,25 @@ namespace Galactic1.UI.Shop
         //         _GameState.Save();
         //     }
         // }
+        
+        
+        private void SubscribeInbox()
+        {
+            _inboxRuntime = _container.Resolve<GameSession>().GameLoopContext.InboxRuntime;
+            _inboxRuntime.OnInboxChanged += UpdateInboxCount;
+
+            UpdateInboxCount();
+        }
+
+        private void UpdateInboxCount()
+        {
+            if (inboxCountText == null || _inboxRuntime == null)
+                return;
+
+            var qu = _inboxRuntime.Slots.Count;
+            inboxCountText.transform.parent.gameObject.SetActive(qu > 0);
+            inboxCountText.text = qu.ToString();
+        }
 
 
 
@@ -383,6 +413,7 @@ namespace Galactic1.UI.Shop
                 {
                     _viewModel._gameStoreService._shopController.OnPurchaseSuccess = panel.Hide;
                     panel.Show(styleResolver, config, view, buyCallback);
+                    EventBus<AudioUIEvent>.Raise(new AudioUIEvent(shopController.AudioConfig.openDetail.ToData()));
                 }
                 else
                 {

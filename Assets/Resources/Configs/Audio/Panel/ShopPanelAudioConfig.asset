@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0b41f2f217649508826905ecd347031, type: 3}
+  m_Name: ShopPanelAudioConfig
+  m_EditorClassIdentifier: 
+  <ConfigId>k__BackingField: shop_panel_audio_config
+  open:
+    clips: []
+    volume: 1
+    pitchMin: 0.95
+    pitchMax: 1.05
+  openDetail:
+    clips:
+    - {fileID: 8300000, guid: d128f745d6b3243c498956c0f3bf3d49, type: 3}
+    volume: 0.4
+    pitchMin: 1
+    pitchMax: 1
+  purchaseComplete:
+    clips:
+    - {fileID: 8300000, guid: 6ac59ebb0f78645639ac501f28425830, type: 3}
+    volume: 0.4
+    pitchMin: 1
+    pitchMax: 1
+  rewardShowed:
+    clips:
+    - {fileID: 8300000, guid: 4dce1d90d3f6c4c71a3095994d21f0fe, type: 3}
+    volume: 0.4
+    pitchMin: 1
+    pitchMax: 1

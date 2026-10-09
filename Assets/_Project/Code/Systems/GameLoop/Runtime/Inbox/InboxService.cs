@@ -4,6 +4,7 @@ using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.Runtime;
 using Galactic1.Code.Systems.GameTime;
+using Galactic1.Game.Meta.Items;
 
 namespace Galactic1.Code.Systems.Inbox
 {
@@ -48,13 +49,21 @@ namespace Galactic1.Code.Systems.Inbox
             
             int expire = _timeService.TotalWorldHours + 720;  // 30 day
 
-            _runtime.AddReward(new InboxSlotData(
-                item, 
-                configId.Guid, 
-                amount,
-                durability == -1 ? item.Physical.maxDurability : durability,
-                ammoInMagazine,
-                expire));
+            var maxStack = item.Classification.maxStack;
+            var amountToSlot = 0;
+            while (amount > 0)  // предметы распределяются по слотам как и в инвентаре
+            {
+                amountToSlot = amount > maxStack ? maxStack : amount;
+                amount -= amountToSlot;
+                
+                _runtime.AddReward(new InboxSlotData(
+                    item, 
+                    configId.Guid, 
+                    amountToSlot,
+                    durability == -1 ? item.Physical.maxDurability : durability,
+                    ammoInMagazine,
+                    expire));
+            }
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Galactic1.UI.Audio
 {
     [CreateAssetMenu(
-        fileName = "InventoryPanelAudio_",
+        fileName = "ShopPanelAudioConfig",
         menuName = "Game Configs/Audio/UI/Shop Panel Audio")]
     public sealed class ShopPanelAudioConfig :
         ScriptableObject,
@@ -25,5 +25,6 @@ namespace Galactic1.UI.Audio
         public AudioCue open;
         public AudioCue openDetail;
         public AudioCue purchaseComplete;
+        public AudioCue rewardShowed;
     }
 }

@@ -1,18 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Galactic1.Configs;
 using Galactic1.Core;
 using Galactic1.Systems.Purchase;
+using Galactic1.UI.Audio;
 using Galactic1.UI.Shop.Rewards;
 using UnityEngine;
 
 namespace Galactic1.UI.Shop
 {
+
+    public interface IShopController
+    {
+        ShopPanelAudioConfig AudioConfig { get; }
+    }
+    
     /// <summary>
     /// Центральный контроллер магазина.
     /// Управляет состояниями, каталогом и покупками через FSM.
     /// </summary>
-    public class ShopController : MonoBehaviour
+    public class ShopController : MonoBehaviour , IShopController
     {
 
         //[Header("UI")]
@@ -25,6 +33,8 @@ namespace Galactic1.UI.Shop
         private ShopRewardService rewardService;
         private ShopStateMachine fsm;
         private readonly HashSet<string> purchasedItems = new();
+
+        public ShopPanelAudioConfig AudioConfig { get; private set; }
 
 
         private ShopCardUIBase currentView;
@@ -45,6 +55,10 @@ namespace Galactic1.UI.Shop
             _rootContainer = container;
             _gameStoreService = gameStoreService;
             _purchaseService = purchaseService;
+
+            AudioConfig = container.Resolve<IConfigProvider>().Get<ShopPanelAudioConfig>();
+
+            _rootContainer.RegisterInstance<IShopController>(this);
             rewardService = new ShopRewardService(container);
 
 
