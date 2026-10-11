@@ -9,6 +9,9 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         {
             targetId = id;
             ServiceLocator.Current.Get<TutorialTargetRegistry>().Register(this);
+
+            EventBus<SceneServicesClearEvent>.Register(new EventBinding<SceneServicesClearEvent>(() =>
+                ServiceLocator.Current.Get<TutorialTargetRegistry>().Unregister(this)));
         }
 
 
