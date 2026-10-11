@@ -32,7 +32,7 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
             // Патронов нет нигде
             if (_inventory.PeekAmmo(ammoDefinition) <= 0)
             {
-                entity.RaiseNoAmmo(); // заглушка для UI
+                //entity.RaiseNoAmmo(); // заглушка для UI
                 return false;
             }
     
@@ -62,7 +62,7 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
 
             // === Нормальное восстановление
             Reload(ammo);
-            _entity.RaiseAmmoChanged(CurrentAmmo - 1, ClipSize);
+            _entity.RaiseAmmoChanged(CurrentAmmo, ClipSize);
 
 #if UNITY_EDITOR
             DLog.Alert($"Ammo restored: {CurrentAmmo}");
@@ -78,16 +78,18 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
             }
 
             CurrentAmmo--;
-      
-#if UNITY_EDITOR
-            DLog.Alert($"Ammo changed to {CurrentAmmo}/{ClipSize}");
-#endif
-            // делаем -1 для правильного отображения в UI
-            if (CurrentAmmo - 1 >= 0)
-                entity.RaiseAmmoChanged(CurrentAmmo - 1, ClipSize);
-            
-            if (CurrentAmmo == 0)
-                entity.SetState(WeaponState.Empty);
+            entity.RaiseAmmoChanged(CurrentAmmo, ClipSize);   // без -1
+            // Empty здесь НЕ ставим — выстрел ещё должен состояться
+        }
+        
+        public override void OnShotCompleted(WeaponEntity entity)
+        {
+            if (CurrentAmmo > 0) return;
+            if (entity.State == WeaponState.Reloading ||
+                entity.State == WeaponState.Unequipped) return;
+
+            entity.SetState(WeaponState.Empty);
+            entity.RaiseReloadRequested();   // дальше UnitReloadHandler.TryStartReload
         }
 
         public override void OnReloadCompleted(WeaponEntity entity)
@@ -99,10 +101,9 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
             int taken  = _inventory.TakeAmmo(ammoId, needed);
             Reload(taken);
             
-            entity.RaiseAmmoChanged(CurrentAmmo - 1, ClipSize);
+            entity.RaiseAmmoChanged(CurrentAmmo, ClipSize);
         }
 
-        // +1 т.к без этого съедается последний патрон (требуется переделать стрельбу в WeaponEntity)
-        void Reload(int val) => CurrentAmmo = val + 1;
+        void Reload(int val) => CurrentAmmo = val;
     }
 }

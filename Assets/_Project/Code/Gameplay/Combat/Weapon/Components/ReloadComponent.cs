@@ -19,7 +19,11 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
         {
             var ammo = entity.Get<AmmoComponent>();
             if (ammo != null && ammo.CurrentAmmo == ammo.ClipSize) return;
-            if (!entity.Get<FireComponent>().IsReady) return;
+
+            // Кулдаун блокирует перезарядку только у «живого» оружия.
+            // Пустое оружие перезаряжаем сразу.
+            var fire = entity.Get<FireComponent>();
+            if (entity.State != WeaponState.Empty && fire != null && !fire.IsReady) return;
 
             _reloading = true;
             _reloadTimer = entity.Definition.ReloadTimeSec;

@@ -187,6 +187,9 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
 
             NotifyFired(request);
             RaiseShotLogicComplete();
+
+            for (int i = 0; i < _components.Count; i++)
+                _components[i].OnShotCompleted(this);   // <<< NEW
         }
     }
 }

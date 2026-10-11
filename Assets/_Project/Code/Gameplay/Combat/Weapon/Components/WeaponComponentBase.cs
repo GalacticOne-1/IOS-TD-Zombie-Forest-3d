@@ -10,6 +10,7 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
         public virtual bool CanReload(WeaponEntity entity) => true;
         public virtual void OnFireRequested(WeaponEntity entity) { }
         public virtual void OnFireExecuted(WeaponEntity entity) { }
+        public virtual void OnShotCompleted(WeaponEntity entity) { }
         public virtual void OnReloadStarted(WeaponEntity entity) { }
         public virtual void OnReloadCompleted(WeaponEntity entity) { }
     }

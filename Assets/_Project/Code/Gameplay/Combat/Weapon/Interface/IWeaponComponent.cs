@@ -13,6 +13,7 @@ namespace Galactic1.Code.Gameplay.Weapons.Logic
         bool CanReload(WeaponEntity entity);
         void OnFireRequested(WeaponEntity entity);  // до выстрела — может отменить
         void OnFireExecuted(WeaponEntity entity);   // после выстрела
+        void OnShotCompleted(WeaponEntity entity);
         void OnReloadStarted(WeaponEntity entity);
         void OnReloadCompleted(WeaponEntity entity);
     }

@@ -45,6 +45,13 @@ namespace Galactic1.Code.Gameplay.Units
             _isReloading = true;
             weapon.OnReloadCompleted += OnReloadDone;
             weapon.Reload();
+            
+            if (entity.State != WeaponState.Reloading)
+            {
+                weapon.OnReloadCompleted -= OnReloadDone;
+                _isReloading = false;
+                return false;
+            }
 
             return true;
         }
