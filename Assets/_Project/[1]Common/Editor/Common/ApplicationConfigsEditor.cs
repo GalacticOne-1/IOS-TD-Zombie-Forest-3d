@@ -442,7 +442,7 @@ namespace Galactic1.Tools
             
             // -- 2 box
             EditorGUILayout.BeginVertical("box",GUILayout.MaxWidth(100));
-            Label(new CLabelData() { name = "Server", style = FlagStatusStyle(), enabled = script.requiresServerConnection});
+            Label(new CLabelData() { name = "Server", style = FlagStatusStyle(), enabled = AppConstants.SERVER_ON});
             Label(new CLabelData() { name = "Screen Log", style = FlagStatusStyle(), enabled = !script.showScreenLogs});
             EditorGUILayout.EndVertical();
             

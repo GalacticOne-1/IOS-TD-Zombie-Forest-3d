@@ -28,10 +28,12 @@ namespace Galactic1.Code.Gameplay.Units.Brain.Utility.Core
 
         public ActionDecision Evaluate(UnitInstance unit, AIContext ctx, EnemyBlackboard blackboard)
         {
+#if UNITY_EDITOR
             Debug.Log(
                 $"AttackAction target={ctx.VisibleTarget?.TargetId} " +
                 $"dist={ctx.DistanceToVisibleTarget:F2} " +
                 $"attackRange={_combat.AttackRange:F2}");
+#endif
             
             // if (ctx is SiegeAIContext siegeCtx &&
             //     siegeCtx.CurrentObjective != SiegeObjective.Player)

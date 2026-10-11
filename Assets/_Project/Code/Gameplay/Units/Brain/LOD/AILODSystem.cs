@@ -20,33 +20,54 @@ namespace Galactic1.Code.Gameplay.AI.LOD
     /// решения об уровне симуляции. EnemyInstance никогда не решает
     /// сам за себя — только исполняет SetSimulationLevel(level).
     ///
-    /// Живёт как дочерняя система RaidRuntime (создаётся/уничтожается
-    /// вместе с рейдом, как CombatRuntime и RaidDirectorRuntime).
-    ///
-    /// Источники данных:
-    ///   EnemyRepository   — scene-слой, даёт EnemyInstance для вызова API
-    ///   RaidEnemyRegistry — runtime-слой, даёт события регистрации/спавна
-    ///   EnemyBlackboard   — per-unit AI память (уже существует, только читаем)
-    ///
-    /// Вызов дистанций к отряду инкапсулирован за Func&lt;Vector3&gt;,
-    /// чтобы AILODSystem не знал КАК считается центр отряда
-    /// (FormationCenterDriver / camera group / etc — решает вызывающий код).
+    /// ДОБАВЛЕНО:
+    ///   1) Гистерезис радиусов — вход в более "живой" уровень по обычному
+    ///      радиусу, выход обратно только после радиус + HysteresisMargin.
+    ///      Отряд на границе больше не вызывает дрожание Full/Low/Sleeping.
+    ///   2) Бюджет переходов на кадр — Evaluate() только строит очередь
+    ///      нужных переходов, а применяются они в Tick() не более
+    ///      MaxTransitionsPerFrame за кадр (дорогие Animator/AIPath enable
+    ///      размазываются по кадрам). Приоритет: пробуждение ближайших первым,
+    ///      засыпание — последним.
     /// </summary>
     public sealed class AILODSystem
     {
+        // ── Очередь переходов ────────────────────────────────────────────
+        private struct PendingTransition
+        {
+            public EnemyInstance Enemy;
+            public int Category; // меньше = важнее (см. GetCategory)
+            public float SqrDist; // внутри категории — ближайшие первыми
+        }
+
+        // Статический делегат — Sort не аллоцирует каждый раз.
+        private static readonly Comparison<PendingTransition> PendingComparison = (a, b) =>
+        {
+            int c = a.Category.CompareTo(b.Category);
+            return c != 0 ? c : a.SqrDist.CompareTo(b.SqrDist);
+        };
+
+        private readonly List<PendingTransition> _pending = new(64);
+        private int _pendingCursor;
+
         private readonly AILODConfig _config;
         private readonly EnemyRepository _enemyRepository;
         private readonly RaidEnemyRegistry _enemyRegistry;
         private Func<Vector3> _squadCenterProvider;
 
-        // Трекинг метаданных спавна по runtime.Id — нужен только для
-        // Director grace period. Заполняется через события регистрации,
-        // а не пересчитывается на каждую итерацию.
         private readonly Dictionary<string, float> _spawnTime = new();
         private readonly Dictionary<string, SpawnSource> _spawnSource = new();
 
-        private readonly float _fullRadiusSqr;
-        private readonly float _lowRadiusSqr;
+        // Радиусы входа (враг становится "живее")
+        private readonly float _fullEnterSqr;
+
+        private readonly float _lowEnterSqr;
+
+        // Радиусы выхода (враг становится "тише") — больше на HysteresisMargin
+        private readonly float _fullExitSqr;
+        private readonly float _lowExitSqr;
+
+        private readonly int _maxTransitionsPerFrame;
 
         private float _evalTimer;
         private bool initialized;
@@ -62,10 +83,18 @@ namespace Galactic1.Code.Gameplay.AI.LOD
             _config = config;
             _enemyRepository = enemyRepository;
             _enemyRegistry = enemyRegistry;
-            
 
-            _fullRadiusSqr = config.FullSimulationRadius * config.FullSimulationRadius;
-            _lowRadiusSqr = config.LowSimulationRadius * config.LowSimulationRadius;
+            float margin = Mathf.Max(0f, config.HysteresisMargin);
+
+            _fullEnterSqr = config.FullSimulationRadius * config.FullSimulationRadius;
+            _lowEnterSqr = config.LowSimulationRadius * config.LowSimulationRadius;
+
+            float fullExit = config.FullSimulationRadius + margin;
+            float lowExit = config.LowSimulationRadius + margin;
+            _fullExitSqr = fullExit * fullExit;
+            _lowExitSqr = lowExit * lowExit;
+
+            _maxTransitionsPerFrame = Mathf.Max(1, config.MaxTransitionsPerFrame);
 
             _enemyRegistry.OnRegistered += HandleRegistered;
             _enemyRegistry.OnUnregistered += HandleUnregistered;
@@ -78,15 +107,16 @@ namespace Galactic1.Code.Gameplay.AI.LOD
         }
 
         /// <summary>
-        /// Начальный проход когда все юниты в сцене готовы
+        /// Начальный проход когда все юниты в сцене готовы.
+        /// Применяется БЕЗ бюджета: это загрузка, не геймплей.
         /// </summary>
         public void Entry()
         {
             squadCenter = ServiceLocator.Current.Get<CameraController>().FocusPosition;
-            Evaluate();
+            BuildQueue();
+            ApplyAllImmediately();
         }
 
-        /// <summary>Вызывать вместе с disposal остальных raid-систем (CombatRuntime.Dispose и т.п.).</summary>
         public void Dispose()
         {
             _enemyRegistry.OnRegistered -= HandleRegistered;
@@ -94,12 +124,11 @@ namespace Galactic1.Code.Gameplay.AI.LOD
 
             _spawnTime.Clear();
             _spawnSource.Clear();
+            _pending.Clear();
+            _pendingCursor = 0;
         }
 
         // ── Registration ────────────────────────────────────────────────
-        // Регистрируемся на RaidEnemyRegistry, а не на EnemyRepository:
-        // нам нужен момент появления EnemyRuntime (для timestamp'а спавна),
-        // который происходит раньше и надёжнее, чем сборка сцен-объекта.
 
         private void HandleRegistered(EnemyRuntime runtime)
         {
@@ -120,34 +149,126 @@ namespace Galactic1.Code.Gameplay.AI.LOD
         {
             if (!initialized)
                 return;
-            
-            _evalTimer += dt;
-            if (_evalTimer < _config.EvaluationInterval) return;
-            _evalTimer = 0f;
 
-            
-            squadCenter = _squadCenterProvider != null
-                ? _squadCenterProvider()
-                : Vector3.zero;
-            
-            Evaluate();
+            // 1) Раз в EvaluationInterval — пересобираем очередь.
+            _evalTimer += dt;
+            if (_evalTimer >= _config.EvaluationInterval)
+            {
+                _evalTimer = 0f;
+
+                squadCenter = _squadCenterProvider != null
+                    ? _squadCenterProvider()
+                    : Vector3.zero;
+
+                BuildQueue();
+            }
+
+            // 2) Каждый кадр — применяем не больше бюджета.
+            DrainQueue(_maxTransitionsPerFrame);
         }
 
-        private void Evaluate()
+        // ── Queue building ───────────────────────────────────────────────
+
+        /// <summary>
+        /// Считает желаемый уровень для каждого врага и кладёт в очередь
+        /// только тех, кому нужна смена. Ничего не применяет.
+        /// Очередь пересобирается целиком — устаревшие записи не копятся.
+        /// </summary>
+        private void BuildQueue()
         {
-            
+            _pending.Clear();
+            _pendingCursor = 0;
+
             float now = Time.time;
 
-            // EnemyRepository.ActiveEnemies — filtered view поверх
-            // UnitSceneRepository, уже существует, ничего нового не создаём.
             foreach (var enemy in _enemyRepository.ActiveEnemies)
             {
                 var runtime = enemy.EnemyAdapter?.Runtime;
-                if (runtime == null) continue; // сцена ещё не забиндена — пропускаем цикл
+                if (runtime == null) continue;
 
-                var level = Decide(enemy, (EnemyRuntime)runtime, squadCenter, now);
-                enemy.SetSimulationLevel(level); // единственная точка исполнения
+                var current = enemy.CurrentSimulationLevel;
+                var desired = Decide(enemy, (EnemyRuntime)runtime, squadCenter, now, current);
+                if (desired == current) continue;
+
+                _pending.Add(new PendingTransition
+                {
+                    Enemy = enemy,
+                    Category = GetCategory(current, desired),
+                    SqrDist = (enemy.transform.position - squadCenter).sqrMagnitude
+                });
             }
+
+            if (_pending.Count > 1)
+                _pending.Sort(PendingComparison);
+        }
+
+        /// <summary>
+        /// 0 — пробуждение в Full (враг рядом, нужен срочно)
+        /// 1 — Sleeping → Low
+        /// 2 — Full → Low (понижение, не срочно)
+        /// 3 — засыпание (самое неспешное)
+        /// </summary>
+        private static int GetCategory(SimulationLevel from, SimulationLevel to)
+        {
+            if (to == SimulationLevel.Full) return 0;
+            if (to == SimulationLevel.Low && from == SimulationLevel.Sleeping) return 1;
+            if (to == SimulationLevel.Low) return 2;
+            return 3; // to == Sleeping
+        }
+
+        // ── Queue draining ───────────────────────────────────────────────
+
+        private void DrainQueue(int budget)
+        {
+            if (_pendingCursor >= _pending.Count) return;
+
+            float now = Time.time;
+            int applied = 0;
+
+            while (_pendingCursor < _pending.Count && applied < budget)
+            {
+                var item = _pending[_pendingCursor++];
+                if (TryApply(item.Enemy, now))
+                    applied++;
+            }
+
+            if (_pendingCursor >= _pending.Count)
+            {
+                _pending.Clear();
+                _pendingCursor = 0;
+            }
+        }
+
+        private void ApplyAllImmediately()
+        {
+            float now = Time.time;
+            for (int i = 0; i < _pending.Count; i++)
+                TryApply(_pending[i].Enemy, now);
+
+            _pending.Clear();
+            _pendingCursor = 0;
+        }
+
+        /// <summary>
+        /// Уровень пересчитывается в момент применения: между постановкой
+        /// в очередь и применением мог пройти не один кадр (враг умер,
+        /// вступил в бой, отряд развернулся). Если смена уже не нужна —
+        /// пропускаем, бюджет не тратится. Возвращает true, если реально
+        /// применён переход.
+        /// </summary>
+        private bool TryApply(EnemyInstance enemy, float now)
+        {
+            if (enemy == null) return false; // Unity-null: объект уничтожен
+
+            var runtime = enemy.EnemyAdapter?.Runtime;
+            if (runtime == null) return false;
+
+            var current = enemy.CurrentSimulationLevel;
+            var desired = Decide(enemy, (EnemyRuntime)runtime, squadCenter, now, current);
+            if (desired == current) return false;
+
+            enemy.SetSimulationLevel(desired); // единственная точка исполнения
+            return true;
         }
 
         // ── Decision ─────────────────────────────────────────────────────
@@ -156,10 +277,10 @@ namespace Galactic1.Code.Gameplay.AI.LOD
             EnemyInstance enemy,
             EnemyRuntime runtime,
             Vector3 squadCenter,
-            float now)
+            float now,
+            SimulationLevel current)
         {
-            // 1) Director grace period — свежеспавненный директором враг
-            //    не должен засыпать раньше, чем успеет вступить в контакт.
+            // 1) Director grace period.
             if (_spawnSource.TryGetValue(runtime.Id, out var source) &&
                 source == SpawnSource.Director)
             {
@@ -168,37 +289,36 @@ namespace Galactic1.Code.Gameplay.AI.LOD
                     return SimulationLevel.Full;
             }
 
-            // 2) Игровое состояние важнее дистанции. Если враг в бою,
-            //    услышал шум или держит pack-слот — он не может уснуть,
-            //    даже если формально далеко от центра отряда.
+            // 2) Игровое состояние важнее дистанции.
             if (IsGameplayCritical(enemy))
                 return SimulationLevel.Full;
 
-            // 3) Чистая дистанция — fallback для всех остальных случаев.
+            // 3) Дистанция с гистерезисом.
+            //    Уже Full      -> остаётся Full до fullExit (радиус + margin).
+            //    Не Full       -> становится Full только внутри fullEnter.
+            //    Уже не спит   -> остаётся бодрым до lowExit.
+            //    Спит          -> просыпается только внутри lowEnter.
             float sqrDist = (enemy.transform.position - squadCenter).sqrMagnitude;
 
-            if (sqrDist <= _fullRadiusSqr) return SimulationLevel.Full;
-            if (sqrDist <= _lowRadiusSqr) return SimulationLevel.Low;
+            bool wasFull = current == SimulationLevel.Full;
+            bool wasAwake = current != SimulationLevel.Sleeping;
+
+            if (sqrDist <= (wasFull ? _fullExitSqr : _fullEnterSqr))
+                return SimulationLevel.Full;
+
+            if (sqrDist <= (wasAwake ? _lowExitSqr : _lowEnterSqr))
+                return SimulationLevel.Low;
+
             return SimulationLevel.Sleeping;
         }
 
         private static bool IsGameplayCritical(EnemyInstance enemy)
         {
-            // Переиспользуем существующий EnemyBlackboard — новых полей
-            // на юните заводить не нужно, вся нужная информация уже там.
             var blackboard = (enemy.Brain as UtilityUnitBrain)?.Blackboard;
             if (blackboard == null) return false;
 
-            // Suspicious / Alerted / Combat — покрывает "in combat",
-            // "currently attacking" и "recently damaged" (OnDamaged
-            // выставляет AlertPhase.Alerted).
             if (blackboard.AlertPhase != AlertPhase.Calm) return true;
-
-            // Зарезервирован PackCoordinator'ом — держит позицию в стае,
-            // не должен пропасть из симуляции.
             if (blackboard.HasPackSlot) return true;
-
-            // Услышал шум, но ещё не обработал его в думалке.
             if (blackboard.HeardNoise) return true;
 
             return false;

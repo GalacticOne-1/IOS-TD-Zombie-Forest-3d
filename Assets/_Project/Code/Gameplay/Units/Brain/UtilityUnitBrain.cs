@@ -108,8 +108,7 @@ namespace Galactic1.Code.Gameplay.Units.Brain.Core
 
 #if UNITY_EDITOR
                 if (rawDecision.Score < 0f || rawDecision.Score > 1f)
-                    Debug.LogWarning(
-                        $"[UtilityAI] {action.GetType().Name} raw={rawDecision.Score:F2} out of [0,1]");
+                    Debug.Log($"[UtilityAI] {action.GetType().Name} raw={rawDecision.Score:F2} out of [0,1]");
 #endif
 
                 // ── Weighted arbitration ───────────────────────────────

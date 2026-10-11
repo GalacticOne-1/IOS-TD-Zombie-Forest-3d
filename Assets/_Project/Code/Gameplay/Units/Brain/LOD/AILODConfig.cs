@@ -25,6 +25,9 @@ namespace Galactic1.Code.Gameplay.AI.LOD
         [Tooltip("Между FullSimulationRadius и этим радиусом — Low. Дальше — Sleeping.")]
         public float LowSimulationRadius = 45f;
 
+        [Min(0f)] public float HysteresisMargin = 5f; // метры
+        [Min(1)] public int MaxTransitionsPerFrame = 3; // для мобильных стартовое значение 2-4
+
         [Header("Raid Director integration")]
         [Tooltip("Враг, заспавненный Director'ом, не может уснуть это время после спавна, " +
                  "чтобы не сломать намеренный директорский спавн-энкаунтер.")]
