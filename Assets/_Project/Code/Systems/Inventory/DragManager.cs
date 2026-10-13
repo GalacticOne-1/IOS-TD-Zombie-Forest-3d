@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Gameplay.Combat.Events;
@@ -24,7 +23,7 @@ namespace Galactic1.Code.UI.Inventory
         private InventorySlotView draggedSlot;
         private bool dragStarted;
         private bool droppedOnSameSlot = false;
-        
+
         private RuntimeId draggedItemId;
         private IInventorySource draggedSource;
         private int draggedSlotIndex;
@@ -32,7 +31,13 @@ namespace Galactic1.Code.UI.Inventory
         // Pointer
         private Vector2 pointerDownPos;
         private InventorySlotView pointerDownSlot;
-        
+
+        // Multitouch: жест "принадлежит" одному пальцу, остальные игнорируются
+        private const int NoPointer = int.MinValue;
+        private int activePointerId = NoPointer;
+        private Vector2 lastPointerPos;
+        private int releasedFrames; // страховка от потерянного OnPointerUp
+
         // Tooltip
         private const float holdTime = 0.3f;
         private float holdTimer = 0f;
@@ -42,14 +47,12 @@ namespace Galactic1.Code.UI.Inventory
         private Vector3 smoothVelocity;
         private const float smoothSpeed = 20f;
         private const float dragThreshold = 8f;
-        
 
-        
-        
+
         public DragManager(
-            Canvas canvas, 
+            Canvas canvas,
             DragIcon iconPrefab,
-            InventoryManagementWindow window, 
+            InventoryManagementWindow window,
             TooltipInventoryUI tooltip,
             InventoryPanelAudioConfig audioConfig)
         {
@@ -61,11 +64,39 @@ namespace Galactic1.Code.UI.Inventory
             _audioConfig = audioConfig;
         }
 
-        // ---- API, вызываемая из InventorySlotUI ----
+        // ---- Multitouch helpers ----
+
+        /// <summary>true, если жест уже ведёт другой палец — событие нужно игнорировать.</summary>
+        public bool IsForeignPointer(PointerEventData e)
+            => activePointerId != NoPointer && activePointerId != e.pointerId;
+
+        private static bool IsAnyPointerPressed()
+            => Input.touchCount > 0 || Input.GetMouseButton(0);
+
+        /// <summary>Принудительная отмена: закрытие панели, OnApplicationPause и т.п.</summary>
+        public void CancelDrag()
+        {
+            if (dragStarted)
+                EndDrag(InventoryDragEndReason.Cancel);
+
+            tooltip.Hide();
+            pointerDownSlot = null;
+            activePointerId = NoPointer;
+            releasedFrames = 0;
+        }
+
+        // ---- API, вызываемая из InventorySlotView ----
         public void OnPointerDown(InventorySlotView slot, PointerEventData eventData)
         {
+            // уже есть активный палец — второй игнорируем
+            if (activePointerId != NoPointer) return;
+
+            activePointerId = eventData.pointerId;
+            releasedFrames = 0;
+
             pointerDownSlot = slot;
             pointerDownPos = eventData.position;
+            lastPointerPos = eventData.position;
 
             holdTimer = 0f;
             tooltipLoaded = false;
@@ -76,11 +107,18 @@ namespace Galactic1.Code.UI.Inventory
 
         public void OnPointerUp(InventorySlotView slot, PointerEventData eventData)
         {
-            // скрыть подсказку
+            // чужой палец
+            if (eventData.pointerId != activePointerId) return;
+
+            lastPointerPos = eventData.position;
             tooltip.Hide();
-            
-            // если drag не начался — это обычный клик
-            if (!dragStarted && pointerDownSlot == slot)
+
+            if (dragStarted)
+            {
+                // дроп по отпусканию именно ведущего пальца
+                TryDrop(eventData.position);
+            }
+            else if (pointerDownSlot == slot)
             {
                 // обычный клик
                 window.ClearAllSelections();
@@ -91,14 +129,17 @@ namespace Galactic1.Code.UI.Inventory
             }
 
             pointerDownSlot = null;
+            activePointerId = NoPointer;
+            releasedFrames = 0;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            // если tooltip успел появиться — отменяем drag
-            //if (tooltipShown) 
-                //return;
-            
+            // чужой палец
+            if (eventData.pointerId != activePointerId) return;
+
+            lastPointerPos = eventData.position;
+
             if (pointerDownSlot != null && !dragStarted)
             {
                 Vector2 delta = eventData.position - pointerDownPos;
@@ -109,7 +150,7 @@ namespace Galactic1.Code.UI.Inventory
                 }
             }
         }
-        
+
         /// <summary>Live-запрос "что сейчас перетаскивается" для guidance-условий тутора
         /// (см. ItemDraggedGuidanceCondition). Null — драг не идёт, либо порог dragThreshold
         /// ещё не превышен (намеренно: клик "с дрожащей рукой" не должен читаться как драг).</summary>
@@ -126,12 +167,34 @@ namespace Galactic1.Code.UI.Inventory
         // ---- Update ----
         public void Update()
         {
+            // ---- Страховка: если ведущий палец поднят, а OnPointerUp не пришёл ----
+            // (слот деактивирован, окно закрыто, потеря фокуса и т.д.)
+            // Ждём 2 кадра подряд, чтобы не конфликтовать с порядком Update / EventSystem.
+            if (activePointerId != NoPointer)
+            {
+                if (IsAnyPointerPressed())
+                {
+                    releasedFrames = 0;
+                }
+                else if (++releasedFrames >= 2)
+                {
+                    if (dragStarted)
+                        TryDrop(lastPointerPos);
+
+                    tooltip.Hide();
+                    pointerDownSlot = null;
+                    activePointerId = NoPointer;
+                    releasedFrames = 0;
+                    return;
+                }
+            }
+
             // ---- Hold для Tooltip ----
             if (!dragStarted && pointerDownSlot != null && !tooltipShown)
             {
                 holdTimer += Time.deltaTime;
-                
-                if(!tooltipLoaded)
+
+                if (!tooltipLoaded)
                     LoadTooltip(pointerDownSlot);
 
                 if (holdTimer >= holdTime)
@@ -143,18 +206,13 @@ namespace Galactic1.Code.UI.Inventory
 
             dragIcon.transform.position = Vector3.SmoothDamp(
                 dragIcon.transform.position,
-                Input.mousePosition,
+                (Vector3)lastPointerPos,
                 ref smoothVelocity,
                 1f / smoothSpeed
             );
-            
-            //EventBus<InventorySlotDragEvent>.Raise(new InventorySlotDragEvent()); ???
-
-            if (Input.GetMouseButtonUp(0))
-                TryDrop();
         }
-        
-        
+
+
         // -----------------------------
         // TOOLTIP
         // -----------------------------
@@ -166,6 +224,7 @@ namespace Galactic1.Code.UI.Inventory
             tooltip.LoadData(slotData.Item, slotData.Durability);
             tooltipLoaded = true;
         }
+
         private void ShowTooltip(InventorySlotView slot)
         {
             var slotData = slot.ParentUI._source.GetSlot(slot.SlotIndex);
@@ -183,31 +242,33 @@ namespace Galactic1.Code.UI.Inventory
             var slotData = fromSlot.ParentUI._source.GetSlot(fromSlot.SlotIndex);
             if (slotData.IsEmpty)
             {
+                // палец остаётся активным до своего OnPointerUp
                 pointerDownSlot = null;
                 return;
             }
-            
+
             tooltip.Hide();
 
             window.ClearAllSelections();
 
             draggedSlot = fromSlot;
             dragStarted = true;
-            
+
             draggedItemId = slotData.Item.Id;
             draggedSource = fromSlot.ParentUI._source;
             draggedSlotIndex = fromSlot.SlotIndex;
-            
+
             EventBus<InventoryDragStartedEvent>.Raise(new InventoryDragStartedEvent(
                 draggedSource,
                 draggedItemId,
                 draggedSlotIndex));
-            
+
             EventBus<AudioUIEvent>.Raise(new AudioUIEvent(_audioConfig.itemDrag.ToData()));
 
             dragIcon = GameObject.Instantiate(dragIconPrefab, canvas.transform);
             dragIcon.transform.position = fromSlot.transform.position;
             dragIcon.SetSprite(slotData.Item.Header.icon);
+            smoothVelocity = Vector3.zero;
 
             fromSlot.SetDimmed(true);
             fromSlot.SetHighlight(true);
@@ -216,11 +277,11 @@ namespace Galactic1.Code.UI.Inventory
             fromSlot.ParentUI.HighlightEquipmentSlots(slotData.Item, true);
         }
 
-        private void TryDrop()
+        private void TryDrop(Vector2 position)
         {
             var pointer = new PointerEventData(EventSystem.current)
             {
-                position = Input.mousePosition
+                position = position
             };
 
             var results = new List<RaycastResult>();
@@ -261,7 +322,6 @@ namespace Galactic1.Code.UI.Inventory
                 target.ParentUI._source,
                 target.SlotIndex
             );
-            
         }
 
 
@@ -272,14 +332,13 @@ namespace Galactic1.Code.UI.Inventory
 
             if (droppedOnSameSlot)
                 reason = InventoryDragEndReason.Cancel;
-            
-            // если дроп на тот же слот — НИЧЕГО НЕ СБРАСЫВАЕМ
+
             if (draggedSlot != null)
             {
                 draggedSlot.SetDimmed(false);
-                
+
                 var item = draggedSlot.ParentUI._source.GetSlot(draggedSlot.SlotIndex).Item;
-                
+
                 draggedSlot.ParentUI.HighlightEquipmentSlots(item, false);
                 draggedSlot.SetHighlight(droppedOnSameSlot);
             }
@@ -288,7 +347,7 @@ namespace Galactic1.Code.UI.Inventory
             draggedSlot = null;
             dragStarted = false;
             droppedOnSameSlot = false;
-            
+
             EventBus<InventoryDragEndedEvent>.Raise(
                 new InventoryDragEndedEvent(
                     draggedSource,

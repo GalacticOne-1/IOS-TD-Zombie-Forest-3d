@@ -1,7 +1,6 @@
 using System.Linq;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Game.Meta.Items;
-using Galactic1.Mobile.EventBus;
 using Galactic1.UI.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,20 +26,16 @@ namespace Galactic1.Code.UI.Inventory
 
         public int SlotIndex { get; private set; }
         public InventoryView ParentUI { get; private set; }
-        
+
 
         private float lastClickTime;
         private const float doubleClickThreshold = 0.3f; // секунды
-        
 
-        
-        
-        
-        
+
         public void Init(InventoryView parent, int index)
         {
             if (!isNotActive) gameObject.SetActive(true);
-            
+
             ParentUI = parent;
             SlotIndex = index;
             SetHighlight(false);
@@ -92,17 +87,18 @@ namespace Galactic1.Code.UI.Inventory
 
                 if (durabilityText != null)
                     durabilityText.text = "";
-                
+
                 if (slotBar)
                 {
                     var maxDurability = item.Physical.maxDurability;
                     slotBar.transform.parent.gameObject.SetActive(maxDurability > 0);
                     slotBar.fillAmount = (float)slot.Durability / maxDurability;
-                    
-                    if(durabilityText != null)
+
+                    if (durabilityText != null)
                     {
                         durabilityText.text = Mathf.CeilToInt(((float)slot.Durability / maxDurability) * 100) + "%";
-                        durabilityText.color = styleResolver.ResolveValueColor(ValueRangeType.Durability, slotBar.fillAmount);
+                        durabilityText.color =
+                            styleResolver.ResolveValueColor(ValueRangeType.Durability, slotBar.fillAmount);
                     }
                 }
 
@@ -141,6 +137,10 @@ namespace Galactic1.Code.UI.Inventory
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            // клик от второго пальца во время чужого жеста — игнорируем
+            if (ServiceLocator.Current.Get<InventoryManagementWindow>().Drag.IsForeignPointer(eventData))
+                return;
+
             var slot = ParentUI.GetSlot(SlotIndex);
             if (slot.IsEmpty)
             {
