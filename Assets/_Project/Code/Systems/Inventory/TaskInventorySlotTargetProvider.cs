@@ -1,7 +1,6 @@
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Inventory.Services;
 using Galactic1.Code.Systems.Tutorial.Presentation;
-using UnityEngine;
 
 namespace Galactic1.Code.UI.Inventory
 {

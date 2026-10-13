@@ -20,10 +20,10 @@ namespace Galactic1.EntryPoint
         /// </summary>
         public void StartBattle(string key)
         {
-            if (PlayerPrefs.HasKey(key))
-                return;
-
-            PlayerPrefs.SetString(key, "y");
+            // if (PlayerPrefs.HasKey(key))
+            //     return;
+            //
+            // PlayerPrefs.SetString(key, "y");
 
             // === спавн стартовых предметов на базе игрока
             
@@ -32,8 +32,9 @@ namespace Galactic1.EntryPoint
             //startKitData.GetKit(EStartKit.StartGame_01).Apply();
             
             // cargo
-            var cargo = ServiceLocator.Current.Get<GameSession>()
-                .GameLoopContext.PlayerTransport.GetInventory;
+            var cargo = 
+                ServiceLocator.Current.Get<GameSession>().GameLoopContext.CurrentRaid?.PlayerTransport.Sources.Cargo ??
+                ServiceLocator.Current.Get<GameSession>().GameLoopContext.PlayerTransport.GetInventory;
             var resourcesPort = (IInventoryResourcesPort)cargo;
             var cargoKit = startKitData.GetKit(EStartKit.StartGameBattle_01);
 

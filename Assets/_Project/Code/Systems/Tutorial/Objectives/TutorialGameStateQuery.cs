@@ -316,6 +316,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                 }
 
                 case InventorySourceType.UnitEquipment:
+                    return GetSquadEquipmentAmount(itemId);
+                
                 case InventorySourceType.TransportEquipment:
                     Debug.LogWarning($"[TutorialGameStateQuery] GetAmount: '{sourceType}' — per-owner " +
                                      "источник без единственного canonical instance, ретроактивная " +
@@ -333,6 +335,28 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                     Debug.LogWarning($"[TutorialGameStateQuery] GetAmount: неизвестный тип '{sourceType}'.");
                     return 0;
             }
+        }
+        
+        
+        private int GetSquadEquipmentAmount(ItemId itemId)
+        {
+            int total = 0;
+
+            if (_context.IsRaidState)
+            {
+                var units = _context.CurrentRaid?.Squad?.Units;
+                if (units == null) return 0;
+
+                foreach (var unit in units)
+                    total += unit.InventorySource?.Equipment?.GetTotalAmount(itemId) ?? 0;
+
+                return total;
+            }
+
+            foreach (var unit in _context.StrategicSquadUnits)
+                total += unit.InventorySource?.Equipment?.GetTotalAmount(itemId) ?? 0;
+
+            return total;
         }
 
         // ── ITutorialConstructionQuery ────────────────────────────────────

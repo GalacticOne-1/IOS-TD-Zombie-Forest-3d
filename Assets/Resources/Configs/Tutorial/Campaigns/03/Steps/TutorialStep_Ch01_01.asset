@@ -57,6 +57,19 @@ MonoBehaviour:
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: f791268393fca4c5793bbcd23394924c, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: "In the Camp, you can advance to the next day to progress time and complete
+        ongoing production and crafting. \nTime also passes automatically while your
+        squad travels on the Global Map."
+      oneShot: 1
+    presentations:
+    - highlightTarget:
+        rid: 3243658565734367314
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items:
     - itemId: {fileID: 11400000, guid: 1163668eeee6a4f45a05c1eb668a9dca, type: 2}
@@ -86,3 +99,7 @@ MonoBehaviour:
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 11400000, guid: f3119f9fb2f654698a19944ca75f31d5, type: 2}
+    - rid: 3243658565734367314
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: de4d68eab2baa4b248e45496780a7283, type: 2}

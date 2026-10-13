@@ -33,6 +33,17 @@ MonoBehaviour:
       boundsTargetId: {fileID: 11400000, guid: c67b48fba768d4bc1a47768c5b29fa80, type: 2}
     actions: []
   guidance:
+  - condition: {fileID: 11400000, guid: 9967401b7984b41c48c07d80fb5d4519, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658562778693739
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: dc53a76bd7b99468b894d5dd880b44c5, type: 2}
     descriptionPanel:
       enabled: 0
@@ -76,3 +87,7 @@ MonoBehaviour:
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 11400000, guid: eed72638c1d2148158452f8930f53212, type: 2}
+    - rid: 3243658562778693739
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: de4d68eab2baa4b248e45496780a7283, type: 2}
