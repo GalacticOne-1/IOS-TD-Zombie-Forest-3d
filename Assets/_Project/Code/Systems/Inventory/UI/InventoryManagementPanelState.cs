@@ -31,6 +31,7 @@ namespace Galactic1.Code.UI.Inventory
         [SerializeField] private GameObject squadExtraRoot;
         [SerializeField] private GameObject squadExtraTransport;
         [SerializeField] private GameObject squadExtraBase;
+        [SerializeField] private GameObject squadExtraFrame;
 
         [SerializeField] private GameObject squadButtonsRoot;
         [SerializeField] private GameObject deleteUnit;
@@ -165,8 +166,10 @@ namespace Galactic1.Code.UI.Inventory
             var mode = _controller.CurrentMode;
 
             // --- Подсветка кнопок ---
-            HighlightButton(campButton.GetChild(0).CMP_Image(), mode == InventoryGameplayMode.Camp_AllUnits);
-            HighlightButton(logisticsButton.GetChild(0).CMP_Image(), mode == InventoryGameplayMode.Camp_And_Transport);
+            HighlightButton(campButton.GetChild(0).CMP_Image(), 
+                mode == InventoryGameplayMode.Camp_AllUnits);
+            HighlightButton(logisticsButton.GetChild(0).CMP_Image(),
+                mode == InventoryGameplayMode.Camp_And_Transport);
             
             
             bool squadMode = mode == InventoryGameplayMode.Transport_SquadOnly || 
@@ -175,8 +178,18 @@ namespace Galactic1.Code.UI.Inventory
             
             // --- Дополнительные кнопки Squad ---
             squadExtraRoot.SetActive(squadMode);
-            HighlightButton(squadExtraTransport.GetChild(0).CMP_Image(), mode == InventoryGameplayMode.Transport_SquadOnly);
-            HighlightButton(squadExtraBase.GetChild(0).CMP_Image(), mode == InventoryGameplayMode.Camp_SquadOnly);
+            HighlightButton(squadExtraTransport.GetChild(1).CMP_Image(),
+                mode == InventoryGameplayMode.Transport_SquadOnly);
+            HighlightButton(squadExtraBase.GetChild(1).CMP_Image(),
+                mode == InventoryGameplayMode.Camp_SquadOnly);
+            
+            // --- 
+            squadExtraFrame.SetActive(squadMode);
+            squadExtraFrame.GetChild(0).CMP_Text().text =
+                mode == InventoryGameplayMode.Transport_SquadOnly
+                    ? "Transport Cargo"
+                    : "Camp";
+            
             
             PublishTabState(mode, squadMode);
         }

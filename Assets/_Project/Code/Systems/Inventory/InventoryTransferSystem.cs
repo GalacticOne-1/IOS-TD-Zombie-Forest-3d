@@ -310,6 +310,9 @@ namespace Galactic1.Code.UI.Inventory
                 //fromSource.InventoryProxy.Slots[fromIndex] = fromSlot;
                 toSource.SetSlot(toIndex, toSlot);
                 fromSource.SetSlot(fromIndex, fromSlot);
+                
+                if (!fromIsEquip)
+                    EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.itemDrop.ToData()));
             }
             else
             {
