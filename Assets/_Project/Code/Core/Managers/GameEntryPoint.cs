@@ -4,6 +4,7 @@ using Galactic1.Code.Systems.Ads;
 using Galactic1.Code.Systems.Ads.AdMob;
 using Galactic1.Code.Systems.Analytics;
 using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Code.Warmup;
 using Galactic1.Code.WorldMap;
 using Galactic1.Configs;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
@@ -265,11 +266,15 @@ namespace Galactic1
             // ***************************************************************************************************
             // процесс загрузки
 
-            // сначало загружаем пустую сцену
+            // #1 сначало загружаем пустую сцену
             if (!_rootContainer.Resolve<SceneService>().SceneExist(Scenes.BOOT))
                 yield return _rootContainer.Resolve<SceneService>().LoadSceneAsync(Scenes.BOOT, false);
             
-            // потом загружаем сцену контроллер 
+            // #2 сцена для прогрева ассетов
+            if (!_rootContainer.Resolve<SceneService>().SceneExist(Scenes.WARMUP))
+                yield return _rootContainer.Resolve<SceneService>().LoadSceneAsync(Scenes.WARMUP, false);
+            
+            // #3 загружаем сцену контроллер 
             yield return _coroutines.StartCoroutine(LoadAndStartGameplay());
             
             
@@ -480,6 +485,10 @@ namespace Galactic1
             
             
             
+            
+            // === ПРОГРЕВ АССЕТОВ ===
+            // рабочие сцены загружаем только после пргрева, т.к эта сцена удаляется
+            yield return _coroutines.StartCoroutine(GameObject.FindFirstObjectByType<VisualWarmup>().Run());
             
             
             // проверяем статус игрока

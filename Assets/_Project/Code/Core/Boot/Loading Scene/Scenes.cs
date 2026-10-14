@@ -3,6 +3,7 @@ namespace Galactic1
     public static class Scenes
     {
         public const string BOOT = "Boot";
+        public const string WARMUP = "Warmup";
         public const string CORE_GAMEPLAY = "CoreGameplay";
         public const string ROOT_PLAYER = "RootPlayer";
         
@@ -26,19 +27,19 @@ namespace Galactic1
             switch (newScene)
             {
                 case MAP:
-                    scenes = new[] { BOOT, MAP, HOME, LOCATION, ROOT_PLAYER, DEV_SCENE };
+                    scenes = new[] { BOOT, WARMUP, MAP, HOME, LOCATION, ROOT_PLAYER, DEV_SCENE };
                     break;
                 
                 case HOME:
-                    scenes = new[] { BOOT, MAP, HOME, LOCATION, DEV_SCENE };
+                    scenes = new[] { BOOT, WARMUP, MAP, HOME, LOCATION, DEV_SCENE };
                     break;
                 
                 case LOCATION:
-                    scenes = new[] { BOOT, MAP, HOME, LOCATION, DEV_SCENE };
+                    scenes = new[] { BOOT, WARMUP, MAP, HOME, LOCATION, DEV_SCENE };
                     break;
                 
                 case DEV_SCENE:
-                    scenes = new[] { BOOT, MAP, HOME, LOCATION, DEV_SCENE };
+                    scenes = new[] { BOOT, WARMUP, MAP, HOME, LOCATION, DEV_SCENE };
                     break;
             }
 
