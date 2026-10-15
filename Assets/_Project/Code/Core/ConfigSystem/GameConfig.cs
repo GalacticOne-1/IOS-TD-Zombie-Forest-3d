@@ -107,7 +107,7 @@ namespace Galactic1
                 var wrapper = JsonUtility.FromJson<Wrapper>(json);
                 if (wrapper != null)
                 {
-                    General = wrapper.general;
+                    //General = wrapper.general;
                     Ios = wrapper.ios;
                     Ad = wrapper.ad;
                 }

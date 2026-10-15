@@ -41,51 +41,6 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         void ClearProgress();
     }
 
-    /// <summary>
-    /// Центральный оркестратор тутора. По структуре ответственности — аналог
-    /// MissionObjectiveService: реагирует на завершение текущего шага и продвигает граф.
-    /// НЕ содержит switch/if по stepId — поведение целиком из Definition-графа.
-    ///
-    /// Живёт в root DIContainer, переживает смену сцен Camp→WorldMap→Raid.
-    ///
-    /// campaignId — RuntimeId-ассет (TutorialCampaignId), как и stepId/chapterId/targetId —
-    /// не строка. Резолв кампании из typed-ссылки (например переданной в StartTutorial) —
-    /// через TutorialCampaignRegistry.GetCampaign(TutorialCampaignId). Резолв из персистентного
-    /// guid (CGameStateTutorial.campaignId, границa save/restore, см. Restore()) — через
-    /// GetCampaignByGuid(string), по тому же принципу, что и TutorialDefinition.GetStepByGuid.
-    /// В ITutorialAnalytics (внешний репортинг-контракт, остался string-based) campaignId/
-    /// stepId/chapterId передаются как .Guid — стабильный id для аналитики.
-    ///
-    /// Точки Persist() во всём классе:
-    ///   1) ActivateStep — сразу после того, как currentStepId в снапшоте стал
-    ///      действительно указывать на реально активный шаг (presentation уже показана).
-    ///   2) CompleteCampaign — после того, как completed=true уже записан.
-    ///   3) HandleActiveStepProgressChanged — ТОЛЬКО при изменении счётчика
-    ///      persistent-объектива (IPersistentTutorialObjective), иначе закрытие игры
-    ///      посреди шага теряет прогресс вида "открыто 3 из 10 контейнеров".
-    ///   4) ClearProgress — явный сброс.
-    /// Никакого отложенного/флагового персиста (_pendingCheckpointPersist убран).
-    ///
-    /// Прогресс объективов: счётчики persistent-объективов хранятся в
-    /// CGameStateTutorial.objectiveProgress (ключ stepGuid + индекс объектива), восстанавливаются
-    /// в BuildStepState ДО Start() и очищаются в ApplyCompletionBookkeeping/ResetProgression.
-    /// Вся логика чтения/записи — в TutorialObjectiveProgressStore.
-    ///
-    /// Completion presentation delay: логическое завершение шага (ApplyCompletionBookkeeping —
-    /// MarkStepCompleted/reward/checkpoint/analytics) выполняется немедленно в момент
-    /// completion, но graph transition и активация следующего шага (ResolveGraphTransition +
-    /// ActivateStep) откладываются до сигнала TutorialTaskPresenter.OnCompletionDelayElapsed —
-    /// см. FinishActiveStepAndAdvance/HandleCompletionDelayElapsed. Это гарантирует, что
-    /// Task Panel успевает показать Completed-состояние текущего шага прежде, чем presentation
-    /// (target/highlight/arrow/panel) следующего шага появится на экране. Delay-таймер и его
-    /// единственный источник истины — ScenarioTaskService; TutorialService про сам таймер
-    /// ничего не знает, только реагирует на событие через adapter (TutorialTaskPresenter).
-    ///
-    /// Guidance (highlight/arrow/camera-подсказки, зависящие от текущего game state) — НЕ
-    /// отдельный механизм прогрессии, а чистый presentation-overlay поверх той же
-    /// stepDef.presentation: см. BuildEffectivePresentation. Он не меняет completion-логику
-    /// (ApplyCompletionBookkeeping/ResolveGraphTransition) ни на строчку.
-    /// </summary>
     public sealed class TutorialService : ITutorialService, ITutorialDebugService, IGameService
     {
         private readonly TutorialCampaignRegistry _registry;
