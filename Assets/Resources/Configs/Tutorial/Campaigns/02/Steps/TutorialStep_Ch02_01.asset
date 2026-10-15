@@ -33,6 +33,18 @@ MonoBehaviour:
       boundsTargetId: {fileID: 0}
     actions: []
   guidance:
+  - condition: {fileID: 11400000, guid: f53a911a8b61644fda252735f16f84f5, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: In the Tavern, you can recruit new survivors to replace those lost during
+        raids.
+      oneShot: 1
+    presentations:
+    - highlightTarget:
+        rid: 3243658609375576147
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   - condition: {fileID: 11400000, guid: 0b09e2f0c9fdb49b0b4d97aabb3d02e6, type: 2}
     descriptionPanel:
       enabled: 0
@@ -68,3 +80,7 @@ MonoBehaviour:
       type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
         targetId: {fileID: 11400000, guid: 3d0557c6f3be04f94a3e4ef90a88d5a8, type: 2}
+    - rid: 3243658609375576147
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 2cd3a57ca785747cca8b3b078cc2aeb8, type: 2}
