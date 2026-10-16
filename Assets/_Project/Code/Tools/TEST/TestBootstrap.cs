@@ -17,6 +17,7 @@ using Galactic1.Code.UI.Inventory;
 using Galactic1.Code.Gameplay.Units.Stats;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.Economy;
+using Galactic1.Code.Systems.Progression;
 using Galactic1.Game.Meta.Items;
 using Galactic1.Structs;
 using Galactic1.Systems;
@@ -194,7 +195,13 @@ namespace Galactic1.Test
                 new FinishLevel();
             }
 
-
+            
+            // --- Add experience
+            if (Input.GetKey(KeyCode.P))
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                    ServiceLocator.Current.Get<ProgressionService>().AddExperience(100);
+            }
 
 
             if (Input.GetKey(KeyCode.E))

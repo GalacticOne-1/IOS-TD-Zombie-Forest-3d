@@ -41,6 +41,7 @@ namespace Galactic1.UI.Shop
         public List<CardPrefabEntry> cardPrefabs;
 
         [Header("Tabs")] 
+        [SerializeField] RectTransform tabsContainer;
         public List<TabButtonEntry> tabButtons;
         public GameObject inboxButton;
         [SerializeField] private TMP_Text inboxCountText;
@@ -148,6 +149,8 @@ namespace Galactic1.UI.Shop
             // Сразу устанавливаем контент на первую вкладку без плавного скролла
             if (tabButtons.Count > 0)
                 ScrollToCategory(tabButtons[0].category, smooth: false);
+            
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tabsContainer);
         }
 
         public override void OnHide()
