@@ -71,7 +71,7 @@ namespace Galactic1.Code.Gameplay.Combat.Events
                 delay: 0.05f));
 
             // Audio — unit voice reaction on damage.
-            if (e.Target != null)
+            if (e.Target != null && e.Target.RuntimeBase.RuntimeDefinition != null)
             {
                 var voice = e.Target.RuntimeBase.RuntimeDefinition.VoiceAudio.ToData();
 
@@ -90,7 +90,7 @@ namespace Galactic1.Code.Gameplay.Combat.Events
         private void OnGameplayDeath(CombatDeathEvent e)
         {
             // Louder voice on death — higher priority.
-            if (e.Victim != null)
+            if (e.Victim != null && e.Victim.RuntimeBase.RuntimeDefinition != null)
             {
                 var voice = e.Victim.RuntimeBase.RuntimeDefinition.VoiceAudio.ToData();
 
