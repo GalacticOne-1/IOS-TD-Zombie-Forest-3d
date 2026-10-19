@@ -1,6 +1,6 @@
 using System;
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 using Galactic1.Core;
 
 namespace Galactic1
@@ -9,11 +9,18 @@ namespace Galactic1
     {
         private readonly IServerAPI serverAPI;
         private readonly Coroutines _routine;
-        
-        
+
         public double serverOffset;
         public float syncInterval = 300f; // 5 минут
         const int RESET_HOUR_UTC = 5;
+        const int INITIAL_ATTEMPTS = 3;
+
+        private bool _autoSyncStarted;
+
+        /// <summary>
+        /// true после первой успешной синхронизации. До этого GetServerNow()/GetServerDay() возвращают мусор.
+        /// </summary>
+        public bool IsSynced { get; private set; }
 
         public event Action OnServerTimeSynced;
 
@@ -22,43 +29,78 @@ namespace Galactic1
         {
             serverAPI = container.Resolve<IServerAPI>();
             _routine = routine;
-            
-            _routine.StartCoroutine(SyncRoutine());
+            // Цикл синхронизации здесь НЕ запускаем: см. StartAutoSync().
         }
 
+        /// <summary>
+        /// Запускает периодический синк. Вызывать один раз, когда стейт загружен
+        /// и все правила суточного сброса зарегистрированы.
+        /// </summary>
+        public void StartAutoSync()
+        {
+            if (_autoSyncStarted) return;
+            _autoSyncStarted = true;
+            _routine.StartCoroutine(SyncLoop());
+        }
 
-        private IEnumerator SyncRoutine()
+        private IEnumerator SyncLoop()
         {
             while (true)
             {
-                yield return _routine.StartCoroutine(SyncServerTime());
-                yield return new WaitForSeconds(syncInterval);
+                yield return new WaitForSecondsRealtime(syncInterval);
+                yield return SyncServerTime();
             }
         }
 
+        /// <summary>
+        /// Пока не было ни одной успешной синхронизации — до INITIAL_ATTEMPTS попыток с паузами.
+        /// После — одна попытка (периодический синк, при неудаче просто ждём следующего цикла).
+        /// </summary>
         public IEnumerator SyncServerTime()
         {
-            double requestStart = Time.realtimeSinceStartupAsDouble;
+            int attempts = IsSynced ? 1 : INITIAL_ATTEMPTS;
 
-            yield return serverAPI.GetServerTime((serverUnixTime) =>
+            for (int i = 0; i < attempts; i++)
             {
-                if (serverUnixTime <= 0) return;
+                double requestStart = Time.realtimeSinceStartupAsDouble;
+                double serverUnixTime = -1;
 
-                double requestEnd = Time.realtimeSinceStartupAsDouble;
-                double rtt = requestEnd - requestStart;
+                yield return serverAPI.GetServerTime(t => serverUnixTime = t);
 
-                double corrected = serverUnixTime + rtt * 0.5;
-                serverOffset = corrected - requestEnd;
+                if (serverUnixTime > 0)
+                {
+                    double requestEnd = Time.realtimeSinceStartupAsDouble;
+                    double rtt = requestEnd - requestStart;
 
-                DLog.Alert($"[TimeSync] Offset={serverOffset}", EDlogColor.BLUE, AppConstants.show_log_core);
+                    double corrected = serverUnixTime + rtt * 0.5;
+                    serverOffset = corrected - requestEnd;
+                    IsSynced = true;
 
-                OnServerTimeSynced?.Invoke();
-            });
+                    DLog.Alert($"[TimeSync] Offset={serverOffset}", EDlogColor.BLUE, AppConstants.show_log_core);
+
+                    try
+                    {
+                        OnServerTimeSynced?.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        // ошибка подписчика не должна ломать цикл синхронизации
+                        Debug.LogException(e);
+                    }
+
+                    yield break;
+                }
+
+                if (i < attempts - 1)
+                    yield return new WaitForSecondsRealtime(1f + i); // 1, 2 сек
+            }
+
+            DLog.Alert("[TimeSync] Sync failed", EDlogColor.ORANGE, AppConstants.show_log_core);
         }
 
         public double GetServerNow()
             => Time.realtimeSinceStartupAsDouble + serverOffset;
-        
+
         public int GetServerDay()
         {
             double adjusted = GetServerNow() - RESET_HOUR_UTC * 3600;

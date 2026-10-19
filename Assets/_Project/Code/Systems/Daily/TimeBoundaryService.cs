@@ -45,11 +45,20 @@ namespace Galactic1.Code.Systems.Daily
         }
 
         /// <summary>
-        /// Проверяется при старте игры и далее периодически (например, раз в минуту).
+        /// Вызывается после каждой синхронизации времени и явно при старте игры.
+        /// Безопасен к раннему вызову: если стейт или время ещё не готовы — просто выходит.
         /// </summary>
         public void CheckDailyReset()
         {
-            int today = _container.Resolve<IServerTimeSync>().GetServerDay();
+            // стейт ещё не загружен (синк мог прийти раньше LoadGameState)
+            if (gameStateProvider.GameStateProxy == null)
+                return;
+
+            var sync = _container.Resolve<IServerTimeSync>();
+            if (!sync.IsSynced)
+                return;
+
+            int today = sync.GetServerDay();
             if (today == CurrentProcessedDay)
                 return;
 

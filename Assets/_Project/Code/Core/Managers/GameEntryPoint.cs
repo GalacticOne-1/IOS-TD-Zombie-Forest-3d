@@ -3,6 +3,7 @@ using Galactic1.Code.GameDatabase;
 using Galactic1.Code.Systems.Ads;
 using Galactic1.Code.Systems.Ads.AdMob;
 using Galactic1.Code.Systems.Analytics;
+using Galactic1.Code.Systems.Daily;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Code.Warmup;
 using Galactic1.Code.WorldMap;
@@ -446,32 +447,55 @@ namespace Galactic1
 #endif
             
             
+            // if (AppConstants.SERVER_ON)
+            // {
+            //     // 1️⃣ Проверяем соединение с сервером
+            //     bool connected = false;
+            //     yield return _coroutines.StartCoroutine(_rootContainer.Resolve<IServerAPI>()
+            //         .PingServer((ok) => connected = ok));
+            //
+            //     if (!connected)
+            //     {
+            //         DLog.Alert("Нет соединения с сервером!", EDlogColor.RED);
+            //         yield break;
+            //     }
+            //
+            //     // 2️⃣ Синхронизация серверного времени
+            //     // Первая синхронизация
+            //     yield return _coroutines.StartCoroutine(_rootContainer.Resolve<IServerTimeSync>().SyncServerTime());
+            //
+            //     // 3️⃣ Инициализация игровых систем (оставил здесь как пример)
+            //     //WorkshopTimerSystem.Instance.Initialize();
+            //     //WorldEventSystem.Instance.Initialize();
+            //
+            //     // 4️⃣ Загружаем данные игрока с сервера
+            //     //yield return _coroutines.StartCoroutine(WorkshopTimerSystem.I.LoadPlayerTasks());
+            //
+            //     // 5️⃣ Стартуем корутину пинга сервера
+            //     _coroutines.StartCoroutine(_rootContainer.Resolve<IServerConnectionChecker>().CheckRoutine());
+            //
+            //     DLog.Alert("✅ Cерверное время синхронизировано!");
+            // }
+            
             if (AppConstants.SERVER_ON)
             {
-                // 1️⃣ Проверяем соединение с сервером
                 bool connected = false;
-                yield return _coroutines.StartCoroutine(_rootContainer.Resolve<IServerAPI>()
-                    .PingServer((ok) => connected = ok));
+                yield return _coroutines.StartCoroutine(PingWithRetry(ok => connected = ok));
 
                 if (!connected)
                 {
                     DLog.Alert("Нет соединения с сервером!", EDlogColor.RED);
+                    // TODO: панель "Нет соединения" с кнопкой Retry вместо мёртвого экрана загрузки
                     yield break;
                 }
 
-                // 2️⃣ Синхронизация серверного времени
-                // Первая синхронизация
                 yield return _coroutines.StartCoroutine(_rootContainer.Resolve<IServerTimeSync>().SyncServerTime());
 
-                // 3️⃣ Инициализация игровых систем (оставил здесь как пример)
-                //WorkshopTimerSystem.Instance.Initialize();
-                //WorldEventSystem.Instance.Initialize();
+                // стейт загружен, правила зарегистрированы, время синхронизировано
+                ServiceLocator.Current.Get<TimeBoundaryService>().CheckDailyReset();
 
-                // 4️⃣ Загружаем данные игрока с сервера
-                //yield return _coroutines.StartCoroutine(WorkshopTimerSystem.I.LoadPlayerTasks());
-
-                // 5️⃣ Стартуем корутину пинга сервера
                 _coroutines.StartCoroutine(_rootContainer.Resolve<IServerConnectionChecker>().CheckRoutine());
+                _rootContainer.Resolve<IServerTimeSync>().StartAutoSync();
 
                 DLog.Alert("✅ Cерверное время синхронизировано!");
             }
@@ -612,6 +636,19 @@ namespace Galactic1
             var sceneEntryPoint = Object.FindFirstObjectByType<GameplayEntryPoint>();
             sceneEntryPoint.Run(_rootContainer);
             
+        }
+        
+        IEnumerator PingWithRetry(System.Action<bool> onDone, int attempts = 4)
+        {
+            var api = _rootContainer.Resolve<IServerAPI>();
+            for (int i = 0; i < attempts; i++)
+            {
+                bool ok = false;
+                yield return _coroutines.StartCoroutine(api.PingServer(r => ok = r));
+                if (ok) { onDone(true); yield break; }
+                yield return new WaitForSecondsRealtime(1f + i);
+            }
+            onDone(false);
         }
         
         

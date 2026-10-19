@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
@@ -24,8 +23,9 @@ namespace Galactic1
     {
         public string serverUrl = "https://galactic1games.com/server"; // без слэша на конце
 
-        
-        
+        private const int PING_TIMEOUT = 8; // сек, на мобильных сетях 5 мало
+        private const int REQUEST_TIMEOUT = 10;
+
         [System.Serializable]
         private class TimeResponse
         {
@@ -43,7 +43,7 @@ namespace Galactic1
         {
             using (UnityWebRequest req = UnityWebRequest.Get(serverUrl + "/ping.php"))
             {
-                req.timeout = 5; // таймаут 5 секунд
+                req.timeout = PING_TIMEOUT;
                 yield return req.SendWebRequest();
                 callback(req.result == UnityWebRequest.Result.Success);
             }
@@ -54,13 +54,26 @@ namespace Galactic1
         {
             using (UnityWebRequest req = UnityWebRequest.Get(serverUrl + "/time.php"))
             {
+                req.timeout = REQUEST_TIMEOUT;
                 yield return req.SendWebRequest();
-                if (req.result == UnityWebRequest.Result.Success)
+
+                if (req.result != UnityWebRequest.Result.Success)
                 {
-                    var json = JsonUtility.FromJson<TimeResponse>(req.downloadHandler.text);
-                    callback(json.server_time);
+                    callback(-1);
+                    yield break;
                 }
-                else callback(-1);
+
+                double serverTime = -1;
+                try
+                {
+                    serverTime = JsonUtility.FromJson<TimeResponse>(req.downloadHandler.text).server_time;
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning("Некорректный ответ time.php: " + e.Message);
+                }
+
+                callback(serverTime);
             }
         }
 
@@ -68,19 +81,21 @@ namespace Galactic1
         public IEnumerator StartTask(string playerId, string taskId, double duration, System.Action<double> onResult)
         {
             string url = $"{serverUrl}/start_task.php?player={playerId}&task={taskId}&duration={duration}";
-            UnityWebRequest www = UnityWebRequest.Get(url);
-            yield return www.SendWebRequest();
-
-            if (www.result != UnityWebRequest.Result.Success)
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
-                Debug.LogError("Ошибка соединения: " + www.error);
-                onResult?.Invoke(-1);
-                yield break;
-            }
+                www.timeout = REQUEST_TIMEOUT;
+                yield return www.SendWebRequest();
 
-            var json = www.downloadHandler.text;
-            var response = JsonUtility.FromJson<StartTaskResponse>(json);
-            onResult?.Invoke(response.finish_time);
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogError("Ошибка соединения: " + www.error);
+                    onResult?.Invoke(-1);
+                    yield break;
+                }
+
+                var response = JsonUtility.FromJson<StartTaskResponse>(www.downloadHandler.text);
+                onResult?.Invoke(response.finish_time);
+            }
         }
 
         // Сохранение активных задач
@@ -91,38 +106,44 @@ namespace Galactic1
             form.AddField("player", playerId);
             form.AddField("data", json);
 
-            UnityWebRequest www = UnityWebRequest.Post($"{serverUrl}/save_tasks.php", form);
-            yield return www.SendWebRequest();
+            using (UnityWebRequest www = UnityWebRequest.Post($"{serverUrl}/save_tasks.php", form))
+            {
+                www.timeout = REQUEST_TIMEOUT;
+                yield return www.SendWebRequest();
 
-            if (www.result != UnityWebRequest.Result.Success)
-                Debug.LogError("Ошибка сохранения: " + www.error);
-            else
-                DLog.Alert("Задания сохранены на сервере");
+                if (www.result != UnityWebRequest.Result.Success)
+                    Debug.LogError("Ошибка сохранения: " + www.error);
+                else
+                    DLog.Alert("Задания сохранены на сервере");
+            }
         }
 
         // Загрузка заданий
         public IEnumerator LoadTasks(string playerId, System.Action<TaskList> onResult)
         {
             string url = $"{serverUrl}/get_tasks.php?player={playerId}";
-            UnityWebRequest www = UnityWebRequest.Get(url);
-            yield return www.SendWebRequest();
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            {
+                www.timeout = REQUEST_TIMEOUT;
+                yield return www.SendWebRequest();
 
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError("Ошибка загрузки: " + www.error);
-                onResult?.Invoke(new TaskList());
-                yield break;
-            }
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogError("Ошибка загрузки: " + www.error);
+                    onResult?.Invoke(new TaskList());
+                    yield break;
+                }
 
-            string json = www.downloadHandler.text;
-            try
-            {
-                TaskList tasks = JsonUtility.FromJson<TaskList>(json);
-                onResult?.Invoke(tasks);
-            }
-            catch
-            {
-                onResult?.Invoke(new TaskList());
+                string json = www.downloadHandler.text;
+                try
+                {
+                    TaskList tasks = JsonUtility.FromJson<TaskList>(json);
+                    onResult?.Invoke(tasks ?? new TaskList());
+                }
+                catch
+                {
+                    onResult?.Invoke(new TaskList());
+                }
             }
         }
     }

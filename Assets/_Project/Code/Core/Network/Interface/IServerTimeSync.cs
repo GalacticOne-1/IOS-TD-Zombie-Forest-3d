@@ -9,5 +9,7 @@ namespace Galactic1
         IEnumerator SyncServerTime();
         double GetServerNow();
         int GetServerDay();
+        bool IsSynced { get; }
+        void StartAutoSync();
     }
 }
