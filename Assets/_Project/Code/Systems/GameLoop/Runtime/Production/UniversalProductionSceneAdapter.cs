@@ -203,8 +203,19 @@ namespace Galactic1.Game.Runtime.Production
 
             // 1. списываем ресурсы ДО изменения очереди: runtime уведомляет UI внутри
             //    TryAddJob, и к этому моменту карточка должна видеть уже новый инвентарь
+            var spent = new List<InventorySlotRuntime>();
             foreach (var r in recipe.Requirement)
-                _inventory.TrySpend(r.Item.Id, r.Amount);
+            {
+                if (!_inventory.TrySpend(r.Item.Id, r.Amount))
+                {
+                    // списание сорвалось на середине -> возвращаем уже списанное
+                    RefundSpent(spent);
+                    return false;
+                }
+
+                spent.Add(new InventorySlotRuntime(
+                    GameContent.Items.Get(r.Item.Id), r.Amount, 0, 0));
+            }
 
             // 2. добавляем заказ
             bool added = _runtime.TryAddJob(
@@ -218,13 +229,14 @@ namespace Galactic1.Game.Runtime.Production
                 return true;
 
             // 3. не вышло (очередь не изменилась, TryAddJob атомарен) -> возвращаем ресурсы
-            foreach (var r in recipe.Requirement)
-            {
-                _inventory.TryAdd(new InventorySlotRuntime(
-                    GameContent.Items.Get(r.Item.Id), r.Amount, 0, 0));
-            }
-
+            RefundSpent(spent);
             return false;
+        }
+
+        private void RefundSpent(List<InventorySlotRuntime> slots)
+        {
+            foreach (var slot in slots)
+                _inventory.TryAdd(slot);
         }
 
         /// <summary>
