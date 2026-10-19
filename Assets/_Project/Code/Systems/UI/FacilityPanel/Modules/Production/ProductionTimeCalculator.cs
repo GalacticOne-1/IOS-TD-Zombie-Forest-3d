@@ -66,40 +66,46 @@ namespace Galactic1.Game.Runtime.Production
         }
 
         /// <summary>
-        /// Цена скипа активного слота (слот 0): сумма за КАЖДУЮ непроизведённую единицу.
-        /// - текущий заказ: по оставшимся часам
-        /// - каждый следующий заказ стека: по полной длительности
+        /// Цена скипа активного слота (слот 0).
+        /// Считаются ВСЕ оставшиеся часы слота:
+        /// - текущий заказ: оставшиеся часы
+        /// - каждый следующий заказ стека: полная длительность
+        /// Формула цены применяется ОДИН раз к сумме часов, поэтому минимум в 1 монету
+        /// и округление вниз не накапливаются по каждой единице стека.
         /// Возвращает -1, если скипать нечего.
         /// </summary>
         public static int CalculateSkipCost(IProductionStationRuntime runtime, IEconomyService economy)
         {
+            int totalHours = CalculateSkipHours(runtime);
+            if (totalHours <= 0)
+                return -1;
+
+            return economy.CalculateProductionSkipCost(totalHours, runtime.Level);
+        }
+
+        /// <summary>
+        /// Сколько часов производства убирает скип: остаток текущего заказа
+        /// плюс полная длительность каждого следующего заказа стека слота 0.
+        /// </summary>
+        public static int CalculateSkipHours(IProductionStationRuntime runtime)
+        {
             var queue = runtime.GetQueueDTO();
             if (queue.Count == 0)
-                return -1;
+                return 0;
 
             var active = queue[0];
             if (active.State != ProductionJobState.InProgress)
-                return -1;
+                return 0;
 
             int remainingOrders = active.CurrentStack - active.CompletedStack;
             if (remainingOrders <= 0)
-                return -1;
-
-            int level = runtime.Level;
+                return 0;
 
             int currentLeft = Math.Max(
                 0,
                 active.StartWorldHour + active.TotalDurationHours - runtime.TotalWorldHour);
 
-            int cost = economy.CalculateProductionSkipCost(currentLeft, level);
-
-            if (remainingOrders > 1)
-            {
-                int perOrder = economy.CalculateProductionSkipCost(active.TotalDurationHours, level);
-                cost += (remainingOrders - 1) * perOrder;
-            }
-
-            return cost;
+            return currentLeft + (remainingOrders - 1) * active.TotalDurationHours;
         }
 
         /// <summary>
