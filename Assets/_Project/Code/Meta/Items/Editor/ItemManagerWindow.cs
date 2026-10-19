@@ -13,11 +13,11 @@ namespace Galactic1.Tools
     public class ItemManagerWindow : ExtendedEditorWindow
     {
 
-        
+
         public ItemDatabase database { get; private set; }
         public ItemManagerSettings settings { get; private set; }
-        
-        public static ItemManagerWindow Manager {get; private set;}
+
+        public static ItemManagerWindow Manager { get; private set; }
 
         private ItemManagerWindow_BottomToolbar bottomToolbar;
 
@@ -28,6 +28,7 @@ namespace Galactic1.Tools
         private FacilityUpgradesEditor _facilityUpgradesEditor;
 
         private int mainTab;
+
         string[] tMainTabs = new string[]
         {
             "Items",
@@ -41,21 +42,41 @@ namespace Galactic1.Tools
         public ItemCategoryEditor selectedCategoryEditor = ItemCategoryEditor.All;
         private Vector2 leftScroll;
         private Vector2 centerScroll;
-        public ItemConfig SelectedItem {get; private set;}
+        public ItemConfig SelectedItem { get; private set; }
         public SerializedObject CurrentSO { get; private set; }
         public RecipesEditor RecipesEditor => recipesEditor;
 
 
+
         public Action onNewItemSelected;
-        
-        
+        private bool breakdownPerUnit;
+
+
+        #region Breakdown Recipe
+
+        private const int BreakdownMaxDepth = 8;
+        private const float BreakdownRowHeight = 28f;
+        private const float BreakdownIndent = 20f;
+
+        private static readonly Color BreakdownRootBg = new Color(0.25f, 0.55f, 0.95f, 0.20f);
+        private static readonly Color BreakdownRootAccent = new Color(0.25f, 0.55f, 0.95f, 0.95f);
+        private static readonly Color BreakdownChildBg = new Color(0f, 0f, 0f, 0.15f);
+        private static readonly Color BreakdownLineColor = new Color(1f, 1f, 1f, 0.35f);
+
+        private string pendingTooltip;
+        private GUIStyle _bdName, _bdMini, _bdMiniItalic, _bdError;
+
+
+        #endregion
+
+
         private static readonly Color CraftableAccentColor = new Color(0.11f, 0.62f, 0.46f, 0.85f); // teal
-        private static readonly Color CraftableBgColor    = new Color(0.11f, 0.62f, 0.46f, 0.08f);
-        
+        private static readonly Color CraftableBgColor = new Color(0.11f, 0.62f, 0.46f, 0.08f);
+
         private static readonly Color ErrorAccentColor = new Color(0.85f, 0.16f, 0.16f, 0.9f); // red
-        
-        
-        
+
+
+
 
 
         [MenuItem("Tools/Items/Item Manager")]
@@ -69,6 +90,7 @@ namespace Galactic1.Tools
             balanceEditor = new BalanceEditor(this);
             _itemActionsEditor = new ItemActionsEditor(this);
             _facilityUpgradesEditor = new FacilityUpgradesEditor(this);
+            wantsMouseMove = true;
 
             // * для сброса с вкладки топлива
             onNewItemSelected += () =>
@@ -84,8 +106,8 @@ namespace Galactic1.Tools
                     mainTab = 0;
                 }
             };
-            
-            
+
+
             LoadDatabase();
             LoadSettings();
         }
@@ -112,6 +134,9 @@ namespace Galactic1.Tools
 
         private void OnGUI()
         {
+            if (Event.current.type == EventType.MouseMove)
+                Repaint();
+
             // Сброс фокуса при любом клике левой кнопкой мыши
             if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
             {
@@ -119,8 +144,8 @@ namespace Galactic1.Tools
                 GUI.FocusControl(null);
                 Repaint(); // Обновляем окно, чтобы изменения сразу отразились
             }
-            
-            
+
+
             if (bottomToolbar == null)
             {
                 bottomToolbar = new ItemManagerWindow_BottomToolbar(this);
@@ -160,10 +185,10 @@ namespace Galactic1.Tools
                 case 5:
                     //stationFuelEditor.DrawPanel();
                     break;
-                
-                
+
+
             }
-            
+
             EditorGUILayout.EndVertical();
 
 
@@ -214,7 +239,7 @@ namespace Galactic1.Tools
 
                 if (item == SelectedItem)
                     GUI.backgroundColor = Color.green;
-                
+
                 // Кнопка с именем предмета, одинаковой длины и высотой 20
                 if (GUILayout.Button(item.Header.titleLid,
                         GUILayout.Width(155), GUILayout.Height(30)))
@@ -226,6 +251,7 @@ namespace Galactic1.Tools
                         onNewItemSelected?.Invoke();
                     }
                 }
+
                 // Полоса поверх уже отрисованной кнопки
                 if (item.IsCraftable && Event.current.type == EventType.Repaint)
                 {
@@ -233,9 +259,9 @@ namespace Galactic1.Tools
                     EditorGUI.DrawRect(new Rect(last.x, last.y, last.width, last.height), CraftableBgColor);
                     EditorGUI.DrawRect(new Rect(last.x, last.y, 2.5f, last.height), CraftableAccentColor);
                 }
-                
+
                 // алерт об ошибке рецепта
-                if (item.IsCraftable && 
+                if (item.IsCraftable &&
                     (item.Recipes == null || item.Recipes.Count == 0 || recipesEditor.RecipeError(item.Recipes[0])))
                 {
                     if (Event.current.type == EventType.Repaint)
@@ -247,7 +273,7 @@ namespace Galactic1.Tools
                             ErrorAccentColor);
                     }
                 }
-                
+
                 GUI.backgroundColor = original;
 
                 EditorGUILayout.EndHorizontal();
@@ -265,34 +291,34 @@ namespace Galactic1.Tools
         {
             GUILayout.Space(5);
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Height(30));
-            
+
             //var _tab = GUILayout.Toolbar(mainTab, tMainTabs, GUILayout.Width(300) ,GUILayout.Height(25));
 
             var _tab = mainTab;
-            
+
             DrawTabButton(0, ref _tab);
             DrawTabButton(1, ref _tab);
             DrawTabButton(2, ref _tab);
             DrawTabButton(3, ref _tab);
-            
+
             // === upgrage level
             GUI.enabled = SelectedItem != null ? SelectedItem.IsFacility() : false;
             DrawTabButton(4, ref _tab);
             GUI.enabled = true;
-            
+
             // === fuel
             GUI.enabled = FuelButtonActive();
             DrawTabButton(5, ref _tab);
             GUI.enabled = true;
-            
-            
+
+
             // выбор вкладки
-            if (_tab != mainTab )
+            if (_tab != mainTab)
             {
                 mainTab = _tab;
                 balanceEditor.RefreshList();
             }
-            
+
             EditorGUILayout.EndHorizontal();
         }
 
@@ -303,6 +329,7 @@ namespace Galactic1.Tools
             {
                 tab = target;
             }
+
             GUI.backgroundColor = original;
         }
 
@@ -321,13 +348,13 @@ namespace Galactic1.Tools
 
                 // Левая часть: имя, редкость, уровень
                 EditorGUILayout.BeginVertical(GUILayout.Width(350));
-                EditorGUILayout.SelectableLabel(SelectedItem.Id?.DebugKey ?? "ItemKey: ----", 
+                EditorGUILayout.SelectableLabel(SelectedItem.Id?.DebugKey ?? "ItemKey: ----",
                     EditorStyles.miniLabel, GUILayout.Height(18));
                 //EditorGUILayout.LabelField(!string.IsNullOrEmpty(SelectedItem.ConfigId) ? SelectedItem.ConfigId : "ItemKey: ----");
                 //EditorGUI.BeginDisabledGroup(true);
                 //EditorGUILayout.TextField(!string.IsNullOrEmpty(selectedItem.ItemKey) ? selectedItem.Guid : "GUID: ----");
                 //EditorGUI.EndDisabledGroup();
-                
+
                 EditorGUILayout.LabelField(!string.IsNullOrEmpty(SelectedItem.Header.titleLid)
                     ? SelectedItem.Header.titleLid
                     : "Title: ----", EditorStyles.boldLabel);
@@ -343,7 +370,8 @@ namespace Galactic1.Tools
 
                 // Правая часть: большая иконка 80x80
                 float iconSize = 80f;
-                Rect iconRect = GUILayoutUtility.GetRect(iconSize, iconSize, GUILayout.Width(iconSize), GUILayout.Height(iconSize));
+                Rect iconRect = GUILayoutUtility.GetRect(iconSize, iconSize, GUILayout.Width(iconSize),
+                    GUILayout.Height(iconSize));
 
                 if (SelectedItem.Header.icon != null)
                 {
@@ -386,9 +414,9 @@ namespace Galactic1.Tools
                 EditorGUILayout.Space(5);
                 EditorGUILayout.BeginVertical("box");
                 EditorGUILayout.LabelField("Stats", EditorStyles.boldLabel);
-                
-                
-                
+
+
+
                 // Weapon Definition
                 if (SelectedItem.HasModule<WeaponModule>())
                 {
@@ -400,7 +428,7 @@ namespace Galactic1.Tools
                         EditorGUILayout.Space(5);
                         EditorGUILayout.BeginVertical("box");
                         EditorGUILayout.LabelField("⚔ Weapon Definition", EditorStyles.boldLabel);
-                        
+
                         EditorGUILayout.HelpBox("Weapon Definition не назначен", MessageType.Warning);
                         EditorGUILayout.Space(3);
                         EditorGUILayout.EndVertical();
@@ -413,65 +441,66 @@ namespace Galactic1.Tools
                         EditorGUILayout.Space(3);
 
                         // Fire
-                        DrawStatRow2("Fire Mode",     def.fireMode.ToString());
-                        DrawStatRow2("Fire Type",     def.fireType.ToString());
-                        DrawStatRow2("Ammo Type",     def.ammoType.ToString());
+                        DrawStatRow2("Fire Mode", def.fireMode.ToString());
+                        DrawStatRow2("Fire Type", def.fireType.ToString());
+                        DrawStatRow2("Ammo Type", def.ammoType.ToString());
 
                         EditorGUILayout.Space(5);
 
                         // Damage
                         EditorGUILayout.LabelField("Damage", EditorStyles.miniBoldLabel);
-                        DrawStatRow2("Damage",        $"{def.damage} ±{def.damageVariance * 100f:0}%");
-                        DrawStatRow2("DPS",           $"{weapon.DPS:0.0}");
-                        DrawStatRow2("Armor Pierce",  $"{def.armorPiercing}");
+                        DrawStatRow2("Damage", $"{def.damage} ±{def.damageVariance * 100f:0}%");
+                        DrawStatRow2("DPS", $"{weapon.DPS:0.0}");
+                        DrawStatRow2("Armor Pierce", $"{def.armorPiercing}");
                         //DrawStatRow2("Range",         $"{def.range}m  (eff: {def.effectiveRange}m / max: {def.maxRange}m)");
 
                         EditorGUILayout.Space(5);
 
                         // Fire Rate
                         EditorGUILayout.LabelField("Fire Rate", EditorStyles.miniBoldLabel);
-                        DrawStatRow2("RPM",           $"{def.roundsPerMinute}");
+                        DrawStatRow2("RPM", $"{def.roundsPerMinute}");
                         if (def.fireMode == FireMode.Burst)
                         {
-                            DrawStatRow2("Burst Count",   $"{def.burstCount}");
-                            DrawStatRow2("Burst Pause",   $"{def.burstPauseSec}s");
+                            DrawStatRow2("Burst Count", $"{def.burstCount}");
+                            DrawStatRow2("Burst Pause", $"{def.burstPauseSec}s");
                         }
+
                         if (def.projectilesPerShot > 1)
-                            DrawStatRow2("Pellets",   $"{def.projectilesPerShot}");
+                            DrawStatRow2("Pellets", $"{def.projectilesPerShot}");
 
                         EditorGUILayout.Space(5);
 
                         // Ammo
                         EditorGUILayout.LabelField("Ammo", EditorStyles.miniBoldLabel);
-                        DrawStatRow2("Magazine",      $"{def.magazineSize}");
-                        DrawStatRow2("Reload",        $"{def.reloadTimeSec}s");
+                        DrawStatRow2("Magazine", $"{def.magazineSize}");
+                        DrawStatRow2("Reload", $"{def.reloadTimeSec}s");
 
                         EditorGUILayout.Space(5);
 
                         // Spread
                         EditorGUILayout.LabelField("Spread", EditorStyles.miniBoldLabel);
-                        DrawStatRow2("Accuracy",      $"{(int)def.GetAccuracyScore()}%");
-                        DrawStatRow2("Base Spread",   $"{def.baseSpreadDeg}°");
-                        DrawStatRow2("Moving Mul",    $"x{def.movingSpreadMul}");
-                        DrawStatRow2("Stress Mul",    $"x{def.stressSpreadMul}");
+                        DrawStatRow2("Accuracy", $"{(int)def.GetAccuracyScore()}%");
+                        DrawStatRow2("Base Spread", $"{def.baseSpreadDeg}°");
+                        DrawStatRow2("Moving Mul", $"x{def.movingSpreadMul}");
+                        DrawStatRow2("Stress Mul", $"x{def.stressSpreadMul}");
                         //DrawStatRow2("Range Penalty", $"x{def.maxRangeSpreadPenalty}");
 
                         if (def.hasHeat)
                         {
                             EditorGUILayout.Space(5);
                             EditorGUILayout.LabelField("Heat", EditorStyles.miniBoldLabel);
-                            DrawStatRow2("Per Shot",      $"{def.heatPerShot}");
-                            DrawStatRow2("Cool Rate",     $"{def.heatCoolRate}/s");
-                            DrawStatRow2("Overheat",      $"{def.overheatThreshold}");
-                            DrawStatRow2("Cooldown",      $"{def.cooldownSec}s");
+                            DrawStatRow2("Per Shot", $"{def.heatPerShot}");
+                            DrawStatRow2("Cool Rate", $"{def.heatCoolRate}/s");
+                            DrawStatRow2("Overheat", $"{def.overheatThreshold}");
+                            DrawStatRow2("Cooldown", $"{def.cooldownSec}s");
                         }
 
                         if (def.hasSuppression)
                         {
                             EditorGUILayout.Space(5);
                             EditorGUILayout.LabelField("Suppression", EditorStyles.miniBoldLabel);
-                            DrawStatRow2("Angle",         $"{def.suppressionAngle}°");
-                            DrawStatRow2("Range",         $"{def.suppressionRange}m");
+                            DrawStatRow2("Angle", $"{def.suppressionAngle}°");
+                            DrawStatRow2("Range", $"{def.suppressionRange}m");
                         }
 
                         EditorGUILayout.EndVertical();
@@ -484,14 +513,14 @@ namespace Galactic1.Tools
                             EditorGUILayout.BeginVertical("box");
                             EditorGUILayout.LabelField("🔵 Ammo Definition", EditorStyles.boldLabel);
                             EditorGUILayout.Space(3);
-                            DrawStatRow2("Name",      ammoDef.DisplayName);
-                            DrawStatRow2("Id",        ammoDef.Id?.DebugKey ?? "—");
-                            DrawStatRow2("Prefab",    ammoDef.PrefabPath);
+                            DrawStatRow2("Name", ammoDef.DisplayName);
+                            DrawStatRow2("Id", ammoDef.Id?.DebugKey ?? "—");
+                            DrawStatRow2("Prefab", ammoDef.PrefabPath);
                             EditorGUILayout.EndVertical();
                         }
                     }
                 }
-                
+
                 // Ammo Definition
                 if (SelectedItem.HasModule<AmmoModule>())
                 {
@@ -510,8 +539,8 @@ namespace Galactic1.Tools
                     {
                         EditorGUILayout.Space(5);
                         EditorGUILayout.LabelField("Definition", EditorStyles.miniBoldLabel);
-                        DrawStatRow2("Name",   ammoDef.DisplayName);
-                        DrawStatRow2("Id",     ammoDef.Id?.DebugKey ?? "—");
+                        DrawStatRow2("Name", ammoDef.DisplayName);
+                        DrawStatRow2("Id", ammoDef.Id?.DebugKey ?? "—");
                         DrawStatRow2("Prefab", ammoDef.PrefabPath);
                     }
                     else
@@ -584,6 +613,14 @@ namespace Galactic1.Tools
                     DrawRecipeList(SelectedItem);
 
                     EditorGUILayout.EndVertical(); // конец бокса Crafting
+
+
+                    // === развёрнутый рецепт ингредиентов
+                    EditorGUILayout.Space(5);
+                    EditorGUILayout.BeginVertical("box");
+                    EditorGUILayout.LabelField("🌳 Recipe Breakdown", EditorStyles.boldLabel);
+                    DrawRecipeBreakdown(SelectedItem);
+                    EditorGUILayout.EndVertical();
                 }
 
                 EditorGUILayout.EndScrollView();
@@ -606,7 +643,7 @@ namespace Galactic1.Tools
             EditorGUILayout.EndHorizontal();
         }
 
-        
+
         private void DrawStatRow2(string label, string value)
         {
             EditorGUILayout.BeginHorizontal();
@@ -621,19 +658,19 @@ namespace Galactic1.Tools
                 return;
 
             var lootModule = item.LootModule;
-            
+
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Loot Data:", GUILayout.Width(75));
-            
+
             GUILayout.Label("Value", GUILayout.Width(35));
             GUILayout.Label($"[{lootModule.LootCost}]", GUILayout.Width(30));
-            
+
             GUILayout.Label("Tier", GUILayout.Width(25));
             GUILayout.Label($"[{item.Classification.tier}]", GUILayout.Width(35));
-            
+
             GUILayout.Label("Drop Tag", GUILayout.Width(55));
             GUILayout.Label($"[{lootModule.DropTag}]", GUILayout.Width(80));
-            
+
             EditorGUILayout.EndHorizontal();
         }
 
@@ -720,8 +757,8 @@ namespace Galactic1.Tools
                     Rect textRect = new Rect(blockRect.x + 3 + 20 + 6, blockRect.y + 2, blockRect.width - (3 + 20 + 6),
                         20);
                     GUI.Label(textRect, "x" + recipe.OutputCount, EditorStyles.boldLabel);
-                    
-                    
+
+
                     GUILayout.Label($"(Stack {recipe.StackOrderLimit})", GUILayout.Width(100));
 
                     EditorGUILayout.EndHorizontal();
@@ -843,7 +880,7 @@ namespace Galactic1.Tools
             if (recipeToRemove >= 0)
             {
                 craftable.RemoveRecipe(recipeToRemove);
-                
+
                 SaveAsset(craftable);
                 GUI.FocusControl(null);
                 EditorUtility.SetDirty(craftable);
@@ -852,6 +889,249 @@ namespace Galactic1.Tools
             // Drag & Drop зона
             //DrawDropZone(craftable);
         }
+
+
+        private static bool HasRecipe(ItemConfig item)
+            => item != null
+               && item.IsCraftable
+               && item.Recipes != null
+               && item.Recipes.Count > 0
+               && item.Recipes[0] != null
+               && item.Recipes[0].Requirement != null
+               && item.Recipes[0].Requirement.Count > 0;
+
+        private void EnsureBreakdownStyles()
+        {
+            if (_bdName != null) return;
+
+            _bdName = new GUIStyle(EditorStyles.boldLabel)
+                { alignment = TextAnchor.MiddleLeft, clipping = TextClipping.Clip };
+            _bdMini = new GUIStyle(EditorStyles.miniLabel)
+                { alignment = TextAnchor.MiddleLeft };
+            _bdMiniItalic = new GUIStyle(_bdMini) { fontStyle = FontStyle.Italic };
+            _bdError = new GUIStyle(_bdMini);
+            _bdError.normal.textColor = ErrorAccentColor;
+        }
+
+        private void DrawRecipeBreakdown(ItemConfig root)
+        {
+            EnsureBreakdownStyles();
+            pendingTooltip = null;
+
+            // === блок управления
+            EditorGUILayout.BeginHorizontal(GUILayout.Height(30));
+            breakdownPerUnit = GUILayout.Toggle(
+                breakdownPerUnit,
+                breakdownPerUnit ? "Recipe x1" : "Recipe xN",
+                "Button",
+                GUILayout.Height(30), GUILayout.Width(100));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            GUILayout.Space(5);
+
+            if (!HasRecipe(root))
+            {
+                EditorGUILayout.LabelField("No ingredients", EditorStyles.miniLabel);
+                return;
+            }
+
+            var path = new HashSet<ItemConfig> { root };
+
+            foreach (var req in root.Recipes[0].Requirement)
+            {
+                if (req.Item == null) continue;
+
+                float units = breakdownPerUnit ? 1f : req.Amount;
+
+                // каждый ингредиент первого уровня + всё его поддерево - в отдельном боксе
+                EditorGUILayout.BeginVertical("box");
+                DrawBreakdownRow(req.Item, units, 0, path, new List<bool>(), true);
+                EditorGUILayout.EndVertical();
+                GUILayout.Space(3);
+            }
+
+            DrawPendingTooltip();
+        }
+
+        private void DrawBreakdownRow(ItemConfig item, float units, int depth,
+            HashSet<ItemConfig> path, List<bool> ancestorMore, bool isLast)
+        {
+            bool isCycle = path.Contains(item);
+            bool hasRecipe = HasRecipe(item);
+            string title = item.Header.titleLid;
+
+            Rect row = EditorGUILayout.BeginHorizontal(GUIStyle.none, GUILayout.Height(BreakdownRowHeight));
+            if (Event.current.type == EventType.Repaint)
+                DrawBreakdownRowBackground(row, depth, ancestorMore, isLast);
+
+            GUILayout.Space(6f + depth * BreakdownIndent);
+
+            // иконка + название + количество
+            Rect mainIcon = DrawIconRect(item, 24f);
+            TrackTooltip(mainIcon, title);
+
+            GUILayout.Label($"{title}  x{FormatAmount(units)}", _bdName,
+                GUILayout.Width(150), GUILayout.Height(BreakdownRowHeight));
+
+            GUILayout.Label("→", _bdMini, GUILayout.Width(18), GUILayout.Height(BreakdownRowHeight));
+
+            float crafts = 0f;
+
+            if (isCycle)
+            {
+                GUILayout.Label("cycle!", _bdError, GUILayout.Height(BreakdownRowHeight));
+            }
+            else if (!hasRecipe)
+            {
+                GUILayout.Label("only loot", _bdMiniItalic, GUILayout.Height(BreakdownRowHeight));
+            }
+            else
+            {
+                var recipe = item.Recipes[0];
+                float outputCount = Mathf.Max(1, recipe.OutputCount);
+
+                crafts = units / outputCount;
+                if (!breakdownPerUnit)
+                    crafts = Mathf.Ceil(crafts);
+
+                foreach (var sub in recipe.Requirement)
+                {
+                    if (sub.Item == null) continue;
+
+                    float needed = sub.Amount * crafts;
+
+                    Rect ic = DrawIconRect(sub.Item, 20f);
+                    GUILayout.Label($"x{FormatAmount(needed)}", _bdMini,
+                        GUILayout.Width(36), GUILayout.Height(BreakdownRowHeight));
+                    Rect lbl = GUILayoutUtility.GetLastRect();
+
+                    // подсказка по иконке и по количеству рядом
+                    TrackTooltip(Rect.MinMaxRect(ic.xMin, ic.yMin, lbl.xMax, ic.yMax), sub.Item.Header.titleLid);
+                }
+
+                if (recipe.OutputCount > 1)
+                    GUILayout.Label($"(→ x{recipe.OutputCount})", _bdMini,
+                        GUILayout.Width(50), GUILayout.Height(BreakdownRowHeight));
+            }
+
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+
+            // === рекурсия: только те ингредиенты, которые сами крафтятся
+            if (isCycle || !hasRecipe || depth >= BreakdownMaxDepth) return;
+
+            var kids = new List<(ItemConfig item, float amount)>();
+            foreach (var sub in item.Recipes[0].Requirement)
+            {
+                if (sub.Item == null) continue;
+                if (!HasRecipe(sub.Item) && !path.Contains(sub.Item)) continue;
+                kids.Add((sub.Item, sub.Amount * crafts));
+            }
+
+            // нужно ли продолжать вертикальную линию этого уровня у потомков
+            var childMore = new List<bool>(ancestorMore);
+            if (depth >= 1) childMore.Add(!isLast);
+
+            path.Add(item);
+            for (int i = 0; i < kids.Count; i++)
+                DrawBreakdownRow(kids[i].item, kids[i].amount, depth + 1, path, childMore, i == kids.Count - 1);
+            path.Remove(item);
+        }
+
+// ===== фон и линии дерева
+        private static float BreakdownColumnX(Rect r, int column)
+            => r.x + 6f + column * BreakdownIndent + BreakdownIndent * 0.5f;
+
+        private void DrawBreakdownRowBackground(Rect r, int depth, List<bool> ancestorMore, bool isLast)
+        {
+            if (depth == 0)
+            {
+                EditorGUI.DrawRect(r, BreakdownRootBg);
+                EditorGUI.DrawRect(new Rect(r.x, r.y, 3f, r.height), BreakdownRootAccent);
+                return;
+            }
+
+            EditorGUI.DrawRect(r, BreakdownChildBg);
+
+            // продолжающиеся вертикальные линии предков
+            for (int i = 0; i < ancestorMore.Count; i++)
+            {
+                if (!ancestorMore[i]) continue;
+                EditorGUI.DrawRect(new Rect(BreakdownColumnX(r, i), r.y, 1f, r.height), BreakdownLineColor);
+            }
+
+            // свой "локоть": вертикаль вниз (до середины, если последний) + горизонталь к иконке
+            float x = BreakdownColumnX(r, depth - 1);
+            float midY = r.y + r.height * 0.5f;
+            float vertEnd = isLast ? midY : r.yMax;
+
+            EditorGUI.DrawRect(new Rect(x, r.y, 1f, vertEnd - r.y), BreakdownLineColor);
+            EditorGUI.DrawRect(new Rect(x, midY, BreakdownIndent * 0.5f, 1f), BreakdownLineColor);
+        }
+
+// ===== иконка (возвращает rect для подсказки)
+        private Rect DrawIconRect(ItemConfig item, float size)
+        {
+            Rect rect = GUILayoutUtility.GetRect(size, BreakdownRowHeight,
+                GUILayout.Width(size), GUILayout.Height(BreakdownRowHeight));
+            Rect icon = new Rect(rect.x, rect.center.y - size * 0.5f, size, size);
+
+            if (item.Header.icon != null)
+            {
+                Sprite spr = item.Header.icon;
+                Texture2D tex = spr.texture;
+                var texCoords = new Rect(
+                    spr.rect.x / tex.width,
+                    spr.rect.y / tex.height,
+                    spr.rect.width / tex.width,
+                    spr.rect.height / tex.height);
+                GUI.DrawTextureWithTexCoords(icon, tex, texCoords);
+            }
+            else
+            {
+                EditorGUI.DrawRect(icon, Color.black);
+                GUI.Label(icon, "?", EditorStyles.centeredGreyMiniLabel);
+            }
+
+            return rect;
+        }
+
+// ===== подсказка с названием предмета (как в блоке рецепта)
+        private void TrackTooltip(Rect rect, string text)
+        {
+            if (Event.current.type == EventType.Repaint && rect.Contains(Event.current.mousePosition))
+                pendingTooltip = text;
+        }
+
+        private void DrawPendingTooltip()
+        {
+            if (string.IsNullOrEmpty(pendingTooltip) || Event.current.type != EventType.Repaint) return;
+
+            Vector2 mouse = Event.current.mousePosition;
+
+            var tooltipStyle = new GUIStyle(GUI.skin.box)
+            {
+                normal = { textColor = Color.white },
+                fontSize = 11,
+                alignment = TextAnchor.MiddleCenter,
+                wordWrap = false
+            };
+
+            Vector2 size = tooltipStyle.CalcSize(new GUIContent(pendingTooltip));
+            Rect tooltipRect = new Rect(mouse.x + 15, mouse.y - size.y - 10, size.x + 8, size.y + 4);
+
+            // тень
+            Color prev = GUI.color;
+            GUI.color = Color.black;
+            GUI.Box(new Rect(tooltipRect.x + 1, tooltipRect.y + 1, tooltipRect.width, tooltipRect.height),
+                "", tooltipStyle);
+            GUI.color = prev;
+
+            GUI.Box(tooltipRect, pendingTooltip, tooltipStyle);
+        }
+
+        private static string FormatAmount(float value)
+            => value.ToString("0.##");
 
 
 
@@ -878,7 +1158,8 @@ namespace Galactic1.Tools
             foreach (var item in database.Items)
             {
                 if (item == null) continue;
-                if (selectedCategoryEditor == ItemCategoryEditor.All || ItemMatchesCategory(item, selectedCategoryEditor))
+                if (selectedCategoryEditor == ItemCategoryEditor.All ||
+                    ItemMatchesCategory(item, selectedCategoryEditor))
                     yield return item;
             }
         }
@@ -889,23 +1170,23 @@ namespace Galactic1.Tools
             {
                 case ItemCategoryEditor.Resource: return item.HasModule<ResourceModule>();
                 case ItemCategoryEditor.Consumable: return item.HasModule<UseModule>();
-                
+
                 case ItemCategoryEditor.Weapon: return item.HasModule<WeaponModule>();
                 case ItemCategoryEditor.Armor: return item.HasModule<EquipmentModule>();
                 case ItemCategoryEditor.Ammo: return item.HasModule<AmmoModule>();
                 case ItemCategoryEditor.Upgrade: return item.HasModule<UpgradeModule>();
-                
+
                 case ItemCategoryEditor.Blueprint: return item.HasModule<BlueprintModule>();
-                
+
                 case ItemCategoryEditor.Station: return item.HasModule<CraftingStationModule>();
                 case ItemCategoryEditor.Storage: return item.HasModule<StorageModule>();
                 case ItemCategoryEditor.Facility:
                 {
-                    return item.IsFacility() && 
+                    return item.IsFacility() &&
                            item.Classification.category == ItemCategory.BaseFacility;
                 }
                 case ItemCategoryEditor.Defense: return item.HasModule<DefenseFacilityModule>();
-                
+
                 default: return true;
             }
         }
