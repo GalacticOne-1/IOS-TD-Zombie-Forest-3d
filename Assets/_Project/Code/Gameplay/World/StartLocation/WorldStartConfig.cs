@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using Galactic1.Code.GameDatabase.Registries;
 using Galactic1.Code.Systems.Inventory;
@@ -70,6 +71,10 @@ namespace Galactic1.Game.World.StartLocation
             
             if (config.HasModule<CampTraderModule>())
                 return ("CampTrader", config.Id);
+            
+            // для стен передаем Guid, так же как и при обычном строительстве
+            if (config.HasModule<DefenseFacilityModule>())
+                return (Guid.NewGuid().ToString(), config.Id);
             
             
             // if (config.HasModule<StorageModule>())
