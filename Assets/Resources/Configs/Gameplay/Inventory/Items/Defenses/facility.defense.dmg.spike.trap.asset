@@ -75,6 +75,7 @@ MonoBehaviour:
       type: {class: DefenseFacilityModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
       data:
         facilityType: 10
+        weaponProduction: 0
         footprint:
           width: 1
           height: 1
@@ -86,6 +87,7 @@ MonoBehaviour:
         upgradeLevels: []
         allowedZoneTags: 0a000000
         allowedZonesOnly: 1
+        requiredUnlock: {fileID: 0}
     - rid: 4802526131553828974
       type: {class: BuildingHealthModule, ns: Galactic1.Game.Meta.Items, asm: Assembly-CSharp}
       data:
