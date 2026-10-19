@@ -21,7 +21,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: b287b685d3a074c909c23f090ecb4426, type: 2}
   presentation:
     instructionTitleKey: Build an Living Module
-    instructionDesKey: Build a Living Module to increase the maximum number of survivors
+    instructionDesKey: Build a living module to increase the maximum number of survivors
       in your camp.
     dialogueId: 
     inputPolicy: 0
@@ -33,12 +33,32 @@ MonoBehaviour:
       mode: 0
       boundsTargetId: {fileID: 0}
     actions: []
-  guidance: []
+  guidance:
+  - condition: {fileID: 11400000, guid: e241f106ab08a4d3a9ef199a07b9e1b9, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658704246013955
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
-  transitions: []
+  transitions:
+  - nextStepId: {fileID: 11400000, guid: 8526dffdb445447bfaea3e5f8bf8e058, type: 2}
+    condition:
+      rid: -2
   isCheckpoint: 1
   requiredDomain: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3243658704246013955
+      type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        facilityItemId: {fileID: 11400000, guid: a5a70008f55694b6ea7bca5621b29351, type: 2}

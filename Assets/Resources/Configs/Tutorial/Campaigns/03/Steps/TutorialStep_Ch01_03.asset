@@ -32,7 +32,40 @@ MonoBehaviour:
       mode: 0
       boundsTargetId: {fileID: 0}
     actions: []
-  guidance: []
+  guidance:
+  - condition: {fileID: 11400000, guid: 6e1288eda30524af8a2e29612fa7d228, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658704246013957
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 053a104cb3a92490f86e7723da02ced0, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658704246013958
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  - condition: {fileID: 11400000, guid: 7f26c6c2b99954197aa945781a95cb88, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658704246013960
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions:
@@ -46,3 +79,15 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 3243658704246013957
+      type: {class: TutorialFixedTargetQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        targetId: {fileID: 11400000, guid: 324bc5d5b92db4914a3a9af992ff54dd, type: 2}
+    - rid: 3243658704246013958
+      type: {class: TutorialConstructionTabQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        category: 4
+    - rid: 3243658704246013960
+      type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        facilityItemId: {fileID: 11400000, guid: 449e9fcf934cd49ccbfb35f905fae0f0, type: 2}

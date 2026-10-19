@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358f25d0ab76a47019c639ad12536315, type: 3}
+  m_Name: TutorialStep_Ch02_05
+  m_EditorClassIdentifier: 
+  stepId: {fileID: 11400000, guid: 8526dffdb445447bfaea3e5f8bf8e058, type: 2}
+  chapterId: {fileID: 11400000, guid: 270ee9d37045442fc983d913015a758b, type: 2}
+  analyticsStepIndex: 0
+  objectives:
+    mode: 0
+    objectives:
+    - {fileID: 11400000, guid: 7eee6d0b2f96c4c3285f226bf68404e9, type: 2}
+  presentation:
+    instructionTitleKey: Build an Refinery
+    instructionDesKey: Build a refinery in the camp.
+    dialogueId: 
+    inputPolicy: 0
+    canMove: 1
+    canControlCamera: 1
+    canInteract: 1
+    canUseAbilities: 1
+    cameraConstraint:
+      mode: 0
+      boundsTargetId: {fileID: 0}
+    actions: []
+  guidance:
+  - condition: {fileID: 11400000, guid: 597195fbebd1b4aa49de2fdfbe6bf358, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658704246013956
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
+  reward:
+    items: []
+  transitions: []
+  isCheckpoint: 1
+  requiredDomain: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 3243658704246013956
+      type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        facilityItemId: {fileID: 11400000, guid: 21d52e2dbfb414a5b89f360bb2577882, type: 2}

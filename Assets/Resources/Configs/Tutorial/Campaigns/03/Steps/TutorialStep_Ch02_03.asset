@@ -32,7 +32,18 @@ MonoBehaviour:
       mode: 0
       boundsTargetId: {fileID: 0}
     actions: []
-  guidance: []
+  guidance:
+  - condition: {fileID: 11400000, guid: 589c4a356ebb647e0955e719b75380d2, type: 2}
+    descriptionPanel:
+      enabled: 0
+      text: 
+      oneShot: 0
+    presentations:
+    - highlightTarget:
+        rid: 3243658704246013954
+      arrowTargetId: {fileID: 0}
+      cameraFocusTargetId: {fileID: 0}
+      cameraBoundsTargetId: {fileID: 0}
   reward:
     items: []
   transitions:
@@ -46,3 +57,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 3243658704246013954
+      type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
+      data:
+        facilityItemId: {fileID: 11400000, guid: abcbcd147f0cc484eacde13b5350b6d2, type: 2}
