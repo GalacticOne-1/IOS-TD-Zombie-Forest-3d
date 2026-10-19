@@ -6,16 +6,21 @@ namespace Galactic1.Code.Systems.Economy
     /// Рассчитывает стоимость ускорения производства.
     /// Не списывает валюту.
     /// Чистая формула.
+    ///
+    /// Правило: 24 часа = 10 монет, минимум 1 монета, округление всегда вниз.
+    /// Примеры: 12 ч = 5, 8 ч = 3 (3.33), 3 ч = 1 (1.25 -> 1), 1 ч = 1 (0.41 -> минимум 1),
+    ///          14 ч = 5 (5.83 -> 5), 29 ч = 12 (12.08 -> 12).
     /// </summary>
     public sealed class ProductionSkipCostService
     {
-        private readonly int CostPerHour = 3;
+        private const int HoursPerPeriod = 24;
+        private const int CoinsPerPeriod = 10;
         private const int MinimumCost = 1;
 
-        
+        // Параметр оставлен, чтобы не ломать регистрацию в DI.
+        // Цена теперь задаётся константами выше, а не EconomyConfig.ProductionCostPerHour.
         public ProductionSkipCostService(EconomyConfig economyConfig)
         {
-            CostPerHour = economyConfig.ProductionCostPerHour;
         }
 
         public int Calculate(int remainingHours, int stationLevel)
@@ -23,14 +28,10 @@ namespace Galactic1.Code.Systems.Economy
             if (remainingHours <= 0)
                 return 0;
 
-            int baseCost = remainingHours * CostPerHour;
+            // целочисленное деление = округление вниз
+            int cost = remainingHours * CoinsPerPeriod / HoursPerPeriod;
 
-            // Можно добавить модификаторы уровня
-            int levelModifier = 1 + stationLevel;
-
-            int final = baseCost * levelModifier;
-
-            return final < MinimumCost ? MinimumCost : final;
+            return cost < MinimumCost ? MinimumCost : cost;
         }
     }
 }

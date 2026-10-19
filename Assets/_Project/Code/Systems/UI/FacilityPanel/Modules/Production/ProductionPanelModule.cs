@@ -147,18 +147,21 @@ namespace Galactic1.Game.UI.Production
 
             if (job == null)
                 return;
-            
+
             EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.action.ToData()));
 
-            // A. если есть готовые заказы — забираем по одному
-            if (job.CompletedStack > 0)
+            int notProduced = job.CurrentStack - job.CompletedStack;
+
+            // A. сначала отменяем ещё не произведённые заказы (минус 1 из стека)
+            if (notProduced > 0)
             {
-                _adapter.CollectSingle(jobId);
+                _adapter.CancelOrder(jobId);
                 return;
             }
 
-            // B. если готовых нет — отменяем заказ
-            _adapter.CancelOrder(jobId);
+            // B. непроизведённых нет -> забираем готовые по одному
+            if (job.CompletedStack > 0)
+                _adapter.CollectSingle(jobId);
         }
 
         private void HandleTake()

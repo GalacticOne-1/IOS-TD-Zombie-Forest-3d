@@ -2,6 +2,7 @@ using Galactic1.Code.GameDatabase;
 using Galactic1.Code.Inventory.Abstractions;
 using Galactic1.Code.Systems.Runtime;
 using Galactic1.Items;
+using UnityEngine;
 
 namespace Galactic1.Code.Systems.ProductionPipeline
 {
@@ -39,7 +40,7 @@ namespace Galactic1.Code.Systems.ProductionPipeline
             if (!_storage.HasStorageForAnyTag(item.Tags))
                 return;
 
-            // Stage 2: Capacity check (ВАЖНО — без partial!)
+            // Stage 2: Capacity check (без partial!)
             var slot = new InventorySlotRuntime(item, e.Amount, item.Physical.maxDurability, 0);
 
             if (!_inventory.CanAdd(slot))
@@ -50,10 +51,14 @@ namespace Galactic1.Code.Systems.ProductionPipeline
 
             if (result.Remaining > 0)
             {
-                // теоретически не должно произойти
+                // не должно происходить после CanAdd: часть предметов уже в инвентаре,
+                // а заказ остаётся в слоте -> возможна двойная выдача при ручном сборе
+                Debug.LogError(
+                    $"[AutoCollect] Partial add for {e.RecipeId}: remaining {result.Remaining}");
                 return;
             }
-            
+
+            // Stage 4: уведомляем runtime станции, он освободит заказ в слоте
             EventBus<ProductionOrderAutoCollectedEvent>.Raise(
                 new ProductionOrderAutoCollectedEvent
                 {
@@ -63,10 +68,6 @@ namespace Galactic1.Code.Systems.ProductionPipeline
                     Orders = e.Orders,
                     Amount = e.Amount
                 });
-
-            // Stage 4: Notify runtime (опционально)
-            // можно через отдельный event:
-            // ProductionOrderAutoCollectedEvent
         }
     }
 }

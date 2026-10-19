@@ -160,14 +160,12 @@ namespace Galactic1.Game.UI.Buildings
 
             int remainingActive = ProductionTimeCalculator.CalculateRemaining(runtime);
             int totalRemaining = ProductionTimeCalculator.CalculateTotalRemaining(runtime, remainingActive);
-            
-            
+
             bool hasActiveProduction = runtime.GetQueueDTO()
                 .FirstOrDefault()?.State == ProductionJobState.InProgress;
 
-            var skipCost = _economyService.CalculateProductionSkipCost(
-                remainingActive,
-                runtime.Level);
+            // цена за каждую непроизведённую единицу слота 0
+            int skipCost = Math.Max(0, ProductionTimeCalculator.CalculateSkipCost(runtime, _economyService));
 
             var canSkip = _economyService.HasEnough(
                 EBankResourceType.CurrencyPremium,

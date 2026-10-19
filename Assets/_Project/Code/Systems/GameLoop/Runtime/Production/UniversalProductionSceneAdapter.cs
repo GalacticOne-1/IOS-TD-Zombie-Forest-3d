@@ -22,13 +22,13 @@ namespace Galactic1.Game.Runtime.Production
 {
     /// <summary>
     /// Универсальный адаптер производственной станции.
-    /// 
+    ///
     /// Работает с любой реализацией IProductionStationRuntime:
     /// - Craft
     /// - Recycler
     /// - Smelter
     /// - etc.
-    /// 
+    ///
     /// Scene не знает конкретный тип станции.
     /// Runtime остаётся единственным источником истины.
     /// </summary>
@@ -39,13 +39,12 @@ namespace Galactic1.Game.Runtime.Production
         private readonly IInventoryResourcesPort _inventory;
         private readonly IEconomyService _economy;
         private readonly ResourcesRequirementService _requirementService;
-         
+
         public FacilityType Type => _runtime.Type;
 
         private RuntimeId _currentRecipe;
         public RuntimeId CurrentRecipe => _currentRecipe;
 
-        
         public event Action OnStateChanged
         {
             add => _runtime.OnStateChanged += value;
@@ -53,9 +52,6 @@ namespace Galactic1.Game.Runtime.Production
         }
 
         public event Action OnCollectFailed;
-
-        
-        
 
         public void SetCurrentRecipe(RuntimeId id) => _currentRecipe = id;
 
@@ -82,15 +78,12 @@ namespace Galactic1.Game.Runtime.Production
 
             var recipe = recipeEntry.Recipes[0];
 
-            
             // === мульти выход для recycler
-            List<RecyclerOutputDTO> outputResources = new ();
+            List<RecyclerOutputDTO> outputResources = new();
             if (Type == FacilityType.Recycler)
             {
-                
             }
 
-            
             // === DESCRIPTER STATS
             List<StatDtoBase> descriptorDto = new();
             DescriptorStyleEntry descriptorEntry;
@@ -104,11 +97,7 @@ namespace Galactic1.Game.Runtime.Production
                     Debug.LogError($"Not exist style for descriptor [{e.DescriptorId}]");
                     continue;
                 }
-                
-                // * получаем layout если поле не статичное
-                // var statEntry = descriptorEntry.layoutType == StatLayoutType.StaticLabel
-                // ? null
-                // : StatStyleResolver.Resolve(descriptorEntry.statId);
+
                 var resolve = StatValueResolver.Resolve(e, out var statId);
                 descriptorDto.Add(new DescriptorViewDto(
                     descriptorEntry,
@@ -116,8 +105,6 @@ namespace Galactic1.Game.Runtime.Production
                     StatStyleResolver.Resolve(statId)
                 ));
             }
-            
-            
 
             // === STATS GROUP
             List<StatGroupViewDto> statGroup = new();
@@ -128,35 +115,30 @@ namespace Galactic1.Game.Runtime.Production
             {
                 if (s.Value == 0)
                     continue;
-                
+
                 // * damage не показываем в поле, уже есть в статике
-                if(s.StatId == StatId.Damage)
+                if (s.StatId == StatId.Damage)
                     continue;
-                
-                
+
                 var statEntry = StatStyleResolver.Resolve(s.StatId);
                 if (statEntry != null)
                     statDto.Add(new StatViewDto(statEntry, s.Value));
                 else
                     Debug.LogError($"Not exist style for stat [{s.StatId}]");
             }
-            
-            // === если есть список предметов 
+
+            // === если есть список предметов
             // например:
             //   - у оружия используемые боеприпасы
             //   - у патронов всё оружие которое юзает эти патроны
             if (recipe.OutputItem.TryGetLinkedItems(out var id, out var result))
                 statDto.Add(new ItemListViewDto(StatStyleResolver.Resolve(id), result));
 
-            
-            
             // *** добавляем финальный список настроеных статов
             statGroup.Add(new StatGroupViewDto(
                 "Main",
                 "Stats",
                 statDto));
-            
-            
 
             var requirements = recipe.Requirement
                 .Select(r =>
@@ -201,14 +183,14 @@ namespace Galactic1.Game.Runtime.Production
                         $"Upgrade {_stationConfig.Item.Header.titleLid} Lvl. {(byte)recipe.RequiredTier}"
                 });
         }
-        
+
         // =========================================================
         // COMMANDS
         // =========================================================
 
         public bool TryAddOrder(RuntimeId recipeId)
         {
-            if (recipeId== null)
+            if (recipeId == null)
                 return false;
 
             if (!_runtime.CanAddJob(recipeId))
@@ -219,58 +201,68 @@ namespace Galactic1.Game.Runtime.Production
             if (!_requirementService.HasResources(recipe.Requirement))
                 return false;
 
-            // списание ресурсов (после проверки)
-            foreach (var r in recipe.Requirement)
-                _inventory.TrySpend(r.Item.Id, r.Amount);
-
-            return _runtime.TryAddJob(
+            // сначала добавляем заказ, и только при успехе списываем ресурсы
+            bool added = _runtime.TryAddJob(
                 recipeId,
                 (int)recipe.CraftTime,
                 1,
                 recipe.StackOrderLimit,
-            recipe.OutputCount);
+                recipe.OutputCount);
+
+            if (!added)
+                return false;
+
+            foreach (var r in recipe.Requirement)
+                _inventory.TrySpend(r.Item.Id, r.Amount);
+
+            return true;
         }
 
+        /// <summary>
+        /// Отменяет один НЕПРОИЗВЕДЁННЫЙ заказ слота и возвращает его ресурсы.
+        /// Готовые заказы отменить нельзя — их только забирают.
+        /// </summary>
         public bool CancelOrder(string jobId)
         {
             var job = _runtime.GetQueueDTO().FirstOrDefault(j => j.JobId == jobId);
-
             if (job == null)
+                return false;
+
+            if (job.CurrentStack - job.CompletedStack <= 0)
                 return false;
 
             var recipeEntry = _stationConfig.AvailableRecipes
                 .FirstOrDefault(r => r.Id == job.RecipeId);
-
             if (recipeEntry == null)
                 return false;
 
             var recipe = recipeEntry.Recipes[0];
 
-            // === 1. Проверка вместимости
             var refundSlots = recipe.Requirement
                 .Select(r => new InventorySlotRuntime(
-                    GameContent.Items.Get(r.Item.Id),
-                    r.Amount,
-                    0,
-                    0))
+                    GameContent.Items.Get(r.Item.Id), r.Amount, 0, 0))
                 .ToList();
 
+            // 1. проверка вместимости
             if (!_inventory.CanAddMultiple(refundSlots))
             {
                 OnCollectFailed?.Invoke();
                 return false;
             }
 
-            // === 2. Реальное добавление
+            // 2. сначала отмена, потом возврат ресурсов
+            if (!_runtime.CancelJob(jobId, 1))
+                return false;
+
             foreach (var slot in refundSlots)
                 _inventory.TryAdd(slot);
 
-            // === 3. Удаление заказа
-            return _runtime.CancelJob(jobId);
+            return true;
         }
 
         /// <summary>
-        /// Забирает предметы со всех готовых слотов
+        /// Забирает предметы со всех готовых слотов.
+        /// Слот, для которого нет места, пропускается, остальные обрабатываются.
         /// </summary>
         public void CollectCompleted()
         {
@@ -289,11 +281,11 @@ namespace Galactic1.Game.Runtime.Production
 
                 var item = GameContent.Items.Get(job.RecipeId);
                 var slot = new InventorySlotRuntime(item, totalItems, item.Physical.maxDurability, 0);
-                
+
                 if (!_inventory.CanAdd(slot))
                 {
-                    OnCollectFailed?.Invoke();
-                    return;
+                    failed = true;
+                    continue;
                 }
 
                 var result = _inventory.TryAdd(slot);
@@ -313,7 +305,7 @@ namespace Galactic1.Game.Runtime.Production
             if (failed)
                 OnCollectFailed?.Invoke();
         }
-        
+
         public void CollectSingle(string jobId)
         {
             var job = _runtime.GetQueueDTO().FirstOrDefault(j => j.JobId == jobId);
@@ -336,21 +328,16 @@ namespace Galactic1.Game.Runtime.Production
             var result = _inventory.TryAdd(slot);
 
             if (result.Remaining == 0)
-            {
                 _runtime.CollectCompletedOrders(jobId, 1);
-            }
             else
-            {
                 OnCollectFailed?.Invoke();
-            }
         }
 
         public bool TryPaidSkip()
         {
-            int remaining = CalculateRemaining();
-            int cost = _economy.CalculateProductionSkipCost(
-                remaining,
-                _runtime.Level);
+            int cost = GetSkipCost();
+            if (cost < 0)
+                return false; // нечего скипать
 
             if (!_economy.TrySpend(EBankResourceType.CurrencyPremium, cost))
                 return false;
@@ -359,47 +346,22 @@ namespace Galactic1.Game.Runtime.Production
             return true;
         }
 
+        /// <summary>
+        /// Цена скипа активного слота (слот 0) = сумма цен за КАЖДУЮ непроизведённую единицу:
+        /// - текущий заказ: по оставшимся часам
+        /// - каждый следующий заказ стека: по полной длительности
+        /// Возвращает -1, если скипать нечего. Можно использовать для отображения цены в UI.
+        /// </summary>
+        public int GetSkipCost()
+            => ProductionTimeCalculator.CalculateSkipCost(_runtime, _economy);
+
         // =========================================================
         // INTERNAL
         // =========================================================
-        
+
         public IReadOnlyList<ProductionJobRuntimeDTO> GetQueue()
         {
             return _runtime.GetQueueDTO();
-        }
-
-        private int CalculateRemaining()
-        {
-            var queue = _runtime.GetQueueDTO();
-
-            if (queue.Count == 0)
-                return 0;
-
-            var active = queue[0];
-
-            if (active.State != ProductionJobState.InProgress)
-                return 0;
-
-            int remaining =
-                active.StartWorldHour + active.TotalDurationHours
-                - _runtime.TotalWorldHour;
-
-            return Math.Max(0, remaining);
-        }
-
-        private int CalculateTotalRemaining(int activeRemaining)
-        {
-            int total = 0;
-
-            foreach (var job in _runtime.GetQueueDTO())
-            {
-                if (job.State == ProductionJobState.InProgress)
-                    total += activeRemaining;
-                else if (job.State == ProductionJobState.Queued)
-                    total += job.TotalDurationHours;
-            }
-
-            return total;
         }
     }
 }

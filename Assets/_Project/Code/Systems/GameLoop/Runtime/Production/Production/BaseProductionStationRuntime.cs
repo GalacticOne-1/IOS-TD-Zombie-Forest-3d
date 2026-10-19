@@ -14,44 +14,44 @@ namespace Galactic1.Game.Runtime.Production
     /// <summary>
     /// Базовый runtime для всех production-станций.
     ///
-    /// Отвечает за:
-    /// • очередь
-    /// • время
-    /// • порядок слотов
-    /// • запуск следующего
-    /// • commit lifecycle
+    /// Правила:
+    /// • крафтит ТОЛЬКО слот 0, остальные слоты — очередь
+    /// • если слот 0 Completed (ждёт сбора) — станок стоит
+    /// • после освобождения слота 0 очередь сдвигается и новый слот 0 стартует
+    /// • время почасовое: за один вызов может пройти много часов,
+    ///   поэтому обработка идёт циклом по заказам с реальным часом готовности
     ///
     /// Не знает:
     /// • про инвентарь
     /// • про UI
     /// • про конкретную механику станции
     /// </summary>
-    public abstract class BaseProductionStationRuntime : 
+    public abstract class BaseProductionStationRuntime :
         BaseCampFacilityRuntime,
         IProductionStationRuntime
     {
-        
         protected abstract int MaxSlots { get; }
+
+        // час, на который "перемотано" моделирование (null = реальное время)
+        private int? _simHour;
 
         public IReadOnlyList<ProductionJobProxy> GetQueue => Proxy.ProductionQueue;
 
         private EventBinding<ProductionOrderAutoCollectedEvent> _eventBinding;
 
-
         protected BaseProductionStationRuntime(
-            FacilityProxy proxy, 
+            FacilityProxy proxy,
             FacilityModule config,
-            GameTimeService timeService) 
+            GameTimeService timeService)
             : base(proxy, config, timeService)
         {
-
             TimeService.HoursPassed += OnHoursPassed;
 
             _eventBinding = new EventBinding<ProductionOrderAutoCollectedEvent>(OnAutoCollected);
             EventBus<ProductionOrderAutoCollectedEvent>.Register(_eventBinding);
 
-            TryStartNext();
-            NormalizeQueue();
+            // досчитываем прогресс, пока игра была выключена
+            // (ProcessProduction сам вызывает TryStartNext)
             ProcessProduction(false);
             MarkStateChanged();
         }
@@ -66,12 +66,10 @@ namespace Galactic1.Game.Runtime.Production
             EventBus<ProductionOrderAutoCollectedEvent>.Deregister(_eventBinding);
         }
 
-        
-        
-        
         // =========================================================
         // PUBLIC API
         // =========================================================
+
         public IReadOnlyList<ProductionJobRuntimeDTO> GetQueueDTO()
         {
             var result = new List<ProductionJobRuntimeDTO>();
@@ -97,77 +95,81 @@ namespace Galactic1.Game.Runtime.Production
             return result;
         }
 
+        /// <summary>
+        /// Должен повторять логику выбора слота в TryAddJob.
+        /// </summary>
         public bool CanAddJob(RuntimeId recipeId)
         {
-            if (Proxy.ProductionQueue.Count < MaxSlots)
+            var q = Proxy.ProductionQueue;
+
+            if (q.Count < MaxSlots)
                 return true;
 
-            return Proxy.ProductionQueue.Any(j =>
-                j.RecipeId.Value == recipeId.Guid &&
-                j.State.Value == ProductionJobState.Queued &&
-                j.CurrentStack.Value < j.MaxStack.Value);
+            // очередь полна: подходит только дозаказ в последний слот с заказами
+            var last = FindLastOccupiedSlot();
+            return last != null && CanStackInto(last, recipeId);
         }
-        
-        
+
         public bool TryAddJob(
-            RuntimeId recipeId, 
-            int durationHours, 
-            int orders, 
-            int stackLimit, 
+            RuntimeId recipeId,
+            int durationHours,
+            int orders,
+            int stackLimit,
             int amountPerOrder)
         {
-            // 1. ищем последний слот где есть заказы (с конца)
+            if (orders <= 0 || stackLimit <= 0)
+                return false;
+
+            // 1. ищем слот для дозаказа: последний слот с заказами,
+            //    если это тот же рецепт и в нём есть место
             ProductionJobProxy targetSlot = null;
-            for (int i = Proxy.ProductionQueue.Count - 1; i >= 0; i--)
-            {
-                var slot = Proxy.ProductionQueue[i];
-                if (slot.CurrentStack.Value > 0)
-                {
-                    if(slot.RecipeId.Value == recipeId.Guid && slot.CurrentStack.Value < slot.MaxStack.Value)
-                    {
-                        targetSlot = slot;
-                        
-                        // *** первый слот может быть в статусе Completed
-                        // поэтому меняем что бы он снова запустился
-                        if (i == 0 && IsCompleted(targetSlot))
-                            targetSlot.State.Value = ProductionJobState.Queued;
-                    }
-                    break;
-                }
-            }
+            var last = FindLastOccupiedSlot();
+            if (last != null && CanStackInto(last, recipeId))
+                targetSlot = last;
 
-            // если нет, ищем первый свободный слот
-            if (targetSlot == null)
-            {
-                targetSlot = Proxy.ProductionQueue.FirstOrDefault(j => j.CurrentStack.Value == 0);
-            }
-
-            // 2. заполняем найденный слот
+            // 2. ПРОВЕРКА ДО ИЗМЕНЕНИЙ (атомарность):
+            //    считаем, сколько заказов уйдёт в существующий слот
+            //    и сколько новых слотов понадобится
+            int remaining = orders;
             if (targetSlot != null)
             {
+                int free = targetSlot.MaxStack.Value - targetSlot.CurrentStack.Value;
+                remaining -= Math.Min(free, remaining);
+            }
+
+            int newSlotsNeeded = remaining > 0
+                ? (remaining + stackLimit - 1) / stackLimit
+                : 0;
+
+            if (Proxy.ProductionQueue.Count + newSlotsNeeded > MaxSlots)
+                return false;
+
+            // 3. применяем изменения
+            if (targetSlot != null)
+            {
+                // первый слот может быть Completed — перезапускаем его
+                if (ReferenceEquals(targetSlot, Proxy.ProductionQueue[0]) && IsCompleted(targetSlot))
+                    targetSlot.State.Value = ProductionJobState.Queued;
+
                 int free = targetSlot.MaxStack.Value - targetSlot.CurrentStack.Value;
                 int add = Math.Min(free, orders);
                 targetSlot.CurrentStack.Value += add;
                 orders -= add;
             }
 
-            // 3. создаем новые слоты, если остались заказы
             while (orders > 0)
             {
-                if (Proxy.ProductionQueue.Count >= MaxSlots)
-                    return false;
-
                 int toAdd = Math.Min(orders, stackLimit);
 
                 var data = new ProductionJobData
                 {
                     JobId = Guid.NewGuid().ToString(),
                     RecipeId = recipeId.Guid,
-                    
+
                     State = (byte)ProductionJobState.Queued,
                     TotalHours = durationHours,
                     StartWorldHour = 0,
-                    
+
                     Amount = amountPerOrder,
                     CurrentStack = toAdd,
                     CompletedStack = 0,
@@ -183,36 +185,41 @@ namespace Galactic1.Game.Runtime.Production
             return true;
         }
 
+        /// <summary>
+        /// Отмена НЕПРОИЗВЕДЁННЫХ заказов слота. Готовые отменить нельзя — их только забирают.
+        /// </summary>
         public bool CancelJob(string jobId, int ordersToCancel = 1)
         {
             var job = Find(jobId);
             if (job == null)
                 return false;
 
-            // уменьшаем стек
-            job.CurrentStack.Value = Math.Max(0, job.CurrentStack.Value - ordersToCancel);
-            
+            int cancellable = job.CurrentStack.Value - job.CompletedStack.Value;
+            ordersToCancel = Math.Min(ordersToCancel, cancellable);
+            if (ordersToCancel <= 0)
+                return false;
 
-            // если стек пуст, удаляем слот
+            job.CurrentStack.Value -= ordersToCancel;
+
             if (job.CurrentStack.Value <= 0)
             {
-                bool wasActive = IsInProgress(job);
                 Proxy.RemoveJob(job);
-
-                // если был активный, запускаем следующий
-                if (wasActive)
-                    TryStartNext();
-                
-                NormalizeQueue();
             }
-            
-            MarkStateChanged();
+            else if (IsInProgress(job) &&
+                     job.CompletedStack.Value >= job.CurrentStack.Value)
+            {
+                // все оставшиеся заказы уже готовы -> станок ждёт сбора
+                MarkCompleted(job);
+            }
 
+            TryStartNext();
+            NormalizeQueue();
+            MarkStateChanged();
             return true;
         }
-        
+
         /// <summary>
-        /// Забрать N готовых заказов из слота
+        /// Забрать N готовых заказов из слота.
         /// </summary>
         public void CollectCompletedOrders(string jobId, int orders)
         {
@@ -224,40 +231,43 @@ namespace Galactic1.Game.Runtime.Production
             if (take <= 0)
                 return;
 
-            // уменьшаем готовые
             job.CompletedStack.Value = Math.Max(0, job.CompletedStack.Value - take);
-            // уменьшаем общее количество заказов
-            job.CurrentStack.Value   = Math.Max(0, job.CurrentStack.Value - take);
+            job.CurrentStack.Value = Math.Max(0, job.CurrentStack.Value - take);
 
-            // если все заказы забраны и новых нет
+            // все заказы забраны и новых нет -> слот освобождается, очередь сдвигается
             if (job.CompletedStack.Value == 0 && job.CurrentStack.Value == 0)
             {
                 Proxy.RemoveJob(job);
+                TryStartNext();
                 NormalizeQueue();
             }
 
             MarkStateChanged();
         }
-        
-        
-        
+
         public void ReduceCompletedAmount(string jobId, int amount)
         {
-            var job = Proxy.ProductionQueue.FirstOrDefault(j => j.JobId.Value == jobId);
+            var job = Find(jobId);
             if (job == null)
                 return;
 
-            if (job.State.Value != ProductionJobState.Completed)
+            if (!IsCompleted(job))
                 return;
 
             job.Amount.Value -= amount;
 
             if (job.Amount.Value <= 0)
+            {
                 Proxy.RemoveJob(job);
+                TryStartNext();
+            }
 
             MarkStateChanged();
         }
-        
+
+        /// <summary>
+        /// Мгновенно завершает весь активный слот (слот 0).
+        /// </summary>
         public void SkipActive()
         {
             ProcessProduction(true);
@@ -273,6 +283,7 @@ namespace Galactic1.Game.Runtime.Production
                 return;
 
             Proxy.RemoveJob(job);
+            TryStartNext();
 
             NormalizeQueue();
             MarkStateChanged();
@@ -295,119 +306,119 @@ namespace Galactic1.Game.Runtime.Production
         // CORE QUEUE LOGIC
         // =========================================================
 
+        /// <summary>
+        /// Обрабатывает производство по одному заказу за итерацию.
+        /// Каждый заказ фиксируется с часом реальной готовности, поэтому
+        /// если прошло много часов, а автосбор освобождает слоты, следующие
+        /// слоты тоже успевают произвестись.
+        /// </summary>
         protected void ProcessProduction(bool forceCompleteActive)
         {
-            if (Proxy.ProductionQueue.Count == 0)
-                return;
+            int now = TotalWorldHour;
+            bool force = forceCompleteActive;
 
-            var active = Proxy.ProductionQueue.FirstOrDefault(IsInProgress);
-            if (active == null)
-                return;
-
-            int duration = active.TotalHours.Value;
-            int elapsed = TotalWorldHour - active.StartWorldHour.Value;
-
-            if (!forceCompleteActive && elapsed < duration)
-                return;
-
-            int ordersToComplete;
-
-            if (forceCompleteActive)
+            // guard защищает от бесконечного цикла при кривых данных
+            for (int guard = 0; guard < 10000; guard++)
             {
-                ordersToComplete = active.CurrentStack.Value - active.CompletedStack.Value;
-            }
-            else
-            {
-                ordersToComplete = elapsed / duration;
-            }
+                if (Proxy.ProductionQueue.Count == 0)
+                    break;
 
-            int remainingOrders = active.CurrentStack.Value - active.CompletedStack.Value;
-
-            ordersToComplete = Math.Min(ordersToComplete, remainingOrders);
-
-            if (ordersToComplete <= 0)
-                return;
-            
-            
-            if (!TryResolveRecipe(active, out var recipe))
-                return;
-
-            for (int i = 0; i < ordersToComplete; i++)
-            {
-                active.CompletedStack.Value++;
-
-                EventBus<ProductionOrderCompletedEvent>.Raise(
-                    new ProductionOrderCompletedEvent()
-                    {
-                        JobId = active.JobId.Value,
-                        RecipeId = recipe.Id,
-                        StationId = Proxy.UniqueId,
-                        Orders = 1,
-                        Amount = active.Amount.Value
-                    });
-            }
-
-            bool slotWillComplete =
-                active.CompletedStack.Value >= active.CurrentStack.Value;
-
-            if (slotWillComplete)
-            {
-                MarkCompleted(active);
-            }
-            else
-            {
-                active.StartWorldHour.Value += ordersToComplete * duration;
-            }
-
-            if (!Proxy.ProductionQueue.Any(IsInProgress))
                 TryStartNext();
+
+                var active = Proxy.ProductionQueue[0];
+                if (!IsInProgress(active))
+                    break; // слот 0 Completed -> станок стоит
+
+                int duration = active.TotalHours.Value;
+                if (duration <= 0)
+                    break;
+
+                if (active.CompletedStack.Value >= active.CurrentStack.Value)
+                {
+                    MarkCompleted(active);
+                    break;
+                }
+
+                int finishHour = active.StartWorldHour.Value + duration;
+                if (!force && finishHour > now)
+                    break; // следующий заказ ещё не готов
+
+                if (!TryResolveRecipe(active, out var recipe))
+                    break;
+
+                // час, когда этот заказ реально завершился
+                int completionHour = force ? now : finishHour;
+
+                // 1. полностью обновляем состояние ДО события
+                active.CompletedStack.Value++;
+                active.StartWorldHour.Value = completionHour; // следующий заказ стека начнётся отсюда
+
+                bool slotDone = active.CompletedStack.Value >= active.CurrentStack.Value;
+                if (slotDone)
+                    MarkCompleted(active);
+
+                // 2. данные события берём заранее: автосбор может удалить active из очереди
+                var evt = new ProductionOrderCompletedEvent
+                {
+                    JobId = active.JobId.Value,
+                    RecipeId = recipe.Id,
+                    StationId = Proxy.UniqueId,
+                    Orders = 1,
+                    Amount = active.Amount.Value
+                };
+
+                // 3. событие. Если сработает автосбор, слот освободится,
+                //    а TryStartNext() возьмёт _simHour как час старта следующего слота
+                _simHour = completionHour;
+                try
+                {
+                    EventBus<ProductionOrderCompletedEvent>.Raise(evt);
+                }
+                finally
+                {
+                    _simHour = null;
+                }
+
+                // skip завершает только текущий слот
+                if (force && slotDone)
+                    break;
+            }
 
             NormalizeQueue();
             MarkStateChanged();
         }
-        
+
         private void OnAutoCollected(ProductionOrderAutoCollectedEvent e)
         {
             if (e.StationId != Proxy.UniqueId)
                 return;
 
             var job = Find(e.JobId);
-
             if (job == null)
                 return;
 
             CollectCompletedOrders(job.JobId.Value, e.Orders);
         }
 
+        /// <summary>
+        /// Запускает слот 0, если он ждёт в очереди. Другие слоты никогда не стартуют.
+        /// </summary>
         protected void TryStartNext()
         {
-            if (Proxy.ProductionQueue.Any(IsInProgress))
+            if (Proxy.ProductionQueue.Count == 0)
                 return;
 
-            var next = Proxy.ProductionQueue.FirstOrDefault(IsQueued);
-            if (next != null)
-                StartJob(next, TotalWorldHour);
+            var first = Proxy.ProductionQueue[0];
+            if (IsQueued(first))
+                StartJob(first, _simHour ?? TotalWorldHour);
         }
 
         /// <summary>
-        /// Приводит очередь к строгому порядку:
-        /// 1. Один InProgress (если есть)
-        /// 2. Все Queued
-        /// 3. Все Completed
-        /// Не изменяет состояние слотов — только порядок.
+        /// Оставлен для совместимости с наследниками. Сдвиг очереди происходит
+        /// сам при удалении слота из списка (Proxy.RemoveJob).
         /// </summary>
         protected void NormalizeQueue()
         {
-            // if (Proxy.ProductionQueue.Count <= 1)
-            //     return;
-            //
-            // var ordered = Proxy.ProductionQueue
-            //     .OrderByDescending(IsInProgress)
-            //     .ThenBy(j => IsQueued(j) ? 0 : 1)
-            //     .ToList();
-            //
-            // if (!Proxy.ProductionQueue.SequenceEqual(ordered))
-            //     Proxy.Reorder(ordered);
         }
 
         // =========================================================
@@ -443,15 +454,24 @@ namespace Galactic1.Game.Runtime.Production
             job.State.Value = ProductionJobState.Completed;
         }
 
-        protected void ReorderAfterCompletion(ProductionJobProxy completed)
-        {
-            var reordered = Proxy.ProductionQueue
-                .Skip(1)
-                .Concat(new[] { completed })
-                .ToList();
+        // =========================================================
+        // PRIVATE HELPERS
+        // =========================================================
 
-            Proxy.Reorder(reordered);
+        private ProductionJobProxy FindLastOccupiedSlot()
+        {
+            var q = Proxy.ProductionQueue;
+            for (int i = q.Count - 1; i >= 0; i--)
+            {
+                if (q[i].CurrentStack.Value > 0)
+                    return q[i];
+            }
+
+            return null;
         }
 
+        private static bool CanStackInto(ProductionJobProxy slot, RuntimeId recipeId)
+            => slot.RecipeId.Value == recipeId.Guid &&
+               slot.CurrentStack.Value < slot.MaxStack.Value;
     }
 }
