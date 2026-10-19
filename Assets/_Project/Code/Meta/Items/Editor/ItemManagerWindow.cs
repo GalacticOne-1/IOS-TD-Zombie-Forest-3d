@@ -1009,9 +1009,16 @@ namespace Galactic1.Tools
                     TrackTooltip(Rect.MinMaxRect(ic.xMin, ic.yMin, lbl.xMax, ic.yMax), sub.Item.Header.titleLid);
                 }
 
-                if (recipe.OutputCount > 1)
-                    GUILayout.Label($"(→ x{recipe.OutputCount})", _bdMini,
-                        GUILayout.Width(50), GUILayout.Height(BreakdownRowHeight));
+                if (outputCount > 1 || crafts > 1f)
+                {
+                    string info = breakdownPerUnit
+                        ? $"(крафт даёт x{FormatAmount(outputCount)})"
+                        : $"({FormatAmount(crafts)}× → x{FormatAmount(crafts * outputCount)})";
+
+                    GUILayout.Label(info, _bdMini, 
+                        GUILayout.Width(110), 
+                        GUILayout.Height(BreakdownRowHeight));
+                }
             }
 
             GUILayout.FlexibleSpace();
