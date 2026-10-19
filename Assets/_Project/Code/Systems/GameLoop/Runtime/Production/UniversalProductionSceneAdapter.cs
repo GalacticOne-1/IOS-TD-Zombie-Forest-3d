@@ -201,7 +201,12 @@ namespace Galactic1.Game.Runtime.Production
             if (!_requirementService.HasResources(recipe.Requirement))
                 return false;
 
-            // сначала добавляем заказ, и только при успехе списываем ресурсы
+            // 1. списываем ресурсы ДО изменения очереди: runtime уведомляет UI внутри
+            //    TryAddJob, и к этому моменту карточка должна видеть уже новый инвентарь
+            foreach (var r in recipe.Requirement)
+                _inventory.TrySpend(r.Item.Id, r.Amount);
+
+            // 2. добавляем заказ
             bool added = _runtime.TryAddJob(
                 recipeId,
                 (int)recipe.CraftTime,
@@ -209,13 +214,17 @@ namespace Galactic1.Game.Runtime.Production
                 recipe.StackOrderLimit,
                 recipe.OutputCount);
 
-            if (!added)
-                return false;
+            if (added)
+                return true;
 
+            // 3. не вышло (очередь не изменилась, TryAddJob атомарен) -> возвращаем ресурсы
             foreach (var r in recipe.Requirement)
-                _inventory.TrySpend(r.Item.Id, r.Amount);
+            {
+                _inventory.TryAdd(new InventorySlotRuntime(
+                    GameContent.Items.Get(r.Item.Id), r.Amount, 0, 0));
+            }
 
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -250,14 +259,19 @@ namespace Galactic1.Game.Runtime.Production
                 return false;
             }
 
-            // 2. сначала отмена, потом возврат ресурсов
-            if (!_runtime.CancelJob(jobId, 1))
-                return false;
-
+            // 2. возвращаем ресурсы ДО отмены: runtime уведомляет UI внутри CancelJob,
+            //    и к этому моменту карточка должна видеть уже новый инвентарь
             foreach (var slot in refundSlots)
                 _inventory.TryAdd(slot);
 
-            return true;
+            // 3. отмена. Заказ уже проверен как отменяемый, но на случай отказа откатываем возврат
+            if (_runtime.CancelJob(jobId, 1))
+                return true;
+
+            foreach (var r in recipe.Requirement)
+                _inventory.TrySpend(r.Item.Id, r.Amount);
+
+            return false;
         }
 
         /// <summary>
