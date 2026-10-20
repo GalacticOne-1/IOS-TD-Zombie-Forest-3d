@@ -1102,8 +1102,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -593.31006, y: 47.458496}
-  m_SizeDelta: {x: 1186.615, y: 834.9963}
+  m_AnchoredPosition: {x: -660.53406, y: 61}
+  m_SizeDelta: {x: 1321.0632, y: 929.6046}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4825552004398395697
 CanvasRenderer:
@@ -1154,6 +1154,7 @@ GameObject:
   - component: {fileID: 7810267409262439869}
   - component: {fileID: 6133695835045933384}
   - component: {fileID: 3531095465877992198}
+  - component: {fileID: 5828082832606110777}
   m_Layer: 5
   m_Name: Loading Screen
   m_TagString: Untagged
@@ -1220,6 +1221,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5828082832606110777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3723597679264614128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 938fc31b2ea64abd96647d1491d1ffea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewport: {fileID: 3560843542981386287}
 --- !u!1 &3730579106242529159
 GameObject:
   m_ObjectHideFlags: 0
