@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: resource.const.kit_Recipe_1
   m_EditorClassIdentifier: 
   outputItem: {fileID: 11400000, guid: b811c953694984262ba8994851fcba85, type: 2}
-  outputCount: 4
+  outputCount: 1
   requirement:
   - Item: {fileID: 11400000, guid: 87b611b740a434461ae8c001511b607f, type: 2}
-    Amount: 4
-  - Item: {fileID: 11400000, guid: 6bf48663564b7466b8b537cfc248ddd5, type: 2}
     Amount: 2
+  - Item: {fileID: 11400000, guid: bbef5db427aff47f09932afea46c6b06, type: 2}
+    Amount: 2
+  - Item: {fileID: 11400000, guid: 6bf48663564b7466b8b537cfc248ddd5, type: 2}
+    Amount: 1
   requiredStationItem: {fileID: 11400000, guid: 29e9bb6da7a95499aac263faf4cac1d0, type: 2}
   requiredTier: 1
-  craftTime: 1
-  stackOrderLimit: 20
+  craftTime: 4
+  stackOrderLimit: 6
   requiredPlayerLevel: 0
   requiredTags: []
