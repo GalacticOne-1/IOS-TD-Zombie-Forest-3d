@@ -293,11 +293,7 @@ namespace Galactic1.Code.Cameras
                 position.z = Mathf.Clamp(position.z, minBounds.z, maxBounds.z);
             }
 
-            // ADDED — раздел 14 ТЗ: Level Bounds → Tutorial Bounds → Squad Radius.
-            // Применяется поверх level bounds, только XZ (Y не трогаем — раздел 18 ТЗ).
-            // Работает автоматически и для drag+inertia (ApplyMovement), и для
-            // FocusOnPosition/FocusOnPositionFacility (SmoothMoveToPosition) — оба пути
-            // уже проходят через этот единственный ClampToBounds, второй pipeline не нужен.
+            // Level Bounds → Tutorial Bounds → Squad Radius.
             if (_hasTutorialBounds)
             {
                 position.x = Mathf.Clamp(position.x, _tutorialMinBounds.x, _tutorialMaxBounds.x);
