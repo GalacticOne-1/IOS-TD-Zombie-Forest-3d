@@ -14,7 +14,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     {
         public bool TryGetFacilityTarget(ItemId facilityItemId, out ITutorialTarget target)
         {
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+            ServiceLocator.Current.TryGet<ConstructionPanelController>(out var controller);
             var listView = controller?.View?.ListView;
 
             if (listView != null)

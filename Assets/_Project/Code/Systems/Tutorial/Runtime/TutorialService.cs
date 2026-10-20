@@ -7,8 +7,6 @@ using Galactic1.Code.Systems.Tutorial.Objectives;
 using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Code.Systems.Tutorial.Rewards;
 using Galactic1.Core;
-using Galactic1.Core.Systems.GameLoopSession;
-using Galactic1.EntryPoint;
 using Galactic1.UI.Core;
 using R3;
 using UnityEngine;
@@ -455,10 +453,11 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             if (guidanceDefs == null)
                 return list;
+            
 
             foreach (var g in guidanceDefs)
             {
-                var condition = _guidanceFactory.Create(g.condition);
+                var condition = _guidanceFactory.Create(g.condition, g.allowedDomains);
 
                 var targets = new List<TutorialGuidanceTarget>(
                     g.presentations?.Count ?? 0);
@@ -496,7 +495,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             foreach (var g in guidanceDefs)
             {
                 if (g.descriptionPanel == null || !g.descriptionPanel.enabled) continue;
-                var condition = _guidanceFactory.Create(g.condition);
+                var condition = _guidanceFactory.Create(g.condition, g.allowedDomains);
                 list.Add((condition, g.descriptionPanel));
             }
 

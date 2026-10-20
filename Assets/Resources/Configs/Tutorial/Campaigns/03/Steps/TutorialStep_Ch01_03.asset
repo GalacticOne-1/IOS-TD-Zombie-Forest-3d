@@ -33,7 +33,8 @@ MonoBehaviour:
       boundsTargetId: {fileID: 0}
     actions: []
   guidance:
-  - condition: {fileID: 11400000, guid: 6e1288eda30524af8a2e29612fa7d228, type: 2}
+  - allowedDomains: 01000000
+    condition: {fileID: 11400000, guid: 6e1288eda30524af8a2e29612fa7d228, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
@@ -44,7 +45,8 @@ MonoBehaviour:
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
-  - condition: {fileID: 11400000, guid: 053a104cb3a92490f86e7723da02ced0, type: 2}
+  - allowedDomains: 01000000
+    condition: {fileID: 11400000, guid: 053a104cb3a92490f86e7723da02ced0, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
@@ -55,7 +57,8 @@ MonoBehaviour:
       arrowTargetId: {fileID: 0}
       cameraFocusTargetId: {fileID: 0}
       cameraBoundsTargetId: {fileID: 0}
-  - condition: {fileID: 11400000, guid: 7f26c6c2b99954197aa945781a95cb88, type: 2}
+  - allowedDomains: 01000000
+    condition: {fileID: 11400000, guid: 7f26c6c2b99954197aa945781a95cb88, type: 2}
     descriptionPanel:
       enabled: 0
       text: 

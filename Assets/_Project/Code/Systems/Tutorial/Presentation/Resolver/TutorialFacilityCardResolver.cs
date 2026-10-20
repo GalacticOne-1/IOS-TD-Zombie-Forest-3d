@@ -19,7 +19,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
 
         public void SubscribeInvalidation(TutorialTargetRequest request, Action callback)
         {
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+            ServiceLocator.Current.TryGet<ConstructionPanelController>(out var controller);
             var listView = controller?.View?.ListView;
             if (listView == null) return; // панель не открыта — валидный fallback "нечего пересчитывать"
 
@@ -31,7 +31,8 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public void UnsubscribeInvalidation(TutorialTargetRequest request, Action callback)
         {
             if (!_handlers.TryGetValue(callback, out var handler)) return;
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+
+            ServiceLocator.Current.TryGet<ConstructionPanelController>(out var controller);
             var listView = controller?.View?.ListView;
             if (listView != null) listView.OnRebuilt -= handler;
             _handlers.Remove(callback);

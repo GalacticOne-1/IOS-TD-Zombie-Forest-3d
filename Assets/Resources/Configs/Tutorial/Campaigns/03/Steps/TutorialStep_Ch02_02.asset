@@ -18,10 +18,10 @@ MonoBehaviour:
   objectives:
     mode: 0
     objectives:
-    - {fileID: 11400000, guid: 07da0361f6c46414a91844f322fbed1b, type: 2}
+    - {fileID: 11400000, guid: aa9be5dedbd634d379c32b0605b97757, type: 2}
   presentation:
-    instructionTitleKey: Build an Foundry
-    instructionDesKey: Build a foundry in the camp.
+    instructionTitleKey: Build an Workshop
+    instructionDesKey: Build a workshop in the camp.
     dialogueId: 
     inputPolicy: 0
     canMove: 1
@@ -33,7 +33,8 @@ MonoBehaviour:
       boundsTargetId: {fileID: 0}
     actions: []
   guidance:
-  - condition: {fileID: 11400000, guid: 40c2dc9b698de4451b1f1402825f9524, type: 2}
+  - allowedDomains: 01000000
+    condition: {fileID: 11400000, guid: 589c4a356ebb647e0955e719b75380d2, type: 2}
     descriptionPanel:
       enabled: 0
       text: 
@@ -60,4 +61,4 @@ MonoBehaviour:
     - rid: 3243658704730980434
       type: {class: TutorialFacilityCardQuery, ns: Galactic1.Code.Systems.Tutorial.Authoring, asm: Assembly-CSharp}
       data:
-        facilityItemId: {fileID: 11400000, guid: 96dad5a337b1b47dc995fe0dc4e7b04b, type: 2}
+        facilityItemId: {fileID: 11400000, guid: abcbcd147f0cc484eacde13b5350b6d2, type: 2}

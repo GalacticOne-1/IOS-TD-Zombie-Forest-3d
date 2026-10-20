@@ -11,7 +11,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
     {
         public bool TryGetTabTarget(ConstructionCategory category, out ITutorialTarget target)
         {
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+            ServiceLocator.Current.TryGet<ConstructionPanelController>(out var controller);
             var tabs = controller?.View?.Tabs;
 
             if (tabs != null)

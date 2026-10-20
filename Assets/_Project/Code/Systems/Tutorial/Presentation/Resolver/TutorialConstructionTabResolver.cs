@@ -19,7 +19,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
 
         public void SubscribeInvalidation(TutorialTargetRequest request, Action callback)
         {
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+            ServiceLocator.Current.TryGet<ConstructionPanelController>(out var controller);
             var view = controller?.View;
             if (view == null) return;
 
@@ -31,7 +31,7 @@ namespace Galactic1.Code.Systems.Tutorial.Presentation
         public void UnsubscribeInvalidation(TutorialTargetRequest request, Action callback)
         {
             if (!_handlers.TryGetValue(callback, out var handler)) return;
-            var controller = ServiceLocator.Current.Get<ConstructionPanelController>();
+            ServiceLocator.Current.TryGet<ConstructionPanelController>(out var controller);
             var view = controller?.View;
             if (view != null) view.OnTabsRebuilt -= handler;
             _handlers.Remove(callback);

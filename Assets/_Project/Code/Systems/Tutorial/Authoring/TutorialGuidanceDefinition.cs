@@ -23,6 +23,12 @@ namespace Galactic1.Code.Systems.Tutorial.Authoring
     [Serializable]
     public sealed class TutorialGuidanceDefinition
     {
+        [Tooltip("Опционально. Домены, в которых этот guidance может быть активен. " +
+                 "Пусто (или содержит Any) = без ограничений. Применяется ко всему entry, " +
+                 "включая descriptionPanel. Если текущий домен не в списке — entry пропускается, " +
+                 "и резолв идёт к следующему.")]
+        public List<TutorialStepDomain> allowedDomains = new();
+        
         [Tooltip("Пусто = условие всегда истинно (см. класс-докстринг).")]
         public TutorialGuidanceConditionDefinition condition;
         

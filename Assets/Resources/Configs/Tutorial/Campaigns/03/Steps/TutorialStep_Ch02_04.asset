@@ -34,7 +34,8 @@ MonoBehaviour:
       boundsTargetId: {fileID: 0}
     actions: []
   guidance:
-  - condition: {fileID: 11400000, guid: e241f106ab08a4d3a9ef199a07b9e1b9, type: 2}
+  - allowedDomains: 01000000
+    condition: {fileID: 11400000, guid: e241f106ab08a4d3a9ef199a07b9e1b9, type: 2}
     descriptionPanel:
       enabled: 0
       text: 

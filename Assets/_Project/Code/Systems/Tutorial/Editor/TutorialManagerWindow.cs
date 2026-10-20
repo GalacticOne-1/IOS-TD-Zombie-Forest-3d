@@ -63,7 +63,7 @@ namespace Galactic1.Tools
                 ? AssetDatabase.LoadAssetAtPath<TutorialCampaignRegistry>(AssetDatabase.GUIDToAssetPath(guids[0]))
                 : null;
         }
-        
+
         private void LoadAssetCreationSettings()
         {
             var guids = AssetDatabase.FindAssets("t:TutorialAssetCreationSettings");
@@ -72,7 +72,7 @@ namespace Galactic1.Tools
                 ? AssetDatabase.LoadAssetAtPath<TutorialAssetCreationSettings>(AssetDatabase.GUIDToAssetPath(guids[0]))
                 : null;
         }
-        
+
 
         public void RefreshCampaignList()
         {
@@ -250,6 +250,7 @@ namespace Galactic1.Tools
                 selectedChapter = chapter;
                 SelectStep(chapter.steps != null && chapter.steps.Count > 0 ? chapter.steps[0] : null);
             }
+
             GUI.backgroundColor = originalBg;
 
             if (isChapterSelected)
@@ -415,10 +416,12 @@ namespace Galactic1.Tools
                     ShowCreateAssetMenu<TutorialObjectiveDefinition>(
                         instance => AddArrayElement(listProp, instance));
                 }
+
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.EndVertical();
             }
+
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
@@ -439,7 +442,9 @@ namespace Galactic1.Tools
             else
             {
                 string title = objective.ObjectiveTypeId +
-                    (string.IsNullOrEmpty(objective.debugDescription) ? "" : $" — {objective.debugDescription}");
+                               (string.IsNullOrEmpty(objective.debugDescription)
+                                   ? ""
+                                   : $" — {objective.debugDescription}");
                 //elementProp.isExpanded = EditorGUILayout.Foldout(elementProp.isExpanded, title, true);
                 EditorGUILayout.LabelField(title, EditorStyles.label);
 
@@ -519,9 +524,11 @@ namespace Galactic1.Tools
                 EditorGUILayout.PropertyField(p.FindPropertyRelative("cameraConstraint"),
                     new GUIContent("Camera Constraint"), true);
 
-                EditorGUILayout.HelpBox("Camera Constraint (область камеры) — статичен на уровне шага и не зависит от Guidance.", MessageType.Info);
-                
-                
+                EditorGUILayout.HelpBox(
+                    "Camera Constraint (область камеры) — статичен на уровне шага и не зависит от Guidance.",
+                    MessageType.Info);
+
+
                 // ---- Actions ----
                 EditorGUILayout.Space(4);
                 EditorGUILayout.LabelField("Actions", EditorStyles.miniBoldLabel);
@@ -545,14 +552,14 @@ namespace Galactic1.Tools
                 if (GUILayout.Button("+ Create New", GUILayout.Width(130)))
                     ShowCreateAssetMenu<TutorialActionDefinition>(instance => AddArrayElement(actionsProp, instance));
                 EditorGUILayout.EndHorizontal();
-                
+
 
                 EditorGUILayout.EndVertical();
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
-        
+
         /// <summary>Returns true if the entry was removed this frame.</summary>
         private bool DrawActionEntry(SerializedProperty listProp, int index)
         {
@@ -627,6 +634,12 @@ namespace Galactic1.Tools
 
                     if (conditionProp != null)
                         conditionProp.objectReferenceValue = null;
+
+                    // InsertArrayElementAtIndex копирует предыдущий элемент — без очистки
+                    // новый entry унаследовал бы список доменов предыдущего.
+                    var domainsProp = newEntry.FindPropertyRelative("allowedDomains");
+                    if (domainsProp != null)
+                        domainsProp.ClearArray();
                 }
 
                 EditorGUILayout.EndVertical();
@@ -699,12 +712,16 @@ namespace Galactic1.Tools
 
             GUILayout.FlexibleSpace();
 
+            string domainsSummary = BuildAllowedDomainsSummary(
+                entryProp.FindPropertyRelative("allowedDomains"));
+
             EditorGUILayout.LabelField(
-                condition != null
+                (condition != null
                     ? condition.ConditionTypeId
-                    : "Unconditional (always true)",
+                    : "Unconditional (always true)")
+                + domainsSummary,
                 EditorStyles.miniBoldLabel,
-                GUILayout.Width(180));
+                GUILayout.Width(260));
 
             GUI.backgroundColor = Color.red;
             bool removed = GUILayout.Button("x", GUILayout.Width(20));
@@ -758,6 +775,12 @@ namespace Galactic1.Tools
             }
 
             EditorGUILayout.EndHorizontal();
+
+            // ------------------------------------------------------------
+            // Allowed Domains
+            // ------------------------------------------------------------
+
+            DrawGuidanceAllowedDomains(entryProp);
 
             // ------------------------------------------------------------
             // Presentations
@@ -836,6 +859,108 @@ namespace Galactic1.Tools
             EditorGUILayout.EndVertical();
 
             return false;
+        }
+
+        /// <summary>Список доменов, в которых guidance-entry может быть активен.
+        /// Пусто (или Any) = без ограничений. Применяется ко всему entry, включая
+        /// descriptionPanel.</summary>
+        private void DrawGuidanceAllowedDomains(SerializedProperty entryProp)
+        {
+            var domainsProp = entryProp.FindPropertyRelative("allowedDomains");
+
+            EditorGUILayout.Space(6);
+            EditorGUILayout.LabelField(
+                "Allowed Domains (empty = any domain)", EditorStyles.miniBoldLabel);
+
+            if (domainsProp == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "Serialized field 'allowedDomains' was not found on TutorialGuidanceDefinition.",
+                    MessageType.Error);
+                return;
+            }
+
+            var seen = new HashSet<int>();
+            bool hasAny = false;
+            bool hasDuplicate = false;
+
+            for (int i = 0; i < domainsProp.arraySize; i++)
+            {
+                var element = domainsProp.GetArrayElementAtIndex(i);
+
+                if (!seen.Add(element.enumValueIndex)) hasDuplicate = true;
+                if (element.enumValueIndex == (int)TutorialStepDomain.Any) hasAny = true;
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PropertyField(element, GUIContent.none);
+
+                GUI.backgroundColor = Color.red;
+                bool removed = GUILayout.Button("x", GUILayout.Width(20));
+                GUI.backgroundColor = originalBg;
+                EditorGUILayout.EndHorizontal();
+
+                if (removed)
+                {
+                    domainsProp.DeleteArrayElementAtIndex(i);
+                    break;
+                }
+            }
+
+            if (domainsProp.arraySize == 0)
+            {
+                EditorGUILayout.HelpBox(
+                    "No restriction — guidance works in any domain.", MessageType.None);
+            }
+            else if (hasAny)
+            {
+                EditorGUILayout.HelpBox(
+                    domainsProp.arraySize > 1
+                        ? "'Any' in the list disables the filter entirely — other entries are ignored. " +
+                          "Remove 'Any' or remove the other domains."
+                        : "'Any' = no restriction.",
+                    domainsProp.arraySize > 1 ? MessageType.Warning : MessageType.None);
+            }
+
+            if (hasDuplicate)
+                EditorGUILayout.HelpBox("Duplicate domains in the list.", MessageType.Warning);
+
+            if (GUILayout.Button("+ Add Domain", GUILayout.Width(120)))
+            {
+                // Подбираем первый ещё не использованный домен (кроме Any), иначе новый элемент
+                // по умолчанию стал бы Any и молча отключил бы фильтр.
+                int pick = -1;
+                foreach (TutorialStepDomain candidate in Enum.GetValues(typeof(TutorialStepDomain)))
+                {
+                    if (candidate == TutorialStepDomain.Any) continue;
+                    if (seen.Contains((int)candidate)) continue;
+                    pick = (int)candidate;
+                    break;
+                }
+
+                int newIndex = domainsProp.arraySize;
+                domainsProp.InsertArrayElementAtIndex(newIndex);
+                var added = domainsProp.GetArrayElementAtIndex(newIndex);
+                added.enumValueIndex = pick >= 0 ? pick : (int)TutorialStepDomain.Camp;
+            }
+        }
+
+        /// <summary>Короткая сводка для заголовка entry, например " [Camp, Raid]".
+        /// Пустая строка, если ограничений нет.</summary>
+        private static string BuildAllowedDomainsSummary(SerializedProperty domainsProp)
+        {
+            if (domainsProp == null || domainsProp.arraySize == 0)
+                return "";
+
+            var names = new List<string>(domainsProp.arraySize);
+            for (int i = 0; i < domainsProp.arraySize; i++)
+            {
+                var el = domainsProp.GetArrayElementAtIndex(i);
+                int idx = el.enumValueIndex;
+                if (idx >= 0 && idx < el.enumDisplayNames.Length)
+                    names.Add(el.enumDisplayNames[idx]);
+            }
+
+            return names.Count > 0 ? $"  [{string.Join(", ", names)}]" : "";
         }
 
         /// <summary>
@@ -992,6 +1117,7 @@ namespace Galactic1.Tools
 
                 EditorGUILayout.EndVertical();
             }
+
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
@@ -1017,6 +1143,7 @@ namespace Galactic1.Tools
 
                 EditorGUILayout.EndVertical();
             }
+
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
@@ -1073,6 +1200,7 @@ namespace Galactic1.Tools
 
                 EditorGUILayout.EndVertical();
             }
+
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
@@ -1195,6 +1323,7 @@ namespace Galactic1.Tools
                 if (name.EndsWith(suffix, StringComparison.Ordinal))
                     return name.Substring(0, name.Length - suffix.Length);
             }
+
             return name;
         }
 
@@ -1276,9 +1405,5 @@ namespace Galactic1.Tools
             string folder = string.IsNullOrEmpty(stepPath) ? "Assets" : Path.GetDirectoryName(stepPath);
             return string.IsNullOrEmpty(folder) ? "Assets" : folder;
         }
-        
-        
-        
-        
     }
 }

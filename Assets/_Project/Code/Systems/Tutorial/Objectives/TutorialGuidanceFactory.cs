@@ -16,6 +16,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
     public sealed class TutorialGuidanceFactory
     {
         private readonly Dictionary<Type, Func<TutorialGuidanceConditionDefinition, ITutorialGuidanceCondition>> _map = new();
+        
+        private readonly IGameLoopStateQuery _gameLoop;
 
         public TutorialGuidanceFactory(
             ITutorialInventoryQuery inventory,
@@ -31,6 +33,8 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             ITutorialInventorySquadExtraTabQuery inventorySquadExtraTab,
             ITutorialConstructionGhostQuery constructionGhost)
         {
+            
+            _gameLoop = gameLoop;
             
             Register<UIScreenOpenGuidanceConditionDefinition>(
                 d => new UIScreenOpenGuidanceCondition(uiState, d.screenId, d.expectedOpen));
@@ -109,6 +113,24 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
                 $"'{definition.GetType().Name}' (ConditionTypeId='{definition.ConditionTypeId}', " +
                 $"asset='{definition.name}'). This is an authoring/registration error — the guidance " +
                 "entry referencing this condition cannot resolve until a factory entry is added for this type.");
+        }
+        
+        /// <summary>Создаёт условие и, если задан непустой список доменов без Any,
+        /// оборачивает его в DomainFilteredGuidanceCondition.</summary>
+        public ITutorialGuidanceCondition Create(
+            TutorialGuidanceConditionDefinition definition,
+            IReadOnlyList<TutorialStepDomain> allowedDomains)
+        {
+            var inner = Create(definition);
+
+            if (allowedDomains == null || allowedDomains.Count == 0)
+                return inner;
+
+            foreach (var d in allowedDomains)
+                if (d == TutorialStepDomain.Any)
+                    return inner;
+
+            return new DomainFilteredGuidanceCondition(inner, _gameLoop, allowedDomains);
         }
     }
 }
