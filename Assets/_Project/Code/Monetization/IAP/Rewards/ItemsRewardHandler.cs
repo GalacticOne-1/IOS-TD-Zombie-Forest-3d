@@ -31,7 +31,8 @@ namespace Galactic1.UI.Shop.Rewards
                         item,
                         reward.count,
                         item.Physical.maxDurability,
-                        0));
+                        0),
+                    true);
             }
         }
         

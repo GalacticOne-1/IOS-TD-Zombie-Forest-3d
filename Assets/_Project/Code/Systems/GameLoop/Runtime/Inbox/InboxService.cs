@@ -43,22 +43,28 @@ namespace Galactic1.Code.Systems.Inbox
         /// <param name="configId"></param>
         /// <param name="amount"></param>
         /// <param name="durability">оставить -1 для полной прочности</param>
-        public void AddReward(RuntimeId configId, int amount, int durability = -1, int ammoInMagazine = 0)
+        public void AddReward(
+            RuntimeId configId,
+            int amount,
+            int durability = -1,
+            int ammoInMagazine = 0,
+            bool permanent = false)
         {
             var item = GameContent.Items.Get(configId);
-            
-            int expire = _timeService.TotalWorldHours + 720;  // 30 day
+
+            int expire = permanent
+                ? InboxExpiration.Never
+                : _timeService.TotalWorldHours + 720; // 30 дней
 
             var maxStack = item.Classification.maxStack;
-            var amountToSlot = 0;
-            while (amount > 0)  // предметы распределяются по слотам как и в инвентаре
+            while (amount > 0)
             {
-                amountToSlot = amount > maxStack ? maxStack : amount;
+                int amountToSlot = amount > maxStack ? maxStack : amount;
                 amount -= amountToSlot;
-                
+
                 _runtime.AddReward(new InboxSlotData(
-                    item, 
-                    configId.Guid, 
+                    item,
+                    configId.Guid,
                     amountToSlot,
                     durability == -1 ? item.Physical.maxDurability : durability,
                     ammoInMagazine,
@@ -69,7 +75,8 @@ namespace Galactic1.Code.Systems.Inbox
         /// <summary>
         /// Добавление предмета
         /// </summary>
-        public void AddReward(InventorySlotRuntime slot)
-            => AddReward(slot.Item.Id, slot.Amount, slot.Durability, slot.AmmoInMagazine);
+        public void AddReward(InventorySlotRuntime slot, bool permanent = false)
+            => AddReward(slot.Item.Id, slot.Amount, slot.Durability, slot.AmmoInMagazine, permanent);
+
     }
 }

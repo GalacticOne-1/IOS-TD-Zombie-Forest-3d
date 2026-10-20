@@ -32,9 +32,9 @@ namespace Galactic1.Code.Systems.Runtime
                 OnInboxChanged?.Invoke();
             });
             
-            //_timeService.HoursPassed += OnHoursPassed;
+            _timeService.HoursPassed += OnHoursPassed;
 
-            //CleanupExpired();
+            CleanupExpired();
         }
         
         private void OnHoursPassed(int hours, TimeAdvanceReason reason)
@@ -47,7 +47,8 @@ namespace Galactic1.Code.Systems.Runtime
             int now = _timeService.TotalWorldHours;
 
             var expired = Slots
-                .Where(s => s.ExpireWorldHour <= now)
+                .Where(s => !InboxExpiration.IsPermanent(s.ExpireWorldHour)
+                            && s.ExpireWorldHour <= now)
                 .ToList();
 
             foreach (var slot in expired)

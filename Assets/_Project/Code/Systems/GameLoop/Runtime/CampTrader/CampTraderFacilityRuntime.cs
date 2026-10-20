@@ -127,13 +127,14 @@ namespace Galactic1.Code.Systems.Runtime.Building
         private void GrantItemStub(TraderOfferConfig offer)
         {
             EventBus<AudioUIEvent>.Raise(new AudioUIEvent(audioConfig.buy.ToData()));
-            
+
             ServiceLocator.Current.Get<InboxService>().AddReward(
                 new InventorySlotRuntime(
                     offer.Item,
                     offer.Amount,
                     offer.Durability,
-                    0));
+                    0),
+                true);
         }
     }
 }

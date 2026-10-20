@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Galactic1.Code.GameDatabase;
 using Galactic1.Code.Systems.Economy;
+using Galactic1.Code.Systems.Inbox;
 using Galactic1.Code.Systems.Runtime;
 using Galactic1.Code.Systems.Runtime.Building;
 using Galactic1.Configs;
@@ -318,20 +319,25 @@ namespace Galactic1.Game.UI.Buildings
                     ? slot.Durability.Value / (float)maxDurability
                     : 1f;
                 
-                int remainingHours = Math.Max(
-                    0,
-                    slot.ExpireWorldHour - runtime.TotalWorldHour);
+                bool isPermanent = InboxExpiration.IsPermanent(slot.ExpireWorldHour);
+
+                int remainingHours = isPermanent
+                    ? 0
+                    : Math.Max(0, slot.ExpireWorldHour - runtime.TotalWorldHour);
+
+                // страховка от просроченных (если добавляли)
+                if (!isPermanent && remainingHours <= 0)
+                    continue;
 
                 list.Add(new InboxItemDTO
                 {
                     SlotId = slot.SlotId,
                     Item = slot.Item.Value,
                     Count = slot.Amount.Value,
-
                     Durability = durability,
                     Durability01 = durability01,
-
-                    RemainingHours = remainingHours
+                    RemainingHours = remainingHours,
+                    IsPermanent = isPermanent
                 });
             }
 

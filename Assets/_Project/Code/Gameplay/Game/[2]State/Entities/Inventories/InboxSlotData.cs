@@ -25,4 +25,12 @@ namespace Galactic1.Code.Systems.Inbox
             ExpireWorldHour = expireWorldHour;
         }
     }
+    
+    public static class InboxExpiration
+    {
+        /// <summary>Предмет не имеет срока годности.</summary>
+        public const int Never = int.MaxValue;
+
+        public static bool IsPermanent(int expireWorldHour) => expireWorldHour == Never;
+    }
 }

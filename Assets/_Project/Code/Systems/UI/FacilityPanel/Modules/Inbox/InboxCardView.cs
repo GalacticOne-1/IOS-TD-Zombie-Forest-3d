@@ -53,7 +53,7 @@ namespace Galactic1.Game.UI.Inbox
             itemImg.material = styleResolver.ResolveRarityColor(item.Classification.rarity).Material;
             itemImg.sprite = item.Header.icon;
             
-            // durability
+            // === durability
             if (dto.Durability > 0)
             {
                 durabilityText.gameObject.SetActive(true);
@@ -68,8 +68,17 @@ namespace Galactic1.Game.UI.Inbox
                 durabilityBar.transform.parent.gameObject.SetActive(false);
             }
 
-            // time
-            timeLeftText.text = TimeUtils.FormatTime(dto.RemainingHours);
+            // === time
+            if (dto.IsPermanent)
+            {
+                // вариант А: скрыть таймер
+                timeLeftText.gameObject.SetActive(false);
+            }
+            else
+            {
+                timeLeftText.gameObject.SetActive(true);
+                timeLeftText.text = TimeUtils.FormatTime(dto.RemainingHours);
+            }
 
             takeButton.RegisterButtonClick(() => OnTakeClicked?.Invoke(_slotId));
             

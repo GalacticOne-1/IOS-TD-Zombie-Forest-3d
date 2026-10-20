@@ -19,5 +19,6 @@ namespace Galactic1.Game.UI.Buildings.DTO
         public float Durability01;
         
         public int RemainingHours;
+        public bool IsPermanent;
     }
 }
