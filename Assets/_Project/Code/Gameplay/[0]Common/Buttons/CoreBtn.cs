@@ -73,10 +73,9 @@ namespace Galactic1
 
         protected virtual bool ClickBlocked()
         {
-            new TUTORIAL_AvailButton(gameObject, out bool isTutorial);
             return CORT.BLOCK_BUTTTONS && !ignoreBlock                      // глобальная блокировка всех кнопок
                    || CLICK_BLOCKED                                         // блокировка отдельной кнопки
-                   || isTutorial && !freeUse;                              // блокировка по обучению
+                   || !freeUse;                              // блокировка по обучению
         }
         
         

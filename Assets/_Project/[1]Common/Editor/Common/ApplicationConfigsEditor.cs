@@ -333,12 +333,7 @@ namespace Galactic1.Tools
                 func =  () => script.requiresAdService = !script.requiresAdService,
                 enabled = script.requiresAdService,
             });
-            Button(new CButtonData()
-            {
-                name = "REVIEW",
-                func =  () => _configsProvider.Get<GameConfig>().SetReview = !_configsProvider.Get<GameConfig>().General.review,
-                enabled = _configsProvider.Get<GameConfig>().General.review,
-            });
+            
             EditorGUILayout.EndHorizontal();
             
             
@@ -355,8 +350,8 @@ namespace Galactic1.Tools
             Button(new CButtonData()
             {
                 name = "TUTORIAL",
-                func =  () => _configsProvider.Get<GameConfig>().SetTutorial = !_configsProvider.Get<GameConfig>().General.tutorial,
-                enabled = _configsProvider.Get<GameConfig>().General.tutorial,
+                func =  () => _configsProvider.Get<GameConfig>().SetTutorial = !_configsProvider.Get<GameConfig>().General.tutorialActive,
+                enabled = _configsProvider.Get<GameConfig>().General.tutorialActive,
             });
             Button(new CButtonData()
             {
@@ -449,7 +444,6 @@ namespace Galactic1.Tools
             // -- 3 box
             EditorGUILayout.BeginVertical("box",GUILayout.MaxWidth(100));
             Label(new CLabelData() { name = "Logo", style = FlagStatusStyle(), enabled = script.requiresLogo});
-            Label(new CLabelData() { name = "Review", style = FlagStatusStyle(), enabled = _configsProvider.Get<GameConfig>().General.review});
             Label(new CLabelData() { name = "Game Mode", style = FlagStatusStyle(), enabled = script.modeRegular});
             EditorGUILayout.EndVertical();
             
@@ -470,7 +464,7 @@ namespace Galactic1.Tools
             EditorGUILayout.Space(10);
             
             Label(new CLabelData() { name = "IAP", style = FlagStatusStyle(), enabled = script.requiresIapService});
-            Label(new CLabelData() { name = "Tutorial", style = FlagStatusStyle(), enabled = _configsProvider.Get<GameConfig>().General.tutorial});
+            Label(new CLabelData() { name = "Tutorial", style = FlagStatusStyle(), enabled = _configsProvider.Get<GameConfig>().General.tutorialActive});
             EditorGUILayout.EndVertical();
             
             

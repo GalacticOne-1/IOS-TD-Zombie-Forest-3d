@@ -91,7 +91,7 @@ namespace Galactic1.Code.Systems.GameLoop.States
 
 
                 // #9 review
-                if (ServiceLocator.Current.Get<Review>().NeedRequest())
+                if (ServiceLocator.Current.Get<RWPanel>().NeedRequest())
                 {
                     widgetQueue.Enqueue(new WidgetRequest
                     {
@@ -104,7 +104,7 @@ namespace Galactic1.Code.Systems.GameLoop.States
                                 null,
                                 _ =>
                                 {
-                                    var screen = _.GetComponent<Review>();
+                                    var screen = _.GetComponent<RWPanel>();
                                     screen.OnClosed += onDone;
                                     screen.OnShow();
                                 });

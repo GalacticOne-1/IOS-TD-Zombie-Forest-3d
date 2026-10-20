@@ -177,8 +177,6 @@ namespace Galactic1.Core.Systems.GameSession
             // HUD
             _session.HUD = FindAnyObjectByType<HUDPlayer>();
             
-            // player death service
-            ServiceLocator.Current.Get<DeathSystem>().Initialize(_session);
             
             // player FSM
             //var playerStateMachine = _session.Player.GetComponent<PlayerStateMachine>();

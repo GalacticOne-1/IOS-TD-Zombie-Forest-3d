@@ -1,15 +1,10 @@
 
 using Galactic1.Code.Cameras;
-using Galactic1.Code.Gameplay.AoE;
 using Galactic1.Code.Gameplay.Combat.Visual;
 using Galactic1.Code.Systems.Squad;
 using Galactic1.Code.UI.RaidLoot;
 using Galactic1.Configs;
 using Galactic1.Core.Systems.GameSession;
-using Galactic1.Gameplay.Player;
-using Galactic1.RaidLoot.Scene;
-using Galactic1.Repository;
-using Galactic1.Systems.Inventory;
 using UnityEngine;
 
 namespace Galactic1
@@ -32,8 +27,6 @@ namespace Galactic1
             // register
             ServiceLocator.Current.Register(FindAnyObjectByType<SceneSessionManager>());
             ServiceLocator.Current.Register(_cameraController);
-            ServiceLocator.Current.Register(new InventoryRepository());
-            ServiceLocator.Current.Register(new PlayerRepository());
             ServiceLocator.Current.Register(_hubMaterials);
             
             
@@ -62,8 +55,6 @@ namespace Galactic1
                 cameraShakeListener.Dispose();
                 ServiceLocator.Current.Unregister<CombatCameraShakeDriver>();
                 
-                ServiceLocator.Current.Unregister<InventoryRepository>();
-                ServiceLocator.Current.Unregister<PlayerRepository>();
                 ServiceLocator.Current.Unregister<HubMaterials>();
                 
                 ServiceLocator.Current.Unregister<SquadController>();

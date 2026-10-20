@@ -8,8 +8,6 @@ namespace Galactic1
         // true - для релиза
         public const bool SERVER_ON = true;
         
-        public const float DELAY_HINT = .35f;
-        public const float BTN_ALPHA = .3f;
 
         public const string LAUNCH = "second_launch";
 
@@ -26,17 +24,8 @@ namespace Galactic1
 
         public const string EXIT_SCENE_REQUEST_TAG = nameof(EXIT_SCENE_REQUEST_TAG);
 
-        // squad
-        public const float ACCURACY = 10;
-        public const float MAX_STABILITY = 1.3f;        // после этого значения начинается сильный разброс оружия
-        public const float SPAWN_DELAY = .2f;
-
-        public const float gravity = 5;
         
         public const float DetectionRadius = .48f;
-
-        // 1 - для прямого управления
-        public const byte player_unit_qu = 1;
 
         
 
@@ -86,24 +75,6 @@ namespace Galactic1
         // должно быть больше размера колайдера дракона, что бы можно было всегда залезть обратно на дракона
         public const byte MAX_DISTANCE_TO_DRAGON = 4;
 
-        //
-        // /// границы лагеря
-        // public static Vector2 CAMP_BORDER_X = new Vector2(-12, 50);
-        // /// границы лагеря
-        // public static Vector2 CAMP_BORDER_Y = new Vector2(1.5f, 50);
-        //
-        // /// границы лагеря без выхода на карту
-        // public static Vector2 CAMP_BORDER_CLOSE_X = new Vector2(-5, 43);
-        // /// границы лагеря без выхода на карту
-        // public static Vector2 CAMP_BORDER_CLOSE_Y = new Vector2(1.5f, 43);
-
-        /// дней до сброса рейда
-        public const byte EVENT_LOCATION_REQUIRE_DAY = 5;
-
-
-
-        public const byte WEAPON_CONSUMPTION = 3;
-        public const byte ARMOR_CONSUMPTION = 10;
 
 
         public const string PATH_GAMEPLAY = "Prefabs/GAMEPLAY/";

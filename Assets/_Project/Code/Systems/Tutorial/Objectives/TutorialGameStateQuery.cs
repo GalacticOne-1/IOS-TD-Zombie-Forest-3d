@@ -142,9 +142,9 @@ namespace Galactic1.Code.Systems.Tutorial.Objectives
             EventBus<StartGameEvent>.Register(new EventBinding<StartGameEvent>(() =>
             {
                 var configProvider = ServiceLocator.Current.Get<ConfigProvider>();
-                if (!configProvider.Get<GameConfig>().General.tutorial)
+                if (!configProvider.Get<GameConfig>().General.tutorialActive)
                 {
-                    Debug.LogError("Tutorial is disabled!");
+                    Debug.Log("Tutorial is disabled!");
                     return;
                 }
                 

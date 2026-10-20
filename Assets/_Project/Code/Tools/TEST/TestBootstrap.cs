@@ -1,29 +1,16 @@
-using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using DEV;
-using Galactic1.Code.Dev;
-using Galactic1.Code.GameDatabase;
 using Galactic1.Code.Gameplay.BaseBuilding;
 using Galactic1.Code.Gameplay.Combat.Data;
 using Galactic1.Code.Systems.GameTime;
 using Galactic1.Configs;
-using Galactic1.Items;
-using Galactic1.Core.Systems.GameLoopSession;
 using Galactic1.Code.Gameplay.Damage;
 using Galactic1.Code.Gameplay.Enemies.Repositories;
 using Galactic1.Code.Gameplay.Survivors.Repositories;
-using Galactic1.Code.UI.Inventory;
-using Galactic1.Code.Gameplay.Units.Stats;
-using Galactic1.Code.Inventory.Abstractions;
-using Galactic1.Code.Systems.Economy;
 using Galactic1.Code.Systems.Progression;
-using Galactic1.Game.Meta.Items;
-using Galactic1.Structs;
 using Galactic1.Systems;
-using Galactic1.Utility;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Galactic1.Test
 {
@@ -55,26 +42,6 @@ namespace Galactic1.Test
                     AudioService.PlayMusic("Combat");
                 }
             }
-
-
-            // level state
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.O))
-                ServiceLocator.Current.Get<Bootstrap>().SetState(EGameState.OFF);
-
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.P))
-                ServiceLocator.Current.Get<Bootstrap>().SetState(EGameState.LEVEL_PLAY);
-
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.U))
-                ServiceLocator.Current.Get<Bootstrap>().SetState(EGameState.PAUSE);
-
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.R))
-                ServiceLocator.Current.Get<Bootstrap>().SetState(EGameState.RESUME);
-
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.F))
-                ServiceLocator.Current.Get<Bootstrap>().SetState(EGameState.LEVEL_FINISH);
-
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.E))
-                ServiceLocator.Current.Get<Bootstrap>().SetState(EGameState.LEVEL_EXIT);
 
 
             if (Input.GetKey(KeyCode.C) && Input.GetKeyDown(KeyCode.V))
@@ -124,9 +91,6 @@ namespace Galactic1.Test
                     });
             }
 
-            // MAP
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.M))
-                ServiceLocator.Current.Get<GameMachine>().Map_Enter();
 
             // to test location
             // if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.L))
@@ -192,7 +156,7 @@ namespace Galactic1.Test
             // -- battle reward
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Space))
             {
-                new FinishLevel();
+                
             }
 
             

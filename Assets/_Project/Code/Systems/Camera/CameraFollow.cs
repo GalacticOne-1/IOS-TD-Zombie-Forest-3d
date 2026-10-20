@@ -1,9 +1,5 @@
-using System;
-using Galactic1.Repository;
-using Galactic1;
-using Galactic1.AbstractFactory;
+
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Galactic1
 {
@@ -38,7 +34,7 @@ namespace Galactic1
         public void Activator()
         {
             tr = transform;
-            objToFollow = ServiceLocator.Current.Get<PlayerRepository>().GetController.Tr;
+            //objToFollow = ServiceLocator.Current.Get<PlayerRepository>().GetController.Tr;
             tr.position = objToFollow.position + offset;
             ServiceLocator.Current.Get<MonoBehaviourMaster>().update.Add(this);
             ServiceLocator.Current.Get<MonoBehaviourMaster>().fixedUpdate.Add(this);

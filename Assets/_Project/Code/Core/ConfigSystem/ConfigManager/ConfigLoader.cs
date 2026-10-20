@@ -10,7 +10,7 @@ namespace Galactic1.Configs
 {
     public static class ConfigLoader
     {
-        private const string RemoteManifestUrl = "https://galactic1games.com/Survivor Squad/Configs/manifest.json";
+        private const string RemoteManifestUrl = "https://galactic1games.com/Survivor_Squad/Configs/manifest.json";
         private static readonly string LocalPath = Application.persistentDataPath;
         private static readonly string StreamingPath = Path.Combine(Application.streamingAssetsPath, "Configs");
 
@@ -99,6 +99,18 @@ namespace Galactic1.Configs
                         maxAttempts: 3,
                         delayBetweenAttempts: 2f,
                         timeout: 5);
+                    
+                    // Лог содержимого скачанного JSON
+                    if (!string.IsNullOrEmpty(json))
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        DLog.Alert($"📥 Downloaded [{entry.key}]:\n{json}", EDlogColor.YELLOW);
+#endif
+                    }
+                    else
+                    {
+                        DLog.Alert($"⚠ Server returned empty JSON for [{entry.key}]", EDlogColor.ORANGE);
+                    }
                 }
 
 

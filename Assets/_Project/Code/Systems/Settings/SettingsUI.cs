@@ -92,7 +92,6 @@ namespace Galactic1.Systems
         public override void OnHide()
         {
             base.OnHide();
-            new GAME_Speed().Continue();
             gameObject.SetActive(false);
             PanelShowed = false;
         }

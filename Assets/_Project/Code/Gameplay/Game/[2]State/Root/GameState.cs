@@ -20,7 +20,7 @@ namespace Galactic1.Core
         public CGameStateAD ADState { get; set; }
         public CGameStateDailyReward DailyReward { get; set; }
         public CGameStateDailyQuest DailyQuest { get; set; }
-        public CGameStateReview Review { get; set; }
+        public CGameStateRW RW { get; set; }
         
         // ********************         DEFAULT        ************************************************************
         

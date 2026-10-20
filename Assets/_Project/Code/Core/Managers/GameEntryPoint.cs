@@ -328,7 +328,10 @@ namespace Galactic1
             if (entryPointConfig.isAppstore)
             {
                 LoadingManager.I.NewStepStarted(CServiceType.PLAYER_PERMISSION);
-                yield return new Config().CheckRequest(_coroutines, configProvider.Get<GameConfig>().Ios);
+
+                yield return _coroutines.StartCoroutine(
+                    PermissionsRequester.RequestAll(
+                        status => SystemRepository.ATTStatus = (byte)status));
             }
             // ***************************************************************************************************
             

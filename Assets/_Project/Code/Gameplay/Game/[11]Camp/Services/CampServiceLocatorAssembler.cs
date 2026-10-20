@@ -16,10 +16,8 @@ namespace Galactic1
 
         [Header("BASIC")] 
         [SerializeField] private HomeMenuButtonsBinder _buttonsBinder;
-        [SerializeField] private ViewGameController _viewGameController;
 
         [Header("GAME")] 
-        [SerializeField] private TaskLoggerController _taskLoggerController;
         [SerializeField] private Environment _environment;
         [SerializeField] private ConstructionModeController _constructionModeController;
         

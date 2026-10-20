@@ -2,7 +2,6 @@
 using Galactic1;
 using Galactic1.Configs;
 using Galactic1.Mobile;
-using Galactic1.Repository;
 using UnityEngine;
 using Galactic1.Core;
 using Galactic1.Code.Systems.GameLoop.Tactical;
@@ -265,7 +264,7 @@ namespace DEV
                     ServiceLocator.Current.Get<UIManager>().OpenScreen(
                         UIScreenId.Review,
                         null,
-                        _ => { _.GetComponent<Review>().OnShow(); });
+                        _ => { _.GetComponent<RWPanel>().OnShow(); });
                     break;
                 
                 case EDEVCMD.update_quest:
@@ -339,14 +338,14 @@ namespace DEV
                 case CDevUnitCMD.p_broke_armor:
                 case CDevUnitCMD.p_broke_weapon:
                 {
-                    var controller = ServiceLocator.Current.Get<PlayerRepository>().GetController;
+                    //var controller = ServiceLocator.Current.Get<PlayerRepository>().GetController;
                     
                     //controller.EquipmentContainer_old.OnItemUsed(cmd == CDevUnitCMD.p_broke_weapon ? 0 : equipmentSlot, false);
                 }
                     break;
                 case CDevUnitCMD.p_broke_tool:
                 {
-                    var controller = ServiceLocator.Current.Get<PlayerRepository>().GetController;
+                    //var controller = ServiceLocator.Current.Get<PlayerRepository>().GetController;
                     
                     //controller.EquipmentContainer_old.OnItemUsed(0, true);
                 }
@@ -362,7 +361,7 @@ namespace DEV
                     break;
                 case CDevUnitCMD.d_broke_tool:
                 {
-                    var controller = ServiceLocator.Current.Get<PlayerRepository>().GetController;
+                    //var controller = ServiceLocator.Current.Get<PlayerRepository>().GetController;
                     
                     //controller.EquipmentContainer_old.OnItemUsed(0, true);
                 }

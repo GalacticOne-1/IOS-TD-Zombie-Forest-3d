@@ -148,7 +148,7 @@ namespace Galactic1.Core
             gameLoopContext.LastRaidResult.ResourcesLost = new();
             
             // === устанавливаем локацию для обучения
-            if (_configsProvider.Get<GameConfig>().General.tutorial)
+            if (_configsProvider.Get<GameConfig>().General.tutorialActive)
             {
                 gameLoopContext.CurrentLocationStateId = 1;
                 gameLoopContext.CurrentLocationNode = "tutorial_suburb";
@@ -262,7 +262,7 @@ namespace Galactic1.Core
 
             };
 
-            var review = new CGameStateReview
+            var rw = new CGameStateRW
             {
 
             };
@@ -283,7 +283,7 @@ namespace Galactic1.Core
                 ADState = AD,
                 DailyReward = dailyReward,
                 DailyQuest = dailyQuest,
-                Review = review,
+                RW = rw,
                 Tutorial = tutorial,
                 Inbox = inbox,
                 

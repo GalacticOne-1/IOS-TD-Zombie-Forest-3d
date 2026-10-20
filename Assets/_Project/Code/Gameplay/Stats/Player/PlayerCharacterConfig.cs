@@ -1,5 +1,4 @@
 using System;
-using Galactic1.Repository;
 using UnityEngine;
 
 namespace Galactic1
@@ -83,75 +82,75 @@ namespace Galactic1
 
 
 
-        public void SetAnimatorController(bool isDragon, int id, EEquipmentType klass, out bool oneArm)
-        {
-            oneArm = false;
-                
-            // #1 определяем контроллер
-            EAnimatorVariant requires = EAnimatorVariant.Unarmed;
-
-            // unit
-            if (!isDragon)
-            {
-                switch (klass)
-                {
-                    case EEquipmentType.Unarmed:
-                        requires = EAnimatorVariant.Unarmed;
-                        break;
-                
-                    case EEquipmentType.Tool_hit:
-                        requires = EAnimatorVariant.Tool;
-                        break;
-                
-                    case EEquipmentType.Spear:
-                        requires = EAnimatorVariant.Spear;
-                        break;
-                    case EEquipmentType.Sidearm:
-                        requires = EAnimatorVariant.Sidearm;
-                        break;
-                
-                    case EEquipmentType.Smg:
-                        requires = EAnimatorVariant.Smg;
-                        break;
-                
-                    case EEquipmentType.Shotgun:
-                        requires = EAnimatorVariant.Shotgun;
-                        break;
-                
-                
-                    case EEquipmentType.Mg:
-                    case EEquipmentType.Assault_rifle:
-                    case EEquipmentType.Marksman_rifle:
-                    case EEquipmentType.Rifle:
-                        requires = EAnimatorVariant.Rifle;
-                        break;
-                
-                }
-            }
-
-            else
-            {
-                switch (klass)
-                {
-                    case EEquipmentType.Unarmed:
-                        requires = EAnimatorVariant.Unarmed_Dragon;
-                        break;
-
-                }
-            }
-
-            // #2 находим нужный и подключаем
-            var l = _animatorControllers.Length;
-            for (int i = 0; i < l; i++)
-            {
-                if (_animatorControllers[i].type == requires)
-                {
-                    ServiceLocator.Current.Get<PlayerRepository>().GetUnit("player").Animation.animator
-                        .runtimeAnimatorController = _animatorControllers[i].controller;
-                    oneArm = _animatorControllers[i].oneArm;
-                }
-            }
-        }
+        // public void SetAnimatorController(bool isDragon, int id, EEquipmentType klass, out bool oneArm)
+        // {
+        //     oneArm = false;
+        //         
+        //     // #1 определяем контроллер
+        //     EAnimatorVariant requires = EAnimatorVariant.Unarmed;
+        //
+        //     // unit
+        //     if (!isDragon)
+        //     {
+        //         switch (klass)
+        //         {
+        //             case EEquipmentType.Unarmed:
+        //                 requires = EAnimatorVariant.Unarmed;
+        //                 break;
+        //         
+        //             case EEquipmentType.Tool_hit:
+        //                 requires = EAnimatorVariant.Tool;
+        //                 break;
+        //         
+        //             case EEquipmentType.Spear:
+        //                 requires = EAnimatorVariant.Spear;
+        //                 break;
+        //             case EEquipmentType.Sidearm:
+        //                 requires = EAnimatorVariant.Sidearm;
+        //                 break;
+        //         
+        //             case EEquipmentType.Smg:
+        //                 requires = EAnimatorVariant.Smg;
+        //                 break;
+        //         
+        //             case EEquipmentType.Shotgun:
+        //                 requires = EAnimatorVariant.Shotgun;
+        //                 break;
+        //         
+        //         
+        //             case EEquipmentType.Mg:
+        //             case EEquipmentType.Assault_rifle:
+        //             case EEquipmentType.Marksman_rifle:
+        //             case EEquipmentType.Rifle:
+        //                 requires = EAnimatorVariant.Rifle;
+        //                 break;
+        //         
+        //         }
+        //     }
+        //
+        //     else
+        //     {
+        //         switch (klass)
+        //         {
+        //             case EEquipmentType.Unarmed:
+        //                 requires = EAnimatorVariant.Unarmed_Dragon;
+        //                 break;
+        //
+        //         }
+        //     }
+        //
+        //     // #2 находим нужный и подключаем
+        //     var l = _animatorControllers.Length;
+        //     for (int i = 0; i < l; i++)
+        //     {
+        //         if (_animatorControllers[i].type == requires)
+        //         {
+        //             ServiceLocator.Current.Get<PlayerRepository>().GetUnit("player").Animation.animator
+        //                 .runtimeAnimatorController = _animatorControllers[i].controller;
+        //             oneArm = _animatorControllers[i].oneArm;
+        //         }
+        //     }
+        // }
 
 
         

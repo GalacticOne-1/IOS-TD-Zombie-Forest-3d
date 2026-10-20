@@ -14,7 +14,6 @@ using Galactic1.Code.UI.Tooltips;
 using Galactic1.Code.UI.World;
 using Galactic1.Configs;
 using Galactic1.Core.Systems.GameLoopSession;
-using Galactic1.Gameplay.Death;
 using Galactic1.Systems;
 using Galactic1.UI.Core;
 using Galactic1.Localisation;
@@ -42,8 +41,6 @@ namespace Galactic1
         [SerializeField] private PoolManager _poolManager;
         [SerializeField] private EffectRequestSystem _effectRequestSystem;
 
-        //[SerializeField] private CameraController _cameraController;
-        [SerializeField] private DeathSystem _deathSystem;
         
         
         [Space]
@@ -61,7 +58,6 @@ namespace Galactic1
         [SerializeField] private GUIAssist _guiAssist;
         [SerializeField] private ScreenGFX _screenGFX;
         [SerializeField] private ScreenGFXController _screenGFXController;
-        [SerializeField] private GameMachine _gameMachine;
         
         
         
@@ -109,7 +105,6 @@ namespace Galactic1
             ServiceLocator.Current.Register(new TimeBoundaryService(container));
             //ServiceLocator.Current.Register(_cameraController);
             ServiceLocator.Current.Register(new CameraTargetGroup());
-            ServiceLocator.Current.Register(_deathSystem);
             ServiceLocator.Current.Register(new GameSession());
             ServiceLocator.Current.Register(_poolManager);
             ServiceLocator.Current.Register(_effectRequestSystem);
@@ -156,9 +151,6 @@ namespace Galactic1
             ServiceLocator.Current.Register(_screenGFX);
             ServiceLocator.Current.Register(_screenGFXController);
             
-            
-            ServiceLocator.Current.Register(new Bootstrap());
-            ServiceLocator.Current.Register(_gameMachine);
             
         }
     }

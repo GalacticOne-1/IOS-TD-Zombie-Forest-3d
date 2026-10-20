@@ -146,10 +146,6 @@ namespace Galactic1.Configs
                 // ! что бы json загрузался он должен быть в манифесте! 
                 switch (key)
                 {
-                    case "builds_config":
-                        //UpdateConfigsFromJson<BuildConfig, BuildConfig.Wrapper>(json, Builds._configs);
-                        break;
-                    
                     case "equipments_config":
                         //UpdateConfigsFromJson<CombatEquipmentConfig, CombatEquipmentConfig.Wrapper>(json, Equipments._configs);
                         break;

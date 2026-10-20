@@ -20,7 +20,7 @@ namespace Galactic1.Core
         public readonly ReactiveProperty<CGameStateAD> ADState;
         public readonly ReactiveProperty<CGameStateDailyReward> DailyReward;
         public readonly ReactiveProperty<CGameStateDailyQuest> DailyQuest;
-        public readonly ReactiveProperty<CGameStateReview> Review;
+        public readonly ReactiveProperty<CGameStateRW> Rw;
         public readonly ReactiveProperty<CGameStateTutorial> Tutorial;
         
         // ********************         DEFAULT        ************************************************************
@@ -67,8 +67,8 @@ namespace Galactic1.Core
             ADState = new(gameState.ADState);
             ADState.Skip(1).Subscribe(_ => gameState.ADState = _);
             
-            Review = new(gameState.Review);
-            Review.Skip(1).Subscribe(_ => gameState.Review = _);
+            Rw = new(gameState.RW);
+            Rw.Skip(1).Subscribe(_ => gameState.RW = _);
             
             DailyReward = new(gameState.DailyReward);
             DailyQuest = new(gameState.DailyQuest);

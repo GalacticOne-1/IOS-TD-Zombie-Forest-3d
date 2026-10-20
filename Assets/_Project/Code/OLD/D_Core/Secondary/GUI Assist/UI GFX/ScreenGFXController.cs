@@ -263,22 +263,6 @@ namespace Galactic1
             StartCoroutine(floatinHeap(data));
         }
         
-        /// <summary>
-        /// Всплывающие спрайты летящие в цель (массив по очереди)
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="g">сигналы окончания</param>
-        public void FloatingHeap(CHeapData[] data, out GameObject[] g)
-        {
-            g = new GameObject[data.Length];
-            for (int i = 0; i < data.Length; i++)
-            {
-                g[i] = new GameObject();
-                g[i].name = $"(TEMP.) GFX Signal Complete #{data[i].type}";
-                g[i].transform.parent = ServiceLocator.Current.Get<ViewGameController>().GetCanvas(ECanvas.GAME).transform;
-            }
-            StartCoroutine(floatinHeap(data, g));
-        }
         
         // для поочередного появления групп объектов
         IEnumerator floatinHeap(CHeapData[] data, GameObject[] g = null)

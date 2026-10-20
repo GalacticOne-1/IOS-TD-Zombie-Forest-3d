@@ -48,53 +48,6 @@ namespace Galactic1
         
         
         
-        
-        //public bool FIRST_LAUNCH;
-        //public bool APP_LOAD = false;                  // приложение загружено
-        
-        
-        
-        #region Progress load app
-
-        private float currentProgress;
-        
-        // полоса готовности игры
-        public void SetProgress(float newCurr)
-        {
-            //tProgress.text = $"{newCurr}%";
-            //progressBar.fillAmount = newCurr / 100.0f;
-        }
-        
-        /// <summary>
-        /// Для указания названия процесса 
-        /// </summary>
-        /// <param name="t"></param>
-        public void SetProcessText(string t)
-        {
-            //processTitle.text = t;
-        }
-
-
-        
-        #endregion
-
-
-
-
-
-
-
-        #region GAME SETTINGS PARAMS
-
-
-        private float musicVolume;
-        private float sfxVolume;
-        
-        
-
-        #endregion
-        
-        
         public void Save()
         {
 #if UNITY_EDITOR

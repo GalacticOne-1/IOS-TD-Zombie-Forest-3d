@@ -1,5 +1,4 @@
-﻿using Galactic1;
-using Galactic1.Mobile;
+﻿
 using UnityEngine;
 
 namespace Galactic1
@@ -82,7 +81,6 @@ namespace Galactic1
             //bAdBox.EventBtn_old(ServiceLocator.Current.Get<ViewGameController>().EquipmentADBoxViewModel.OpenWindow);
             //bInbox.EventBtn_old(ServiceLocator.Current.Get<ViewGameController>().InboxViewModel.OpenWindow);
             
-            toBattle._event.AddListener(() => ServiceLocator.Current.Get<Bootstrap>().SetState(EGameState.LEVEL_PLAY));
             //toLobby._event.AddListener(() => Bootstrap.ToState(EGameState.LEVEL_EXIT));
             //cancelBattle._event.AddListener(() => GameManager.BTN_GAMEPLAY_DEFEAT_exit());
             //revive._event.AddListener(() => GameManager.BTN_GAMEPLAY_DEFEAT_revive());

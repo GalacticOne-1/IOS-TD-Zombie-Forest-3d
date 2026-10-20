@@ -22,24 +22,13 @@ namespace Galactic1.Core.UI.HUD
         [SerializeField] private GameObject ButtonSquadFocus;
         [SerializeField] private AbilityTargetingHUD abilityTargetingHUD;
         [SerializeField] private UIDamageFeedback _uiDamageFeedback;
-        //public UIJoystick joystick;
-        //[field: SerializeField] public TargetHPBarUI targetHPBar { get; private set; }
+        
 
         [Header("Progression")]
         [SerializeField] private TMP_Text playerLevelText;
         [SerializeField] private Image playerExperienceFillBar;
 
        
-        //[field: SerializeField] public GameObject jump { get; private set; }
-        //[field: SerializeField] public UIButtonPocket quickButton1 { get; private set; }
-       // [field: SerializeField] public UIButtonPocket quickButton2 { get; private set; }
-       // [field: SerializeField] public UIButtonAttack attackButton { get; private set; }
-       // [field: SerializeField] public UIButtonAction actionButton { get; private set; }
-
-
-        //private HUDSlotsController _hudSlotsController;
-        //private EventBinding<SceneClearEvent> onSwitchClear;
-
         public UIDamageFeedback UIDamageFeedback => _uiDamageFeedback;
 
         private UnitCardBindingSystem _cardBindings;
@@ -55,13 +44,7 @@ namespace Galactic1.Core.UI.HUD
             base.Initialize(container, id);
             gameObject.SetActive(true);
             
-           // _hudSlotsController = GetComponent<HUDSlotsController>();
-            
             BindButtons();
-            
-            // register buttons
-            //jump.RegisterButtonClick(JoystickController.I.Jump);
-
             
             
             // === когда отряд заспавнен создаем карточки
@@ -136,41 +119,6 @@ namespace Galactic1.Core.UI.HUD
         }
 
         
-        public void ConnectToInventory()
-        {
-            // Определяем, кто сейчас под управлением
-            // var IsDragon = ServiceLocator.Current.Get<IGameStateProvider>().GameStateProxy
-            //     .PlayerUnitData[0].OnDragon.CurrentValue;
-            //
-            // _hudSlotsController.Unbind();
-            //
-            // if (!IsDragon)
-            // {
-            //     ApplyHUDProfile(playerHUD);
-            //     _hudSlotsController.Bind(
-            //         this, 
-            //         ServiceLocator.Current.Get<InventoryRepository>().PlayerEquipment
-            //     );
-            // }
-            // else
-            // {
-            //     ApplyHUDProfile(dragonHUD);
-            //     _hudSlotsController.Bind(
-            //         this,
-            //         ServiceLocator.Current.Get<InventoryRepository>().DragonEquipment
-            //     );
-            // }
-        }
-        
-        private void ApplyHUDProfile(HUDProfile profile)
-        {
-            // attackButton.gameObject.SetActive(profile.showAttack);
-            // actionButton.gameObject.SetActive(profile.showAction);
-            // jump.SetActive(profile.showJump);
-            // dragonButton.SetActive(profile.showDragonButton);
-            // quickButton1.gameObject.SetActive(profile.showQuick1);
-            // quickButton2.gameObject.SetActive(profile.showQuick2);
-        }
 
 
         // === PROGRESSION HUD ========================================================

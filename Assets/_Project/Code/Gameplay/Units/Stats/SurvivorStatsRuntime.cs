@@ -58,13 +58,11 @@ namespace Galactic1.Code.Gameplay.Units.Stats
         {
             base.ModifyStat(stat, amount);                      // изменить CurrentStats с clamp
             Proxy.Stats[stat].Value = CurrentStats[stat];       // пушим в Proxy
-            SetControlFeatures(stat);
         }
         public override void SetStat(StatId stat, float amount)
         {
             base.SetStat(stat, amount);                         // изменить CurrentStats с clamp
             Proxy.Stats[stat].Value = CurrentStats[stat];       // пушим в Proxy
-            SetControlFeatures(stat);
         }
         
         protected override void SyncProxyStats()
@@ -77,28 +75,9 @@ namespace Galactic1.Code.Gameplay.Units.Stats
                 Proxy.Stats[stat].Value = resourceStats.Contains(stat)
                     ? CurrentStats[stat]
                     : CalculatedStats[stat];
-                SetControlFeatures(stat);
             }
         }
 
 
-        public void SetControlFeatures(StatId stat)
-        {
-            switch (stat)
-            {
-                case StatId.MoveSpeed:
-                    PlayerControlStatsRepository.speedMovement = CurrentStats[StatId.MoveSpeed];
-                    break;
-                case StatId.JumpForce:
-                    PlayerControlStatsRepository.jumpForce = CurrentStats[StatId.JumpForce];
-                    break;
-                case StatId.WallJumpForce:
-                    PlayerControlStatsRepository.wallJumpForce = CurrentStats[StatId.WallJumpForce];
-                    break;
-                case StatId.WallSlideSpeed:
-                    PlayerControlStatsRepository.wallSlideSpeed = CurrentStats[StatId.WallSlideSpeed];
-                    break;
-            }
-        }
     }
 }

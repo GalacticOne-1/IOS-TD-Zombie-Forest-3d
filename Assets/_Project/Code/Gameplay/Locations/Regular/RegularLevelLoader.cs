@@ -1,7 +1,4 @@
-using UnityEngine;
-using Galactic1.Repository;
-using Galactic1.Configs;
-using Galactic1.Core.Location;
+
 
 namespace Galactic1.Gameplay.Locations.Modes
 {

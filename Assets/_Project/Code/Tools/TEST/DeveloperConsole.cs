@@ -1,8 +1,5 @@
 using Galactic1.Configs;
-using Galactic1.Repository;
-using Galactic1;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Galactic1
 {
