@@ -3,6 +3,8 @@ using Galactic1.Configs;
 using UnityEngine;
 using Galactic1.Core;
 using Galactic1.UI.Core;
+using Galactic1.Code.Systems.Tutorial.Authoring;
+using Galactic1.Code.Systems.Tutorial.Runtime;
 
 #if UNITY_IOS
 using UnityEngine.iOS;
@@ -16,6 +18,9 @@ namespace Galactic1
         /*
          *    Панель оценки игры
          */
+        
+        [Tooltip("Отзыв запрашивается только после завершения этого шага обучения. Пусто = без ограничения.")]
+        [SerializeField] private TutorialStepId requiredTutorialStep;
 
         [SerializeField] private GameObject bNo, BYes;
 
@@ -43,9 +48,25 @@ namespace Galactic1
 
         public bool NeedRequest()
         {
-            var d = true;
-            var y = ServiceLocator.Current.Get<IGameStateProvider>().GameStateProxy.Rw.Value.rwRequest;
-            return d && !y;
+            bool alreadyRequested =
+                ServiceLocator.Current.Get<IGameStateProvider>().GameStateProxy.Rw.Value.rwRequest;
+
+            if (alreadyRequested)
+                return false;
+
+            return IsTutorialGateOpen();
+        }
+        
+        private bool IsTutorialGateOpen()
+        {
+            if (requiredTutorialStep == null)
+                return true;
+
+            // Сервиса обучения нет — гейтить нечем, не блокируем отзыв.
+            if (!ServiceLocator.Current.TryGet<ITutorialService>(out var tutorial))
+                return true;
+
+            return tutorial.IsStepCompleted(requiredTutorialStep);
         }
 
         
