@@ -54,9 +54,6 @@ namespace Galactic1.UI.Core
                 screenCache[screenId[i]] = panel;
             }
             
-            // *** ставим экран смерти выше остальных
-            if(screenCache.ContainsKey(UIScreenId.DeathScreen))
-                screenCache[UIScreenId.DeathScreen].transform.SetSiblingIndex(GetRoot(UIScreenId.DeathScreen).childCount);
         }
 
         public void RemoveScreens()

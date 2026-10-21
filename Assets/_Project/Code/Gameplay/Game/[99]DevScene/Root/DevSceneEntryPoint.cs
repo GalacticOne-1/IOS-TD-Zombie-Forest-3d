@@ -117,7 +117,7 @@ namespace Galactic1
                             new[]
                             {
                                 UIScreenId.Settings,
-                                UIScreenId.DeathScreen,
+                                //UIScreenId.DeathScreen,
                                 UIScreenId.PlayerDamageFrame,
                                 UIScreenId.HUDInput,
                                 UIScreenId.HUDLocation,

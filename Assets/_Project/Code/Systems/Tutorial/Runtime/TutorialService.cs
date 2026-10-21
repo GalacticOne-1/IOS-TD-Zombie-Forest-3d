@@ -297,7 +297,6 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
         public TutorialProgress GetProgress() => _runtime?.ToProgress(_activeStep?.Definition.chapterId);
         public bool IsStepActive(TutorialStepId stepId) => stepId != null && _activeStep?.Definition.stepId == stepId;
-        //public bool IsStepCompleted(TutorialStepId stepId) => _runtime?.IsStepCompleted(stepId) ?? false;
         
         public bool IsStepCompleted(TutorialStepId stepId)
         {
