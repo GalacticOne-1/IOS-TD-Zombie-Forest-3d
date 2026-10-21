@@ -33,11 +33,10 @@ MonoBehaviour:
   <MainOption>k__BackingField:
     purchaseLimit: 0
     limited: 0
-    price: 0
-    discount: 0
     hot: 1
     sale:
       active: 0
+      onlyPercentLabel: 0
       percent: 0
     bonus:
       active: 0
@@ -48,6 +47,6 @@ MonoBehaviour:
     rewardValue: 0
   <RewardItems>k__BackingField:
   - itemId: {fileID: 11400000, guid: 9143b85fa8fb84e129892d5cf42d7b97, type: 2}
-    count: 2
+    count: 4
     oldCount: 0
   <LinkedItems>k__BackingField: []
