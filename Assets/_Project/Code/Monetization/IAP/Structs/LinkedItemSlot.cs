@@ -34,7 +34,7 @@ public class LinkedItemSlot : MonoBehaviour
     private void HandleHoldStart(RectTransform anchor)
         => ServiceLocator.Current.Get<TooltipController>().Show<ItemTooltipView>(
             TooltipType.Loot,
-            gameObject.CMP_RectTr(),
+            icon.gameObject.CMP_RectTr(),
             item,
             item.Physical.maxDurability);
 
