@@ -90,7 +90,7 @@ namespace Galactic1.UI.Shop
                     slot.icon.gameObject.SetActive(slot.icon.sprite != null);
 
                     // Количество limited из linkedItem
-                    slot.currentCount.text = linkedItem.RewardItems[0].count.ToString();
+                    slot.currentCount.text = $"x{linkedItem.RewardItems[0].count}";
 
                     // Старое количество из linkedItem
                     if (slot.oldCountText != null)
