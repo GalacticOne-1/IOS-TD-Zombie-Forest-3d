@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2724b4d7e4a9494f863e3b62d2c623d5, type: 3}
   m_Name: CameraConfig_WorldMap
   m_EditorClassIdentifier: 
+  <LimitToSquadRadius>k__BackingField: 0
+  <SquadRadiusLimit>k__BackingField: 15
   <UseCameraBounds>k__BackingField: 1
   <MoveSpeed>k__BackingField: 1
   <DragSpeed>k__BackingField: 3
   <DragResponsiveness>k__BackingField: 20
+  <FocusOffsetZ>k__BackingField: 0
+  <FocusDuration>k__BackingField: 0.2
+  <FacilityFocusViewportOffsetY>k__BackingField: 0.15
+  <ConstructionModeFocusViewportOffsetY>k__BackingField: -0.15
   <InertiaDamping>k__BackingField: 1.5
   <MinInertiaSpeed>k__BackingField: 0.05
   <ZoomSpeed>k__BackingField: 5
@@ -23,5 +29,9 @@ MonoBehaviour:
   <PinchZoomSpeed>k__BackingField: 0.02
   <MinZoom>k__BackingField: 6
   <MaxZoom>k__BackingField: 12
+  <ConstructionMaxZoom>k__BackingField: 20
+  <DefaultTilt>k__BackingField: 45
+  <ConstructionTilt>k__BackingField: 60
+  <TiltSmooth>k__BackingField: 0.25
   <DragButton>k__BackingField: 323
   <InvertDrag>k__BackingField: 0

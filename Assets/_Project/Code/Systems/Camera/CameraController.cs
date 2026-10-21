@@ -11,8 +11,10 @@ namespace Galactic1.Code.Cameras
     public class CameraController : MonoBehaviour, IUpdate, IMainCamera
     {
         [SerializeField] private CameraConfig config;
-        [SerializeField] private AnimationCurve moveCurve = 
+
+        [SerializeField] private AnimationCurve moveCurve =
             AnimationCurve.EaseInOut(0, 0, 1, 1);
+
         private TutorialCapabilityPolicy _tutorialCapabilities;
 
         private TutorialCapabilityPolicy TutorialCapabilities
@@ -129,6 +131,7 @@ namespace Galactic1.Code.Cameras
             config = cameraConfig;
 
             isDragging = false;
+            isPinching = false;
             velocity = Vector3.zero;
 
             if (Freeze != null)
@@ -180,6 +183,13 @@ namespace Galactic1.Code.Cameras
 
                 ApplyMovement();
             }
+            else
+            {
+                // Ввод заблокирован (туториал, OnFreeze, UI): HandleMouseDrag не вызывается
+                // и не увидит GetKeyUp. Без сброса isDragging останется true со старым
+                // lastMousePosition, и после разблокировки камера прыгнет.
+                isDragging = false;
+            }
         }
 
         private bool CanProcessInput()
@@ -206,7 +216,12 @@ namespace Galactic1.Code.Cameras
         {
 #if UNITY_IOS || UNITY_ANDROID
             if (isPinching || Input.touchCount > 1)
+            {
+                // Мультитач: обрываем драг, иначе lastMousePosition устареет
+                // и при возврате к одному пальцу камера прыгнет
+                isDragging = false;
                 return;
+            }
 #endif
             if (Input.GetKeyDown(config.DragButton))
             {
@@ -224,6 +239,13 @@ namespace Galactic1.Code.Cameras
 
             if (!isDragging) return;
 
+            // Защита от пропущенного GetKeyUp (отмена касания системным жестом iOS и т.п.)
+            if (!Input.GetKey(config.DragButton))
+            {
+                isDragging = false;
+                return;
+            }
+
             Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
             lastMousePosition = Input.mousePosition;
 
@@ -232,7 +254,14 @@ namespace Galactic1.Code.Cameras
 
             float zoomFactor = cam.orthographicSize / config.MaxZoom;
 
-            Vector3 dragMove = new Vector3(-mouseDelta.x, 0, -mouseDelta.y) * config.DragSpeed * zoomFactor;
+            // Дельта пикселей за кадр -> скорость, не зависящая от FPS.
+            // ApplyMovement умножает скорость на deltaTime, поэтому перемещение
+            // за кадр всегда равно delta * DragSpeed * zoomFactor / 60.
+            float dt = Mathf.Max(Time.deltaTime, 0.0001f);
+            const float referenceDt = 1f / 60f;
+
+            Vector3 dragMove = new Vector3(-mouseDelta.x, 0, -mouseDelta.y)
+                               * (config.DragSpeed * zoomFactor * referenceDt / dt);
 
             velocity = Vector3.Lerp(velocity, dragMove, config.DragResponsiveness * Time.deltaTime);
         }
@@ -383,7 +412,7 @@ namespace Galactic1.Code.Cameras
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                float t = elapsed / duration;
+                float t = Mathf.Clamp01(elapsed / duration);
                 t = moveCurve.Evaluate(t);
 
                 Vector3 lerped = Vector3.Lerp(startPosition, targetPosition, t);
