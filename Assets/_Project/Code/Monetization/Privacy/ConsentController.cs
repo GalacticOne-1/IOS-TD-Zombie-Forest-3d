@@ -1,5 +1,5 @@
 using System;
-using Galactic1;
+using System.Collections.Generic;
 using GoogleMobileAds.Ump.Api;
 using UnityEngine;
 
@@ -7,99 +7,78 @@ namespace Galactic1.Mobile
 {
     public class ConsentController
     {
-        
-        
-        
-        
-        
-        
-        /// <summary>
-        /// Вызов в ApplicationSetup before AD Init
-        /// </summary>
-        public void GatherConsent(GameConfig config,  Action<string, bool> onComplete)
-        {
-            
-            var canRequestAds = ConsentInformation.CanRequestAds();
-            
-#if UNITY_IOS && !UNITY_EDITOR
-            
-            // *** нет согласия по ATT, форму согласия не запускаеем
-            if(config.Ios.statusATT != 3)
-            {
-                onComplete.Invoke("Ios ATT is false ", canRequestAds);
-                return;
-            }
-            
-#elif UNITY_ANDROID && !UNITY_EDITOR
-            // проверка разрешения для андроида
-#endif
+        // Для теста: форсировать EEA в dev-билдах и добавить hashed id устройства из логов
+        private const bool FORCE_EEA_IN_DEBUG = false;
+        private static readonly List<string> TestDeviceIds = new() { /* "HASHED_ID_FROM_LOGCAT" */ };
 
-            
-            // *** Если согласие получено в предыдущих сессиях ***************************************
-            if (ConsentInformation.CanRequestAds())
+        public static bool CanRequestAds => ConsentInformation.CanRequestAds();
+
+        public static bool PrivacyOptionsRequired =>
+            ConsentInformation.PrivacyOptionsRequirementStatus == PrivacyOptionsRequirementStatus.Required;
+
+        /// <summary>
+        /// Вызывать ДО инициализации рекламы (после ATT на iOS).
+        /// onComplete вызывается ВСЕГДА ровно один раз: (error или null, итоговый canRequestAds).
+        /// </summary>
+        public void GatherConsent(GameConfig config, Action<string, bool> onComplete)
+        {
+            var finished = false;
+
+            void Finish(string error)
             {
-                onComplete.Invoke("Consent previous session", true);
-                return;
+                if (finished) return;
+                finished = true;
+                // читаем актуальное значение именно сейчас, после всех шагов
+                onComplete?.Invoke(error, ConsentInformation.CanRequestAds());
             }
-            
-            
-            
-            // *** Для нового согласия  ***************************************************************
-            
-            // Set tag for under age of consent.
-            // Here false means users are not under age of consent.
-            ConsentRequestParameters request = new ConsentRequestParameters
+
+            var request = new ConsentRequestParameters
             {
                 TagForUnderAgeOfConsent = false,
             };
 
-            
-            // #1 Check the current consent information status.
-            ConsentInformation.Update(request, (FormError updateError) =>
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            if (FORCE_EEA_IN_DEBUG)
             {
-                // Handle the error.
+                request.ConsentDebugSettings = new ConsentDebugSettings
+                {
+                    DebugGeography = DebugGeography.EEA,
+                    TestDeviceHashedIds = TestDeviceIds,
+                };
+            }
+#endif
+
+            // Согласие уже есть с прошлой сессии: не заставляем игрока ждать сеть,
+            // но статус обновляем (форма покажется на следующем запуске, если согласие устарело).
+            if (ConsentInformation.CanRequestAds())
+            {
+                ConsentInformation.Update(request, _ => { });
+                Finish(null);
+                return;
+            }
+
+            // #1 обновляем статус согласия (на каждом запуске, как требует Google)
+            ConsentInformation.Update(request, updateError =>
+            {
                 if (updateError != null)
                 {
-                    onComplete(updateError.Message, canRequestAds);
+                    Finish($"UMP update: {updateError.Message}");
                     return;
                 }
-                
-                // *** Enable the privacy basicSettings button.
-                // if (ServiceLocator.Current.Get<W_Options>().buttonsFeature.bConsentOption)
-                // {
-                //     ServiceLocator.Current.Get<W_Options>().buttonsFeature.bConsentOption.gameObject
-                //         .SetActive(ConsentInformation.PrivacyOptionsRequirementStatus == PrivacyOptionsRequirementStatus.Required);
-                // }
-                
-                
-                // #2 If the error is null, the consent information state was updated.
-                // You are now ready to check if a form is available.
-                ConsentForm.LoadAndShowConsentFormIfRequired((FormError formError) =>
+
+                // #2 показываем форму, только если она требуется (EEA/UK и т.п.)
+                ConsentForm.LoadAndShowConsentFormIfRequired(formError =>
                 {
-                    if (formError != null)
-                    {
-                        // Consent gathering failed.
-                        ScreenProfiler.AddMessage("GDPR : Consent gathering failed".SetText(EDlogColor.ORANGE));
-                        return;
-                    }
-                
-                    // Consent gathering process has completed. (new consent)
-                    onComplete("Consent new session | "+formError?.Message, true);
+                    // и при ошибке, и при успехе доходим до Finish
+                    Finish(formError?.Message);
                 });
             });
-            
         }
-        
-        
-        /// <summary>
-        /// Shows the privacy options form to the user. (for button)
-        /// </summary>
+
+        /// <summary>Форма настроек приватности (для кнопки в настройках).</summary>
         public void ShowPrivacyOptionsForm(Action<string> onComplete)
         {
-            ConsentForm.ShowPrivacyOptionsForm((FormError showError) =>
-            {
-                onComplete?.Invoke(showError?.Message);
-            });
+            ConsentForm.ShowPrivacyOptionsForm(showError => onComplete?.Invoke(showError?.Message));
         }
     }
 }

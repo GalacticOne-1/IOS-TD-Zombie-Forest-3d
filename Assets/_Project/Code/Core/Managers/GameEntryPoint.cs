@@ -16,6 +16,7 @@ using Galactic1.Gameplay.Death;
 using Galactic1.Localisation;
 using Galactic1.Mobile;
 using Galactic1.Systems;
+using Galactic1.Systems.Ads;
 using Galactic1.Systems.Privacy;
 using Galactic1.UI.Shop;
 using R3;
@@ -386,62 +387,14 @@ namespace Galactic1
             }
             
             // === sdk Ad
+            // >>> реклама: фоновый запуск, загрузку не задерживает
             if (entryPointConfig.requiresAdService)
-                yield return _coroutines.StartCoroutine(InitializeAdService());
-            //else
-                //ServiceLocator.Current.Get<AdController>().Inactive();
-            // if (entryPointConfig.requiresAdService)
-            // {
-            //     
-            //     // *** запрос на согласие на персонализированую рекламу ******************************************
-            //     bool waitConsent = true;
-            //     var _consentController = new ConsentController();
-            //     
-            //     // #1 кнопка для показа формы (сделано в SettingsUI)
-            //     // ServiceLocator.Current.Get<W_Options>().buttonsFeature.bConsentOption.EventBtnOne(() => 
-            //     //     _consentController.ShowPrivacyOptionsForm(error =>
-            //     //     {
-            //     //         if (error != null)
-            //     //         {
-            //     //             ScreenProfiler.AddMessage($"GDPR : Failed to show privacy option form >> {error}".SetText(EDlogColor.ORANGE));
-            //     //         }
-            //     //     }));
-            //     
-            //     // #2 запрос/загрузка согласия
-            //     _consentController.GatherConsent(
-            //         configProvider.Get<GameConfig>(),
-            //         (error, canRequestAds) =>
-            //         {
-            //             if (error != null)
-            //             {
-            //                 ScreenProfiler.AddMessage($"GDPR : {error}".SetText(EDlogColor.ORANGE));
-            //             }
-            //
-            //             // *** по идее запуск сдк рекламы должен происходить только при наличии согласия
-            //             if (canRequestAds)
-            //             {
-            //                 ScreenProfiler.AddMessage("GDPR : Can request Ads");
-            //                 // ServiceLocator.Current.Get<ADSController>().Init()
-            //                 // оставил старый запуск сдк рекламы, иначе реклама не будет работать в игре
-            //             }
-            //
-            //             waitConsent = false;
-            //         });
-            //     while (waitConsent) yield return null;
-            //     // ***********************************************************************************************
-            //
-            //
-            //     DLog.Alert("Start: load ADS", EDlogColor.YELLOW, AppConstants.show_log_core);
-            //     //SetProcessText("Load M-II");
-            //     //SetProgress(48);
-            //     
-            //     LoadingManager.I.NewStepStarted(CServiceType.AD);
-            //     yield return _coroutines.StartCoroutine(ServiceLocator.Current.Get<AdController>().Init());
-            // }
-            // else
-            // {
-            //     ServiceLocator.Current.Get<AdController>().Inactive();
-            // }
+            {
+                var adsBootstrap = new AdsBootstrap(_rootContainer, _coroutines, configProvider.Get<GameConfig>());
+                _rootContainer.RegisterInstance(adsBootstrap);
+                adsBootstrap.Start();
+            }
+            
             
             // ===== вызываем единственное событие при загрузки приложения =====
             EventBus<LoadAndStartCoreEvent>.Raise(new LoadAndStartCoreEvent());
@@ -1002,52 +955,9 @@ namespace Galactic1
 
 
 
-        IEnumerator InitializeAdService()
-        {
-            var configProvider = _rootContainer.Resolve<IConfigProvider>();
-            
-            var consentService = new ConsentService();
-            ServiceLocator.Current.Register(consentService);
-
-            bool consentDone = false;
-
-            consentService.GatherConsent(configProvider.Get<GameConfig>(), () =>
-            {
-                consentDone = true;
-            });
-
-            while (!consentDone)
-                yield return null;
-            
-            // *** по идее запуск сдк рекламы должен происходить только при наличии согласия
-            //if (consentService.CanRequestAds) // скрыто, иначе реклама не будет работать в игре
-            {
-                //ScreenProfiler.AddMessage("GDPR : Can request Ads");
-                
-                // --- SDK INIT (инфраструктура)
-                LoadingManager.I.NewStepStarted(CServiceType.AD);
-                var sdk = new AdMobInitializer();
-                var task = sdk.InitializeAsync();
-                
-                while (!task.IsCompleted) 
-                    yield return null;
-                
-                // sdk запущено
-                // создаем прелоад и запускаем сервис
-                var adapter = new AdMobAdapter();
-                var preload = new AdPreloadService(
-                    adapter,
-                    sdk,
-                    _coroutines); 
-
-                preload.Start();
-
-                var adService = AdInstaller.Create(_rootContainer, _coroutines, adapter, preload);
-                ServiceLocator.Current.Register(adService);
-            }
-        }
-
         
+
+
 
 
 

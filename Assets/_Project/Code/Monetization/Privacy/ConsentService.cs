@@ -4,31 +4,33 @@ using UnityEngine;
 
 namespace Galactic1.Systems.Privacy
 {
-    /// <summary>
-    /// Управляет получением GDPR/UMP согласия.
-    /// Ничего не знает о рекламе.
-    /// </summary>
     public class ConsentService : IGameService
     {
+        private readonly ConsentController _controller = new();
+
         public bool CanRequestAds { get; private set; }
+        public bool PrivacyOptionsRequired => ConsentController.PrivacyOptionsRequired;
 
         public void GatherConsent(GameConfig config, Action onComplete)
         {
-            var controller = new ConsentController();
-
-            controller.GatherConsent(config, (error, canRequestAds) =>
+            _controller.GatherConsent(config, (error, canRequestAds) =>
             {
-                if (error != null)
-                    Debug.LogWarning($"GDPR error: {error}");
+                if (!string.IsNullOrEmpty(error))
+                    Debug.Log($"GDPR: {error}");
 
                 CanRequestAds = canRequestAds;
                 onComplete?.Invoke();
             });
         }
 
-        public void ShowPrivacyOptions(Action<string> onError)
+        /// <summary>Для кнопки в настройках. После закрытия формы CanRequestAds обновляется.</summary>
+        public void ShowPrivacyOptions(Action<string> onComplete = null)
         {
-            new ConsentController().ShowPrivacyOptionsForm(onError);
+            _controller.ShowPrivacyOptionsForm(error =>
+            {
+                CanRequestAds = ConsentController.CanRequestAds;
+                onComplete?.Invoke(error);
+            });
         }
     }
 }
