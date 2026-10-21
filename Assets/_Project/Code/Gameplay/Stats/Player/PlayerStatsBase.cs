@@ -41,28 +41,6 @@ namespace Galactic1.Code.Gameplay.Units.Stats
             public CPlayer base_stats;
         }
 
-        /// <summary>
-        /// Обновить поля ScriptableObject из JSON.
-        /// </summary>
-        public void UpdateFromJson(string json)
-        {
-            try
-            {
-                var wrapper = JsonUtility.FromJson<Wrapper>(json);
-                if (wrapper != null)
-                {
-                    BaseStats = wrapper.base_stats;
-                }
-                else
-                {
-                    Debug.LogWarning("⚠️ UpdateFromJson: JSON не содержит данных PlayerConfig.");
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"❌ UpdateFromJson error: {e.Message}");
-            }
-        }
 
         public override Dictionary<StatId, float> GetBaseStats()
         {

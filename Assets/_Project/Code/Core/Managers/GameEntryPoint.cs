@@ -178,7 +178,10 @@ namespace Galactic1
             // === загружаем настройки игры и ассеты
             var configProvider = new ConfigProvider();
             _rootContainer.RegisterInstance<IConfigProvider>(configProvider);
-            yield return _rootContainer.Resolve<IConfigProvider>().LoadAllConfigs();
+
+            // Нужен кадр: Bootstrap() стартует из конструктора GameEntryPoint, и _instance
+            // к StartGame() должен быть уже присвоен. Раньше этот кадр давал yield LoadAllConfigs.
+            yield return null;
             
             // === регистрируем игровой контент
             GameContent.Initialize(configProvider);

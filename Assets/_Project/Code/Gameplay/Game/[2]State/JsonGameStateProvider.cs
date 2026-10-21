@@ -9,7 +9,6 @@ using Galactic1.UI.Shop;
 using Galactic1.Code.Gameplay.Units.Stats;
 using Galactic1.Code.Systems.Tutorial.Authoring;
 using Galactic1.Configs.Galactic1.Code.GameDatabase;
-using Galactic1.EntryPoint;
 using Galactic1.Game.World.StartLocation;
 using Galactic1.Structs;
 using Galactic1.Window;

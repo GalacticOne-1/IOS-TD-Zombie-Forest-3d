@@ -16,18 +16,8 @@ namespace Galactic1
 
         #region GENERAL
 
-        [field: SerializeField] public CGeneral General { get; private set; }
+        [field: SerializeField] public General General { get; private set; }
         
-        public bool SetRequiresDeviceSetup
-        {
-            set
-            {
-                var general = General;
-                general.requiresDeviceSetup = value;
-                General = general;
-            }
-        }
-
         public bool SetTutorial
         {
             set
@@ -43,44 +33,10 @@ namespace Galactic1
         
         #region AD
 
-        [field: SerializeField] public CAd Ad { get; private set; }
+        [field: SerializeField] public Ad Ad { get; private set; }
         
         #endregion
 
-
-        
-        [Serializable]
-        private class Wrapper
-        {
-            public CGeneral general;
-            public CIOS ios;
-            public CAd ad;
-        }
-
-        /// <summary>
-        /// Обновить поля ScriptableObject из JSON.
-        /// </summary>
-        public void UpdateFromJson(string json)
-        {
-            try
-            {
-                var wrapper = JsonUtility.FromJson<Wrapper>(json);
-                if (wrapper != null)
-                {
-                    Ad = wrapper.ad;
-                }
-                else
-                {
-                    Debug.LogWarning("⚠️ UpdateFromJson: JSON не содержит данных progress.");
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"❌ UpdateFromJson error: {e.Message}");
-            }
-        }
-        
-        
 
         public void Save()
         {
@@ -93,21 +49,13 @@ namespace Galactic1
     
     
     [Serializable]
-    public struct CGeneral
+    public struct General
     {
-        public bool requiresDeviceSetup;            // подгон канвасов под айпад
         public bool tutorialActive;
-        public bool alwaysShowPayOffer;             // экраны от магазина и рекламы в начале сцены
     }
     
     [Serializable]
-    public struct CIOS
-    {
-        public byte statusATT { set; get; }         // то что выбрал пользователь
-    }
-    
-    [Serializable]
-    public struct CAd
+    public struct Ad
     {
         public byte dailyLimit;                     // available ad per day
         public byte interDelayTimer;                // pause between show 

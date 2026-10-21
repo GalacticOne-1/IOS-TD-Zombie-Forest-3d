@@ -4,13 +4,13 @@ using UnityEngine;
 namespace Galactic1
 {
     [CreateAssetMenu(fileName = "BuildingConfig", menuName = "Game Configs/Entities/Inventory/New Structure Config")]
-    public class BuildableConfig : InventoryConfigs
+    public class BuildableConfig 
     {
 
         
         [Space] 
         [SerializeField] private EEquipment assetKey;
-        public override int GetAssetKey() => (int)assetKey;
+        public int GetAssetKey() => (int)assetKey;
         [SerializeField] private bool isDefense;
 
 
@@ -47,28 +47,6 @@ namespace Galactic1
         public byte requiresBlueprint;              // 0 = доступно сразу
 
         
-        public override string GetMainFeatures()
-        {
-            if(!isDefense) return "";
-
-            
-            StatId[] require = new StatId[3] { StatId.Health, StatId.Damage, StatId.SlowAmount };
-            byte n = 0;
-            var resp = "";
-            for (int i = 0; i < 3; i++)
-            {
-                GetAttribute(require[i], out CAttributes attr);
-                if (attr.value > 0)
-                {
-                    if (n > 0) resp += "\n";
-                    resp += $"{ServiceLocator.Current.Get<LocalisationService>().Data.attributes[(byte)attr.type]}: {attr.value}";
-                    if(attr.type == StatId.SlowAmount) resp += "%";
-                    n++;
-                }
-            }
-                
-            return resp;
-        }
 
         #region PREFAB
 
