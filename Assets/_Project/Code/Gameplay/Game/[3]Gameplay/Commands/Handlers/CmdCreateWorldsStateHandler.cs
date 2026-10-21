@@ -33,10 +33,6 @@ namespace Galactic1
                 return false;
             }
 
-            var newWorldStateSettings = _configProvider.LocationsState._configs
-                .First(l => l.Key == command.WorldStateId);
-            var newWorldInitialStateSettings = newWorldStateSettings.Value.initialStateConfigs;
-            
             
             // ******************************************************************************************
             // здесь настраивается состояние по умолчанию, при первом запуске

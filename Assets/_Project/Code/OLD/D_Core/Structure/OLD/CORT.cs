@@ -99,11 +99,6 @@ namespace Galactic1
 
         
         /// <summary>
-        /// Звук error
-        /// </summary>
-        public static void SoundAlert() => ServiceLocator.Current.Get<AudioController>().Sound_UI(3);
-        
-        /// <summary>
         /// Показать плашку (нe хватает кристаллов)
         /// </summary>
         public static void NotEnoughtGems()

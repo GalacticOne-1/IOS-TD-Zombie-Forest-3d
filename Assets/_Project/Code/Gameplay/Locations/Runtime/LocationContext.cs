@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Galactic1.Code.Gameplay.Enemies.Authoring;
 using Galactic1.Code.WorldMap;
-using Galactic1.Core.GameSession;
-using Galactic1.Core.Location;
 using Galactic1.RaidLoot.Definition;
 using Galactic1.RaidLoot.Scene;
 using UnityEngine;

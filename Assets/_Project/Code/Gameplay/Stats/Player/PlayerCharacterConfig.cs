@@ -36,8 +36,6 @@ namespace Galactic1
         #endregion
         
         
-        public InventoryConfigs fight;
-        
         
         
 

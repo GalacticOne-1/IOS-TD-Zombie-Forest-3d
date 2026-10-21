@@ -56,7 +56,6 @@ namespace Galactic1
             // #1 ОБРАБОТЧК КОММАНД ******************************************************************************
             var cmd = new CommandProcessor(gameStateProvider);
             cmd.RegisterHandle(new CmdCreateWorldsStateHandler(gameStateProxy, gameConfings, configProvider));
-            cmd.RegisterHandle(new CmdPlaceEntitiesHandler(gameStateProxy));
             cmd.RegisterHandle(new CmdCratesHandler(gameStateProxy));
             container.RegisterInstance<ICommandProcessor>(cmd);
             
@@ -215,7 +214,7 @@ namespace Galactic1
             
             container.RegisterFactory(_ => new StructureService(
                 loadingWorldState.Entities,
-                configProvider.Structures._configs,
+                null,
                 cmd
             )).AsSingle();
             

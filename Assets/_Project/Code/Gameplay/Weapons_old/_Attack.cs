@@ -270,8 +270,8 @@ namespace Galactic1.AbstractFactory
                 if(shootFx.use) shootFx.fx.SetActive(true);
                 
                 // звук выстрела
-                if(audio.state != EWeaponAudio.DISABLE)
-                    ServiceLocator.Current.Get<AudioController>().SoundDelay_Attack(audio.sampleShot,2, Random.Range(.9f, 1.0f));
+                // if(audio.state != EWeaponAudio.DISABLE)
+                //     ServiceLocator.Current.Get<AudioController>().SoundDelay_Attack(audio.sampleShot,2, Random.Range(.9f, 1.0f));
                 
                 // if (ammo == weapon.ammo)
                 // {
@@ -329,8 +329,8 @@ namespace Galactic1.AbstractFactory
                 // --------
                 
                 // звук выстрела
-                if(audio.state != EWeaponAudio.DISABLE)
-                    ServiceLocator.Current.Get<AudioController>().SoundDelay_Attack(audio.sampleShot,2, Random.Range(.9f, 1.0f));
+                // if(audio.state != EWeaponAudio.DISABLE)
+                //     ServiceLocator.Current.Get<AudioController>().SoundDelay_Attack(audio.sampleShot,2, Random.Range(.9f, 1.0f));
                 
                 RequestState(EAttackStateType.HIT, "Attack.EnterProcess()");
             }

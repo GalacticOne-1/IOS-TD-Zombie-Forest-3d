@@ -185,7 +185,7 @@ namespace Galactic1
                         lastId = selectedId;
                         selectedId = i;
                         onSelect?.Invoke();
-                        ServiceLocator.Current.Get<AudioController>().Sound_UI(9);
+                        //ServiceLocator.Current.Get<AudioController>().Sound_UI(9);
                     }
 
                     scale = Mathf.Clamp(1 / (distance / spacing) * snapScale, .6f, 1f);
