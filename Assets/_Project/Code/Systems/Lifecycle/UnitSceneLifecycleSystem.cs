@@ -101,9 +101,12 @@ namespace Galactic1.Code.Systems.Lifecycle
             // === спавн всех юнитов для защиты лагеря
             if(_gameLoopContext.CurrentRaid?.Scenario.Options.UseDefenseFacilities ?? false)
             {
-                var units= _gameLoopContext.CurrentRaid.CampDefenders.Units;
-                foreach (var unit in units)
-                    SpawnIfMissing(unit);
+                if(_gameLoopContext.CurrentRaid.CampDefenders != null)
+                {
+                    var units = _gameLoopContext.CurrentRaid.CampDefenders.Units;
+                    foreach (var unit in units)
+                        SpawnIfMissing(unit);
+                }
             }
         }
 

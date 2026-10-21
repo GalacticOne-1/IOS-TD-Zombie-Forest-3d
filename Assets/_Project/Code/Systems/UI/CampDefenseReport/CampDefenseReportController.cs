@@ -89,10 +89,11 @@ namespace Galactic1.Code.UI.RaidReport
             IReadOnlyList<RaidSurvivorResult> survivors, 
             IReadOnlyList<RaidSurvivorResult> campUnits)
         {
+            survivorRoot.MakeHidden();
+            
             if (survivors == null || survivors.Count == 0) 
                 return;
             
-            survivorRoot.MakeHidden();
 
             GameObject label;
             

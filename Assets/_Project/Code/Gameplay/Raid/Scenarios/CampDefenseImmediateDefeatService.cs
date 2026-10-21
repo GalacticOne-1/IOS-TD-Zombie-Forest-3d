@@ -34,8 +34,6 @@ namespace Galactic1.Code.Systems.CampDefense.Preparation
             var accessService = ServiceLocator.Current.Get<InventoryManagementWindow>()
                 .controller.AccessService;
 
-            // #1 Минимальный raid-shell — без спавна, без тактической сцены.
-            //    Squad пуст по определению (это и есть причина NoUnitsInCamp).
             var raid = new RaidRuntime
             {
                 Status = RaidStatus.Failed,
@@ -47,22 +45,19 @@ namespace Galactic1.Code.Systems.CampDefense.Preparation
                     configProvider.Get<SurvivorConsumptionConfig>()),
             };
 
-            // #2 Временный сценарий — используется только чтобы переиспользовать
-            //    существующий BuildRaidResult (штраф, маппинг ResourcesLost и т.п.),
-            //    а не дублировать эту логику здесь.
             var scenario = new CampDefenseScenario(_container);
             raid.Scenario = scenario;
-
             _context.CurrentRaid = raid;
 
             var raidResult = scenario.BuildRaidResult(raid, raid.MissionResult);
 
-            // #3 Записываем результат туда же, куда его пишет обычный PostRaidReportState
             _context.Proxy.LastRaidResult = raidResult;
             _context.Proxy.HasPendingRaidReport.Value = true;
 
-            // #4 Переиспользуем существующий выход/reload сцены —
-            //    именно он приводит к показу CampDefenseReport через CampReportState.
+            // Замыкаем цикл угрозы: в обычном потоке это делает Scenario.Cleanup()
+            // из RaidInProgressState.Exit(), которого здесь нет.
+            _container.Resolve<CampDefensePreparationService>().CompleteDefense();
+
             scenario.ExitFromLocation();
         }
     }
