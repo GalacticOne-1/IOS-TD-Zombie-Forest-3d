@@ -19,6 +19,7 @@ namespace Galactic1.UI.Core
         MessageToast = 14,
         TaskPopup = 15,
         Dialog = 16,
+        TutorialSkip = 17,
         
         Inventory = 20,
         Craft = 21,

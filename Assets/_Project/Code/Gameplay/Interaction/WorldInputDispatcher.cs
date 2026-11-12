@@ -98,6 +98,9 @@ namespace Galactic1.Code.Gameplay.Interaction
         // =========================
         public void UpdateM()
         {
+            if (_camera == null)
+                return;
+            
             ProcessPointerRaw(); // ВСЕГДА (targeting pipeline)
 
             if (_interactionBlocker.IsBlocked)

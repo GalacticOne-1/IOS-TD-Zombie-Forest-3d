@@ -17,10 +17,17 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
     public interface ITutorialService : IGameService
     {
         bool IsActive { get; }
+        /// <summary>true = игрок пропустил обучение (TutorialSkipPopup). Гейты при этом не применяются.</summary>
+        bool IsSkipped { get; }
         void StartOrRestore(TutorialCampaignId campaignId, TutorialChapterId startChapterId = null);
         void StartTutorial(TutorialCampaignId campaignId, TutorialChapterId startChapterId = null);
         void Restore();
         void StopTutorial();
+
+        /// <summary>Внешне завершает ТЕКУЩУЮ кампанию (без прохождения оставшихся шагов) и, если
+        /// у неё задан NextCampaignId, стартует следующую. false = нечего завершать.</summary>
+        bool CompleteCurrentCampaign();
+
         TutorialProgress GetProgress();
         bool IsStepActive(TutorialStepId stepId);
         bool IsStepCompleted(TutorialStepId stepId);
@@ -39,7 +46,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         void ClearProgress();
     }
 
-    public sealed class TutorialService : ITutorialService, ITutorialDebugService, IGameService
+    public sealed class TutorialService : ITutorialService, ITutorialDebugService
     {
         private readonly TutorialCampaignRegistry _registry;
         private readonly TutorialObjectiveFactory _objectiveFactory;
@@ -72,6 +79,9 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
         private TutorialStepDefinition _pendingTransitionStepDef;
 
         public bool IsActive => _runtime != null && _runtime.IsActive;
+        
+        public bool IsSkipped
+            => PlayerPrefs.GetString(_gameStateProvider.SkipTutorialKey, string.Empty) == "y";
 
         public TutorialService(
             TutorialCampaignRegistry registry,
@@ -295,9 +305,26 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             _runtime = null;
         }
 
+        public bool CompleteCurrentCampaign()
+        {
+            if (_runtime == null || !_runtime.IsActive)
+            {
+                Debug.LogWarning("[TutorialService] CompleteCurrentCampaign: нет активной кампании — игнор.");
+                return false;
+            }
+
+            AbortActiveStepWithoutCompletion();
+            MarkAllCampaignStepsCompleted(_runtime.Definition);
+
+            // Дальше тот же путь, что у естественного Terminal: MarkCampaignCompleted →
+            // analytics → StartTutorial(Next) / ClearCameraConstraint → loadCampOnCompletion → Persist.
+            CompleteCampaign();
+            return true;
+        }
+
         public TutorialProgress GetProgress() => _runtime?.ToProgress(_activeStep?.Definition.chapterId);
         public bool IsStepActive(TutorialStepId stepId) => stepId != null && _activeStep?.Definition.stepId == stepId;
-        
+
         public bool IsStepCompleted(TutorialStepId stepId)
         {
             if (stepId == null) return false;
@@ -463,7 +490,7 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             if (guidanceDefs == null)
                 return list;
-            
+
 
             foreach (var g in guidanceDefs)
             {
@@ -858,6 +885,57 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
             }
 
             Persist();
+        }
+
+        /// <summary>Гасит живой шаг (или окно completion delay) БЕЗ bookkeeping завершения:
+        /// ни награды, ни checkpoint, ни StepCompleted. Зеркалит teardown из
+        /// FinishActiveStepAndAdvance, но не трогает его — тот код протестирован.</summary>
+        private void AbortActiveStepWithoutCompletion()
+        {
+            // Шаг уже завершён и ждёт completion delay: RemoveTask отменяет таймер внутри
+            // ScenarioTaskService, а обнулённый pending не даст протухшему сигналу продолжить граф.
+            _pendingTransitionStepDef = null;
+            _taskPresenter.Clear();
+
+            var step = _activeStep;
+            if (step != null)
+            {
+                var def = step.Definition;
+
+                step.OnStepCompleted -= HandleAsyncStepCompleted;
+                step.OnProgressChanged -= HandleActiveStepProgressChanged;
+                step.OnGuidanceChanged -= HandleActiveStepGuidanceChanged;
+                step.OnPanelChanged -= HandleActivePanelChanged;
+
+                TutorialObjectiveProgressStore.Clear(_tutorialState, def.stepId.Guid);
+                _analytics.StepSkipped(_runtime.CampaignId, def.chapterId?.Guid, def.stepId.Guid,
+                    def.analyticsStepIndex);
+
+                step.Stop();
+                _activeStep = null;
+            }
+
+            // HideVisuals, а не Hide: camera constraint снимет/заменит Show() следующей кампании,
+            // либо CompleteCampaign() при её отсутствии.
+            _presentation.HideVisuals();
+            _uiManager.ClosePopup(UIScreenId.TaskPopup);
+        }
+
+        /// <summary>Помечает все шаги кампании выполненными (только в completed/allCompleted,
+        /// БЕЗ наград). Нужно из-за TutorialTargetGateService: при активной СЛЕДУЮЩЕЙ кампании
+        /// IsActive == true, и гейты с requiredStepId из пропущенной кампании блокировали бы
+        /// игрока навсегда.</summary>
+        private void MarkAllCampaignStepsCompleted(TutorialDefinition definition)
+        {
+            if (definition.chapters == null) return;
+
+            foreach (var chapter in definition.chapters)
+            {
+                if (chapter?.steps == null) continue;
+                foreach (var step in chapter.steps)
+                    if (step?.stepId != null)
+                        _runtime.MarkStepCompleted(step.stepId);
+            }
         }
 
         private void Persist() => _gameStateProvider.SaveGameState();

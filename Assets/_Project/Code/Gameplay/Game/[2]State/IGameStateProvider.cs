@@ -6,6 +6,7 @@ namespace Galactic1.Core
     {
         
         string NewGameKey { get; }
+        string SkipTutorialKey { get; }
         public GameStateProxy GameStateProxy { get; }
 
         public Observable<GameStateProxy> LoadGameState();

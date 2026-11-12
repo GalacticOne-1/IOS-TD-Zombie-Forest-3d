@@ -21,10 +21,14 @@ namespace Galactic1.Core
     {
         private readonly ConfigProvider _configsProvider;
         private const string GAME_STATE_KEY = nameof(GAME_STATE_KEY);
-        public const string NEW_GAME_KEY = nameof(NEW_GAME_KEY);
+        private const string NEW_GAME_KEY = nameof(NEW_GAME_KEY);
+        private const string SKIP_TUTORIAL_KEY = nameof(SKIP_TUTORIAL_KEY);
         private const string SAVE_PATH = "zombie_forest_3d_savedata";
 
-        public string NewGameKey => NEW_GAME_KEY;
+        // используем для пропуска обучения, потом заменить на свое значение
+        // или убрать PlayerPrefs.SetString(stateProvider.NewGameKey, "y"); в GameEntryPoint
+        public string NewGameKey => NEW_GAME_KEY; 
+        public string SkipTutorialKey => SKIP_TUTORIAL_KEY;
 
         public GameStateProxy GameStateProxy { get; private set; }
 
@@ -86,6 +90,7 @@ namespace Galactic1.Core
         {
             PlayerPrefs.DeleteKey(GAME_STATE_KEY);
             PlayerPrefs.DeleteKey(NEW_GAME_KEY);
+            PlayerPrefs.DeleteKey(SKIP_TUTORIAL_KEY);
             PlayerPrefs.Save();
 
             bool saveDeleted = DataSaver.deleteData(SAVE_PATH);

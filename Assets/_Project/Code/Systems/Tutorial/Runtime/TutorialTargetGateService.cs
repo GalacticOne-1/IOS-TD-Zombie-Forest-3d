@@ -40,6 +40,11 @@ namespace Galactic1.Code.Systems.Tutorial.Runtime
 
             if (!_registry.TryGetGate(targetId, out var gate))
                 return TutorialTargetGateResult.Allowed;
+            
+            // Игрок пропустил обучение — разблокировка по шагам больше не действует ни для каких кнопок,
+            // в том числе привязанных к шагам следующей кампании.
+            if (_tutorialService.IsSkipped)
+                return TutorialTargetGateResult.Allowed;
 
             if (gate.requiredStepId == null)
             {

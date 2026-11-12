@@ -176,7 +176,8 @@ namespace Galactic1.UI.Core
                 UIScreenId.Settings or
                     UIScreenId.PurchaseRewardScreen or
                     UIScreenId.PlayerDamageFrame or
-                    UIScreenId.DeathScreen
+                    UIScreenId.DeathScreen or
+                    UIScreenId.TutorialSkip
                     => _layerRoot.overlayRoot,
 
                 UIScreenId.ScenarioTaskHUD
