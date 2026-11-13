@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using DEV;
+using Galactic1.Code.Systems.Tutorial.Presentation;
 using Galactic1.Mobile;
 using Galactic1.Systems.Privacy;
 using Galactic1.UI.Core;
@@ -56,6 +57,8 @@ namespace Galactic1.Systems
         public override void Initialize(DIContainer container, UIScreenId id)
         {
             base.Initialize(container, id);
+            
+            GetComponent<TutorialSkipSettings>().Setup(container);
             
             DevUpdate.I.SettingsUI = this;
             
